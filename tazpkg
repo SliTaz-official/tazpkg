@@ -1,0 +1,793 @@
+#!/bin/sh
+# Tazpkg - Tiny autonomus zone packages manager.
+#
+# This is a lightwight packages manager for *.tazpkg files, all written in
+# SHell script. It works well with Busybox ash shell and bash. Tazpkg let you
+# list, install, remove, download or get information about a package, you can
+# use 'tazpkg usage' to get a list of commands with a short description. Tazpkg
+# also relolv dependencies and can upgrade packages from a mirror.
+#
+# (C) 2007 SliTaz - GNU General Public License v3.
+# Author : <pankso@slitaz.org>
+#
+VERSION=1.3
+
+####################
+# Script variables #
+####################
+
+# Packages categories.
+CATEGORIES="base-system base-apps x-window extra"
+
+# Initialize some variables to use words
+# rater than numbers for functions and actions.
+COMMAND=$1
+PACKAGE=${2%.tazpkg}
+TARGET_DIR=$3
+TOP_DIR=`pwd`
+TMP_DIR=/tmp/tazpkg-$$-$RANDOM
+
+# Path to tazpkg used dir and configuration files
+LOCALSTATE=/var/lib/tazpkg
+INSTALLED=$LOCALSTATE/installed
+CACHE_DIR=/var/cache/tazpkg
+MIRROR=$LOCALSTATE/mirror
+PACKAGES_LIST=$LOCALSTATE/packages.list
+
+
+# Check if the directories and files used by Tazpkg
+# exists. If not and user is root we creat them.
+if test $(id -u) = 0 ; then
+	if [ ! -d "$CACHE_DIR" ]; then
+		mkdir -p $CACHE_DIR
+	fi
+	if [ ! -d "$INSTALLED" ]; then
+	  mkdir -p $INSTALLED
+	fi
+	if [ ! -f "$LOCALSTATE/mirror" ]; then
+	  echo "$DEFAULT_MIRROR" > $LOCALSTATE/mirror
+	fi
+fi
+
+####################
+# Script functions #
+####################
+
+# Print the usage.
+usage ()
+{
+	echo -e "SliTaz packages manager - Version: $VERSION\n
+\033[1mUsage: \033[0m tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
+\033[1mCommands: \033[0m
+  usage         Print this short usage.
+  list          List installed packages on the system by category or all.
+  list-mirror   List all available packages on the mirror (--diff for new).
+  info          Print informations about the package.
+  desc          Print description of a package (if it exist).
+  list-files    List of files installed with the package.
+  search        Search for a package by pattern or name.
+  install       Install a local (*.tazpkg) package (--forced to force).
+  install-list  Install all packages from a list of packages.
+  remove        Remove the specified package and all installed files.
+  extract       Extract a (*.tazpkg) package into a directory.
+  pack          Pack an unpacked or prepared package tree.
+  recharge      Recharge your packages.list from the mirror.
+  upgrade       Upgrade all installed and listed packages on the mirror.
+  get           Download a package into the current directory.
+  get-install   Download and install a package from the mirror.
+  clean-cache   Clean all packages downloaded in cache directory.
+  setup-mirror  Change the mirror url configuration.\n"
+}
+
+# Status function with color (supported by Ash).
+status()
+{
+	local CHECK=$?
+	echo -en "\\033[70G[ "
+	if [ $CHECK = 0 ]; then
+		echo -en "\\033[1;33mOK"
+	else
+		echo -en "\\033[1;31mFailed"
+	fi
+	echo -e "\\033[0;39m ]"
+}
+
+# Check if user is root to install, or remove packages.
+check_root()
+{
+	if test $(id -u) != 0 ; then
+		echo -e "\nYou must be root to run `basename $0` with this option."
+		echo -e "Please type 'su' and root password to become super-user.\n"
+		exit 0
+	fi
+}
+
+# Check for a package name on cmdline.
+check_for_package_on_cmdline()
+{
+	if [ -z "$PACKAGE" ]; then
+		echo -e "\nPlease specify a package name on the command line.\n"
+		exit 0
+	fi
+}
+
+# Check if the package (*.tazpkg) is in current dir.
+check_for_package_file()
+{
+	if [ ! -f "$TOP_DIR/$PACKAGE.tazpkg" ]; then
+		echo -e "
+Unable to find : $TOP_DIR/$PACKAGE.tazpkg
+You must be in the package directory to install, extract or pack.\n"
+		exit 0
+	fi
+}
+
+# Check for the receipt of an installed package.
+check_for_receipt()
+{
+	if [ ! -f "$INSTALLED/$PACKAGE/receipt" ]; then
+		echo -e "\nUnable to find the receipt : $INSTALLED/$PACKAGE/receipt\n"
+		exit 0
+	fi
+}
+
+# Check if a package is already installed.
+check_for_installed_package()
+{
+	if [ -d "$INSTALLED/${PACKAGE%-[0-9]*}" ]; then
+		echo -e "
+$PACKAGE is already installed. You can use the --forced option to force
+installation or remove it and reinstall.\n"
+		exit 0
+	fi
+}
+
+# Check for packages.list to download and install packages.
+check_for_packages_list()
+{
+	if [ ! -f "$LOCALSTATE/packages.list" ]; then
+		echo -e "
+Unable to find the list : $LOCALSTATE/packages.list\n
+You must probably run 'tazpkg recharge' as root to get the last list of 
+packages avalaible on the mirror.\n"
+		exit 0
+	fi
+}
+
+# Check for a package in packages.list. Used by get and get-install to grep
+# package basename.
+check_for_package_in_list()
+{
+	if grep -q "^$PACKAGE-[0-9]" $LOCALSTATE/packages.list; then
+		PACKAGE=`grep ^$PACKAGE-[0-9] $LOCALSTATE/packages.list`
+	else
+		echo -e "\nUnable to find : $PACKAGE in the mirrored packages list.\n"
+		exit 0
+	fi
+}
+
+# Extract a package with cpio and gzip.
+extract_package()
+{
+	echo -n "Extracting $PACKAGE..."
+	cpio -id < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
+	gzip -d fs.cpio.gz
+	echo -n "Extracting the pseudo fs... "
+	cpio -id < fs.cpio && rm fs.cpio
+}
+
+# This function install a package in the rootfs.
+install_package()
+{
+	mkdir -p $TMP_DIR
+	echo ""
+	echo -e "\033[1mInstallation of :\033[0m $PACKAGE"
+	echo "================================================================================"
+	echo -n "Copying $PACKAGE... "
+	cp $PACKAGE.tazpkg $TMP_DIR
+	status
+	cd $TMP_DIR
+	extract_package
+	# Include temporary receipt to get the right variables.
+	. $PWD/receipt
+	# Make the installed package data dir to store
+	# the receipt and the files list.
+	mkdir -p $INSTALLED/$PACKAGE
+	cp receipt $INSTALLED/$PACKAGE
+	# Include installed receipt.
+	. $INSTALLED/$PACKAGE/receipt
+	# Copy the list of files and the description if found.
+	cp files.list $INSTALLED/$PACKAGE
+	if [ -f "description.txt" ]; then
+		cp description.txt $INSTALLED/$PACKAGE
+	fi
+	if [ `cat $INSTALLED/$PACKAGE/receipt | grep pre_install` ]; then
+		# Execute post install commands.
+		pre_install
+	fi
+	echo -n "Installing $PACKAGE... "
+	cp -a fs/* /
+	status
+	# Remove the temporary random directory.
+	echo -n "Removing all tmp files... "
+	cd .. && rm -rf $TMP_DIR
+	status
+	if [ `cat $INSTALLED/$PACKAGE/receipt | grep post_install` ]; then
+		# Execute post install commands.
+		post_install
+	fi
+	cd $TOP_DIR
+	echo "================================================================================"
+	echo "$PACKAGE ($VERSION) is installed."
+	echo ""
+}
+
+# Check for missing deps listed in a receipt packages.
+check_for_deps()
+{
+	for i in $DEPENDS
+	do
+		if [ ! -d "$INSTALLED/$i" ]; then
+			MISSING_PACKAGE=$i
+			deps=$(($deps+1))
+		fi
+	done
+	if [ ! "$MISSING_PACKAGE" = "" ]; then
+		echo -e "\033[1mTracking dependencies for :\033[0m $PACKAGE"
+		echo "================================================================================"
+		for i in $DEPENDS
+		do
+			if [ ! -d "$INSTALLED/$i" ]; then
+				MISSING_PACKAGE=$i
+				echo "Missing : $MISSING_PACKAGE"
+			fi
+		done
+		echo "================================================================================"
+		echo "$deps missing package(s) to install."
+	fi
+}
+
+# Install all missing deps. First ask user then install all missing deps
+# from local dir, cdrom, media or from the mirror. In case we want to
+# install packages from local, we need a packages.list to find the version.
+install_deps()
+{
+	echo ""
+	echo -n "Install all missing dependencies(y/N) ? "; read anser
+	if [ "$anser" = "y" ]; then
+		for pkg in $DEPENDS
+		do
+			if [ ! -d "$INSTALLED/$pkg" ]; then
+				# We can install packages from a local dir by greping
+				# the TAZPKG_BASENAME in the local packages.list.
+				if [ -f "$TOP_DIR/packages.list" ]; then
+					echo "Checking if $pkg exist in local list... "
+					TAZPKG_BASENAME=`grep -e ^$pkg-[0-9] $TOP_DIR/packages.list`
+					if [ -f "$TAZPKG_BASENAME.tazpkg" ]; then
+						tazpkg install $TAZPKG_BASENAME.tazpkg
+					fi
+				# Install deps from the mirror.
+				else
+					if [ ! -f "$LOCALSTATE/packages.list" ]; then
+						tazpkg recharge
+					fi
+					tazpkg get-install $pkg
+				fi
+			fi
+		done
+	else
+		echo -e "\nLeaving dependencies for $PACKAGE unsolved."
+		echo -e "The package is installed but will probably not work.\n"
+	fi
+}
+
+# Sed package version temp file.  we need 123 not 1.2.3 to use -gt. Few
+# pacakges also use letters, so a is 1, b is 2, c is 3, etc.
+#
+sed_tmpfile()
+{
+	sed -i s/"$PACKAGE-"/''/ $tmpfile
+	sed -i s/'\.'//g $tmpfile
+	sed -i s/'-'//g $tmpfile
+	sed -i s/'pre'// $tmpfile
+	sed -i s/'a'/'1'/ $tmpfile
+	sed -i s/'b'/'2'/ $tmpfile
+	sed -i s/'c'/'3'/ $tmpfile
+	sed -i s/'d'/'4'/ $tmpfile
+	sed -i s/'e'/'5'/ $tmpfile
+}
+
+###################
+# Tazpkg commands #
+###################
+
+case "$COMMAND" in
+	list)
+		# List all installed packages or a specific category.
+		#
+		if [ "$2" = "category" ]; then
+			echo -e "\033[1m\nPackages categories :\033[0m $CATEGORIES\n"
+			exit 0
+		fi
+		# Check for an asked category.
+		if [ -n "$2" ]; then
+			ASKED_CATEGORY=$2
+			echo ""
+			echo -e "\033[1mInstalled packages of category :\033[0m $ASKED_CATEGORY"
+			echo "================================================================================"
+			for pkg in $INSTALLED/*
+			do
+				. $pkg/receipt
+				if [ "$CATEGORY" == "$ASKED_CATEGORY" ]; then
+					echo -n "$PACKAGE"
+					echo -e "\033[24G $VERSION"
+					packages=$(($packages+1))
+				fi
+			done
+			echo "================================================================================"
+			echo -e "$packages packages installed of category $ASKED_CATEGORY."
+			echo ""
+		else
+			# By default list all packages and version.
+			echo ""
+			echo -e "\033[1mList of all installed packages\033[0m"
+			echo "================================================================================"
+			for pkg in $INSTALLED/*
+			do
+				. $pkg/receipt
+				echo -n "$PACKAGE"
+				echo -en "\033[24G $VERSION"
+				echo -e "\033[42G $CATEGORY"
+				packages=$(($packages+1))
+			done
+			echo "================================================================================"
+			echo "$packages packages installed."
+			echo ""
+		fi
+		;;
+	list-mirror)
+		# List all available packages on the mirror. Option --diff display
+		# last mirrored packages diff (see recharge).
+		check_for_packages_list
+		if [ "$2" = "--diff" ]; then
+			if [ -f "$LOCALSTATE/packages.diff" ]; then
+				echo ""
+				echo -e "\033[1mMirrored packages diff\033[0m"
+				echo "================================================================================"
+				cat $LOCALSTATE/packages.diff
+				echo "================================================================================"
+				pkgs=`cat $LOCALSTATE/packages.diff | wc -l`
+				echo "$pkgs new packages listed on the mirror."
+				echo ""
+			else
+				 echo -e "\nUnable to list anything, no packages.diff found."
+				 echo -e "Recharge your current list to creat a first diff.\n"
+			fi	
+		else
+			echo ""
+			echo -e "\033[1mList of available packages on the mirror\033[0m"
+			echo "================================================================================"
+			cat $LOCALSTATE/packages.list
+			echo "================================================================================"
+			pkgs=`cat $LOCALSTATE/packages.list | wc -l`
+			echo "$pkgs packages in the last recharged list."
+			echo ""
+		fi
+		;;
+	list-files)
+		# List files installed with the package.
+		#
+		check_for_package_on_cmdline
+		check_for_receipt
+		echo ""
+		echo -e "\033[1mInstalled files with :\033[0m $PACKAGE"
+		echo "================================================================================"
+		cat $INSTALLED/$PACKAGE/files.list | sort
+		echo "================================================================================"
+		files=`cat $INSTALLED/$PACKAGE/files.list | wc -l`
+		echo "$files files installed with $PACKAGE."
+		echo ""
+		;;
+	info)
+		# Informations about package.
+		#
+		check_for_package_on_cmdline
+		check_for_receipt
+		. $INSTALLED/$PACKAGE/receipt
+		echo ""
+		echo -e "\033[1mTazpkg informations\033[0m
+================================================================================
+Package    : $PACKAGE
+Version    : $VERSION
+Category   : $CATEGORY
+Short desc : $SHORT_DESC
+Maintainer : $MAINTAINER"
+		if [ ! "$DEPENDS" = "" ]; then
+			echo -e "Depends    : $DEPENDS"
+		fi
+		if [ ! "$WANTED" = "" ]; then
+			echo -e "Wanted src : $WANTED"
+		fi
+		if [ ! "$WEB_SITE" = "" ]; then
+			echo -e "Web site   : $WEB_SITE"
+		fi
+		echo "================================================================================"
+		echo ""
+		;;
+	desc)
+		# Display package description.txt if available.
+		if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
+			echo ""
+			echo -e "\033[1mDescription of :\033[0m $PACKAGE"
+			echo "================================================================================"
+			cat $INSTALLED/$PACKAGE/description.txt
+			echo "================================================================================"
+			echo ""
+		else
+			echo -e "\nSorry, no description available for this package.\n"
+		fi
+		;;
+	search)
+		# Search for a package by pattern or name.
+		#
+		if [ -z "$2" ]; then
+			echo -e "\nPlease specify a pattern or a package name to search."
+			echo -e "Example : 'tazpkg search paint'. \n"
+			exit 0
+		fi
+		echo ""
+		echo -e "\033[1mSearch result for :\033[0m $2"
+		echo ""
+		echo "Installed packages"
+		echo "================================================================================"
+		list=`ls -1 $INSTALLED | grep $2`
+		for pkg in $list
+		do
+			. $INSTALLED/$pkg/receipt
+			echo -n "$PACKAGE "
+			echo -en "\033[24G $VERSION"
+			echo -e "\033[42G $CATEGORY"
+			packages=$(($packages+1))
+		done
+		if [ "$packages" = "" ]; then
+			echo "0 installed packages found for : $2"
+			echo ""
+		else
+			echo "================================================================================"
+			echo "$packages installed packages found for : $2"
+			echo ""
+		fi
+		echo "Available packages"
+		echo "================================================================================"
+		if [ -f "$LOCALSTATE/packages.list" ]; then
+			cat $LOCALSTATE/packages.list | grep $2
+		else
+			echo -e "
+No 'packages.list' found to check for mirrored packages. For more results,
+please run once 'tazpkg recharge' as root before searching.\n"
+		fi
+		echo "================================================================================"
+		packages=`cat $LOCALSTATE/packages.list | grep $2 | wc -l`
+		echo "$packages avalaible on the mirror."
+		echo ""
+		;;
+	install)
+		# Install .tazpkg packages.
+		#
+		check_root
+		check_for_package_on_cmdline
+		check_for_package_file
+		# Check if forced install.
+		if [ "$3" = "--forced" ]; then
+			continue
+		else
+			check_for_installed_package
+		fi
+		install_package
+		# Resolv package deps.
+		check_for_deps
+		if [ ! "$MISSING_PACKAGE" = "" ]; then
+			install_deps
+		fi
+		;;
+	install-list)
+		# Install a set of packages from a list.
+		#
+		check_root
+		if [ -z "$2" ]; then
+			echo -e "
+Please change directory (cd) to the packages repository, and specify the
+list of packages to install. Example : tazpkg install-list packages.list\n"
+			exit 0
+		fi
+		# Check if the packages list exist.
+		if [ ! -f "$2" ]; then
+			echo "Unable to find : $2"
+			exit 0
+		else
+			LIST=`cat $2`
+		fi
+		# Install all packages.
+		for pkg in $LIST
+		do
+			if [ "$3" = "--forced" ]; then
+				tazpkg install $pkg --forced
+			else
+				tazpkg install $pkg
+			fi
+		done
+		;;
+	remove)
+		# Remove packages.
+		#
+		check_root
+		check_for_package_on_cmdline
+		if [ ! -d "$INSTALLED/$PACKAGE" ]; then
+			echo -e "\n$PACKAGE is not installed.\n"
+			exit 0
+		else
+			. $INSTALLED/$PACKAGE/receipt
+		fi
+		echo ""
+		echo "Remove $PACKAGE ($VERSION) ?"
+		echo -n "Please confirm uninstallation (y/N) : "; read anser
+		if [ "$anser" = "y" ]; then
+			echo ""
+			echo -e "\033[1mRemoving :\033[0m $PACKAGE"
+			echo "================================================================================"
+			echo -n "Removing all files installed..."
+			for file in `cat $INSTALLED/$PACKAGE/files.list`
+			do
+				rm -f $file
+			done
+			status
+			# Remove package receipt.
+			echo -n "Removing package receipt..."
+			rm -rf $INSTALLED/$PACKAGE
+			status
+		else
+			echo ""
+			echo "Uninstallation of $PACKAGE cancelled."
+		fi
+		echo ""
+		;;
+	extract)
+		# Extract .tazpkg cpio archive into a directory.
+		#
+		check_for_package_on_cmdline
+		check_for_package_file
+		echo ""
+		echo -e "\033[1mExtracting :\033[0m $PACKAGE"
+		echo "================================================================================"
+		# If any directory destination is found on the cmdline
+		# we creat one in the current dir using the package name.
+		if [ -n "$TARGET_DIR" ]; then
+			DESTDIR=$TARGET_DIR/$PACKAGE
+		else
+			DESTDIR=$PACKAGE
+		fi
+		mkdir -p $DESTDIR
+		echo -n "Copying original package..."
+		cp $PACKAGE.tazpkg $DESTDIR
+		status
+		cd $DESTDIR
+		extract_package
+		echo "================================================================================"
+		echo "$PACKAGE is extracted to : $DESTDIR"
+		echo ""
+		;;
+	pack)
+		# Creat SliTaz package archive using cpio and gzip.
+		#
+		check_for_package_on_cmdline
+		cd $PACKAGE
+		if [ ! -f "receipt" ]; then
+			echo "Receipt is missing. Please read the documentation."
+			exit 0
+		else
+			echo ""
+			echo -e "\033[1mPacking :\033[0m $PACKAGE"
+			echo "================================================================================"
+			# Creat files.list with redirecting find outpout.
+			echo -n "Creating the list of files..." && cd fs
+			find . -type f -print > ../files.list
+			find . -type l -print >> ../files.list
+			cd .. && sed -i s/'^.'/''/ files.list
+			status
+			# Build cpio archives.
+			echo -n "Compressing the fs... "
+			find fs -print | cpio -o -H newc > fs.cpio
+			gzip fs.cpio && rm -rf fs
+			echo -n "Creating full cpio archive... "
+			find . -print | cpio -o -H newc > ../$PACKAGE.tazpkg
+			echo -n "Restoring original package tree... "
+			gzip -d fs.cpio.gz && cpio -id < fs.cpio
+			rm fs.cpio && cd ..
+			echo "================================================================================"
+			echo "Package $PACKAGE compressed succefully."
+			echo "Size : `du -sh $PACKAGE.tazpkg`"
+			echo ""
+		fi
+		;;
+	recharge)
+		# Recharge packages.list from a mirror.
+		#
+		check_root
+		cd $LOCALSTATE
+		echo ""
+		if [ -f "$LOCALSTATE/packages.list" ]; then
+			echo -n "Creating backup of the last packages list..."
+			mv -f packages.list packages.list.bak
+			status
+		fi
+		wget `cat $MIRROR`/packages.list
+		if [ -f "$LOCALSTATE/packages.list.bak" ]; then
+			diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
+			sed -i s/+// packages.diff
+			echo ""
+			echo -e "\033[1mMirrored packages diff\033[0m"
+			echo "================================================================================"
+			cat packages.diff
+			if [ ! "`cat packages.diff | wc -l`" = 0 ]; then
+				echo "================================================================================"
+				echo "`cat packages.diff | wc -l` new packages on the mirror."
+				echo ""
+			else
+				echo "`cat packages.diff | wc -l` new packages on the mirror."
+				echo ""
+			fi
+		else
+			echo -e "
+================================================================================
+Last packages.list is ready to use. Note that next time you recharge the list,
+a list of differencies will be displayed to show new and upgradable packages.\n"
+		fi
+		;;
+	upgrade)
+		# Upgrade all installed packages with the new version from the mirror.
+		#
+		check_root
+		check_for_packages_list
+		cd $LOCALSTATE
+		rm -f upradable-packages.list
+		echo ""
+		echo -e "\033[1mAvalaible upgrade\033[0m"
+		echo "================================================================================"
+		for pkg in $INSTALLED/*
+		do
+			. $pkg/receipt
+			# We need a temp file to sed the package version.
+			tmpfile=/tmp/pkg.version
+			# Check if the installed package is in the current list (other
+			# mirror or local).
+			if grep -q "^$PACKAGE-[0-9]" packages.list; then
+				newpkg=`grep ^$PACKAGE-[0-9] packages.list`
+				# Get last and current version without points using 
+				# function sed_tmpfile().
+				echo $newpkg > $tmpfile
+				sed_tmpfile
+				NEW_VERSION=`cat $tmpfile`
+				echo $VERSION > $tmpfile
+				sed_tmpfile
+				CURRENT_VERSION=`cat $tmpfile`
+				# Compare version.
+				if [ "$NEW_VERSION" -gt "$CURRENT_VERSION" ]; then
+					echo $newpkg > $tmpfile
+					sed -i s/"$PACKAGE-"/''/ $tmpfile
+					newversion=`cat $tmpfile`
+					rm -f $tmpfile
+					echo -n "$PACKAGE"
+					echo -en "\033[24G $VERSION"
+					echo -en "\033[38G --->"
+					echo -en "\033[48G $newversion"
+					echo -e "\033[68G $CATEGORY"
+					up=$(($up+1))
+					echo "$PACKAGE" >> upradable-packages.list
+				fi
+				packages=$(($packages+1))
+			fi	
+		done
+		rm -f $tmpfile
+		if [ ! "$up" = "" ]; then
+			echo "================================================================================"
+			echo "$packages installed and listed packages to consider, $up to upgrade."
+			echo ""
+		else
+			echo "$packages installed and listed packages to consider, 0 to upgrade."
+			echo ""
+			exit 0
+		fi
+		# Ask for upgrade, it can be done an other time.
+		echo -n "Upgrade now (y/N) ? "; read anser
+		if [ ! "$anser" = "y" ]; then
+			echo -e "\nExiting. No package upgraded.\n"
+			exit 0
+		fi
+		# If anser is yes (y). Install all new version.
+		for pkg in `cat upradable-packages.list`
+		do
+			tazpkg get-install $pkg --forced
+		done
+		;;
+	get)
+		# Downlowd a package with wget.
+		#
+		check_for_package_on_cmdline
+		check_for_packages_list
+		check_for_package_in_list
+		echo ""
+		wget `cat $MIRROR`/$PACKAGE.tazpkg
+		echo ""
+		;;
+	get-install)
+		# Download and install a package.
+		#
+		check_root
+		check_for_package_on_cmdline
+		check_for_packages_list
+		check_for_package_in_list
+		# Check if forced install.
+		if [ "$3" = "--forced" ]; then
+			rm -f $CACHE_DIR/$PACKAGE.tazpkg
+		else
+			check_for_installed_package
+		fi
+		cd $CACHE_DIR
+		if [ -f "$PACKAGE.tazpkg" ]; then
+			echo "$PACKAGE already in the cache : $CACHE_DIR"
+		else
+			echo ""
+			wget `cat $MIRROR`/$PACKAGE.tazpkg
+		fi
+		install_package
+		check_for_deps
+		if [ ! "$MISSING_PACKAGE" = "" ]; then
+			install_deps
+		fi
+		;;
+	clean-cache)
+		# Remove all downloaded packages.
+		#
+		check_root
+		files=`ls -1 $CACHE_DIR | wc -l`
+		echo ""
+		echo -e "\033[1mCleaning cache directory :\033[0m $CACHE_DIR"
+		echo "================================================================================"
+		rm -rf $CACHE_DIR/*
+		echo "$files file(s) removed from cache."
+		echo ""
+		;;
+	setup-mirror)
+		# Change mirror URL.
+		#
+		check_root
+		# Backup old list.
+		if [ -f "$LOCALSTATE/mirror" ]; then
+			mv -f $LOCALSTATE/mirror $LOCALSTATE/mirror.bak
+		fi
+		echo ""
+		echo -e "\033[1mCurrent mirror\033[0m"
+		echo "================================================================================"
+		echo "  `cat $MIRROR`"
+		echo "
+Please enter URL of the new mirror (http or ftp). You must specify the complet
+address to the directory of the packages and packages.list file."
+		echo ""
+		echo -n "New mirror URL : "
+		read NEW_MIRROR_URL
+		if [ "$NEW_MIRROR_URL" = "" ]; then
+			echo "Nothing as been change."
+		else
+			echo "Setting mirror to : $NEW_MIRROR_URL"
+			echo "$NEW_MIRROR_URL" > $LOCALSTATE/mirror
+		fi
+		echo ""
+		;;
+	usage|*)
+		# Print a short help or give usage for an unknow or empty command.
+		#
+		usage
+		;;
+esac
+
+exit 0
