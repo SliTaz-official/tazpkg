@@ -10,7 +10,7 @@
 # (C) 2007 SliTaz - GNU General Public License v3.
 # Author : <pankso@slitaz.org>
 #
-VERSION=1.3
+VERSION=1.4pre
 
 ####################
 # Script variables #
@@ -22,7 +22,8 @@ CATEGORIES="base-system base-apps x-window extra"
 # Initialize some variables to use words
 # rater than numbers for functions and actions.
 COMMAND=$1
-PACKAGE=${2%.tazpkg}
+PACKAGE=$(basename ${2%.tazpkg})
+PACKAGE_FILE=$2
 TARGET_DIR=$3
 TOP_DIR=`pwd`
 TMP_DIR=/tmp/tazpkg-$$-$RANDOM
@@ -111,13 +112,12 @@ check_for_package_on_cmdline()
 	fi
 }
 
-# Check if the package (*.tazpkg) is in current dir.
+# Check if the package (*.tazpkg) exist before installing or extracting.
 check_for_package_file()
 {
-	if [ ! -f "$TOP_DIR/$PACKAGE.tazpkg" ]; then
+	if [ ! -f "$PACKAGE_FILE" ]; then
 		echo -e "
-Unable to find : $TOP_DIR/$PACKAGE.tazpkg
-You must be in the package directory to install, extract or pack.\n"
+Unable to find : $PACKAGE_FILE\n"
 		exit 0
 	fi
 }
@@ -184,7 +184,7 @@ install_package()
 	echo -e "\033[1mInstallation of :\033[0m $PACKAGE"
 	echo "================================================================================"
 	echo -n "Copying $PACKAGE... "
-	cp $PACKAGE.tazpkg $TMP_DIR
+	cp $PACKAGE_FILE $TMP_DIR
 	status
 	cd $TMP_DIR
 	extract_package
@@ -568,7 +568,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		fi
 		mkdir -p $DESTDIR
 		echo -n "Copying original package..."
-		cp $PACKAGE.tazpkg $DESTDIR
+		cp $PACKAGE_FILE $DESTDIR
 		status
 		cd $DESTDIR
 		extract_package
