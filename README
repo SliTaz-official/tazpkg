@@ -1,0 +1,51 @@
+README for Tazpkg -  Tiny autonomus packages manager                       2007
+===============================================================================
+
+
+Tazpkg est un gestionnaire de paquets ultra légé (~25 Ko) permettant 
+d'installer, lister, télécharger, enlever des paquets sur un système 
+GNU/Linux. Tazpkg propose aussi une commande de recherche, pour générer une
+liste et des commandes pour la création de paquets. Il a été créé pour les
+besoins de SliTaz GNU/Linux, mini distribution autonome. Le format des paquets
+utilisent l'extension *.tazpkg, c'est une archive cpio contenant un système de
+fichiers (fs) compressés avec gzip, la recette et une éventuelle description.
+Tazpkg fournit aussi un système de gestion des dépendances basé sur les
+recettes des paquets. La recette contient toutes les informations au sujet du
+paquet, elle peu aussi contenir les fonctions de pre et post installation.
+Cette même recette est par ailleur utilisée par Tazwok pour compiler les
+sources et créer un paquet tazpkg.
+
+Tazpkg est écript en script shell depuis rien (from scratch), compatible
+Bash, et fonctionnant avec Ash du projet Busybox. Tazpkg est distribué
+sous license libre GNU gpl v3.
+
+
+Contenu de l'archive source
+---------------------------
+
+ * tazpkg : c'est le script du gestionnaire de paquet, c'est le seul fichier
+   à installer, mise à part la documentation optionnelle.
+ * doc/ : La documentation contenant le manuel au format xHTML.
+ * Les fichiers AUTHORS, ChangeLog, COPYING, gpl.txt et ce README.
+
+
+TESTING
+-------
+
+ $ cd into/tazpkg-sources
+ Test it :
+ $ ./tazpkg usage
+
+
+INSTALL
+-------
+
+ # cd into/tazpkg-sources
+ # make install
+ 
+Uninstall :
+ # make uninstall
+
+
+===============================================================================
+                                                         http://www.slitaz.org/
