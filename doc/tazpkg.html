@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<head>
+	<title>Tazpkg Manual - Manuel du gestionnaire de paquets 'tazpkg'</title>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<meta name="description" content="tazpkg manuel utilisation documentation description commandes" />
+	<meta name="expires" content="never" />
+	<meta name="modified" content="2007-10-29 13:52:42" />
+	<style type="text/css"><!--
+	body { font: 90% sans-serif, vernada, arial; margin: 0; }
+	#header { background: #BFB06B; color: black; height: 50px;
+		border-top: 1px solid black; border-bottom: 1px solid black; }
+	#content { margin: 0px 50px 26px 50px; }
+	h1 { margin: 14px 0px 0px 16px; }
+	li { line-height: 1.4em; }
+	pre { padding: 5px; color: black; background: #e1e0b0; }
+	pre.script { padding: 10px; color: black; background: #e8e8e8;
+		border: 1px inset #333333; }
+	code { font-size: 100%; color: #669900; background: transparent; }
+	hr { color: white; background: white; height: 1px; border: 0; }
+	--></style>
+</head>
+<body bgcolor="#ffffff">
+<div id="header">
+<h1><font color="#3e1220">Tazpkg Manual</font></h1>
+</div>
+<hr />
+<!-- Start content -->
+<div id="content">
+
+<h2>NOM</h2>
+<p>
+Tazpkg - Tiny autonomus zone packages manager (v1.3)
+</p>
+
+<h2>SYNTAXE</h2>
+<pre>
+ tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
+</pre>
+
+<h2>DESCRIPTION</h2>
+<p>
+Tazpkg est un gestionnaire de paquets ultra légé (~25 Ko) permettant
+d'installer, lister, télécharger, mettre à jour ou enlever des paquets
+précompilés sur un système GNU/Linux. Tazpkg propose aussi une commande de
+recherche et une commande pour la création de paquets. Il a été créé pour les
+besoins de SliTaz GNU/Linux, mini distribution autonome. Le format des paquets
+utilisent l'extension *.tazpkg, c'est une archive cpio contenant un système de
+fichiers (fs) compressés avec gzip, la recette et une éventuelle description.
+Tazpkg fournit aussi un système de gestion des dépendances basé sur les
+recettes des paquets. La recette contient toutes les informations au sujet du
+paquet, elle peu aussi contenir les fonctions de pre et post installation.
+Cette même recette est par ailleur utilisée par Tazwok pour compiler les
+sources et créer un paquet tazpkg.
+</p>
+<p>
+Tazpkg est écript en script shell depuis rien (from scratch), compatible
+Bash, et fonctionnant avec Ash du projet Busybox. Tazpkg est distribué
+sous license libre GNU gpl v3.
+</p>
+
+<h2>COMMANDES</h2>
+<h3><font color="#6c0023">list</font></h3>
+<p>
+Liste et compte les paquets installés sur le système. Cette commande permet
+d'afficher sur une colonne la liste tous les paquets installés, vous pouvez
+aussi utiliser la commande de recherche (search) pour avoir une liste en
+fonction d'un nom (exemple xorg). Cette commande vous permet aussi de lister
+les catégories et les paquets en fonction de leur catégorie :
+</p>
+<pre>
+ # tazpkg list
+ # tazpkg list category
+</pre>
+<h3><font color="#6c0023">list-mirror</font></h3>
+<p>
+Liste et compte les paquets disponnibles sur le miroir. Cette commande va
+afficher le dernier fichier packages.list rechargé depuis le miroir, si la
+liste des paquets n'existe pas, il vous sera demandé de lancer la commande
+'tazpkg recharge' en tant qu'administrateur (root) pour obtenir la liste
+des paquets disponnibles. L'option --diff est utilisés pour afficher le
+fichier des différences entre la dernière et l'actuelle liste des paquets :
+</p>
+<pre>
+ # tazpkg list-mirror
+ # tazpkg list-mirror --diff
+</pre>
+<h3><font color="#6c0023">info</font></h3>
+<p>
+Donne les informations disponibles dans la recette du paquet en question, sa
+version, sa catégorie, le mainteneur, son site Web et ses éventuelles
+dépendances (voir aussi Tazwok pour plus d'informations sur les recettes) :
+</p>
+<pre>
+ # tazpkg info busybox
+</pre>
+<h3><font color="#6c0023">desc</font></h3>
+<p>
+Description du paquet (si elle existe). Cette commande affiche le fichier
+description.txt propre à chaque paquet, la description est un simple fichier
+text ne dépassant pas le 80 caractères pour un affichage standard dans un
+terminal. Si la description du paquet n'existe pas, vous pouvez la créer et
+l'envoyer au mainteneur du paquet (quelques lignes suffisent) :
+</p>
+<pre>
+ # tazpkg desc busybox
+</pre>
+<h3><font color="#6c0023">list-files</font></h3>
+<p>
+Liste et compte les fichiers installés avec un paquet. Cette commande va
+simplement lire et classé le fichier files.list propre à chaque paquet, ce
+fichier est générer automatiquement lors de la création, il est aussi utilisé
+pour supprimer tous les fichiers lors de la désinstallation d'un paquet. Pour
+lister les fichier installés avec le paquet bc :
+</p>
+<pre>
+ # tazpkg list-files bc
+</pre>
+<h3><font color="#6c0023">search</font></h3>
+<p>
+Recherche de paquets par patron ou nom de paquet. La commande de rechercher
+va chercher le terme voulu dans les paquets installés et dans la liste des
+paquets disponnibles sur le miroir. Pour obtenir la plus récente liste des
+paquets installable depuis internet, il suffit de lancer 'tazpkg recharge'
+avant d'effectuer une recherche :
+</p>
+<pre>
+ # tazpkg search gcc
+</pre>
+<h3><font color="#6c0023">install</font></h3>
+<p>
+Installation d'un paquet local avec l'extension .tazpkg. Voir la commande
+'get-install' pour installer un paquet depuis internet. Pour installer un
+paquet local il est conseillé de ce placer préalablement dans le répertoire
+contenant le paquet en question, puis de lancer 'tazpkg' avec la commande
+'install' suivit du nom de 'paquet.tazpkg'. A noter que vous pouvez forcer
+l'installalation via l'option --forced :
+</p>
+<pre>
+ # tazpkg install package-1.0.tazpkg
+ # tazpkg install package-1.0.tazpkg --forced
+</pre>
+<h3><font color="#6c0023">install-list</font></h3>
+<p>
+Installation d'un set de paquets listés dans un fichier. Cette commande
+permet d'installer plusieurs paquets en une seule commande et peut aussi être
+forcée :
+</p>
+<pre>
+ # tazpkg install-list my-packages.list
+ # tazpkg install-list my-packages.list --forced
+</pre>
+<h3><font color="#6c0023">remove</font></h3>
+<p>
+Désinstallation d'un paquet, il vous sera demandé confirmation (y/N). Cette
+commande va supprimer tous les fichiers installés avec le paquet, pour
+afficher cette liste, vous pouvez utiliser la commande 'list-files' de Tazpkg
+suivit du nom du paquet en question. Exemple avec le paquet bc :
+</p>
+<pre>
+ # tazpkg remove bc
+</pre>
+<h3><font color="#6c0023">extract</font></h3>
+<p>
+Extraire un paquet dans un répertoire donné. Si vous ne spécifié pas le
+répertoire de destination, le paquet sera extrait dans le répertoire courant
+en utilisant le nom paquet-version :
+</p>
+<pre>
+ # tazpkg extract package.tazpkg
+ # tazpkg extract package.tazpkg target/dir
+</pre>
+<h3><font color="#6c0023">pack</font></h3>
+<p>
+La commande 'pack' permet de créer un paquet depuis un répertoire préparé à
+l'avance ou depuis un paquet désarchivé. Cette commande permet aussi de créer
+manuellement un paquet.tazpkg (voir la documentation et Tazwok pour la création
+automatique de paquets). Pour empaqueter un paquet :
+</p>
+<pre>
+ # tazpkg pack package-version
+</pre>
+<h3><font color="#6c0023">recharge</font></h3>
+<p>
+Recharge la liste des paquets disponibles sur le miroir (packages.list). Cette
+commande va télécharger la plus récente liste des paquets installables depuis
+le miroir, à noter qu'avant de commencer, Tazpkg va sauvegarder l'ancienne
+liste. Une fois la liste à jour, vous pouvez la consulter via la commande
+'list' et effectuer un recherche de paquet via la commande 'search' de Tazpkg.
+Pour réafficher la liste des différences, vous pouvez utiliser la commande
+'list-mirror --diff'. Et pour afficher et mettre à jour les paquets du système,
+vous pouvez utiliser 'upgrade'. Pour recharger la plus récente liste des
+paquets :
+</p>
+<pre>
+ # tazpkg recharge
+</pre>
+<h3><font color="#6c0023">upgrade</font></h3>
+<p>
+La commande 'upgrade' permet de mettre à jour tous les paquets installée et
+disponibles sur le miroir courant. La mise à jour des paquets est une
+importante partie du système, elle permet de garder un système sécurisé avec
+les dernières corrections et nouveautés. Le projet SliTaz, même mini, fournit
+régulièrement des mises à jours de sécurité et propose généralement les
+dernières version des logiciles. A noter que cette fonction est destinée aux
+personne ayant installé SliTaz sur disque dur, en mode LiveCD les paquets mis
+à jours seront perdu lors de l'arrêt du système. Pour garder un système un
+jour :
+</p>
+<pre>
+ # tazpkg upgarde
+</pre>
+<h3><font color="#6c0023">get</font></h3>
+<p>
+Télécharger un paquet depuis le miroir (si il existe). Le paquet téléchargé
+est stocké dans le répertoire courant, pour connaître le chemin vous pouvez
+utiliser la commande 'pwd'. Pour télécharger un paquet tel que 'grub', il
+de lancer la commande :
+</p>
+<pre>
+ # tazpkg get grub
+</pre>
+<h3><font color="#6c0023">get-install</font></h3>
+<p>
+Installer un paquet depuis un mirroir sur internet. La commande 'get-install'
+commence par vérifier si le paquet existe bien sur le miroir et si il n'a pas
+déjà été téléchargé, avant de commencer le rapatriement. Pour connaître la
+liste des paquets sur le miroir il faut utiliser la commande 'list-mirroir'
+(voir aussi recharge). Pour installer un paquet tel que 'grub' :
+</p>
+<pre>
+ # tazpkg get-install grub
+</pre>
+<h3><font color="#6c0023">clean-cache</font></h3>
+<p>
+Supprimer les paquets Tazpkg téléchargés dans le cache. Lors de l'installation
+de paquets via le Web, Tazpkg garde une copie du paquet, cela est fait pour
+ganger de la bande passante en cas de réinstallation, mais il se peut que vous
+vouliez libérer de la place sur le disque dur ou que vous désiriez
+retélécharger des paquets :
+</p>
+<pre>
+ # tazpkg clean-cache
+</pre>
+<h3><font color="#6c0023">setup-mirror</font></h3>
+<p>
+Configurer l'URL du miroir, la commande 'setup-mirror' vous demandera alors
+l'URL du nouveau miroir. A noter que vous pouvez aussi modifier à la main le
+fichier /var/lib/tazpkg/mirror. L'URL doit pointer sur le répertoire contenant
+la liste (packages.list) et les paquets :
+</p>
+<pre>
+ # tazpkg setup-mirror
+</pre>
+
+<h2>MAINTENEUR</h2>
+<p>
+Christophe Lincoln &lt;pankso at slitaz.org&gt;
+</p>
+
+</div>
+<!-- End content -->
+</body>
+</html>
