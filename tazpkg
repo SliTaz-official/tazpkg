@@ -8,7 +8,7 @@
 # also relolv dependencies and can upgrade packages from a mirror.
 #
 # (C) 2007 SliTaz - GNU General Public License v3.
-# Author : <pankso@slitaz.org>
+# Initial author : <pankso@slitaz.org>
 #
 VERSION=1.4pre
 
@@ -17,12 +17,18 @@ VERSION=1.4pre
 ####################
 
 # Packages categories.
-CATEGORIES="base-system base-apps x-window extra"
+CATEGORIES="base-system base-apps x-window extra devel"
 
 # Initialize some variables to use words
 # rater than numbers for functions and actions.
 COMMAND=$1
-PACKAGE=$(basename ${2%.tazpkg})
+if [ -f $2 ]; then
+	# Set pkg basename for install, extract
+	PACKAGE=$(basename ${2%.tazpkg} 2>/dev/null)
+else
+	# Pkg name for remove, search and all other cmds
+	PACKAGE=${2%.tazpkg}
+fi
 PACKAGE_FILE=$2
 TARGET_DIR=$3
 TOP_DIR=`pwd`
@@ -34,7 +40,10 @@ INSTALLED=$LOCALSTATE/installed
 CACHE_DIR=/var/cache/tazpkg
 MIRROR=$LOCALSTATE/mirror
 PACKAGES_LIST=$LOCALSTATE/packages.list
+BLOCKED=$LOCALSTATE/blocked-packages.list
 
+# Bold red warnig for upgrade.
+WARNING="\\033[1;31mWARNING\\033[0;39m"
 
 # Check if the directories and files used by Tazpkg
 # exists. If not and user is root we creat them.
@@ -74,10 +83,11 @@ usage ()
   pack          Pack an unpacked or prepared package tree.
   recharge      Recharge your packages.list from the mirror.
   upgrade       Upgrade all installed and listed packages on the mirror.
+  block|unblock Block an installed package version or unblock it for upgrade.
   get           Download a package into the current directory.
   get-install   Download and install a package from the mirror.
   clean-cache   Clean all packages downloaded in cache directory.
-  setup-mirror  Change the mirror url configuration.\n"
+  setup-mirror  Change the mirror url configuration."
 }
 
 # Status function with color (supported by Ash).
@@ -253,7 +263,7 @@ check_for_deps()
 install_deps()
 {
 	echo ""
-	echo -n "Install all missing dependencies(y/N) ? "; read anser
+	echo -n "Install all missing dependencies (y/N) ? "; read anser
 	if [ "$anser" = "y" ]; then
 		for pkg in $DEPENDS
 		do
@@ -279,22 +289,6 @@ install_deps()
 		echo -e "\nLeaving dependencies for $PACKAGE unsolved."
 		echo -e "The package is installed but will probably not work.\n"
 	fi
-}
-
-# Sed package version temp file.  we need 123 not 1.2.3 to use -gt. Few
-# pacakges also use letters, so a is 1, b is 2, c is 3, etc.
-#
-sed_tmpfile()
-{
-	sed -i s/"$PACKAGE-"/''/ $tmpfile
-	sed -i s/'\.'//g $tmpfile
-	sed -i s/'-'//g $tmpfile
-	sed -i s/'pre'// $tmpfile
-	sed -i s/'a'/'1'/ $tmpfile
-	sed -i s/'b'/'2'/ $tmpfile
-	sed -i s/'c'/'3'/ $tmpfile
-	sed -i s/'d'/'4'/ $tmpfile
-	sed -i s/'e'/'5'/ $tmpfile
 }
 
 ###################
@@ -649,6 +643,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		check_root
 		check_for_packages_list
 		cd $LOCALSTATE
+		# Touch the blocked pkgs list to avoid errors and remove any old
+		# upgrade list.
+		touch blocked-packages.list
 		rm -f upradable-packages.list
 		echo ""
 		echo -e "\033[1mAvalaible upgrade\033[0m"
@@ -656,46 +653,75 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		for pkg in $INSTALLED/*
 		do
 			. $pkg/receipt
-			# We need a temp file to sed the package version.
-			tmpfile=/tmp/pkg.version
-			# Check if the installed package is in the current list (other
-			# mirror or local).
-			if grep -q "^$PACKAGE-[0-9]" packages.list; then
-				newpkg=`grep ^$PACKAGE-[0-9] packages.list`
-				# Get last and current version without points using 
-				# function sed_tmpfile().
-				echo $newpkg > $tmpfile
-				sed_tmpfile
-				NEW_VERSION=`cat $tmpfile`
-				echo $VERSION > $tmpfile
-				sed_tmpfile
-				CURRENT_VERSION=`cat $tmpfile`
-				# Compare version.
-				if [ "$NEW_VERSION" -gt "$CURRENT_VERSION" ]; then
-					echo $newpkg > $tmpfile
-					sed -i s/"$PACKAGE-"/''/ $tmpfile
-					newversion=`cat $tmpfile`
-					rm -f $tmpfile
-					echo -n "$PACKAGE"
-					echo -en "\033[24G $VERSION"
-					echo -en "\033[38G --->"
-					echo -en "\033[48G $newversion"
-					echo -e "\033[68G $CATEGORY"
-					up=$(($up+1))
-					echo "$PACKAGE" >> upradable-packages.list
+			# Skip specified pkgs listed in $LOCALSTATE/blocked-packages.list
+			if grep -q "^$PACKAGE" $BLOCKED; then
+				blocked=$(($blocked+1))
+			else
+				# Check if the installed package is in the current list (other
+				# mirror or local).
+				if grep -q "^$PACKAGE-[0-9]" packages.list; then
+					# Set new kg and version for futur comparaison
+					NEW_PACKAGE=`grep ^$PACKAGE-[0-9] packages.list`
+					NEW_VERSION=`echo $NEW_PACKAGE | sed s/$PACKAGE-/''/`
+					# Compare version. Upgrade are only avalaible for official
+					# packages, so we control de mirror and it should be ok if
+					# we just check for egality.
+					if [ "$VERSION" != "$NEW_VERSION" ]; then
+						# Version seems different. Check for major, minor or 
+						# revision
+						PKG_MAJOR=`echo $VERSION | cut -f1 -d"."`
+						NEW_MAJOR=`echo $NEW_VERSION | cut -f1 -d"."`
+						PKG_MINOR=`echo $VERSION | cut -f2 -d"."`
+						NEW_MINOR=`echo $NEW_VERSION | cut -f2 -d"."`
+						# Major
+						if [ "$NEW_MAJOR" -gt "$PKG_MAJOR" ]; then
+							RELEASE=major
+						fi
+						if [ "$NEW_MAJOR" -lt "$PKG_MAJOR" ]; then
+							RELEASE=$WARNING
+							FIXE=yes
+						fi
+						# Minor
+						if [ "$NEW_MINOR" -gt "$PKG_MINOR" ]; then
+							RELEASE=minor
+						fi
+						if [ "$NEW_MINOR" -lt "$PKG_MINOR" ]; then
+							RELEASE=$WARNING
+							FIXE=yes
+						fi
+						# Default to revision.
+						if [ -z $RELEASE ]; then
+							RELEASE=revision
+						fi
+						echo -n "$PACKAGE"
+						echo -en "\033[24G $VERSION"
+						echo -en "\033[38G --->"
+						echo -en "\033[48G $NEW_VERSION"
+						echo -en "\033[60G $CATEGORY"
+						echo -e "\033[72G $RELEASE"
+						up=$(($up+1))
+						echo "$PACKAGE" >> upradable-packages.list
+					fi
+					packages=$(($packages+1))
 				fi
-				packages=$(($packages+1))
-			fi	
+			fi
 		done
 		rm -f $tmpfile
 		if [ ! "$up" = "" ]; then
 			echo "================================================================================"
-			echo "$packages installed and listed packages to consider, $up to upgrade."
+			echo "$packages installed and listed packages to consider, $up to upgrade, $blocked blocked."
 			echo ""
 		else
-			echo "$packages installed and listed packages to consider, 0 to upgrade."
+			echo "$packages installed and listed packages to consider, 0 to upgrade, $blocked blocked."
 			echo ""
 			exit 0
+		fi
+		# What to do if major or minor version is smaller.
+		if [ "$FIXE" == "yes" ]; then
+			echo -e "$WARNING ---> Installed package seems more recent than the mirrored one."
+			echo "You can block packages using the command : 'tazpkg block package'"
+			echo "Or upgrade package at you own risks."
+			echo ""
 		fi
 		# Ask for upgrade, it can be done an other time.
 		echo -n "Upgrade now (y/N) ? "; read anser
@@ -708,6 +734,41 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		do
 			tazpkg get-install $pkg --forced
 		done
+		;;
+	block)
+		# Add a pkg name to the list of blocked packages.
+		#
+		check_root
+		check_for_package_on_cmdline
+		echo ""
+		if grep -q "^$PACKAGE" $BLOCKED; then
+			echo "$PACKAGE is already in the blocked packages list."
+			echo ""
+			exit 0
+		else
+			echo -n "Add $PACKAGE to : $BLOCKED..."
+			echo $PACKAGE >> $BLOCKED
+			status
+		fi
+		echo ""
+		;;
+	unblock)
+		# Remove a pkg name to the list of blocked packages.
+		#
+		check_root
+		check_for_package_on_cmdline
+		echo ""
+		if grep -q "^$PACKAGE" $BLOCKED; then
+			echo -n "Removing $PACKAGE from : $BLOCKED..."
+			sed -i s/$PACKAGE/''/ $BLOCKED
+			sed -i '/^$/d' $BLOCKED
+			status
+		else
+			echo "$PACKAGE is not in the blocked packages list."
+			echo ""
+			exit 0
+		fi
+		echo ""
 		;;
 	get)
 		# Downlowd a package with wget.
