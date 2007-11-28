@@ -211,6 +211,19 @@ jour :
 <pre>
  # tazpkg upgarde
 </pre>
+<h3><font color="#6c0023">block ou unblock</font></h3>
+<p>
+Les commandes 'block' et 'unblock' pemettent de blocker la version du paquet
+installé pour qu'il ne soit pas mis à jour par la commande 'upgrade'. La list
+des paquets bloqués est contenue dans le fichier : 
+/var/lib/tazpkg/blocked-packages.list, elle peut aussi être éditée à la main.
+Pour bloquer ou débloquer un paquet tel que Grub :
+</p>
+<pre>
+ # tazpkg block grub
+ Ou :
+ # tazpkg unblock grub
+</pre>
 <h3><font color="#6c0023">get</font></h3>
 <p>
 Télécharger un paquet depuis le miroir (si il existe). Le paquet téléchargé
