@@ -66,7 +66,7 @@ fi
 # Print the usage.
 usage ()
 {
-	echo -e "SliTaz packages manager - Version: $VERSION\n
+	echo -e "SliTaz packages manager - Version: $VERSION
 \033[1mUsage: \033[0m tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
 \033[1mCommands: \033[0m
   usage         Print this short usage.
@@ -76,6 +76,7 @@ usage ()
   desc          Print description of a package (if it exist).
   list-files    List of files installed with the package.
   search        Search for a package by pattern or name.
+  search-file	Search for file(s) in all installed packages files.
   install       Install a local (*.tazpkg) package (--forced to force).
   install-list  Install all packages from a list of packages.
   remove        Remove the specified package and all installed files.
@@ -443,27 +444,67 @@ Maintainer : $MAINTAINER"
 			echo -e "\033[42G $CATEGORY"
 			packages=$(($packages+1))
 		done
+		# Set correct ending messages.
 		if [ "$packages" = "" ]; then
 			echo "0 installed packages found for : $2"
 			echo ""
 		else
 			echo "================================================================================"
-			echo "$packages installed packages found for : $2"
+			echo "$packages installed package(s) found for : $2"
 			echo ""
 		fi
 		echo "Available packages"
 		echo "================================================================================"
 		if [ -f "$LOCALSTATE/packages.list" ]; then
 			cat $LOCALSTATE/packages.list | grep $2
+			packages=`cat $LOCALSTATE/packages.list | grep $2 | wc -l`
 		else
 			echo -e "
 No 'packages.list' found to check for mirrored packages. For more results,
 please run once 'tazpkg recharge' as root before searching.\n"
 		fi
-		echo "================================================================================"
-		packages=`cat $LOCALSTATE/packages.list | grep $2 | wc -l`
-		echo "$packages avalaible on the mirror."
+		if [ "$packages" = "0" ]; then
+			echo "0 available packages found for : $2"
+			echo ""
+		else
+			echo "================================================================================"
+			echo "$packages available package(s) found for : $2"
+			echo ""
+		fi
+		;;
+	search-file)
+		# Search for a file by pattern or name in all files.list.
+		#
+		if [ -z "$2" ]; then
+			echo -e "\nPlease specify a pattern or a file name to search."
+			echo -e "Example : 'tazpkg search-file libnss'. \n"
+			exit 0
+		fi
 		echo ""
+		echo -e "\033[1mSearch result for file :\033[0m $2"
+		echo "================================================================================"
+		# Check all pkg files.list in search match with specify the package
+		# name and the full path to the file(s).
+		for pkg in $INSTALLED/*
+		do
+			if grep -q $2 $pkg/files.list; then
+				. $pkg/receipt
+				echo ""
+				echo -e "\033[1mPackage $PACKAGE :\033[0m"
+				grep $2 $pkg/files.list
+				files=`grep $2 $pkg/files.list | wc -l`
+				match=$(($match+$files))
+			fi
+		done
+		if [ "$match" = "" ]; then
+			echo "0 file found for : $2"
+			echo ""
+		else
+			echo ""
+			echo "================================================================================"
+			echo "$match file(s) found for : $2"
+			echo ""
+		fi
 		;;
 	install)
 		# Install .tazpkg packages.
