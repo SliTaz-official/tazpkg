@@ -128,18 +128,27 @@ avant d'effectuer une recherche :
 <pre>
  # tazpkg search gcc
 </pre>
+<h3><font color="#6c0023">search-files</font></h3>
+<p>
+La commande 'search-file' permet de rechercher un fichier parmis tous les
+fichiers installés par tous les paquets. Cette commande est très utile pour
+trouver le chemin complet vesr un fichier et savoir si un fichier est bien
+présent sur le système. Exemple :
+</p>
+<pre>
+ $ tazpkg search-file libnss
+</pre>
 <h3><font color="#6c0023">install</font></h3>
 <p>
-Installation d'un paquet local avec l'extension .tazpkg. Voir la commande
-'get-install' pour installer un paquet depuis internet. Pour installer un
-paquet local il est conseillé de ce placer préalablement dans le répertoire
-contenant le paquet en question, puis de lancer 'tazpkg' avec la commande
-'install' suivit du nom de 'paquet.tazpkg'. A noter que vous pouvez forcer
-l'installalation via l'option --forced :
+Cette commande permet l'installation d'un paquet local avec l'extension 
+.tazpkg. Voir la commande 'get-install' pour installer un paquet depuis
+internet. A noter que vous  pouvez forcer l'installalation via l'option
+--forced ou désinstaller et réinstaller :
 </p>
 <pre>
  # tazpkg install package-1.0.tazpkg
- # tazpkg install package-1.0.tazpkg --forced
+ Ou :
+ # tazpkg install path/to/package-1.0.tazpkg --forced
 </pre>
 <h3><font color="#6c0023">install-list</font></h3>
 <p>
@@ -213,7 +222,7 @@ jour :
 </pre>
 <h3><font color="#6c0023">block ou unblock</font></h3>
 <p>
-Les commandes 'block' et 'unblock' pemettent de blocker la version du paquet
+Les commandes 'block' et 'unblock' pemettent de bloquer la version du paquet
 installé pour qu'il ne soit pas mis à jour par la commande 'upgrade'. La list
 des paquets bloqués est contenue dans le fichier : 
 /var/lib/tazpkg/blocked-packages.list, elle peut aussi être éditée à la main.

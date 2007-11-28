@@ -1,3 +1,27 @@
+2007-11-28  Christophe Lincoln  <pankso@slitaz.org>
+
+ * tazpkg : 
+   Ajout des commandes block et unblock pour bloquer des paquets et éviter
+   qu'ils se mettent à jour. Ajout de la commande search-file pour chercher
+   un fichier dans dans l'ensemble des fichiers installés par les pkgs.
+   
+ * Petite correction et documentation des nouvelles commandes, ajout de Pascal
+   dans la liste des autheurs et modification du comportement de la commande
+   upgrade (vérif de l'égalité au lieu de -gt et avertissement en cas de
+   version majeur ou mineur plus petite).
+
+
+2007-11-26  Christophe Lincoln  <pankso@slitaz.org>
+
+ * tazpkg :
+   Ajout du patch proposer par Pascal ez permettant d'installer des paquets en 
+   utilisant le chemin absolut ou relatif (plus besoin de ce placer dans le
+   répertoire du paquet pour installer).
+   
+ * doc/tazpkg.html :
+   Mise à jour du manuel et changement de la couleur du header.
+
+
 2007-11-03  Christophe Lincoln  <pankso@slitaz.org>
 
  * Release - Tazpkg 1.3
