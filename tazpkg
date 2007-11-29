@@ -10,7 +10,7 @@
 # (C) 2007 SliTaz - GNU General Public License v3.
 # Initial author : <pankso@slitaz.org>
 #
-VERSION=1.4pre
+VERSION=1.4
 
 ####################
 # Script variables #
@@ -742,6 +742,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 						echo -e "\033[72G $RELEASE"
 						up=$(($up+1))
 						echo "$PACKAGE" >> upradable-packages.list
+						unset RELEASE
 					fi
 					packages=$(($packages+1))
 				fi
@@ -841,6 +842,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			echo ""
 			wget `cat $MIRROR`/$PACKAGE.tazpkg
 		fi
+		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		install_package
 		check_for_deps
 		if [ ! "$MISSING_PACKAGE" = "" ]; then
