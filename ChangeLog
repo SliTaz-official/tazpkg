@@ -1,3 +1,11 @@
+2007-11-29  Linux User  Christophe Lincoln  <pankso@slitaz.org>
+
+ * Release - Tazpkg 1.4
+ 
+ * Modification du comportement de la commande get-install pour qu'elle trouve
+   les paquets fraîchement téléchargés (du au nouveaux noms des variables).
+
+
 2007-11-28  Christophe Lincoln  <pankso@slitaz.org>
 
  * tazpkg : 
