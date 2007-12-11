@@ -83,6 +83,7 @@ usage ()
   extract       Extract a (*.tazpkg) package into a directory.
   pack          Pack an unpacked or prepared package tree.
   recharge      Recharge your packages.list from the mirror.
+  repack        Creat a package archive from an installed package.
   upgrade       Upgrade all installed and listed packages on the mirror.
   block|unblock Block an installed package version or unblock it for upgrade.
   get           Download a package into the current directory.
@@ -619,6 +620,46 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo "$PACKAGE is extracted to : $DESTDIR"
 		echo ""
 		;;
+	repack)
+		# Creat SliTaz package archive from an installed package.
+		#
+		check_for_package_on_cmdline
+		check_for_receipt
+		eval $(grep ^VERSION= $INSTALLED/$PACKAGE/receipt)
+		echo ""
+		echo -e "\033[1mRepacking :\033[0m $PACKAGE-$VERSION.tazpkg"
+		echo "================================================================================"
+		MISSING=""
+		for i in $(sed 's,^fs,,g' < $INSTALLED/$PACKAGE/files.list); do
+			[ -e "$i" ] && continue
+			[ -L "$i" ] || MISSING="$MISSING $i"
+		done
+		if [ -n "$MISSING" ]; then
+			echo "Can't repack, the following files are lost:"
+			for i in $MISSING; do
+				echo "  $i"
+			done
+			exit 1
+		fi
+		HERE=`pwd`
+		mkdir -p $TMP_DIR
+		cd $TMP_DIR
+		cp $INSTALLED/$PACKAGE/files.list .
+		cp $INSTALLED/$PACKAGE/receipt .
+		ln -s / fs
+		sed 's,^,fs,g' < files.list | cpio -o -H newc 2> /dev/null | \
+			gzip -9 > fs.cpio.gz
+		cpio -o -H newc > $HERE/$PACKAGE-$VERSION.tazpkg 2> /dev/null <<EOT
+receipt
+files.list
+fs.cpio.gz
+EOT
+		cd $HERE
+		\rm -R $TMP_DIR
+		echo "Package $PACKAGE repacked successfully."
+		echo "Size : `du -sh $PACKAGE-$VERSION.tazpkg`"
+		echo ""
+		;;
 	pack)
 		# Creat SliTaz package archive using cpio and gzip.
 		#
@@ -647,7 +688,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			gzip -d fs.cpio.gz && cpio -id < fs.cpio
 			rm fs.cpio && cd ..
 			echo "================================================================================"
-			echo "Package $PACKAGE compressed succefully."
+			echo "Package $PACKAGE compressed successfully."
 			echo "Size : `du -sh $PACKAGE.tazpkg`"
 			echo ""
 		fi
