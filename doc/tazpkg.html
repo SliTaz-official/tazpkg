@@ -41,7 +41,7 @@ Tazpkg - Tiny autonomus zone packages manager (v1.3)
 
 <h2>DESCRIPTION</h2>
 <p>
-Tazpkg est un gestionnaire de paquets ultra légé (~25 Ko) permettant
+Tazpkg est un gestionnaire de paquets ultra léger (~25 Ko) permettant
 d'installer, lister, télécharger, mettre à jour ou enlever des paquets
 précompilés sur un système GNU/Linux. Tazpkg propose aussi une commande de
 recherche et une commande pour la création de paquets. Il a été créé pour les
@@ -79,7 +79,7 @@ Liste et compte les paquets disponnibles sur le miroir. Cette commande va
 afficher le dernier fichier packages.list rechargé depuis le miroir, si la
 liste des paquets n'existe pas, il vous sera demandé de lancer la commande
 'tazpkg recharge' en tant qu'administrateur (root) pour obtenir la liste
-des paquets disponnibles. L'option --diff est utilisés pour afficher le
+des paquets disponnibles. L'option --diff est utilisée pour afficher le
 fichier des différences entre la dernière et l'actuelle liste des paquets :
 </p>
 <pre>
@@ -109,8 +109,8 @@ l'envoyer au mainteneur du paquet (quelques lignes suffisent) :
 <h3><font color="#6c0023">list-files</font></h3>
 <p>
 Liste et compte les fichiers installés avec un paquet. Cette commande va
-simplement lire et classé le fichier files.list propre à chaque paquet, ce
-fichier est générer automatiquement lors de la création, il est aussi utilisé
+simplement lire et classer le fichier files.list propre à chaque paquet, ce
+fichier est généré automatiquement lors de la création, il est aussi utilisé
 pour supprimer tous les fichiers lors de la désinstallation d'un paquet. Pour
 lister les fichier installés avec le paquet bc :
 </p>
@@ -119,10 +119,10 @@ lister les fichier installés avec le paquet bc :
 </pre>
 <h3><font color="#6c0023">search</font></h3>
 <p>
-Recherche de paquets par patron ou nom de paquet. La commande de rechercher
+Recherche de paquets par patron ou nom de paquet. La commande 
 va chercher le terme voulu dans les paquets installés et dans la liste des
-paquets disponnibles sur le miroir. Pour obtenir la plus récente liste des
-paquets installable depuis internet, il suffit de lancer 'tazpkg recharge'
+paquets disponibles sur le miroir. Pour obtenir la plus récente liste des
+paquets installables depuis internet, il suffit de lancer 'tazpkg recharge'
 avant d'effectuer une recherche :
 </p>
 <pre>
@@ -130,9 +130,9 @@ avant d'effectuer une recherche :
 </pre>
 <h3><font color="#6c0023">search-files</font></h3>
 <p>
-La commande 'search-file' permet de rechercher un fichier parmis tous les
+La commande 'search-file' permet de rechercher un fichier parmi tous les
 fichiers installés par tous les paquets. Cette commande est très utile pour
-trouver le chemin complet vesr un fichier et savoir si un fichier est bien
+trouver le chemin complet vers un fichier et savoir si un fichier est bien
 présent sur le système. Exemple :
 </p>
 <pre>
@@ -142,7 +142,7 @@ présent sur le système. Exemple :
 <p>
 Cette commande permet l'installation d'un paquet local avec l'extension 
 .tazpkg. Voir la commande 'get-install' pour installer un paquet depuis
-internet. A noter que vous  pouvez forcer l'installalation via l'option
+internet. A noter que vous  pouvez forcer l'installation via l'option
 --forced ou désinstaller et réinstaller :
 </p>
 <pre>
@@ -172,7 +172,7 @@ suivit du nom du paquet en question. Exemple avec le paquet bc :
 </pre>
 <h3><font color="#6c0023">extract</font></h3>
 <p>
-Extraire un paquet dans un répertoire donné. Si vous ne spécifié pas le
+Extraire un paquet dans un répertoire donné. Si vous ne spécifiez pas le
 répertoire de destination, le paquet sera extrait dans le répertoire courant
 en utilisant le nom paquet-version :
 </p>
@@ -207,14 +207,14 @@ paquets :
 </pre>
 <h3><font color="#6c0023">upgrade</font></h3>
 <p>
-La commande 'upgrade' permet de mettre à jour tous les paquets installée et
+La commande 'upgrade' permet de mettre à jour tous les paquets installés et
 disponibles sur le miroir courant. La mise à jour des paquets est une
 importante partie du système, elle permet de garder un système sécurisé avec
 les dernières corrections et nouveautés. Le projet SliTaz, même mini, fournit
 régulièrement des mises à jours de sécurité et propose généralement les
-dernières version des logiciles. A noter que cette fonction est destinée aux
-personne ayant installé SliTaz sur disque dur, en mode LiveCD les paquets mis
-à jours seront perdu lors de l'arrêt du système. Pour garder un système un
+dernières versions des logiciels. A noter que cette fonction est destinée aux
+personnes ayant installé SliTaz sur disque dur, en mode LiveCD les paquets mis
+à jour seront perdu lors de l'arrêt du système. Pour garder un système un
 jour :
 </p>
 <pre>
@@ -235,7 +235,7 @@ Pour bloquer ou débloquer un paquet tel que Grub :
 </pre>
 <h3><font color="#6c0023">get</font></h3>
 <p>
-Télécharger un paquet depuis le miroir (si il existe). Le paquet téléchargé
+Télécharge un paquet depuis le miroir (si il existe). Le paquet téléchargé
 est stocké dans le répertoire courant, pour connaître le chemin vous pouvez
 utiliser la commande 'pwd'. Pour télécharger un paquet tel que 'grub', il
 de lancer la commande :
@@ -258,7 +258,7 @@ liste des paquets sur le miroir il faut utiliser la commande 'list-mirroir'
 <p>
 Supprimer les paquets Tazpkg téléchargés dans le cache. Lors de l'installation
 de paquets via le Web, Tazpkg garde une copie du paquet, cela est fait pour
-ganger de la bande passante en cas de réinstallation, mais il se peut que vous
+gagner de la bande passante en cas de réinstallation, mais il se peut que vous
 vouliez libérer de la place sur le disque dur ou que vous désiriez
 retélécharger des paquets :
 </p>
@@ -268,7 +268,8 @@ retélécharger des paquets :
 <h3><font color="#6c0023">setup-mirror</font></h3>
 <p>
 Configurer l'URL du miroir, la commande 'setup-mirror' vous demandera alors
-l'URL du nouveau miroir. A noter que vous pouvez aussi modifier à la main le
+l'URL du nouveau miroir. Vous pouvez spécifier plusieurs URLs en les séparant
+par des espaces. A noter que vous pouvez aussi modifier à la main le
 fichier /var/lib/tazpkg/mirror. L'URL doit pointer sur le répertoire contenant
 la liste (packages.list) et les paquets :
 </p>

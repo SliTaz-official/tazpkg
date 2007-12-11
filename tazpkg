@@ -177,6 +177,14 @@ check_for_package_in_list()
 	fi
 }
 
+# Download a file trying all mirrors
+download()
+{
+	for i in $(cat $MIRROR); do
+		wget $i$@
+	done
+}
+
 # Extract a package with cpio and gzip.
 extract_package()
 {
@@ -655,7 +663,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			mv -f packages.list packages.list.bak
 			status
 		fi
-		wget `cat $MIRROR`/packages.list
+		download packages.list
 		if [ -f "$LOCALSTATE/packages.list.bak" ]; then
 			diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
 			sed -i s/+// packages.diff
@@ -819,7 +827,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		check_for_packages_list
 		check_for_package_in_list
 		echo ""
-		wget `cat $MIRROR`/$PACKAGE.tazpkg
+		download $PACKAGE.tazpkg
 		echo ""
 		;;
 	get-install)
@@ -840,7 +848,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			echo "$PACKAGE already in the cache : $CACHE_DIR"
 		else
 			echo ""
-			wget `cat $MIRROR`/$PACKAGE.tazpkg
+			download $PACKAGE.tazpkg
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		install_package
@@ -870,7 +878,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			mv -f $LOCALSTATE/mirror $LOCALSTATE/mirror.bak
 		fi
 		echo ""
-		echo -e "\033[1mCurrent mirror\033[0m"
+		echo -e "\033[1mCurrent mirror(s)\033[0m"
 		echo "================================================================================"
 		echo "  `cat $MIRROR`"
 		echo "
@@ -882,7 +890,7 @@ address to the directory of the packages and packages.list file."
 		if [ "$NEW_MIRROR_URL" = "" ]; then
 			echo "Nothing as been change."
 		else
-			echo "Setting mirror to : $NEW_MIRROR_URL"
+			echo "Setting mirror(s) to : $NEW_MIRROR_URL"
 			echo "$NEW_MIRROR_URL" > $LOCALSTATE/mirror
 		fi
 		echo ""
