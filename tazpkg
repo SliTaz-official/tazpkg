@@ -646,9 +646,15 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		cd $TMP_DIR
 		cp $INSTALLED/$PACKAGE/files.list .
 		cp $INSTALLED/$PACKAGE/receipt .
-		ln -s / fs
-		sed 's,^,fs,g' < files.list | cpio -o -H newc 2> /dev/null | \
-			gzip -9 > fs.cpio.gz
+		cpio -pd fs < files.list
+		. ./receipt
+		src=$TMP_DIR/nowhere
+		_pkg=$TMP_DIR/nowhere
+		fs=fs
+		# go on if errors and catch exit
+		( set +e ; genpkg_rules > /dev/null 2>&1 )
+		cd $TMP_DIR
+		find fs | cpio -o -H newc 2> /dev/null | gzip -9 > fs.cpio.gz
 		cpio -o -H newc > $HERE/$PACKAGE-$VERSION.tazpkg 2> /dev/null <<EOT
 receipt
 files.list
