@@ -103,6 +103,7 @@ status()
 		echo -en "\\033[1;31mFailed"
 	fi
 	echo -e "\\033[0;39m ]"
+	return $CHECK
 }
 
 # Check if user is root to install, or remove packages.
@@ -199,6 +200,11 @@ extract_package()
 # This function install a package in the rootfs.
 install_package()
 {
+	ROOT=$1
+	if [ -n "$ROOT" ]; then
+		 # get absolute path
+		 ROOT=$(cd $ROOT; pwd)
+	fi
 	mkdir -p $TMP_DIR
 	echo ""
 	echo -e "\033[1mInstallation of :\033[0m $PACKAGE"
@@ -208,33 +214,40 @@ install_package()
 	status
 	cd $TMP_DIR
 	extract_package
+	SELF_INSTALL=0
 	# Include temporary receipt to get the right variables.
 	. $PWD/receipt
+	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
+		echo -n "Checking post install dependencies... "
+		[ -d "$INSTALLED/${PACKAGE%-[0-9]*}" ]
+		if ! status; then
+			echo "Please run 'tazpkg install $PACKAGE_FILE' and retry."
+			cd .. && rm -rf $TMP_DIR
+			exit 1
+		fi
+	fi
 	# Make the installed package data dir to store
 	# the receipt and the files list.
-	mkdir -p $INSTALLED/$PACKAGE
-	cp receipt $INSTALLED/$PACKAGE
-	# Include installed receipt.
-	. $INSTALLED/$PACKAGE/receipt
-	# Copy the list of files and the description if found.
-	cp files.list $INSTALLED/$PACKAGE
+	mkdir -p $ROOT$INSTALLED/$PACKAGE
+	cp receipt files.list $ROOT$INSTALLED/$PACKAGE
+	# Copy the description if found.
 	if [ -f "description.txt" ]; then
-		cp description.txt $INSTALLED/$PACKAGE
+		cp description.txt $ROOT$INSTALLED/$PACKAGE
 	fi
-	if [ `cat $INSTALLED/$PACKAGE/receipt | grep pre_install` ]; then
+	if grep -q pre_install $ROOT$INSTALLED/$PACKAGE/receipt; then
 		# Execute post install commands.
-		pre_install
+		pre_install $ROOT
 	fi
 	echo -n "Installing $PACKAGE... "
-	cp -a fs/* /
+	cp -a fs/* $ROOT/
 	status
 	# Remove the temporary random directory.
 	echo -n "Removing all tmp files... "
 	cd .. && rm -rf $TMP_DIR
 	status
-	if [ `cat $INSTALLED/$PACKAGE/receipt | grep post_install` ]; then
+	if grep -q post_install $ROOT$INSTALLED/$PACKAGE/receipt; then
 		# Execute post install commands.
-		post_install
+		post_install $ROOT
 	fi
 	cd $TOP_DIR
 	echo "================================================================================"
@@ -522,9 +535,24 @@ please run once 'tazpkg recharge' as root before searching.\n"
 		check_for_package_on_cmdline
 		check_for_package_file
 		# Check if forced install.
-		if [ "$3" = "--forced" ]; then
-			continue
-		else
+		DO_CHECK="yes"
+		while [ -n "$3" ]; do
+			case "$3" in
+			--forced)
+				DO_CHECK="no"
+				;;
+			--root=*)
+				install_package ${3#--root=}
+				exit $?
+				;;
+			*)	shift 2
+				echo -e "\nUnknown option $*.\n"
+				exit 1
+				;;
+			esac
+			shift
+		done
+		if [ "$DO_CHECK" = "yes" ]; then
 			check_for_installed_package
 		fi
 		install_package
@@ -646,7 +674,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		cd $TMP_DIR
 		cp $INSTALLED/$PACKAGE/files.list .
 		cp $INSTALLED/$PACKAGE/receipt .
-		cpio -pd fs < files.list
+		cpio -pd fs < files.list 2> /dev/null
 		. ./receipt
 		src=$TMP_DIR/nowhere
 		_pkg=$TMP_DIR/nowhere
