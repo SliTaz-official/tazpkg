@@ -215,6 +215,7 @@ install_package()
 	cd $TMP_DIR
 	extract_package
 	SELF_INSTALL=0
+	MODIFY_PACKAGES=""
 	# Include temporary receipt to get the right variables.
 	. $PWD/receipt
 	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
@@ -226,6 +227,12 @@ install_package()
 			exit 1
 		fi
 	fi
+	# Remember modified packages
+	for i in $MODIFY_PACKAGES; do
+		[ -d $ROOT$INSTALLED/$i ] || continue
+		grep -q ^$PACKAGE$ $ROOT$INSTALLED/$i && continue
+		echo "$PACKAGE" >> $ROOT$INSTALLED/$i/modifiers
+	done
 	# Make the installed package data dir to store
 	# the receipt and the files list.
 	mkdir -p $ROOT$INSTALLED/$PACKAGE
@@ -657,6 +664,13 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo ""
 		echo -e "\033[1mRepacking :\033[0m $PACKAGE-$VERSION.tazpkg"
 		echo "================================================================================"
+		if [ -s $INSTALLED/$PACKAGE/modifiers ]; then
+			echo "Can't repack, $PACKAGE files have been modified by:"
+			for i in $(cat $INSTALLED/$PACKAGE/modifiers); do
+				echo "  $i"
+			done
+			exit 1
+		fi
 		MISSING=""
 		for i in $(sed 's,^fs,,g' < $INSTALLED/$PACKAGE/files.list); do
 			[ -e "$i" ] && continue
