@@ -664,6 +664,10 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo ""
 		echo -e "\033[1mRepacking :\033[0m $PACKAGE-$VERSION.tazpkg"
 		echo "================================================================================"
+		if grep -qs ^NO_REPACK= $INSTALLED/$PACKAGE/receipt; then
+			echo "Can't repack $PACKAGE"
+			exit 1
+		fi
 		if [ -s $INSTALLED/$PACKAGE/modifiers ]; then
 			echo "Can't repack, $PACKAGE files have been modified by:"
 			for i in $(cat $INSTALLED/$PACKAGE/modifiers); do
@@ -684,26 +688,15 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			exit 1
 		fi
 		HERE=`pwd`
-		FILES="receipt\nfiles.list\nfs.cpio.gz"
-		mkdir -p $TMP_DIR
-		cd $TMP_DIR
-		cp $INSTALLED/$PACKAGE/files.list .
-		cp $INSTALLED/$PACKAGE/receipt .
-		if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
-			cp $INSTALLED/$PACKAGE/description.txt .
-			FILES="${FILES}\ndescription.txt"
-		fi
+		mkdir -p $TMP_DIR && cd $TMP_DIR
+		FILES="fs.cpio.gz\n"
+		for i in $(ls $INSTALLED/$PACKAGE) ; do
+			cp $INSTALLED/$PACKAGE/$i . && FILES="$FILES$i\n"
+		done
 		cpio -pd fs < files.list 2> /dev/null
-		. ./receipt
-		src=$TMP_DIR/nowhere
-		_pkg=$TMP_DIR/nowhere
-		fs=fs
-		# go on if errors and catch exit
-		( set +e ; genpkg_rules > /dev/null 2>&1 )
-		cd $TMP_DIR
 		find fs | cpio -o -H newc 2> /dev/null | gzip -9 > fs.cpio.gz
-		echo -e "$FILES" | cpio -o -H newc > \
-			$HERE/$PACKAGE-$VERSION.tazpkg 2> /dev/null
+		echo -e "$FILES" | cpio -o -H newc 2> /dev/null > \
+			$HERE/$PACKAGE-$VERSION.tazpkg
 		cd $HERE
 		\rm -R $TMP_DIR
 		echo "Package $PACKAGE repacked successfully."
