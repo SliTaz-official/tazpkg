@@ -88,6 +88,7 @@ usage ()
   block|unblock Block an installed package version or unblock it for upgrade.
   get           Download a package into the current directory.
   get-install   Download and install a package from the mirror.
+  check         Verify installed packages concistancy.
   clean-cache   Clean all packages downloaded in cache directory.
   setup-mirror  Change the mirror url configuration."
 }
@@ -868,6 +869,32 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		do
 			tazpkg get-install $pkg --forced
 		done
+		;;
+	check)
+		# check installed packages set.
+		#
+		check_root
+		cd $INSTALLED
+		for PACKAGE in `ls`; do
+			MSG="Files lost from $PACKAGE :\n"
+			while read file; do
+				[ -e "$file" ] && continue
+				if [ -L "$file" ]; then
+					MSG="$MSG  target of symlink"
+				fi
+				echo -e "$MSG  $file"
+				MSG=""
+			done < $PACKAGE/files.list
+			DEPENDS=""
+			. $PACKAGE/receipt
+			MSG="Missing dependancies for $PACKAGE : \n"
+			for i in $DEPENDS; do
+				[ -d $i ] && continue
+				echo -e "$MSG  $i"
+				MSG=""
+			done
+		done
+		echo "Check completed."
 		;;
 	block)
 		# Add a pkg name to the list of blocked packages.
