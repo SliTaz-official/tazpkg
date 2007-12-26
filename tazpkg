@@ -608,9 +608,23 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -e "\n$PACKAGE is not installed.\n"
 			exit 0
 		else
-			. $INSTALLED/$PACKAGE/receipt
+			ALTERED=""
+			THE_PACKAGE=$PACKAGE	# altered by receipt
+			for i in $(cd $INSTALLED ; ls); do
+				. $INSTALLED/$i/receipt
+				case " $(echo $DEPENDS) " in
+				*\ $THE_PACKAGE\ *) ALTERED="$ALTERED $i";;
+				esac
+			done
+			. $INSTALLED/$THE_PACKAGE/receipt
 		fi
 		echo ""
+		if [ -n "$ALTERED" ]; then
+			echo "The following packages depend on $PACKAGE :"
+			for i in $ALTERED; do
+				echo "  $i"
+			done
+		fi
 		echo "Remove $PACKAGE ($VERSION) ?"
 		echo -n "Please confirm uninstallation (y/N) : "; read anser
 		if [ "$anser" = "y" ]; then
@@ -627,6 +641,15 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -n "Removing package receipt..."
 			rm -rf $INSTALLED/$PACKAGE
 			status
+			if [ -n "$ALTERED" ]; then
+				echo -n "Remove packages depending on $PACKAGE"
+				echo -n " (y/N) ? "; read anser
+				if [ "$anser" = "y" ]; then
+					for i in $ALTERED; do
+						tazpkg remove $i
+					done
+				fi
+			fi
 		else
 			echo ""
 			echo "Uninstallation of $PACKAGE cancelled."
