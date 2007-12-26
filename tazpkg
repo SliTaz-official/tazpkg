@@ -878,7 +878,15 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		check_root
 		cd $INSTALLED
 		for PACKAGE in `ls`; do
-			MSG="Files lost from $PACKAGE :\n"
+			DEPENDS=""
+			. $PACKAGE/receipt
+			if [ -s $PACKAGE/modifiers ]; then
+				echo "The package $PACKAGE $VERSION has been modified by :"
+				for i in $(cat $PACKAGE/modifiers); do
+					echo "  $i"
+				done
+			fi
+			MSG="Files lost from $PACKAGE $VERSION :\n"
 			while read file; do
 				[ -e "$file" ] && continue
 				if [ -L "$file" ]; then
@@ -887,9 +895,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 				echo -e "$MSG  $file"
 				MSG=""
 			done < $PACKAGE/files.list
-			DEPENDS=""
-			. $PACKAGE/receipt
-			MSG="Missing dependancies for $PACKAGE : \n"
+			MSG="Missing dependancies for $PACKAGE $VERSION :\n"
 			for i in $DEPENDS; do
 				[ -d $i ] && continue
 				echo -e "$MSG  $i"
