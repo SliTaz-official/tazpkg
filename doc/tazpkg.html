@@ -31,7 +31,7 @@
 
 <h2>NOM</h2>
 <p>
-Tazpkg - Tiny autonomus zone packages manager (v1.3)
+Tazpkg - Tiny autonomus zone packages manager
 </p>
 
 <h2>SYNTAXE</h2>
@@ -143,12 +143,15 @@ présent sur le système. Exemple :
 Cette commande permet l'installation d'un paquet local avec l'extension 
 .tazpkg. Voir la commande 'get-install' pour installer un paquet depuis
 internet. A noter que vous  pouvez forcer l'installation via l'option
---forced ou désinstaller et réinstaller :
+--forced, désinstaller et réinstaller ou encore spécifier la racine du système
+dans lequel vous désirez installer le paquets via l'option --root= :
 </p>
 <pre>
  # tazpkg install package-1.0.tazpkg
  Ou :
  # tazpkg install path/to/package-1.0.tazpkg --forced
+ Ou :
+ # tazpkg install path/to/package-1.0.tazpkg --root=/mnt/rootfs
 </pre>
 <h3><font color="#6c0023">install-list</font></h3>
 <p>
@@ -227,6 +230,15 @@ jour :
 </p>
 <pre>
  # tazpkg upgarde
+</pre>
+<h3><font color="#6c0023">check</font></h3>
+<p>
+Les commandes 'check' permet de vérifier les dépendances sur les paquets
+instrallés et de vérifier si tous les fichiers nécessaires à la reconstruction
+des paquets sont bien présents :
+</p>
+<pre>
+ # tazpkg check
 </pre>
 <h3><font color="#6c0023">block ou unblock</font></h3>
 <p>
