@@ -1,4 +1,13 @@
-2007-11-29  Linux User  Christophe Lincoln  <pankso@slitaz.org>
+2007-12-26  Christophe Lincoln  <pankso@slitaz.org>
+
+ * Release - Tazpkg 1.5
+
+ * Modification du manuel et préparation pour la publication de la version 1.5.
+   Note : ce fichiers ChangeLog ne sera plus mis à jour comme avant, Tazpkg
+   ayant son propre dépôt Mercurial sur hg.slitaz.org et fournissant des logs.
+
+
+2007-11-29  Christophe Lincoln  <pankso@slitaz.org>
 
  * Release - Tazpkg 1.4
  

@@ -8,9 +8,11 @@
 # also relolv dependencies and can upgrade packages from a mirror.
 #
 # (C) 2007 SliTaz - GNU General Public License v3.
-# Initial author : <pankso@slitaz.org>
 #
-VERSION=1.4
+# Authors : Christophe Lincoln <pankso@slitaz.org>
+#           Pascal Bellard <bellard@slitaz.org>
+#
+VERSION=1.5
 
 ####################
 # Script variables #
