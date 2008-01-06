@@ -634,7 +634,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -n "Removing all files installed..."
 			for file in `cat $INSTALLED/$PACKAGE/files.list`
 			do
-				rm -f $file
+				rm -f $file 2>/dev/null
 			done
 			status
 			# Remove package receipt.
