@@ -24,7 +24,7 @@ CATEGORIES="base-system base-apps x-window extra devel"
 # Initialize some variables to use words
 # rater than numbers for functions and actions.
 COMMAND=$1
-if [ -f $2 ]; then
+if [ -f "$2" ]; then
 	# Set pkg basename for install, extract
 	PACKAGE=$(basename ${2%.tazpkg} 2>/dev/null)
 else
