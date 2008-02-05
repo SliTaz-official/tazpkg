@@ -12,7 +12,7 @@
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #
-VERSION=1.6
+VERSION=1.6.1
 
 ####################
 # Script variables #
@@ -615,6 +615,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 				case " $(echo $DEPENDS) " in
 				*\ $THE_PACKAGE\ *) ALTERED="$ALTERED $i";;
 				esac
+				DEPENDS=""
 			done
 			. $INSTALLED/$THE_PACKAGE/receipt
 		fi
