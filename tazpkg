@@ -73,6 +73,7 @@ usage ()
 \033[1mCommands: \033[0m
   usage         Print this short usage.
   list          List installed packages on the system by category or all.
+  xhtml-list    Creat a xHTML list of installed packges.
   list-mirror   List all available packages on the mirror (--diff for new).
   info          Print informations about the package.
   desc          Print description of a package (if it exist).
@@ -324,6 +325,74 @@ install_deps()
 	fi
 }
 
+# xHTML packages list header.
+xhtml_header()
+{
+	cat > $XHTML_LIST << _EOT_
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Installed packages list</title>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<meta name="modified" content="$DATE" />
+	<meta name="generator" content="Tazpkg" />
+	<style type="text/css"><!--
+	body { font: 12px sans-serif, vernada, arial; margin: 0; }
+	#header { background: #f0ba08; color: black; height: 50px;
+		border-top: 1px solid black; border-bottom: 1px solid black; }
+	#content { margin: 0px 50px 26px 50px; }
+	#footer { border-top: 1px solid black; padding-top: 10px;}
+	h1 { margin: 14px 0px 0px 16px; }
+	pre { padding-left: 5px; }
+	hr { color: white; background: white; height: 1px; border: 0; }
+	--></style>
+</head>
+<body bgcolor="#ffffff">
+<div id="header">
+<h1><font color="#3e1220">Installed packages list</font></h1>
+</div>
+<hr />
+<!-- Start content -->
+<div id="content">
+
+<p>
+_packages_ packages installed - List generated on : $DATE
+<p>
+
+_EOT_
+}
+
+# xHTML content with packages infos.
+xhtml_pkg_info()
+{
+	cat >> $XHTML_LIST << _EOT_
+<h3>$PACKAGE</h3>
+<pre>
+Version    : $VERSION
+Short desc : $SHORT_DESC
+Web site   : <a href="$WEB_SITE">$WEB_SITE</a>
+</pre>
+
+_EOT_
+}
+
+# xHTML packages list footer.
+xhtml_footer()
+{
+	cat >> $XHTML_LIST << _EOT_
+<hr />
+<p id="footer">
+$packages packages installed - List generated on : $DATE
+</p>
+
+<!-- End content -->
+</div>
+</body>
+</html>
+_EOT_
+}
+
 ###################
 # Tazpkg commands #
 ###################
@@ -371,6 +440,38 @@ case "$COMMAND" in
 			echo "$packages packages installed."
 			echo ""
 		fi
+		;;
+	xhtml-list)
+		# Get infos in receipts and build list.
+		DATE=`date +%Y-%m-%d\ \%H:%M:%S`
+		if [ -n "$2" ]; then
+			XHTML_LIST=$2
+		else
+			XHTML_LIST=packages.html
+		fi
+		echo ""
+		echo -e "\033[1mCreating xHTML list of installed packages\033[0m"
+		echo "================================================================================"
+		echo -n "Generating xHTML header..."
+		xhtml_header
+		status
+		# Packages
+		echo -n "Creating packages informations..."
+		for pkg in $INSTALLED/*
+		do
+			. $pkg/receipt
+			xhtml_pkg_info
+			packages=$(($packages+1))
+		done
+		status
+		echo -n "Generating xHTML footer..."
+		xhtml_footer
+		status
+		# sed pkgs nb in header.
+		sed -i s/'_packages_'/"$packages"/ $XHTML_LIST
+		echo "================================================================================"
+		echo "$XHTML_LIST created - $packages packages."
+		echo ""
 		;;
 	list-mirror)
 		# List all available packages on the mirror. Option --diff display
@@ -611,11 +712,11 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			ALTERED=""
 			THE_PACKAGE=$PACKAGE	# altered by receipt
 			for i in $(cd $INSTALLED ; ls); do
+				DEPENDS=""
 				. $INSTALLED/$i/receipt
 				case " $(echo $DEPENDS) " in
 				*\ $THE_PACKAGE\ *) ALTERED="$ALTERED $i";;
 				esac
-				DEPENDS=""
 			done
 			. $INSTALLED/$THE_PACKAGE/receipt
 		fi
@@ -647,7 +748,9 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 				echo -n " (y/N) ? "; read anser
 				if [ "$anser" = "y" ]; then
 					for i in $ALTERED; do
-						tazpkg remove $i
+						if [ -d "$INSTALLED/$i" ]; then
+							tazpkg remove $i
+						fi
 					done
 				fi
 			fi
@@ -919,7 +1022,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 				echo -e "$MSG  $file"
 				MSG=""
 			done < $PACKAGE/files.list
-			MSG="Missing dependancies for $PACKAGE $VERSION :\n"
+			MSG="Missing dependencies for $PACKAGE $VERSION :\n"
 			for i in $DEPENDS; do
 				[ -d $i ] && continue
 				echo -e "$MSG  $i"
@@ -1018,7 +1121,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		check_root
 		# Backup old list.
 		if [ -f "$LOCALSTATE/mirror" ]; then
-			mv -f $LOCALSTATE/mirror $LOCALSTATE/mirror.bak
+			cp -f $LOCALSTATE/mirror $LOCALSTATE/mirror.bak
 		fi
 		echo ""
 		echo -e "\033[1mCurrent mirror(s)\033[0m"
