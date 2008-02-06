@@ -245,8 +245,8 @@ install_package()
 	if [ -f "description.txt" ]; then
 		cp description.txt $ROOT$INSTALLED/$PACKAGE
 	fi
-	if grep -q pre_install $ROOT$INSTALLED/$PACKAGE/receipt; then
-		# Execute post install commands.
+	# Pre install commands.
+	if grep -q ^pre_install $ROOT$INSTALLED/$PACKAGE/receipt; then
 		pre_install $ROOT
 	fi
 	echo -n "Installing $PACKAGE... "
@@ -256,8 +256,8 @@ install_package()
 	echo -n "Removing all tmp files... "
 	cd .. && rm -rf $TMP_DIR
 	status
-	if grep -q post_install $ROOT$INSTALLED/$PACKAGE/receipt; then
-		# Execute post install commands.
+	# Post install commands.
+	if grep -q ^post_install $ROOT$INSTALLED/$PACKAGE/receipt; then
 		post_install $ROOT
 	fi
 	cd $TOP_DIR
@@ -447,7 +447,7 @@ case "$COMMAND" in
 		if [ -n "$2" ]; then
 			XHTML_LIST=$2
 		else
-			XHTML_LIST=packages.html
+			XHTML_LIST=installed-packages.html
 		fi
 		echo ""
 		echo -e "\033[1mCreating xHTML list of installed packages\033[0m"
@@ -532,6 +532,12 @@ Short desc : $SHORT_DESC
 Maintainer : $MAINTAINER"
 		if [ ! "$DEPENDS" = "" ]; then
 			echo -e "Depends    : $DEPENDS"
+		fi
+		if [ ! "$SUGGESTED" = "" ]; then
+			echo -e "Suggested  : $SUGGESTED"
+		fi
+		if [ ! "$BUILD_DEPENDS" = "" ]; then
+			echo -e "Build deps : $BUILD_DEPENDS"
 		fi
 		if [ ! "$WANTED" = "" ]; then
 			echo -e "Wanted src : $WANTED"
@@ -733,6 +739,10 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo ""
 			echo -e "\033[1mRemoving :\033[0m $PACKAGE"
 			echo "================================================================================"
+			# Pre remove commands.
+			if grep -q ^pre_remove $INSTALLED/$PACKAGE/receipt; then
+				pre_remove
+			fi
 			echo -n "Removing all files installed..."
 			for file in `cat $INSTALLED/$PACKAGE/files.list`
 			do
@@ -874,9 +884,11 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo ""
 		if [ -f "$LOCALSTATE/packages.list" ]; then
 			echo -n "Creating backup of the last packages list..."
+			mv -f packages.txt packages.txt.bak 2>/dev/null
 			mv -f packages.list packages.list.bak
 			status
 		fi
+		download packages.txt
 		download packages.list
 		if [ -f "$LOCALSTATE/packages.list.bak" ]; then
 			diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
