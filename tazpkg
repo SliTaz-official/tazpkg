@@ -19,7 +19,19 @@ VERSION=1.6.1
 ####################
 
 # Packages categories.
-CATEGORIES="base-system base-apps x-window extra devel"
+CATEGORIES="
+base-system
+utilities
+network
+graphics
+multimedia
+office
+development
+system-tools
+security
+games
+misc
+meta"
 
 # Initialize some variables to use words
 # rater than numbers for functions and actions.
