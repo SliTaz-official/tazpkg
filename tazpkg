@@ -12,7 +12,7 @@
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #
-VERSION=1.6.1
+VERSION=1.7
 
 ####################
 # Script variables #
@@ -960,19 +960,20 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 						NEW_MAJOR=`echo $NEW_VERSION | cut -f1 -d"."`
 						PKG_MINOR=`echo $VERSION | cut -f2 -d"."`
 						NEW_MINOR=`echo $NEW_VERSION | cut -f2 -d"."`
-						# Major
-						if [ "$NEW_MAJOR" -gt "$PKG_MAJOR" ]; then
-							RELEASE=major
-						fi
-						if [ "$NEW_MAJOR" -lt "$PKG_MAJOR" ]; then
-							RELEASE=$WARNING
-							FIXE=yes
-						fi
 						# Minor
 						if [ "$NEW_MINOR" -gt "$PKG_MINOR" ]; then
 							RELEASE=minor
 						fi
 						if [ "$NEW_MINOR" -lt "$PKG_MINOR" ]; then
+							RELEASE=$WARNING
+							FIXE=yes
+						fi
+						# Major
+						if [ "$NEW_MAJOR" -gt "$PKG_MAJOR" ]; then
+							RELEASE=major
+							FIXE=""
+						fi
+						if [ "$NEW_MAJOR" -lt "$PKG_MAJOR" ]; then
 							RELEASE=$WARNING
 							FIXE=yes
 						fi
