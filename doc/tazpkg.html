@@ -6,7 +6,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
 	<meta name="description" content="tazpkg manuel utilisation documentation description commandes" />
 	<meta name="expires" content="never" />
-	<meta name="modified" content="2007-10-29 13:52:42" />
+	<meta name="modified" content="2008-02-06 00:02:00" />
 	<style type="text/css"><!--
 	body { font: 90% sans-serif, vernada, arial; margin: 0; }
 	#header { background: #f0ba08; color: black; height: 50px;
@@ -41,7 +41,7 @@ Tazpkg - Tiny autonomus zone packages manager
 
 <h2>DESCRIPTION</h2>
 <p>
-Tazpkg est un gestionnaire de paquets ultra léger (~25 Ko) permettant
+Tazpkg est un gestionnaire de paquets ultra léger (~35 Ko) permettant
 d'installer, lister, télécharger, mettre à jour ou enlever des paquets
 précompilés sur un système GNU/Linux. Tazpkg propose aussi une commande de
 recherche et une commande pour la création de paquets. Il a été créé pour les
@@ -72,6 +72,20 @@ les catégories et les paquets en fonction de leur catégorie :
 <pre>
  # tazpkg list
  # tazpkg list category
+</pre>
+<h3><font color="#6c0023">xhtml-list</font></h3>
+<p>
+La commande 'xhtml-list' permet de créer une liste au format xHTML des
+paquets installé sur le système, une générée, cette liste peut être 
+lue avec votre navigateur Web préféré. Cette commande peut être lançée
+en tant que simple utilisateur et crée par défaut une liste nomée 
+'installed-packages.html' dans le répertoire courant. A noter que vous
+pouvez aussi changer le nom de la liste générée via la ligne de
+commande :
+</p>
+<pre>
+ # tazpkg xhtml-list
+ # tazpkg xhtml-list list-name.html
 </pre>
 <h3><font color="#6c0023">list-mirror</font></h3>
 <p>
