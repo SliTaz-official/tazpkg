@@ -413,8 +413,34 @@ case "$COMMAND" in
 	list)
 		# List all installed packages or a specific category.
 		#
-		if [ "$2" = "category" ]; then
-			echo -e "\033[1m\nPackages categories :\033[0m $CATEGORIES\n"
+		if [ "$2" = "blocked" ]; then
+			if [ -f $BLOCKED ]; then
+				LIST=`cat $BLOCKED`
+			fi
+			echo ""
+			echo -e "\033[1mBlocked packages\033[0m"
+			echo "================================================================================"
+			if [ -n $LIST ];then
+				echo $LIST
+				echo ""
+			else
+				echo -e "No blocked packages found.\n"
+			fi
+			exit 0
+		fi
+		# Display the list of categories.
+		if [ "$2" = "category" -o "$2" = "cat" ]; then
+			echo ""
+			echo -e "\033[1mPackages categories :\033[0m"
+			echo "================================================================================"
+			for i in $CATEGORIES
+			do
+				echo $i
+				categories=$(($categories+1))
+			done
+			echo "================================================================================"
+			echo "$categories categories"
+			echo ""
 			exit 0
 		fi
 		# Check for an asked category.
@@ -1002,7 +1028,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			fi
 		done
 		rm -f $tmpfile
-		if [ -n $blocked ]; then
+		if [ -z $blocked ]; then
 			blocked=0
 		fi
 		if [ ! "$up" = "" ]; then
