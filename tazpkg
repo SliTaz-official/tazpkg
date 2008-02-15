@@ -199,7 +199,7 @@ check_for_package_in_list()
 download()
 {
 	for i in $(cat $MIRROR); do
-		wget $i$@
+		wget $i$@ && break
 	done
 }
 
@@ -990,8 +990,8 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 						echo -n "$PACKAGE"
 						echo -en "\033[24G $VERSION"
 						echo -en "\033[38G --->"
-						echo -en "\033[48G $NEW_VERSION"
-						echo -en "\033[60G $CATEGORY"
+						echo -en "\033[43G $NEW_VERSION"
+						echo -en "\033[58G $CATEGORY"
 						echo -e "\033[72G $RELEASE"
 						up=$(($up+1))
 						echo "$PACKAGE" >> upradable-packages.list
@@ -1002,6 +1002,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			fi
 		done
 		rm -f $tmpfile
+		if [ -n $blocked ]; then
+			blocked=0
+		fi
 		if [ ! "$up" = "" ]; then
 			echo "================================================================================"
 			echo "$packages installed and listed packages to consider, $up to upgrade, $blocked blocked."
@@ -1140,9 +1143,12 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		check_root
 		files=`ls -1 $CACHE_DIR | wc -l`
 		echo ""
-		echo -e "\033[1mCleaning cache directory :\033[0m $CACHE_DIR"
+		echo -e "\033[1mClean cache :\033[0m $CACHE_DIR"
 		echo "================================================================================"
+		echo -n "Cleaning cache directory..."
 		rm -rf $CACHE_DIR/*
+		status
+		echo "================================================================================"
 		echo "$files file(s) removed from cache."
 		echo ""
 		;;
