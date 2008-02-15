@@ -12,7 +12,7 @@
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #
-VERSION=1.7
+VERSION=1.8
 
 ####################
 # Script variables #
@@ -429,7 +429,7 @@ case "$COMMAND" in
 			exit 0
 		fi
 		# Display the list of categories.
-		if [ "$2" = "category" -o "$2" = "cat" ]; then
+		if [ "$2" = "cat" -o "$2" = "categories" ]; then
 			echo ""
 			echo -e "\033[1mPackages categories :\033[0m"
 			echo "================================================================================"
