@@ -947,9 +947,15 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 				# Check if the installed package is in the current list (other
 				# mirror or local).
 				if grep -q "^$PACKAGE-[0-9]" packages.list; then
-					# Set new kg and version for futur comparaison
+					# Set new pkg and version for futur comparaison
 					NEW_PACKAGE=`grep ^$PACKAGE-[0-9] packages.list`
 					NEW_VERSION=`echo $NEW_PACKAGE | sed s/$PACKAGE-/''/`
+					# Change '-' and 'pre' to points.
+					NEW_VERSION=`echo $NEW_VERSION | sed s/'-'/'.'/`
+					VERSION=`echo $VERSION | sed s/'-'/'.'/`
+					NEW_VERSION=`echo $NEW_VERSION | sed s/'pre'/'.'/`
+					VERSION=`echo $VERSION | sed s/'pre'/'.'/`
+					
 					# Compare version. Upgrade are only avalaible for official
 					# packages, so we control de mirror and it should be ok if
 					# we just check for egality.
