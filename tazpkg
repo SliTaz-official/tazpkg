@@ -791,6 +791,9 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -n "Removing package receipt..."
 			rm -rf $INSTALLED/$PACKAGE
 			status
+			if grep -q ^post_remove $INSTALLED/$PACKAGE/receipt; then
+				post_remove
+			fi
 			if [ -n "$ALTERED" ]; then
 				echo -n "Remove packages depending on $PACKAGE"
 				echo -n " (y/N) ? "; read anser
