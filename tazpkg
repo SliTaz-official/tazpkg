@@ -55,6 +55,7 @@ CACHE_DIR=/var/cache/tazpkg
 MIRROR=$LOCALSTATE/mirror
 PACKAGES_LIST=$LOCALSTATE/packages.list
 BLOCKED=$LOCALSTATE/blocked-packages.list
+DEFAULT_MIRROR="http://download.tuxfamily.org/slitaz/packages/`cat /etc/slitaz-release`/"
 
 # Bold red warnig for upgrade.
 WARNING="\\033[1;31mWARNING\\033[0;39m"
