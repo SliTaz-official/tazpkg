@@ -207,7 +207,7 @@ download()
 # Extract a package with cpio and gzip.
 extract_package()
 {
-	echo -n "Extracting $PACKAGE..."
+	echo -n "Extracting $PACKAGE... "
 	cpio -id < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
 	gzip -d fs.cpio.gz
 	echo -n "Extracting the pseudo fs... "
@@ -967,9 +967,13 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		echo ""
 		echo -e "\033[1mAvalaible upgrade\033[0m"
 		echo "================================================================================"
+		echo ""
 		for pkg in $INSTALLED/*
 		do
 			. $pkg/receipt
+			# Diplay package name to show that Tazpkg is working...
+			echo -en "\\033[0G                                         "
+			echo -en "\\033[0G$PACKAGE"
 			# Skip specified pkgs listed in $LOCALSTATE/blocked-packages.list
 			if grep -q "^$PACKAGE" $BLOCKED; then
 				blocked=$(($blocked+1))
@@ -985,7 +989,6 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 					VERSION=`echo $VERSION | sed s/'-'/'.'/`
 					NEW_VERSION=`echo $NEW_VERSION | sed s/'pre'/'.'/`
 					VERSION=`echo $VERSION | sed s/'pre'/'.'/`
-					
 					# Compare version. Upgrade are only avalaible for official
 					# packages, so we control de mirror and it should be ok if
 					# we just check for egality.
@@ -1017,7 +1020,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 						if [ -z $RELEASE ]; then
 							RELEASE=revision
 						fi
-						echo -n "$PACKAGE"
+						# Pkg name is already displayed by the check process.
 						echo -en "\033[24G $VERSION"
 						echo -en "\033[38G --->"
 						echo -en "\033[43G $NEW_VERSION"
@@ -1031,15 +1034,19 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 				fi
 			fi
 		done
-		rm -f $tmpfile
 		if [ -z $blocked ]; then
 			blocked=0
 		fi
+		# Clean last checked package and display summary.
 		if [ ! "$up" = "" ]; then
+			echo -e "\\033[0G                                         "
 			echo "================================================================================"
 			echo "$packages installed and listed packages to consider, $up to upgrade, $blocked blocked."
 			echo ""
 		else
+			echo -e "\\033[0GSystem is up to date.                    "
+			echo ""
+			echo "================================================================================"
 			echo "$packages installed and listed packages to consider, 0 to upgrade, $blocked blocked."
 			echo ""
 			exit 0
