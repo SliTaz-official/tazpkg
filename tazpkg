@@ -516,30 +516,36 @@ case "$COMMAND" in
 		# List all available packages on the mirror. Option --diff display
 		# last mirrored packages diff (see recharge).
 		check_for_packages_list
-		if [ "$2" = "--diff" ]; then
-			if [ -f "$LOCALSTATE/packages.diff" ]; then
+		case $2 in
+			--diff)
+				if [ -f "$LOCALSTATE/packages.diff" ]; then
+					echo ""
+					echo -e "\033[1mMirrored packages diff\033[0m"
+					echo "================================================================================"
+					cat $LOCALSTATE/packages.diff
+					echo "================================================================================"
+					pkgs=`cat $LOCALSTATE/packages.diff | wc -l`
+					echo "$pkgs new packages listed on the mirror."
+					echo ""
+				else
+					 echo -e "\nUnable to list anything, no packages.diff found."
+					 echo -e "Recharge your current list to creat a first diff.\n"
+				fi && exit 0 ;;
+			--text|--txt)
 				echo ""
-				echo -e "\033[1mMirrored packages diff\033[0m"
+				echo -e "\033[1mList of available packages on the mirror\033[0m"
 				echo "================================================================================"
-				cat $LOCALSTATE/packages.diff
-				echo "================================================================================"
-				pkgs=`cat $LOCALSTATE/packages.diff | wc -l`
-				echo "$pkgs new packages listed on the mirror."
+				cat $LOCALSTATE/packages.txt ;;
+			--raw|*)
 				echo ""
-			else
-				 echo -e "\nUnable to list anything, no packages.diff found."
-				 echo -e "Recharge your current list to creat a first diff.\n"
-			fi	
-		else
-			echo ""
-			echo -e "\033[1mList of available packages on the mirror\033[0m"
-			echo "================================================================================"
-			cat $LOCALSTATE/packages.list
-			echo "================================================================================"
-			pkgs=`cat $LOCALSTATE/packages.list | wc -l`
-			echo "$pkgs packages in the last recharged list."
-			echo ""
-		fi
+				echo -e "\033[1mList of available packages on the mirror\033[0m"
+				echo "================================================================================"
+				cat $LOCALSTATE/packages.list ;;
+		esac
+		echo "================================================================================"
+		pkgs=`cat $LOCALSTATE/packages.list | wc -l`
+		echo "$pkgs packages in the last recharged list."
+		echo "" 
 		;;
 	list-files)
 		# List files installed with the package.
