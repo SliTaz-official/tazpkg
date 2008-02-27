@@ -67,10 +67,10 @@ if test $(id -u) = 0 ; then
 		mkdir -p $CACHE_DIR
 	fi
 	if [ ! -d "$INSTALLED" ]; then
-	  mkdir -p $INSTALLED
+		mkdir -p $INSTALLED
 	fi
 	if [ ! -f "$LOCALSTATE/mirror" ]; then
-	  echo "$DEFAULT_MIRROR" > $LOCALSTATE/mirror
+		echo "$DEFAULT_MIRROR" > $LOCALSTATE/mirror
 	fi
 fi
 
@@ -81,8 +81,9 @@ fi
 # Print the usage.
 usage ()
 {
-	echo -e "SliTaz packages manager - Version: $VERSION
-\033[1mUsage: \033[0m tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
+	echo -e "SliTaz packages manager - Version: $VERSION\n
+\033[1mUsage:\033[0m tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
+       tazpkg shell\n
 \033[1mCommands: \033[0m
   usage         Print this short usage.
   list          List installed packages on the system by category or all.
@@ -128,7 +129,7 @@ check_root()
 {
 	if test $(id -u) != 0 ; then
 		echo -e "\nYou must be root to run `basename $0` with this option."
-		echo -e "Please type 'su' and root password to become super-user.\n"
+		echo -e "Please use 'su' and root password to become super-user.\n"
 		exit 0
 	fi
 }
@@ -1267,6 +1268,39 @@ address to the directory of the packages and packages.list file."
 			echo "$NEW_MIRROR_URL" > $LOCALSTATE/mirror
 		fi
 		echo ""
+		;;
+	shell)
+		# Tazpkg SHell
+		#
+		if test $(id -u) = 0 ; then
+			PROMPT="\\033[1;33mtazpkg\\033[0;39m# "
+		else
+			PROMPT="\\033[1;33mtazpkg\\033[0;39m> "
+		fi
+		if [ ! "$2" = "--noheader" ]; then
+			clear
+			echo ""
+			echo -e "\033[1mTazpkg SHell.\033[0m"
+			echo "================================================================================"
+			echo "Type 'usage' to list all avalaible commands and 'quit' or 'q' to exit."
+			echo ""
+		fi
+		while true
+		do
+			echo -en "$PROMPT"; read cmd
+			case $cmd in
+				q|quit)
+					break ;;
+				shell)
+					echo "You are already running a Tazpkg SHell." ;;
+				su)
+					su -c 'exec tazpkg shell --noheader' && break ;;
+				"")
+					continue ;;
+				*)
+					tazpkg $cmd ;;
+			esac
+		done
 		;;
 	usage|*)
 		# Print a short help or give usage for an unknow or empty command.
