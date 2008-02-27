@@ -31,7 +31,7 @@
 
 <h2>NOM</h2>
 <p>
-Tazpkg - Tiny autonomus zone packages manager
+Tazpkg - Tiny autonomous zone package manager
 </p>
 
 <h2>SYNTAXE</h2>
@@ -46,16 +46,16 @@ d'installer, lister, télécharger, mettre à jour ou enlever des paquets
 précompilés sur un système GNU/Linux. Tazpkg propose aussi une commande de
 recherche et une commande pour la création de paquets. Il a été créé pour les
 besoins de SliTaz GNU/Linux, mini distribution autonome. Le format des paquets
-utilisent l'extension *.tazpkg, c'est une archive cpio contenant un système de
-fichiers (fs) compressés avec gzip, la recette et une éventuelle description.
+utilise l'extension *.tazpkg, c'est une archive cpio contenant un système de
+fichiers (fs) compressé avec gzip, la recette et une éventuelle description.
 Tazpkg fournit aussi un système de gestion des dépendances basé sur les
 recettes des paquets. La recette contient toutes les informations au sujet du
-paquet, elle peu aussi contenir les fonctions de pre et post installation.
-Cette même recette est par ailleur utilisée par Tazwok pour compiler les
+paquet, elle peut aussi contenir les fonctions de pre et post installation.
+Cette même recette est par ailleurs utilisée par Tazwok pour compiler les
 sources et créer un paquet tazpkg.
 </p>
 <p>
-Tazpkg est écript en script shell depuis rien (from scratch), compatible
+Tazpkg est écrit en script shell depuis rien (from scratch), compatible
 Bash, et fonctionnant avec Ash du projet Busybox. Tazpkg est distribué
 sous license libre GNU gpl v3.
 </p>
@@ -78,9 +78,9 @@ bloqués :
 <h3><font color="#6c0023">xhtml-list</font></h3>
 <p>
 La commande 'xhtml-list' permet de créer une liste au format xHTML des
-paquets installé sur le système, une générée, cette liste peut être 
-lue avec votre navigateur Web préféré. Cette commande peut être lançée
-en tant que simple utilisateur et crée par défaut une liste nomée 
+paquets installés sur le système, une fois générée, cette liste peut être 
+lue avec votre navigateur Web préféré. Cette commande peut être lancée
+en tant que simple utilisateur et crée par défaut une liste nommée 
 'installed-packages.html' dans le répertoire courant. A noter que vous
 pouvez aussi changer le nom de la liste générée via la ligne de
 commande :
@@ -95,7 +95,7 @@ Liste et compte les paquets disponnibles sur le miroir. Cette commande va
 afficher le dernier fichier packages.list rechargé depuis le miroir, si la
 liste des paquets n'existe pas, il vous sera demandé de lancer la commande
 'tazpkg recharge' en tant qu'administrateur (root) pour obtenir la liste
-des paquets disponnibles. L'option --diff est utilisée pour afficher le
+des paquets disponibles. L'option --diff est utilisée pour afficher le
 fichier des différences entre la dernière et l'actuelle liste des paquets :
 </p>
 <pre>
@@ -115,7 +115,7 @@ dépendances (voir aussi Tazwok pour plus d'informations sur les recettes) :
 <p>
 Description du paquet (si elle existe). Cette commande affiche le fichier
 description.txt propre à chaque paquet, la description est un simple fichier
-text ne dépassant pas le 80 caractères pour un affichage standard dans un
+texte ne dépassant pas le 80 caractères pour un affichage standard dans un
 terminal. Si la description du paquet n'existe pas, vous pouvez la créer et
 l'envoyer au mainteneur du paquet (quelques lignes suffisent) :
 </p>
@@ -184,7 +184,7 @@ forcée :
 Désinstallation d'un paquet, il vous sera demandé confirmation (y/N). Cette
 commande va supprimer tous les fichiers installés avec le paquet, pour
 afficher cette liste, vous pouvez utiliser la commande 'list-files' de Tazpkg
-suivit du nom du paquet en question. Exemple avec le paquet bc :
+suivie du nom du paquet en question. Exemple avec le paquet bc :
 </p>
 <pre>
  # tazpkg remove bc
@@ -241,16 +241,16 @@ les dernières corrections et nouveautés. Le projet SliTaz, même mini, fournit
 régulièrement des mises à jours de sécurité et propose généralement les
 dernières versions des logiciels. A noter que cette fonction est destinée aux
 personnes ayant installé SliTaz sur disque dur, en mode LiveCD les paquets mis
-à jour seront perdu lors de l'arrêt du système. Pour garder un système un
+à jour seront perdus lors de l'arrêt du système. Pour garder un système un
 jour :
 </p>
 <pre>
- # tazpkg upgarde
+ # tazpkg upgrade
 </pre>
 <h3><font color="#6c0023">check</font></h3>
 <p>
-Les commandes 'check' permet de vérifier les dépendances sur les paquets
-instrallés et de vérifier si tous les fichiers nécessaires à la reconstruction
+La commande 'check' permet de vérifier les dépendances sur les paquets
+installés et de vérifier si tous les fichiers nécessaires à la reconstruction
 des paquets sont bien présents :
 </p>
 <pre>
@@ -259,7 +259,7 @@ des paquets sont bien présents :
 <h3><font color="#6c0023">block ou unblock</font></h3>
 <p>
 Les commandes 'block' et 'unblock' pemettent de bloquer la version du paquet
-installé pour qu'il ne soit pas mis à jour par la commande 'upgrade'. La list
+installé pour qu'il ne soit pas mis à jour par la commande 'upgrade'. La liste
 des paquets bloqués est contenue dans le fichier : 
 /var/lib/tazpkg/blocked-packages.list, elle peut aussi être éditée à la main.
 Pour bloquer ou débloquer un paquet tel que Grub :
@@ -273,7 +273,7 @@ Pour bloquer ou débloquer un paquet tel que Grub :
 <p>
 Télécharge un paquet depuis le miroir (si il existe). Le paquet téléchargé
 est stocké dans le répertoire courant, pour connaître le chemin vous pouvez
-utiliser la commande 'pwd'. Pour télécharger un paquet tel que 'grub', il
+utiliser la commande 'pwd'. Pour télécharger un paquet tel que 'grub', il suffit
 de lancer la commande :
 </p>
 <pre>
@@ -284,7 +284,7 @@ de lancer la commande :
 Installer un paquet depuis un mirroir sur internet. La commande 'get-install'
 commence par vérifier si le paquet existe bien sur le miroir et si il n'a pas
 déjà été téléchargé, avant de commencer le rapatriement. Pour connaître la
-liste des paquets sur le miroir il faut utiliser la commande 'list-mirroir'
+liste des paquets sur le miroir il faut utiliser la commande 'list-mirror'
 (voir aussi recharge). Pour installer un paquet tel que 'grub' :
 </p>
 <pre>
