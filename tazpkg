@@ -91,7 +91,7 @@ usage ()
   info          Print informations about the package.
   desc          Print description of a package (if it exist).
   list-files    List of files installed with the package.
-  search        Search for a package by pattern or name.
+  search        Search for a package by pattern or name (options: -i|-l|-m).
   search-file	Search for file(s) in all installed packages files.
   install       Install a local (*.tazpkg) package (--forced to force).
   install-list  Install all packages from a list of packages.
@@ -406,6 +406,78 @@ $packages packages installed - List generated on : $DATE
 _EOT_
 }
 
+# Search pattern in installed packages.		
+search_in_installed_packages()
+{
+	echo "Installed packages"
+	echo "================================================================================"
+	list=`ls -1 $INSTALLED | grep "$PATTERN"`
+	for pkg in $list
+	do
+		. $INSTALLED/$pkg/receipt
+		echo -n "$PACKAGE "
+		echo -en "\033[24G $VERSION"
+		echo -e "\033[42G $CATEGORY"
+		packages=$(($packages+1))
+	done
+	# Set correct ending messages.
+	if [ "$packages" = "" ]; then
+		echo "0 installed packages found for : $PATTERN"
+		echo ""
+	else
+		echo "================================================================================"
+		echo "$packages installed package(s) found for : $PATTERN"
+		echo ""
+	fi
+}
+
+# Search in packages.list for avalaible pkgs.	
+search_in_packages_list()
+{
+	echo "Available packages name-version"
+	echo "================================================================================"
+	if [ -f "$LOCALSTATE/packages.list" ]; then
+		cat $LOCALSTATE/packages.list | grep "$PATTERN"
+		packages=`cat $LOCALSTATE/packages.list | grep "$PATTERN" | wc -l`
+	else
+		echo -e "
+No 'packages.list' found to check for mirrored packages. For more results,
+please run once 'tazpkg recharge' as root before searching.\n"
+	fi
+	if [ "$packages" = "0" ]; then
+		echo "0 available packages found for : $PATTERN"
+		echo ""
+	else
+		echo "================================================================================"
+		echo "$packages available package(s) found for : $PATTERN"
+		echo ""
+	fi
+}
+
+# search --mirror: Search in packages.txt for avalaible pkgs and give more 
+# infos than --list or default.	
+search_in_packages_txt()
+{
+	echo "Matching packages name with version and desc"
+	echo "================================================================================"
+	if [ -f "$LOCALSTATE/packages.txt" ]; then
+		cat $LOCALSTATE/packages.txt | grep -A 2 "^$PATTERN"
+		packages=`cat $LOCALSTATE/packages.txt | grep "^$PATTERN" | wc -l`
+	else
+		echo -e "
+No 'packages.txt' found to check for mirrored packages. For more results,
+please run once 'tazpkg recharge' as root before searching.\n"
+	fi
+	if [ "$packages" = "0" ]; then
+		echo "0 available packages found for : $PATTERN"
+		echo ""
+	else
+		echo "================================================================================"
+		echo "$packages available package(s) found for : $PATTERN"
+		echo ""
+	fi
+}
+
 ###################
 # Tazpkg commands #
 ###################
@@ -609,52 +681,27 @@ Maintainer : $MAINTAINER"
 	search)
 		# Search for a package by pattern or name.
 		#
-		if [ -z "$2" ]; then
+		PATTERN="$2"
+		if [ -z "$PATTERN" ]; then
 			echo -e "\nPlease specify a pattern or a package name to search."
-			echo -e "Example : 'tazpkg search paint'. \n"
+			echo -e "Example : 'tazpkg search paint'.\n"
 			exit 0
 		fi
 		echo ""
-		echo -e "\033[1mSearch result for :\033[0m $2"
+		echo -e "\033[1mSearch result for :\033[0m $PATTERN"
 		echo ""
-		echo "Installed packages"
-		echo "================================================================================"
-		list=`ls -1 $INSTALLED | grep $2`
-		for pkg in $list
-		do
-			. $INSTALLED/$pkg/receipt
-			echo -n "$PACKAGE "
-			echo -en "\033[24G $VERSION"
-			echo -e "\033[42G $CATEGORY"
-			packages=$(($packages+1))
-		done
-		# Set correct ending messages.
-		if [ "$packages" = "" ]; then
-			echo "0 installed packages found for : $2"
-			echo ""
-		else
-			echo "================================================================================"
-			echo "$packages installed package(s) found for : $2"
-			echo ""
-		fi
-		echo "Available packages"
-		echo "================================================================================"
-		if [ -f "$LOCALSTATE/packages.list" ]; then
-			cat $LOCALSTATE/packages.list | grep $2
-			packages=`cat $LOCALSTATE/packages.list | grep $2 | wc -l`
-		else
-			echo -e "
-No 'packages.list' found to check for mirrored packages. For more results,
-please run once 'tazpkg recharge' as root before searching.\n"
-		fi
-		if [ "$packages" = "0" ]; then
-			echo "0 available packages found for : $2"
-			echo ""
-		else
-			echo "================================================================================"
-			echo "$packages available package(s) found for : $2"
-			echo ""
-		fi
+		# Default is to search in installed pkgs and the raw list.
+		case $3 in
+			-i|--installed)
+				search_in_installed_packages ;;
+			-l|--list)
+				search_in_packages_list ;;
+			-m|--mirror)
+				search_in_packages_txt ;;
+			*)
+				search_in_installed_packages
+				search_in_packages_list ;;
+		esac
 		;;
 	search-file)
 		# Search for a file by pattern or name in all files.list.
@@ -671,11 +718,11 @@ please run once 'tazpkg recharge' as root before searching.\n"
 		# name and the full path to the file(s).
 		for pkg in $INSTALLED/*
 		do
-			if grep -q $2 $pkg/files.list; then
+			if grep -q "$2" $pkg/files.list; then
 				. $pkg/receipt
 				echo ""
 				echo -e "\033[1mPackage $PACKAGE :\033[0m"
-				grep $2 $pkg/files.list
+				grep "$2" $pkg/files.list
 				files=`grep $2 $pkg/files.list | wc -l`
 				match=$(($match+$files))
 			fi
