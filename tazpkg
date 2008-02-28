@@ -87,7 +87,7 @@ usage ()
 \033[1mCommands: \033[0m
   usage         Print this short usage.
   list          List installed packages on the system by category or all.
-  xhtml-list    Creat a xHTML list of installed packges.
+  xhtml-list    Creates a xHTML list of installed packges.
   list-mirror   List all available packages on the mirror (--diff for new).
   info          Print informations about the package.
   desc          Print description of a package (if it exist).
@@ -100,14 +100,15 @@ usage ()
   extract       Extract a (*.tazpkg) package into a directory.
   pack          Pack an unpacked or prepared package tree.
   recharge      Recharge your packages.list from the mirror.
-  repack        Creat a package archive from an installed package.
+  repack        Creates a package archive from an installed package.
   upgrade       Upgrade all installed and listed packages on the mirror.
   block|unblock Block an installed package version or unblock it for upgrade.
   get           Download a package into the current directory.
   get-install   Download and install a package from the mirror.
   check         Verify installed packages concistancy.
   clean-cache   Clean all packages downloaded in cache directory.
-  setup-mirror  Change the mirror url configuration."
+  setup-mirror  Change the mirror url configuration.
+  reconfigure	Replay post install script from package."
 }
 
 # Status function with color (supported by Ash).
@@ -1268,6 +1269,25 @@ address to the directory of the packages and packages.list file."
 			echo "$NEW_MIRROR_URL" > $LOCALSTATE/mirror
 		fi
 		echo ""
+		;;
+	reconfigure)
+		# Replay post_install from receipt
+		#
+		check_for_package_on_cmdline
+		check_root
+		if [ -d "$INSTALLED/$PACKAGE" ]; then
+			check_for_receipt
+			# Check for post_install
+			if grep -q ^post_install $INSTALLED/$PACKAGE/receipt; then
+				. $INSTALLED/$PACKAGE/receipt
+				post_install
+			else 
+				echo -e "\nNothing to do for $PACKAGE."
+			fi
+		else
+			echo -e "\npackage $PACKAGE is not installed."
+			echo -e "Install package with 'tazpkg install' or 'tazpkg get-install'\n"
+		fi
 		;;
 	shell)
 		# Tazpkg SHell
