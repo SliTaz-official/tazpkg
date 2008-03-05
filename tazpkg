@@ -11,8 +11,9 @@
 #
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #           Pascal Bellard <pascal.bellard@slitaz.org>
+#           Eric Joseph-Alexandre <erjo@slitaz.org>
 #
-VERSION=1.8
+VERSION=1.9
 
 ####################
 # Script variables #
@@ -31,7 +32,8 @@ system-tools
 security
 games
 misc
-meta"
+meta
+non-free"
 
 # Initialize some variables to use words
 # rater than numbers for functions and actions.

@@ -6,7 +6,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
 	<meta name="description" content="tazpkg manuel utilisation documentation description commandes" />
 	<meta name="expires" content="never" />
-	<meta name="modified" content="2008-02-06 00:02:00" />
+	<meta name="modified" content="2008-03-05 16:33:00" />
 	<style type="text/css"><!--
 	body { font: 90% sans-serif, vernada, arial; margin: 0; }
 	#header { background: #f0ba08; color: black; height: 50px;
@@ -37,6 +37,7 @@ Tazpkg - Tiny autonomous zone package manager
 <h2>SYNTAXE</h2>
 <pre>
  tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
+ tazpkg shell
 </pre>
 
 <h2>DESCRIPTION</h2>
@@ -59,6 +60,18 @@ Tazpkg est écrit en script shell depuis rien (from scratch), compatible
 Bash, et fonctionnant avec Ash du projet Busybox. Tazpkg est distribué
 sous license libre GNU gpl v3.
 </p>
+
+<h2>SHELL</h2>
+<p>
+Tazpkg fourni un mode SHell permettant de directement passer les commandes
+au gestionnaire de paquets. Ce mode est utile pour lancer quelques commandes
+comme la mise à jour du système, il support 'su' pour devenir admnistrateur
+mais ne propose pas le rappel des commandes. Pour utiliser Tazpkg en mode 
+SHell :
+</p>
+<pre>
+ $ tazpkg shell
+</pre>
 
 <h2>COMMANDES</h2>
 <h3><font color="#6c0023">list</font></h3>
@@ -136,13 +149,16 @@ lister les fichier installés avec le paquet bc :
 <h3><font color="#6c0023">search</font></h3>
 <p>
 Recherche de paquets par patron ou nom de paquet. La commande 
-va chercher le terme voulu dans les paquets installés et dans la liste des
+va chercher le terme voulu dans les paquets installés et dans les listes des
 paquets disponibles sur le miroir. Pour obtenir la plus récente liste des
 paquets installables depuis internet, il suffit de lancer 'tazpkg recharge'
 avant d'effectuer une recherche :
 </p>
 <pre>
  # tazpkg search gcc
+ # tazpkg search gcc [--installed|--list|--mirror]
+ Ou :
+ # tazpkg search gcc [-i|-l|-m]
 </pre>
 <h3><font color="#6c0023">search-files</font></h3>
 <p>
@@ -311,6 +327,14 @@ la liste (packages.list) et les paquets :
 </p>
 <pre>
  # tazpkg setup-mirror
+</pre>
+<h3><font color="#6c0023">setup-mirror</font></h3>
+<p>
+La commande 'reconfigure' permet de relancer les commande de post et 
+pre-installation d'un paquet afin de le reconfigurer si besoin est :
+</p>
+<pre>
+ # tazpkg reconfigure package
 </pre>
 
 <h2>MAINTENEUR</h2>

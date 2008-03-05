@@ -1,3 +1,11 @@
+2008-03-05  Christophe Lincoln  <pankso@slitaz.org>
+
+ * Release - Tazpkg 1.9
+   
+   Un mode SHell interactif, une commande de reconfigure, support de 
+   pre_remove et post_remove, corrections de bugs et meilleur support
+   de la recherche de paquets.
+
 2008-02-15  Christophe Lincoln  <pankso@slitaz.org>
 
  * Release - Tazpkg 1.8
