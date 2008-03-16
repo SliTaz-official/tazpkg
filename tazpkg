@@ -87,30 +87,31 @@ usage ()
 \033[1mUsage:\033[0m tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
        tazpkg shell\n
 \033[1mCommands: \033[0m
-  usage         Print this short usage.
-  list          List installed packages on the system by category or all.
-  xhtml-list    Creates a xHTML list of installed packges.
-  list-mirror   List all available packages on the mirror (--diff for new).
-  info          Print informations about the package.
-  desc          Print description of a package (if it exist).
-  list-files    List of files installed with the package.
-  search        Search for a package by pattern or name (options: -i|-l|-m).
-  search-file	Search for file(s) in all installed packages files.
-  install       Install a local (*.tazpkg) package (--forced to force).
-  install-list  Install all packages from a list of packages.
-  remove        Remove the specified package and all installed files.
-  extract       Extract a (*.tazpkg) package into a directory.
-  pack          Pack an unpacked or prepared package tree.
-  recharge      Recharge your packages.list from the mirror.
-  repack        Creates a package archive from an installed package.
-  upgrade       Upgrade all installed and listed packages on the mirror.
-  block|unblock Block an installed package version or unblock it for upgrade.
-  get           Download a package into the current directory.
-  get-install   Download and install a package from the mirror.
-  check         Verify installed packages concistancy.
-  clean-cache   Clean all packages downloaded in cache directory.
-  setup-mirror  Change the mirror url configuration.
-  reconfigure	Replay post install script from package."
+  usage            Print this short usage.
+  list             List installed packages on the system by category or all.
+  xhtml-list       Creates a xHTML list of installed packges.
+  list-mirror      List all available packages on the mirror (--diff for new).
+  info             Print informations about the package.
+  desc             Print description of a package (if it exist).
+  list-files       List of files installed with the package.
+  search           Search for a package by pattern or name (options: -i|-l|-m).
+  search-file	   Search for file(s) in all installed packages files.
+  install          Install a local (*.tazpkg) package (--forced to force).
+  install-list     Install all packages from a list of packages.
+  remove           Remove the specified package and all installed files.
+  extract          Extract a (*.tazpkg) package into a directory.
+  pack             Pack an unpacked or prepared package tree.
+  recharge         Recharge your packages.list from the mirror.
+  repack           Creates a package archive from an installed package.
+  upgrade          Upgrade all installed and listed packages on the mirror.
+  block|unblock    Block an installed package version or unblock it for upgrade.
+  get              Download a package into the current directory.
+  get-install      Download and install a package from the mirror.
+  get-install-list Download and install a list of packages from the mirror.
+  check            Verify installed packages concistancy.
+  clean-cache      Clean all packages downloaded in cache directory.
+  setup-mirror     Change the mirror url configuration.
+  reconfigure	   Replay post install script from package."
 }
 
 # Status function with color (supported by Ash).
@@ -775,7 +776,7 @@ Maintainer : $MAINTAINER"
 			install_deps
 		fi
 		;;
-	install-list)
+	install-list|get-install-list)
 		# Install a set of packages from a list.
 		#
 		check_root
@@ -792,13 +793,18 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		else
 			LIST=`cat $2`
 		fi
-		# Install all packages.
+		# Set $COMMAND and install all packages.
+		if [ "$1" = "get-install-list" ]; then
+			COMMAND=get-install-list
+		else
+			COMMAND=install
+		fi
 		for pkg in $LIST
 		do
 			if [ "$3" = "--forced" ]; then
-				tazpkg install $pkg --forced
+				tazpkg $COMMAND $pkg --forced
 			else
-				tazpkg install $pkg
+				tazpkg $COMMAND $pkg
 			fi
 		done
 		;;
