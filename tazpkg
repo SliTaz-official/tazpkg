@@ -848,6 +848,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -n "Removing all files installed..."
 			for file in `cat $INSTALLED/$PACKAGE/files.list`
 			do
+				[ $(grep ^$file$ $INSTALLED/*/files.list | wc -l) -gt 1 ] && continue
 				rm -f $file 2>/dev/null
 			done
 			status
@@ -1163,6 +1164,26 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 				MSG=""
 			done
 		done
+		if [ "$PACKAGE_FILE" = "--full" ]; then
+			FILES=" "
+			for file in $(cat */files.list); do
+				[ -d "$file" ] && continue
+				case "$FILES" in *\ $file\ *) continue;; esac
+				[ $(grep "^$file$" */files.list 2> /dev/null | \
+					wc -l) -gt 1 ] || continue
+				FILES="$FILES$file "
+				echo "The following packages provide $file :"
+				grep -l "^$file$" */files.list | while read f
+				do
+					pkg=${f%/files.list}
+					echo -n "  $pkg"
+					if [ -f $pkg/modifiers ]; then
+						echo -n " (known as overridden by $(cat $pkg/modifiers))"
+					fi
+					echo ""
+				done
+			done
+		fi
 		echo "Check completed."
 		;;
 	block)
