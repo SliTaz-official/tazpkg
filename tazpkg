@@ -416,7 +416,7 @@ search_in_installed_packages()
 {
 	echo "Installed packages"
 	echo "================================================================================"
-	list=`ls -1 $INSTALLED | grep "$PATTERN"`
+	list=`ls -1 $INSTALLED | grep -i "$PATTERN"`
 	for pkg in $list
 	do
 		. $INSTALLED/$pkg/receipt
@@ -442,7 +442,7 @@ search_in_packages_list()
 	echo "Available packages name-version"
 	echo "================================================================================"
 	if [ -f "$LOCALSTATE/packages.list" ]; then
-		cat $LOCALSTATE/packages.list | grep "$PATTERN"
+		cat $LOCALSTATE/packages.list | grep -i "$PATTERN"
 		packages=`cat $LOCALSTATE/packages.list | grep "$PATTERN" | wc -l`
 	else
 		echo -e "
@@ -467,7 +467,7 @@ search_in_packages_txt()
 	echo "================================================================================"
 	if [ -f "$LOCALSTATE/packages.txt" ]; then
 		cat $LOCALSTATE/packages.txt | grep -A 2 "^$PATTERN"
-		packages=`cat $LOCALSTATE/packages.txt | grep "^$PATTERN" | wc -l`
+		packages=`cat $LOCALSTATE/packages.txt | grep -i "^$PATTERN" | wc -l`
 	else
 		echo -e "
 No 'packages.txt' found to check for mirrored packages. For more results,
