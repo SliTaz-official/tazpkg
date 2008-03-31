@@ -922,15 +922,13 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			exit 1
 		fi
 		MISSING=""
-		for i in $(sed 's,^fs,,g' < $INSTALLED/$PACKAGE/files.list); do
+		while read i; do
 			[ -e "$i" ] && continue
-			[ -L "$i" ] || MISSING="$MISSING $i"
-		done
+			[ -L "$i" ] || MISSING="$MISSING\n  $i"
+		done < $INSTALLED/$PACKAGE/files.list
 		if [ -n "$MISSING" ]; then
-			echo "Can't repack, the following files are lost:"
-			for i in $MISSING; do
-				echo "  $i"
-			done
+			echo -n "Can't repack, the following files are lost:"
+			echo -e "$MISSING"
 			exit 1
 		fi
 		HERE=`pwd`
