@@ -795,7 +795,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		fi
 		# Set $COMMAND and install all packages.
 		if [ "$1" = "get-install-list" ]; then
-			COMMAND=get-install-list
+			COMMAND=get-install
 		else
 			COMMAND=install
 		fi
