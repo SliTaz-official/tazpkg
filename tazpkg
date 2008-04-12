@@ -237,7 +237,6 @@ install_package()
 	cd $TMP_DIR
 	extract_package
 	SELF_INSTALL=0
-	MODIFY_PACKAGES=""
 	# Include temporary receipt to get the right variables.
 	. $PWD/receipt
 	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
@@ -250,10 +249,12 @@ install_package()
 		fi
 	fi
 	# Remember modified packages
-	for i in $MODIFY_PACKAGES; do
-		[ -d $ROOT$INSTALLED/$i ] || continue
-		grep -qs ^$PACKAGE$ $ROOT$INSTALLED/$i/modifiers && continue
-		echo "$PACKAGE" >> $ROOT$INSTALLED/$i/modifiers
+	for i in $(cat files.list); do
+		[ -e $ROOT$i ] || continue
+		for j in $(grep -l ^$i$ $ROOT$INSTALLED/*/files.list); do
+			grep -qs ^$PACKAGE$ $(dirname $j)/modifiers && continue
+			echo "$PACKAGE" >> $(dirname $j)/modifiers
+		done
 	done
 	# Make the installed package data dir to store
 	# the receipt and the files list.
