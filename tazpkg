@@ -1031,6 +1031,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		echo -e "\033[1mAvalaible upgrade\033[0m"
 		echo "================================================================================"
 		echo ""
+		# Some packages must be installed first
+		FIRST_CLASS_PACKAGE=" glibc-base "
+		FIRST_CLASS=""
 		for pkg in $INSTALLED/*
 		do
 			. $pkg/receipt
@@ -1091,6 +1094,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 						echo -e "\033[72G $RELEASE"
 						up=$(($up+1))
 						echo "$PACKAGE" >> upradable-packages.list
+						case "$FIRST_CLASS_PACKAGE" in
+						*\ $PACKAGE\ *) FIRST_CLASS="$FIRST_CLASS $PACKAGE";;
+						esac
 						unset RELEASE
 					fi
 					packages=$(($packages+1))
@@ -1128,7 +1134,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			exit 0
 		fi
 		# If anser is yes (y). Install all new version.
-		for pkg in `cat upradable-packages.list`
+		for pkg in $FIRST_CLASS `cat upradable-packages.list`
 		do
 			tazpkg get-install $pkg --forced
 		done
