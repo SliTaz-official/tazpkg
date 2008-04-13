@@ -252,7 +252,7 @@ install_package()
 	for i in $(grep -v '\[' files.list); do
 		[ -e "$ROOT$i" ] || continue
 		[ -d "$ROOT$i" ] && continue
-		for j in $(grep -l ^$i$ $ROOT$INSTALLED/*/files.list); do
+		for j in $(grep -l "^$i$" $ROOT$INSTALLED/*/files.list); do
 			[ "$j" = "$ROOT$INSTALLED/$PACKAGE/files.list" ] && continue
 			grep -qs ^$PACKAGE$ $(dirname $j)/modifiers && continue
 			echo "$PACKAGE" >> $(dirname $j)/modifiers
