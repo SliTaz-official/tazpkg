@@ -944,7 +944,11 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		for i in $(ls $INSTALLED/$PACKAGE) ; do
 			cp $INSTALLED/$PACKAGE/$i . && FILES="$FILES$i\n"
 		done
-		cpio -pd fs < files.list 2> /dev/null
+		ln -s / rootfs
+		mkdir tmp
+		sed 's/^/rootfs/' < files.list | cpio -o -H newc 2>/dev/null |\
+		      ( cd tmp ; cpio -id 2>/dev/null )
+		mv tmp/rootfs fs
 		find fs | cpio -o -H newc 2> /dev/null | gzip -9 > fs.cpio.gz
 		echo -e "$FILES" | cpio -o -H newc 2> /dev/null > \
 			$HERE/$PACKAGE-$VERSION.tazpkg
