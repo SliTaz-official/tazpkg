@@ -1198,6 +1198,13 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 					echo ""
 				done
 			done
+			MSG="No package has installed the following files:\n"
+			find /etc /bin /sbin /lib /usr -not -type d | while read file; do
+				case "$file" in *\[*) continue;; esac
+				grep -q "^$file$" */files.list && continue
+				echo -e "$MSG  $file"
+				MSG=""
+			done
 		fi
 		echo "Check completed."
 		;;
