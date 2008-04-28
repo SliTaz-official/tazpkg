@@ -109,6 +109,9 @@ usage ()
   get-install      Download and install a package from the mirror.
   get-install-list Download and install a list of packages from the mirror.
   check            Verify installed packages concistancy.
+  add-flavor       Install the flavor list of packages.
+  install-flavor   Install the flavor list of packages and remove other ones.
+  set-release      Change release and update packages
   clean-cache      Clean all packages downloaded in cache directory.
   setup-mirror     Change the mirror url configuration.
   reconfigure	   Replay post install script from package."
@@ -490,6 +493,41 @@ please run once 'tazpkg recharge' as root before searching.\n"
 	fi
 }
 
+# Install package-list from a flavor
+install_flavor()
+{
+	check_root
+	FLAVOR=$1
+	ARG=$2
+	mkdir -p $TMP_DIR
+	[ -f $FLAVOR.flavor ] && cp $FLAVOR.flavor $TMP_DIR
+	cd $TMP_DIR
+	if [ -f $FLAVOR.flavor ] || download $FLAVOR.flavor; then
+		zcat $FLAVOR.flavor | cpio -i 2>/dev/null
+		while read file; do
+			for pkg in $(ls -d $INSTALLED/${file%%-*}*); do
+				. $pkg/receipt
+				[ "$PACKAGE-$VERSION" = "$file" ] && break
+			done
+			[ "$PACKAGE-$VERSION" = "$file" ] && continue
+			cd $CACHE_DIR
+			download $file.tazpkg
+			cd $TMP_DIR
+		        tazpkg install $CACHE_DIR/$file.tazpkg --forced
+		done < $FLAVOR.pkglist
+		[ "$ARG" == "--purge" ] && for pkg in $(ls $INSTALLED); do
+			[ -d $INSTALLED/$pkg ] || continue
+			. $INSTALLED/$pkg/receipt
+			grep -q ^$PACKAGE-$VERSION$ $FLAVOR.pkglist && continue
+			tazpkg remove $PACKAGE
+		done
+	else
+		echo "Can't find flavor $FLAVOR Abort."
+	fi
+	cd $TOP_DIR
+	rm -rf $TMP_DIR
+}
+
 ###################
 # Tazpkg commands #
 ###################
@@ -815,6 +853,24 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			fi
 		done
 		;;
+        add-flavor)
+		# Install a set of packages from a flavor.
+		#
+		install_flavor $2
+		;;
+        install-flavor)
+		# Install a set of packages from a flavor and purge other ones.
+		#
+		install_flavor $2 --purge
+		;;
+        set-release)
+		# Change curent release and upgrade packages.
+		#
+		RELEASE=$2
+		rm /var/lib/tazpkg/mirror
+		echo "$RELEASE" > /etc/slitaz-release
+		tazpkg recharge && tazpkg upgrade
+		;;
 	remove)
 		# Remove packages.
 		#
@@ -938,7 +994,6 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -e "$MISSING"
 			exit 1
 		fi
-		HERE=`pwd`
 		mkdir -p $TMP_DIR && cd $TMP_DIR
 		FILES="fs.cpio.gz\n"
 		for i in $(ls $INSTALLED/$PACKAGE) ; do
@@ -951,8 +1006,8 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		mv tmp/rootfs fs
 		find fs | cpio -o -H newc 2> /dev/null | gzip -9 > fs.cpio.gz
 		echo -e "$FILES" | cpio -o -H newc 2> /dev/null > \
-			$HERE/$PACKAGE-$VERSION.tazpkg
-		cd $HERE
+			$TOP_DIR/$PACKAGE-$VERSION.tazpkg
+		cd $TOP_DIR
 		\rm -R $TMP_DIR
 		echo "Package $PACKAGE repacked successfully."
 		echo "Size : `du -sh $PACKAGE-$VERSION.tazpkg`"
