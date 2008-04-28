@@ -515,10 +515,16 @@ install_flavor()
 			cd $TMP_DIR
 		        tazpkg install $CACHE_DIR/$file.tazpkg --forced
 		done < $FLAVOR.pkglist
+		[ -f $FLAVOR.nonfree ] && while read pkg; do
+			[ -d $INSTALLED/$pkg ] || continue
+			[ -d $INSTALLED/get-$pkg ] && tazpkg get-install get-$pkg
+			get-$pkg
+		done < $FLAVOR.nonfree
 		[ "$ARG" == "--purge" ] && for pkg in $(ls $INSTALLED); do
 			[ -d $INSTALLED/$pkg ] || continue
 			. $INSTALLED/$pkg/receipt
 			grep -q ^$PACKAGE-$VERSION$ $FLAVOR.pkglist && continue
+			grep -qs ^$PACKAGE$ $FLAVOR.nonfree && continue
 			tazpkg remove $PACKAGE
 		done
 	else
