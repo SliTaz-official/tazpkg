@@ -859,20 +859,25 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			fi
 		done
 		;;
-        add-flavor)
+	add-flavor)
 		# Install a set of packages from a flavor.
 		#
 		install_flavor $2
 		;;
-        install-flavor)
+	install-flavor)
 		# Install a set of packages from a flavor and purge other ones.
 		#
 		install_flavor $2 --purge
 		;;
-        set-release)
+	set-release)
 		# Change curent release and upgrade packages.
 		#
 		RELEASE=$2
+		if [ -z "$RELEASE" ]; then
+			echo -e "\nPlease specify the release you want on the command line."
+			echo -e "Example: tazpkg set-release cooking\n"
+			exit 0
+		fi
 		rm /var/lib/tazpkg/mirror
 		echo "$RELEASE" > /etc/slitaz-release
 		tazpkg recharge && tazpkg upgrade
