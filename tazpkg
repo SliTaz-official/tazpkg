@@ -1065,10 +1065,12 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo ""
 		if [ -f "$LOCALSTATE/packages.list" ]; then
 			echo -n "Creating backup of the last packages list..."
+			mv -f packages.desc packages.desc.bak 2>/dev/null
 			mv -f packages.txt packages.txt.bak 2>/dev/null
-			mv -f packages.list packages.list.bak
+			mv -f packages.list packages.list.bak 2>/dev/null
 			status
 		fi
+		download packages.desc
 		download packages.txt
 		download packages.list
 		if [ -f "$LOCALSTATE/packages.list.bak" ]; then
