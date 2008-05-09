@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# Dialog box to provide package infos and actions
+#
+
+XTERM_OPTS="-geometry 80x16+120+120"
+
+PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
+
+# Installed or not installed, that the question.
+if [ -d /var/lib/tazpkg/installed/$PKG ]; then
+	. /var/lib/tazpkg/installed/$PKG/receipt
+	export PACKAGE_INFOS="
+<window title=\"Package: $PKG\" icon-name=\"package-x-generic\">
+<vbox>
+
+	<tree>
+		<width>460</width><height>160</height>
+		<label>Package|$PKG</label>
+		<item icon=\"tazpkg\">Version: | $VERSION</item>
+		<item icon=\"tazpkg\">Category: | $CATEGORY</item>
+		<item icon=\"tazpkg\">Depends: | $DEPENDS</item>
+		<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>
+		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
+	</tree>
+
+	<hbox>
+		<button>
+			<label>Remove</label>
+			<input file icon=\"edit-delete\"></input>
+			<action>xterm -T \"Remove $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg remove $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+		<button>
+			<label>Repack</label>
+			<input file icon=\"edit-redo\"></input>
+			<action>xterm -T \"Repack $PACKAGE\" $XTERM_OPTS -e \"\
+			cd /var/cache/tazpkg; \
+			tazpkg repack $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+		<button>
+			<input file icon=\"gtk-close\"></input>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+	</hbox>
+
+</vbox>
+</window>
+"
+else
+	RES=`grep "^$PKG" /var/lib/tazpkg/packages.desc | head -n 1`
+	PACKAGE=`echo "$RES" | cut -d "|" -f 1`
+	VERSION=`echo "$RES" | cut -d "|" -f 2`
+	CATEGORY=`echo "$RES" | cut -d "|" -f 4`
+	WEB_SITE=`echo "$RES" | cut -d "|" -f 5`
+	export PACKAGE_INFOS="
+<window title=\"Package: $PACKAGE\" icon-name=\"package-x-generic\">
+<vbox>
+
+	<tree>
+		<width>460</width><height>140</height>
+		<label>Package|$PKG</label>
+		<item icon=\"tazpkg\">Name: | $PACKAGE</item>
+		<item icon=\"tazpkg\">Version: | $VERSION</item>
+		<item icon=\"tazpkg\">category: | $CATEGORY</item>
+		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
+	</tree>
+
+	<hbox>
+		<button>
+			<label>Get-install</label>
+			<input file icon=\"go-next\"></input>
+			<action>xterm -T \"Install $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg get-install $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
+		</button>
+		<button>
+			<label>Get</label>
+			<input file icon=\"go-next\"></input>
+			<action>xterm -T \"Get $PACKAGE\" $XTERM_OPTS -e \"\
+			cd /var/cache/tazpkg; tazpkg get $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
+		</button>
+		<button>
+			<input file icon=\"gtk-close\"></input>
+			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
+		</button>
+	</hbox>
+
+</vbox>
+</window>
+"
+fi
+
+gtkdialog --center --program=PACKAGE_INFOS
+
+exit 0
