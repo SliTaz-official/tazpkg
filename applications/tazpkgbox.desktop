@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Packages manager (GUI)
+Name[fr]=Gestionnaire de paquets (GUI)
+Comment=Manage software packages
+Exec=subox tazpkgbox
+Icon=tazpkg
+Type=Application
+Categories=System;
