@@ -1,0 +1,305 @@
+#!/bin/sh
+#
+# GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Functions
+# path: /usr/lib/slitaz/tazpkgbox. Notes: Notebook tab are vbox, tab are 
+# used to indent.
+#
+# (C) GNU gpl v3 - SliTaz GNU/Linux 2008.
+#
+VERSION=24080508
+
+# Tazpkgbox is only for root.
+if test $(id -u) != 0 ; then
+	exec subox tazpkgbox
+	exit 0
+fi
+
+# We need at least a mirror URL.
+if [ ! -f /var/lib/tazpkg/mirror ]; then
+	tazpkg >/dev/null
+fi
+
+# Tmp dir and files used to get pkgs infos on the fly. Clean also
+# list and search files to load less data and have a faster start.
+mkdir -p /tmp/tazpkgbox
+echo "all" > /tmp/tazpkgbox/installed-category
+echo "all" > /tmp/tazpkgbox/mirrored-category
+echo "" > /tmp/tazpkgbox/search-installed
+echo "" > /tmp/tazpkgbox/search-mirrored
+
+# English/French help dialod.
+export HELP='
+<window title="Tazpkgbox Help" icon-name="help">
+<vbox>
+	<text use-markup="true" width-chars="54">
+		<label>"
+<b>Tazpkgbox - Packages Manager Help</b>"
+		</label>
+	</text>
+	
+	<frame English>
+		<text wrap="false">
+			<label>"
+Tazpkgbox is a simple and easy to use interface to SliTaz
+packages manager aka Tazpkg. You can install, remove, repack or
+get packages by clicking on the package item. Search engine let
+you find and install new applications in a few mouse click.
+Downloaded and repacked are stored in: /var/cache/tazpkg"
+			</label>
+		</text>
+	</frame>
+	
+	<frame Français>
+		<text wrap="false">
+			<label>"
+Tazpkgbox est une interface graphique au gestionnaire de paquet
+de Slitaz aka Tazpkg. Simple et facile à utiliser, vous pouvez 
+installer, télécharger ou supprimer des paquet en double-cliquant
+sur sa ligne. Les paquets téléchargés ou recréés sont stocké 
+dans: /var/cache/tazpkg"
+			</label>
+		</text>
+	</frame>
+	
+	<hbox>
+		<button ok>
+			<action type="closewindow">HELP</action>
+		</button>
+	</hbox>
+</vbox>
+</window>
+'
+
+# Main dialog
+export TAZPKG_DIALOG='
+<window title="SliTaz Packages Manager" icon-name="package-x-generic">
+<vbox>
+
+	<hbox>
+		<text use-markup="true">
+			<label>"<b>Packages Manager</b>"</label>
+		</text>
+		<pixmap>
+			<input file>/usr/share/pixmaps/tazpkg.png</input>
+		</pixmap>
+	</hbox>
+
+	<notebook labels="Installed|Mirrored|Search|Configuration">
+
+	<vbox>
+		<tree>
+			<width>580</width><height>240</height>
+			<variable>PKG</variable>
+			<label>Package name|Version|Description</label>
+			<input>/usr/lib/slitaz/tazpkgbox/list installed</input>
+			<action>echo "$PKG" > /tmp/tazpkgbox/pkg</action>
+			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>refresh:PKG</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</tree>
+		<hbox>
+			<text>
+				<label>"Category:"</label>
+			</text>
+			<combobox>
+				<variable>INSTALLED_CAT</variable>
+				<item>all</item>
+				<item>base-system</item>
+				<item>utilities</item>
+				<item>network</item>
+				<item>graphics</item>
+				<item>multimedia</item>
+				<item>office</item>
+				<item>development</item>
+				<item>system-tools</item>
+				<item>security</item>
+				<item>games</item>
+				<item>misc</item>
+				<item>meta</item>
+				<item>non-free</item>
+			</combobox>
+			<button>
+				<label>List</label>
+				<input file icon="reload"></input>
+				<action>echo "$INSTALLED_CAT" > /tmp/tazpkgbox/installed-category</action>
+				<action>refresh:PKG</action>
+			</button>
+			<button>
+				<label>Upgrade all</label>
+				<input file icon="system-software-update"></input>
+				<action>xterm -T "Package upgrade" -geometry 80x16+120+120 -e "tazpkg upgrade; sleep 2"</action>
+				<action>refresh:PKG</action>
+				<action>refresh:PKG_STATS</action>
+				<action>refresh:CACHE_STATS</action>
+			</button>
+		</hbox>
+	</vbox>
+
+	<vbox>
+		<tree>
+			<width>580</width><height>240</height>
+			<variable>GET</variable>
+			<label>Package name|Version|Description</label>
+			<input>/usr/lib/slitaz/tazpkgbox/list mirrored</input>
+			<action>echo "$GET" > /tmp/tazpkgbox/pkg</action>
+			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>refresh:PKG</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</tree>
+		<hbox>
+			<combobox>
+				<variable>MIRRORED_CAT</variable>
+				<item>all</item>
+				<item>base-system</item>
+				<item>utilities</item>
+				<item>network</item>
+				<item>graphics</item>
+				<item>multimedia</item>
+				<item>office</item>
+				<item>development</item>
+				<item>system-tools</item>
+				<item>security</item>
+				<item>games</item>
+				<item>misc</item>
+				<item>meta</item>
+				<item>non-free</item>
+			</combobox>
+			<button>
+				<label>List</label>
+				<input file icon="reload"></input>
+				<action>echo "$MIRRORED_CAT" > /tmp/tazpkgbox/mirrored-category</action>
+				<action>refresh:GET</action>
+			</button>
+			<button>
+				<label>Recharge list</label>
+				<input file icon="system-software-update"></input>         
+				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2"</action>
+				<action>refresh:GET</action>
+				<action>refresh:PKG_STATS</action>
+			</button>
+		</hbox>
+	</vbox>
+
+	<vbox>
+		<tree icon="tazpkg">
+			<width>580</width><height>120</height>
+			<variable>RESULT_INSTALLED</variable>
+			<label>Installed packages|Version|Description</label>
+			<input>cat /tmp/tazpkgbox/search-installed</input>
+			<action>echo "$RESULT_INSTALLED" > /tmp/tazpkgbox/pkg</action>
+			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>/usr/lib/slitaz/tazpkgbox/search</action>
+			<action>refresh:RESULT_INSTALLED</action>
+			<action>refresh:PKG</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</tree>
+		<tree icon="tazpkg">
+			<width>580</width><height>120</height>
+			<variable>RESULT_MIRROR</variable>
+			<label>Mirrored packages|Version|Description</label>
+			<input>cat /tmp/tazpkgbox/search-mirrored</input>
+			<action>echo "$RESULT_MIRROR" > /tmp/tazpkgbox/pkg</action>
+			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>/usr/lib/slitaz/tazpkgbox/search</action>
+			<action>refresh:RESULT_INSTALLED</action>
+			<action>refresh:PKG</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</tree>
+		<hbox>
+			<entry>
+				<variable>SEARCH</variable>
+			</entry>
+			<button>
+				<label>Search</label>
+				<input file icon="system-search"></input>
+				<action>/usr/lib/slitaz/tazpkgbox/search</action>
+				<action>refresh:RESULT_INSTALLED</action>
+				<action>refresh:RESULT_MIRROR</action>
+			</button>
+		</hbox>
+	</vbox>
+
+	<vbox>
+		<frame Cache directory>
+			<text use-markup="true" width-chars="60">
+				<label>
+"The cache directory is used to store downloaded or repacked packages."
+				</label>
+			</text>       
+			<hbox>
+				<entry editable="false">
+					<input>cd /var/cache/tazpkg; echo "Packages: `ls | wc -l`, size: `du -sh $PWD`"</input>
+					<variable>CACHE_STATS</variable>
+				</entry>
+				<button>
+					<label>Clean cache</label>
+					<input file icon="go-next"></input> 
+					<action>rm -rf /var/cache/tazpkg/*</action>
+					<action>refresh:CACHE_STATS</action>
+				</button>
+			</hbox>
+		</frame>
+		<frame Mirror URL>
+			<hbox>
+				<entry>
+					<input>head -n 1 /var/lib/tazpkg/mirror</input>
+					<variable>MIRROR</variable>
+				</entry>
+				<button>
+					<label>Setup</label>
+					<input file icon="go-next"></input>
+					<action>echo "$MIRROR" > /var/lib/tazpkg/mirror</action>
+					<action>clear:MIRROR</action>
+					<action>refresh:MIRROR</action>
+				</button>
+				<button>
+					<label>Add</label>
+					<input file icon="gtk-add"></input>
+					<action>echo "$MIRROR" >> /var/lib/tazpkg/mirror</action>
+					<action>clear:MIRROR</action>
+					<action>refresh:MIRROR</action>
+				</button>
+			</hbox>
+		</frame>
+		<frame Files path>
+			<text use-markup="true" width-chars="60">
+				<label>
+"Lists, mirror URL and installed packages: <b>/var/lib/tazpkg</b>"
+				</label>
+			</text>
+		</frame>
+	</vbox>
+
+	</notebook>
+
+	<hbox>
+		<text>
+			<input>echo "Packages: `ls /var/lib/tazpkg/installed | wc -l` installed, `cat /var/lib/tazpkg/packages.list | wc -l` mirrored, `cat /var/lib/tazpkg/upradable-packages.list | wc -l` to upgrade "</input>
+			<variable>PKG_STATS</variable>
+		</text>
+	</hbox>
+
+	<hbox>
+		<button help>
+			<label>Help</label>
+			<action type="launch">HELP</action>
+		</button>
+		<button>
+			<label>Exit</label>
+			<input file icon="exit"></input>
+			<action type="exit">Exit</action>
+		</button>
+	</hbox>
+
+</vbox>
+
+</window>
+'
+
+gtkdialog --center --program=TAZPKG_DIALOG >/dev/null
+
+exit 0
