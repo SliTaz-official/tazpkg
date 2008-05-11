@@ -195,6 +195,24 @@ forcée :
  # tazpkg install-list my-packages.list
  # tazpkg install-list my-packages.list --forced
 </pre>
+<h3><font color="#6c0023">add-flavor</font></h3>
+<p>
+Installation d'un set de paquets listés dans une saveur. Cette commande
+permet d'installer tous les paquets d'une saveur en une seule commande sans
+avoir à générer un nouveau cdrom avec tazlito.
+</p>
+<pre>
+ # tazpkg add-flavor office.flavor
+</pre>
+<h3><font color="#6c0023">install-flavor</font></h3>
+<p>
+Remplacement de tous les paquets par ceux listés dans une saveur. Cette
+commande permet de transformer le distribution courante en une seule commande
+sans avoir à générer un nouveau cdrom avec tazlito.
+</p>
+<pre>
+ # tazpkg install-flavor office.flavor
+</pre>
 <h3><font color="#6c0023">remove</font></h3>
 <p>
 Désinstallation d'un paquet, il vous sera demandé confirmation (y/N). Cette
