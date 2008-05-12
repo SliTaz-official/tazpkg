@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Functions
-# path: /usr/lib/slitaz/tazpkgbox. Notes: Notebook tab are vbox, tab are 
+# path: /usr/lib/slitaz/tazpkgbox. Notes: Notebook tab are vbox, tab are
 # used to indent.
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2008.
@@ -36,31 +36,32 @@ export HELP='
 <b>Tazpkgbox - Packages Manager Help</b>"
 		</label>
 	</text>
-	
+
 	<frame English>
 		<text wrap="false">
 			<label>"
-Tazpkgbox is a simple and easy to use interface to SliTaz
-packages manager aka Tazpkg. You can install, remove, repack or
-get packages by clicking on the package item. Search engine let
-you find and install new applications in a few mouse click.
-Downloaded and repacked are stored in: /var/cache/tazpkg"
+Tazpkgbox is a simple and easy to use interface to the SliTaz
+package manager - aka Tazpkg. You can install, remove, repack or
+get packages by double-clicking on the package item. A Search engine
+lets you find and install new applications in a few mouse clicks.
+
+Downloaded and repacked packages are stored in: /var/cache/tazpkg"
 			</label>
 		</text>
 	</frame>
-	
+
 	<frame Français>
 		<text wrap="false">
 			<label>"
 Tazpkgbox est une interface graphique au gestionnaire de paquet
-de Slitaz aka Tazpkg. Simple et facile à utiliser, vous pouvez 
+de Slitaz aka Tazpkg. Simple et facile à utiliser, vous pouvez
 installer, télécharger ou supprimer des paquet en double-cliquant
-sur sa ligne. Les paquets téléchargés ou recréés sont stocké 
+sur sa ligne. Les paquets téléchargés ou recréés sont stocké
 dans: /var/cache/tazpkg"
 			</label>
 		</text>
 	</frame>
-	
+
 	<hbox>
 		<button ok>
 			<action type="closewindow">HELP</action>
@@ -174,7 +175,7 @@ export TAZPKG_DIALOG='
 			</button>
 			<button>
 				<label>Recharge list</label>
-				<input file icon="system-software-update"></input>         
+				<input file icon="system-software-update"></input>
 				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2"</action>
 				<action>refresh:GET</action>
 				<action>refresh:PKG_STATS</action>
@@ -229,7 +230,7 @@ export TAZPKG_DIALOG='
 				<label>
 "The cache directory is used to store downloaded or repacked packages."
 				</label>
-			</text>       
+			</text>
 			<hbox>
 				<entry editable="false">
 					<input>cd /var/cache/tazpkg; echo "Packages: `ls | wc -l`, size: `du -sh $PWD`"</input>
@@ -237,7 +238,7 @@ export TAZPKG_DIALOG='
 				</entry>
 				<button>
 					<label>Clean cache</label>
-					<input file icon="go-next"></input> 
+					<input file icon="go-next"></input>
 					<action>rm -rf /var/cache/tazpkg/*</action>
 					<action>refresh:CACHE_STATS</action>
 				</button>
