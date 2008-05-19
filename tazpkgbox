@@ -276,14 +276,12 @@ export TAZPKG_DIALOG='
 				<button>
 					<label>Quick check</label>
 					<input file icon="go-next"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg
-					gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check | less "</action>
+					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check | less "</action>
 				</button>
 				<button>
 					<label>Full check</label>
 					<input file icon="go-next"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg
-					gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less "</action>
+					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less "</action>
 				</button>
 			</hbox>
 		</frame>
