@@ -39,6 +39,25 @@ grep -q post_install /var/lib/tazpkg/installed/$PKG/receipt && PACKAGE_INFOS="$P
 			tazpkg reconfigure $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>"
+if grep -q ^$PKG$ /var/lib/tazpkg/blocked-packages.list; then
+	PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Unblock</label>
+			<input file icon=\"up\"></input>
+			<action>xterm -T \"Unblock $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg unblock $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>"
+else
+	PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Block</label>
+			<input file icon=\"down\"></input>
+			<action>xterm -T \"Block $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg block $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>"
+fi
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Remove</label>
