@@ -172,7 +172,7 @@ check_for_receipt()
 # Check if a package is already installed.
 check_for_installed_package()
 {
-	if [ -d "$INSTALLED/${PACKAGE%-[0-9]*}" ]; then
+	if [ -d "$INSTALLED/${PACKAGE%-[0-9A-Z]*}" ]; then
 		echo -e "
 $PACKAGE is already installed. You can use the --forced option to force
 installation or remove it and reinstall.\n"
@@ -200,8 +200,8 @@ packages avalaible on the mirror.\n"
 # package basename.
 check_for_package_in_list()
 {
-	if grep -q "^$PACKAGE-[0-9]" $LOCALSTATE/packages.list; then
-		PACKAGE=`grep ^$PACKAGE-[0-9] $LOCALSTATE/packages.list`
+	if grep -q "^$PACKAGE-[0-9A-Z]" $LOCALSTATE/packages.list; then
+		PACKAGE=`grep ^$PACKAGE-[0-9A-Z] $LOCALSTATE/packages.list`
 	else
 		echo -e "\nUnable to find : $PACKAGE in the mirrored packages list.\n"
 		exit 0
@@ -248,7 +248,7 @@ install_package()
 	. $PWD/receipt
 	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
 		echo -n "Checking post install dependencies... "
-		[ -d "$INSTALLED/${PACKAGE%-[0-9]*}" ]
+		[ -d "$INSTALLED/${PACKAGE%-[0-9A-Z]*}" ]
 		if ! status; then
 			echo "Please run 'tazpkg install $PACKAGE_FILE' and retry."
 			cd .. && rm -rf $TMP_DIR
@@ -334,7 +334,7 @@ install_deps()
 				# the TAZPKG_BASENAME in the local packages.list.
 				if [ -f "$TOP_DIR/packages.list" ]; then
 					echo "Checking if $pkg exist in local list... "
-					TAZPKG_BASENAME=`grep -e ^$pkg-[0-9] $TOP_DIR/packages.list`
+					TAZPKG_BASENAME=`grep -e ^$pkg-[0-9A-Z] $TOP_DIR/packages.list`
 					if [ -f "$TAZPKG_BASENAME.tazpkg" ]; then
 						tazpkg install $TAZPKG_BASENAME.tazpkg
 					fi
@@ -1124,9 +1124,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			else
 				# Check if the installed package is in the current list (other
 				# mirror or local).
-				if grep -q "^$PACKAGE-[0-9]" packages.list; then
+				if grep -q "^$PACKAGE-[0-9A-Z]" packages.list; then
 					# Set new pkg and version for futur comparaison
-					NEW_PACKAGE=`grep ^$PACKAGE-[0-9] packages.list`
+					NEW_PACKAGE=`grep ^$PACKAGE-[0-9A-Z] packages.list`
 					NEW_VERSION=`echo $NEW_PACKAGE | sed s/$PACKAGE-/''/`
 					# Change '-' and 'pre' to points.
 					NEW_VERSION=`echo $NEW_VERSION | sed s/'-'/'.'/`
