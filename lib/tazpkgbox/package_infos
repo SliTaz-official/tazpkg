@@ -30,7 +30,16 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
 	</tree>
 
-	<hbox>
+	<hbox>"
+grep -q post_install /var/lib/tazpkg/installed/$PKG/receipt && PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Reconfigure</label>
+			<input file icon=\"reload\"></input>
+			<action>xterm -T \"Reconfigure $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg reconfigure $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>"
+PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Remove</label>
 			<input file icon=\"edit-delete\"></input>
