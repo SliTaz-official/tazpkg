@@ -10,6 +10,7 @@ PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
 # Installed or not installed, that the question.
 if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 	PACKED_SIZE=""
+	DEPENDS=""
 	. /var/lib/tazpkg/installed/$PKG/receipt
 	PACKAGE_INFOS="
 <window title=\"Package: $PKG\" icon-name=\"package-x-generic\">
@@ -19,7 +20,8 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 		<width>460</width><height>160</height>
 		<label>Package|$PKG</label>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
-		<item icon=\"tazpkg\">Category: | $CATEGORY</item>
+		<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
+[ -n "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"tazpkg\">Depends: | $DEPENDS</item>"
 [ -n "$PACKED_SIZE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"tazpkg\">Size: | $PACKED_SIZE ($UNPACKED_SIZE installed)</item>"
