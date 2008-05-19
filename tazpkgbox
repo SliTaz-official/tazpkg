@@ -267,11 +267,27 @@ export TAZPKG_DIALOG='
 			</hbox>
 		</frame>
 		<frame Files path>
-			<text use-markup="true" width-chars="60">
-				<label>
+			<hbox>
+				<text use-markup="true" width-chars="60">
+					<label>
 "Lists, mirror URL and installed packages: <b>/var/lib/tazpkg</b>"
-				</label>
-			</text>
+					</label>
+				</text>
+				<button>
+					<label>Quick check</label>
+					<input file icon="go-next"></input>
+					<action>tazpkg --check</action>
+					<action>xterm -fa MiscFixed -fs 11 -bg
+					gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check | less "</action>
+				</button>
+				<button>
+					<label>Full check</label>
+					<input file icon="go-next"></input>
+					<action>tazpkg --check</action>
+					<action>xterm -fa MiscFixed -fs 11 -bg
+					gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less "</action>
+				</button>
+			</hbox>
 		</frame>
 	</vbox>
 
