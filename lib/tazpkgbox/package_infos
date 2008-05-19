@@ -9,8 +9,9 @@ PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
 
 # Installed or not installed, that the question.
 if [ -d /var/lib/tazpkg/installed/$PKG ]; then
+	PACKED_SIZE=""
 	. /var/lib/tazpkg/installed/$PKG/receipt
-	export PACKAGE_INFOS="
+	PACKAGE_INFOS="
 <window title=\"Package: $PKG\" icon-name=\"package-x-generic\">
 <vbox>
 
@@ -19,7 +20,10 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 		<label>Package|$PKG</label>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
 		<item icon=\"tazpkg\">Category: | $CATEGORY</item>
-		<item icon=\"tazpkg\">Depends: | $DEPENDS</item>
+		<item icon=\"tazpkg\">Depends: | $DEPENDS</item>"
+[ -n "$PACKED_SIZE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		<item icon=\"tazpkg\">Size: | $PACKED_SIZE ($UNPACKED_SIZE installed)</item>"
+PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
 	</tree>
@@ -49,6 +53,7 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 </vbox>
 </window>
 "
+	export PACKAGE_INFOS
 else
 	RES=`grep "^$PKG" /var/lib/tazpkg/packages.desc | head -n 1`
 	PACKAGE=`echo "$RES" | cut -d "|" -f 1`
