@@ -7,6 +7,33 @@ XTERM_OPTS="-geometry 80x16+120+120"
 
 PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
 
+if [ "$1" = "list_files" ]; then
+	tazpkg list-files $2 | awk '
+BEGIN { ls=0 } {
+  if (/^===/) ls=1-ls;
+  else if (ls) system("stat -c \"%A|%U|%G|%s|%n\" " $0);
+}'
+	exit 0
+fi
+
+export LIST_FILES="
+<window title=\"$PKG files\" icon-name=\"system-file-manager\">
+  <vbox>
+	<tree>
+		<width>600</width><height>160</height>
+		<label>Access | User | Group | Size | Name</label>
+		<input> $0 list_files $PKG </input>
+	</tree>
+	<hbox>
+		<button>
+			<input file icon=\"gtk-close\"></input>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+	</hbox>
+  </vbox>
+</window>
+"
+
 # Installed or not installed, that the question.
 if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 	PACKED_SIZE=""
@@ -73,6 +100,11 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 			cd /var/cache/tazpkg; \
 			tazpkg repack $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+		<button>
+			<label>Files</label>
+			<input file icon=\"tazpkg\"></input>
+			<action type=\"launch\">LIST_FILES</action>
 		</button>
 		<button>
 			<input file icon=\"gtk-close\"></input>
