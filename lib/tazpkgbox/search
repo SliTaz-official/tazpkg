@@ -19,7 +19,7 @@ list_files()
 if [ "$1" = "--files" ]; then
 	tazpkg search-file "$SEARCH" | list_files > \
 		/tmp/tazpkgbox/search-installed
-	tazpkg search-file "$SEARCH" --files | list_files > \
+	tazpkg search-file "$SEARCH" --mirror | list_files > \
 		/tmp/tazpkgbox/search-mirrored
 	exit 0
 fi
