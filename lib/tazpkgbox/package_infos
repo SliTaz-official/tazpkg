@@ -16,6 +16,12 @@ BEGIN { ls=0 } {
 	exit 0
 fi
 
+if [ "$1" = "list_files_mirror" ]; then
+	unlzma -c /var/lib/tazpkg/files.list.lzma | grep -- "^$2:" | \
+		awk '{ print substr($0,index($0,":")+2) }'
+	exit 0
+fi
+
 export LIST_FILES="
 <window title=\"$PKG files\" icon-name=\"system-file-manager\">
   <vbox>
@@ -23,6 +29,24 @@ export LIST_FILES="
 		<width>600</width><height>160</height>
 		<label>Access | User | Group | Size | Name</label>
 		<input> $0 list_files $PKG </input>
+	</tree>
+	<hbox>
+		<button>
+			<input file icon=\"gtk-close\"></input>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+	</hbox>
+  </vbox>
+</window>
+"
+
+export LIST_FILES_MIRROR="
+<window title=\"$PKG files\" icon-name=\"system-file-manager\">
+  <vbox>
+	<tree>
+		<width>300</width><height>160</height>
+		<label>File Name</label>
+		<input> $0 list_files_mirror $PKG </input>
 	</tree>
 	<hbox>
 		<button>
@@ -153,6 +177,11 @@ else
 			<action>xterm -T \"Get $PACKAGE\" $XTERM_OPTS -e \"\
 			cd /var/cache/tazpkg; tazpkg get $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
+		</button>
+		<button>
+			<label>Files</label>
+			<input file icon=\"tazpkg\"></input>
+			<action type=\"launch\">LIST_FILES_MIRROR</action>
 		</button>
 		<button>
 			<input file icon=\"gtk-close\"></input>
