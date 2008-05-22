@@ -770,6 +770,25 @@ Maintainer : $MAINTAINER"
 		echo ""
 		echo -e "\033[1mSearch result for file :\033[0m $2"
 		echo "================================================================================"
+
+		if [ "$3" == "--mirror" ]; then
+		
+		unlzma -c $LOCALSTATE/files.list.lzma | grep -- ".*:.*$2" | awk '
+                            BEGIN { last="" }
+                            {
+			    	pkg=substr($0,0,index($0,":")-1);
+			    	file=substr($0,index($0,":")+2);
+                                if (last != pkg) {
+				    last = pkg;
+				    printf("\n%c[1mPackage %s :%c[0m\n",27,pkg,27);
+				}
+                                printf("%s\n",file);
+                            }'
+		match=`unlzma -c $LOCALSTATE/files.list.lzma | \
+			grep -- ".*:.*$2" | wc -l`
+
+		else
+
 		# Check all pkg files.list in search match with specify the package
 		# name and the full path to the file(s).
 		for pkg in $INSTALLED/*
@@ -783,6 +802,9 @@ Maintainer : $MAINTAINER"
 				match=$(($match+$files))
 			fi
 		done
+
+		fi
+
 		if [ "$match" = "" ]; then
 			echo "0 file found for : $2"
 			echo ""
@@ -1068,11 +1090,13 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			mv -f packages.desc packages.desc.bak 2>/dev/null
 			mv -f packages.txt packages.txt.bak 2>/dev/null
 			mv -f packages.list packages.list.bak 2>/dev/null
+			mv -f files.list.lzma files.list.lzma.bak 2> /dev/nul
 			status
 		fi
 		download packages.desc
 		download packages.txt
 		download packages.list
+		download files.list.lzma
 		if [ -f "$LOCALSTATE/packages.list.bak" ]; then
 			diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
 			sed -i s/+// packages.diff
