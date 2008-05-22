@@ -187,7 +187,7 @@ export TAZPKG_DIALOG='
 		<tree icon="tazpkg">
 			<width>580</width><height>120</height>
 			<variable>RESULT_INSTALLED</variable>
-			<label>Installed packages|Version|Description</label>
+			<label>Installed packages|Version|Description / File</label>
 			<input>cat /tmp/tazpkgbox/search-installed</input>
 			<action>echo "$RESULT_INSTALLED" > /tmp/tazpkgbox/pkg</action>
 			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
@@ -200,7 +200,7 @@ export TAZPKG_DIALOG='
 		<tree icon="tazpkg">
 			<width>580</width><height>120</height>
 			<variable>RESULT_MIRROR</variable>
-			<label>Mirrored packages|Version|Description</label>
+			<label>Mirrored packages|Version|Description / File</label>
 			<input>cat /tmp/tazpkgbox/search-mirrored</input>
 			<action>echo "$RESULT_MIRROR" > /tmp/tazpkgbox/pkg</action>
 			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
@@ -215,9 +215,16 @@ export TAZPKG_DIALOG='
 				<variable>SEARCH</variable>
 			</entry>
 			<button>
-				<label>Search</label>
+				<label>Search Packages</label>
 				<input file icon="system-search"></input>
 				<action>/usr/lib/slitaz/tazpkgbox/search</action>
+				<action>refresh:RESULT_INSTALLED</action>
+				<action>refresh:RESULT_MIRROR</action>
+			</button>
+			<button>
+				<label>Search Files</label>
+				<input file icon="system-search"></input>
+				<action>/usr/lib/slitaz/tazpkgbox/search --files</action>
 				<action>refresh:RESULT_INSTALLED</action>
 				<action>refresh:RESULT_MIRROR</action>
 			</button>

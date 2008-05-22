@@ -7,6 +7,23 @@
 rm -f /tmp/tazpkgbox/search-installed
 touch /tmp/tazpkgbox/search-installed
 
+list_files()
+{
+	sed 's/.\[[01]m//g' | awk 'BEGIN { show=0 } {
+		if (/^===/) show=1-show;
+		else if (/^Package/) pkg=$2;
+		else if ($0 != "" && show != 0) printf("%s||%s\n",pkg,$0);
+	}'
+}
+
+if [ "$1" = "--files" ]; then
+	tazpkg search-file "$SEARCH" | list_files > \
+		/tmp/tazpkgbox/search-installed
+	tazpkg search-file "$SEARCH" --files | list_files > \
+		/tmp/tazpkgbox/search-mirrored
+	exit 0
+fi
+
 # Search installed.
 for i in `ls /var/lib/tazpkg/installed`
 do
