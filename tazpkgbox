@@ -89,7 +89,7 @@ export TAZPKG_DIALOG='
 
 	<vbox>
 		<tree>
-			<width>580</width><height>240</height>
+			<width>620</width><height>240</height>
 			<variable>PKG</variable>
 			<label>Package name|Version|Description</label>
 			<input>/usr/lib/slitaz/tazpkgbox/list installed</input>
@@ -139,7 +139,7 @@ export TAZPKG_DIALOG='
 
 	<vbox>
 		<tree>
-			<width>580</width><height>240</height>
+			<width>620</width><height>240</height>
 			<variable>GET</variable>
 			<label>Package name|Version|Description</label>
 			<input>/usr/lib/slitaz/tazpkgbox/list mirrored</input>
@@ -185,7 +185,7 @@ export TAZPKG_DIALOG='
 
 	<vbox>
 		<tree icon="tazpkg">
-			<width>580</width><height>120</height>
+			<width>620</width><height>120</height>
 			<variable>RESULT_INSTALLED</variable>
 			<label>Installed packages|Version|Description / File</label>
 			<input>cat /tmp/tazpkgbox/search-installed</input>
@@ -198,7 +198,7 @@ export TAZPKG_DIALOG='
 			<action>refresh:CACHE_STATS</action>
 		</tree>
 		<tree icon="tazpkg">
-			<width>580</width><height>120</height>
+			<width>620</width><height>120</height>
 			<variable>RESULT_MIRROR</variable>
 			<label>Mirrored packages|Version|Description / File</label>
 			<input>cat /tmp/tazpkgbox/search-mirrored</input>
@@ -273,13 +273,15 @@ export TAZPKG_DIALOG='
 				</button>
 			</hbox>
 		</frame>
-		<frame Files path>
+		<frame Files path and packages check>
 			<hbox>
 				<text use-markup="true" width-chars="60">
 					<label>
 "Lists, mirror URL and installed packages: <b>/var/lib/tazpkg</b>"
 					</label>
 				</text>
+			</hbox>
+			<hbox>
 				<button>
 					<label>Quick check</label>
 					<input file icon="go-next"></input>
