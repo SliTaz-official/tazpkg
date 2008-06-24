@@ -6,7 +6,7 @@
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2008.
 #
-VERSION=24080508
+VERSION=2.2
 
 # Tazpkgbox is only for root.
 if test $(id -u) != 0 ; then
