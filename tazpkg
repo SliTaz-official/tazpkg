@@ -1027,6 +1027,12 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -e "$MISSING"
 			exit 1
 		fi
+		if [ -f $INSTALLED/$PACKAGE/md5sum ]; then
+			if ! md5sum -s -c $INSTALLED/$PACKAGE/md5sum; then
+				echo -n "Can't repack, md5sum error."
+				exit 1
+			fi
+		fi
 		mkdir -p $TMP_DIR && cd $TMP_DIR
 		FILES="fs.cpio.gz\n"
 		for i in $(ls $INSTALLED/$PACKAGE) ; do
@@ -1272,6 +1278,10 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			done
 		done
 		if [ "$PACKAGE_FILE" = "--full" ]; then
+			for file in */md5sum; do
+				[ -s "$file" ] || continue
+				md5sum -c "$file" 2> /dev/null | grep -v OK$
+			done
 			FILES=" "
 			for file in $(cat */files.list); do
 				[ -d "$file" ] && continue
