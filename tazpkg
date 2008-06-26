@@ -1163,10 +1163,10 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 					if [ "$VERSION" != "$NEW_VERSION" ]; then
 						# Version seems different. Check for major, minor or 
 						# revision
-						PKG_MAJOR=`echo $VERSION | cut -f1 -d"."`
-						NEW_MAJOR=`echo $NEW_VERSION | cut -f1 -d"."`
-						PKG_MINOR=`echo $VERSION | cut -f2 -d"."`
-						NEW_MINOR=`echo $NEW_VERSION | cut -f2 -d"."`
+						PKG_MAJOR=`echo ${VERSION%_*} | cut -f1 -d"."`
+						NEW_MAJOR=`echo ${NEW_VERSION%_*} | cut -f1 -d"."`
+						PKG_MINOR=`echo ${VERSION%_*} | cut -f2 -d"."`
+						NEW_MINOR=`echo ${NEW_VERSION%_*} | cut -f2 -d"."`
 						# Minor
 						if [ "$NEW_MINOR" -gt "$PKG_MINOR" ]; then
 							RELEASE=minor
