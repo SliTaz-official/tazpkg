@@ -212,7 +212,7 @@ check_for_package_in_list()
 download()
 {
 	for i in $(cat $MIRROR); do
-		wget $i$@ && break
+		wget -c $i$@ && break
 	done
 }
 
@@ -1378,6 +1378,12 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		cd $CACHE_DIR
 		if [ -f "$PACKAGE.tazpkg" ]; then
 			echo "$PACKAGE already in the cache : $CACHE_DIR"
+			# check package download was finished
+			hexdump -C $PACKAGE.tazpkg | tail | hexdump -R | \
+			grep -q 00000000TRAILER || {
+				echo "Continue $PACKAGE download"
+				download $PACKAGE.tazpkg
+			}
 		else
 			echo ""
 			download $PACKAGE.tazpkg
