@@ -169,10 +169,28 @@ check_for_receipt()
 	fi
 }
 
+# Get package name in a directory
+package_fullname_in_dir()
+{
+	. $1/receipt
+	echo $PACKAGE-$VERSION$EXTRAVERSION
+}
+
+# Get package name that is already installed.
+get_installed_package_pathname()
+{
+	for i in $INSTALLED/${1%%-*}*; do
+		if [ "$1" = "$(package_fullname_in_dir $i)" ]; then
+			echo $i
+			return
+		fi
+	done
+}
+
 # Check if a package is already installed.
 check_for_installed_package()
 {
-	if [ -d "$INSTALLED/${PACKAGE%-[0-9A-Z]*}" ]; then
+	if [ -n "$(get_installed_package_pathname $PACKAGE)" ]; then
 		echo -e "
 $PACKAGE is already installed. You can use the --forced option to force
 installation or remove it and reinstall.\n"
@@ -196,12 +214,31 @@ packages avalaible on the mirror.\n"
 	fi
 }
 
+# Get a package name in packages.list (whatever the version is).
+get_package_fullname_in_list()
+{
+	local pkg=$1
+	while [ "$pkg" != "${pkg%-*}" ]; do
+		case "$pkg" in
+			*[0-9]);;
+			*) break;; # version must end is 0..9
+		esac
+		pkg=${pkg%-*}
+		if grep -q ^$pkg $2; then
+			grep ^$pkg $2 # echo
+			break
+		fi
+	done
+}
+
 # Check for a package in packages.list. Used by get and get-install to grep
 # package basename.
 check_for_package_in_list()
 {
-	if grep -q "^$PACKAGE-[0-9A-Z]" $LOCALSTATE/packages.list; then
-		PACKAGE=`grep ^$PACKAGE-[0-9A-Z] $LOCALSTATE/packages.list`
+	local pkg
+	pkg=$(get_package_fullname_in_list $PACKAGE $LOCALSTATE/packages.list)
+	if [ -n "$pkg" ]; then
+		PACKAGE=$pkg
 	else
 		echo -e "\nUnable to find : $PACKAGE in the mirrored packages list.\n"
 		exit 0
@@ -248,9 +285,9 @@ install_package()
 	. $PWD/receipt
 	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
 		echo -n "Checking post install dependencies... "
-		[ -d "$INSTALLED/${PACKAGE%-[0-9A-Z]*}" ]
+		[ -n "$(get_installed_package_pathname $PACKAGE)" ]
 		if ! status; then
-			echo "Please run 'tazpkg install $PACKAGE_FILE' and retry."
+			echo "Please run 'tazpkg install $PACKAGE_FILE' in / and retry."
 			cd .. && rm -rf $TMP_DIR
 			exit 1
 		fi
@@ -334,10 +371,16 @@ install_deps()
 				# the TAZPKG_BASENAME in the local packages.list.
 				if [ -f "$TOP_DIR/packages.list" ]; then
 					echo "Checking if $pkg exist in local list... "
-					TAZPKG_BASENAME=`grep -e ^$pkg-[0-9A-Z] $TOP_DIR/packages.list`
-					if [ -f "$TAZPKG_BASENAME.tazpkg" ]; then
-						tazpkg install $TAZPKG_BASENAME.tazpkg
-					fi
+					mkdir $TMP_DIR
+					for i in $pkg-*.tazpkg; do
+						( cd $TMP_DIR ; cpio -i receipt ) < $i
+						if grep -q ^$(package_fullname_in_dir $TMP_DIR)$ $TOP_DIR/packages.list
+						then
+							tazpkg install $i
+							break
+						fi
+					done
+					rm -rf $TMP_DIR
 				# Install deps from the mirror.
 				else
 					if [ ! -f "$LOCALSTATE/packages.list" ]; then
@@ -1161,9 +1204,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			else
 				# Check if the installed package is in the current list (other
 				# mirror or local).
-				if grep -q "^$PACKAGE-[0-9A-Z]" packages.list; then
+				NEW_PACKAGE=$(get_package_fullname_in_list $PACKAGE packages.list)
+				if [ -n "$NEW_PACKAGE" ]; then
 					# Set new pkg and version for futur comparaison
-					NEW_PACKAGE=`grep ^$PACKAGE-[0-9A-Z] packages.list`
 					NEW_VERSION=`echo $NEW_PACKAGE | sed s/$PACKAGE-/''/`
 					# Change '-' and 'pre' to points.
 					NEW_VERSION=`echo $NEW_VERSION | sed s/'-'/'.'/`
