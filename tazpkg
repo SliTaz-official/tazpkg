@@ -219,10 +219,6 @@ get_package_fullname_in_list()
 {
 	local pkg=$1
 	while [ "$pkg" != "${pkg%-*}" ]; do
-		case "$pkg" in
-			*[0-9]);;
-			*) break;; # version must end is 0..9
-		esac
 		pkg=${pkg%-*}
 		if grep -q ^$pkg $2; then
 			grep ^$pkg $2 # echo
