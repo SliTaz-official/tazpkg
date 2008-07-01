@@ -1379,8 +1379,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		if [ -f "$PACKAGE.tazpkg" ]; then
 			echo "$PACKAGE already in the cache : $CACHE_DIR"
 			# check package download was finished
-			hexdump -C $PACKAGE.tazpkg | tail | hexdump -R | \
-			grep -q 00000000TRAILER || {
+			tail -c 2k $PACKAGE.tazpkg | grep -q 00000000TRAILER || {
 				echo "Continue $PACKAGE download"
 				download $PACKAGE.tazpkg
 			}
