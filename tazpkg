@@ -172,6 +172,7 @@ check_for_receipt()
 # Get package name in a directory
 package_fullname_in_dir()
 {
+	EXTRAVERSION=""
 	. $1/receipt
 	echo $PACKAGE-$VERSION$EXTRAVERSION
 }
@@ -265,6 +266,7 @@ install_package()
 	cd $TMP_DIR
 	extract_package
 	SELF_INSTALL=0
+	EXTRAVERSION=""
 	# Include temporary receipt to get the right variables.
 	. $PWD/receipt
 	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
@@ -311,7 +313,7 @@ install_package()
 	fi
 	cd $TOP_DIR
 	echo "================================================================================"
-	echo "$PACKAGE ($VERSION) is installed."
+	echo "$PACKAGE ($VERSION$EXTRAVERSION) is installed."
 	echo ""
 }
 
@@ -424,7 +426,7 @@ xhtml_pkg_info()
 	cat >> $XHTML_LIST << _EOT_
 <h3>$PACKAGE</h3>
 <pre>
-Version    : $VERSION
+Version    : $VERSION$EXTRAVERSION
 Short desc : $SHORT_DESC
 Web site   : <a href="$WEB_SITE">$WEB_SITE</a>
 </pre>
@@ -456,9 +458,10 @@ search_in_installed_packages()
 	list=`ls -1 $INSTALLED | grep -i "$PATTERN"`
 	for pkg in $list
 	do
+		EXTRAVERSION=""
 		. $INSTALLED/$pkg/receipt
 		echo -n "$PACKAGE "
-		echo -en "\033[24G $VERSION"
+		echo -en "\033[24G $VERSION$EXTRAVERSION"
 		echo -e "\033[42G $CATEGORY"
 		packages=$(($packages+1))
 	done
@@ -533,10 +536,11 @@ install_flavor()
 		zcat $FLAVOR.flavor | cpio -i 2>/dev/null
 		while read file; do
 			for pkg in $(ls -d $INSTALLED/${file%%-*}*); do
+				EXTRAVERSION=""
 				. $pkg/receipt
-				[ "$PACKAGE-$VERSION" = "$file" ] && break
+				[ "$PACKAGE-$VERSION$EXTRAVERSION" = "$file" ] && break
 			done
-			[ "$PACKAGE-$VERSION" = "$file" ] && continue
+			[ "$PACKAGE-$VERSION$EXTRAVERSION" = "$file" ] && continue
 			cd $CACHE_DIR
 			download $file.tazpkg
 			cd $TMP_DIR
@@ -549,8 +553,9 @@ install_flavor()
 		done < $FLAVOR.nonfree
 		[ "$ARG" == "--purge" ] && for pkg in $(ls $INSTALLED); do
 			[ -d $INSTALLED/$pkg ] || continue
+			EXTRAVERSION=""
 			. $INSTALLED/$pkg/receipt
-			grep -q ^$PACKAGE-$VERSION$ $FLAVOR.pkglist && continue
+			grep -q ^$PACKAGE-$VERSION$EXTRAVERSION$ $FLAVOR.pkglist && continue
 			grep -qs ^$PACKAGE$ $FLAVOR.nonfree && continue
 			tazpkg remove $PACKAGE
 		done
@@ -607,10 +612,11 @@ case "$COMMAND" in
 			echo "================================================================================"
 			for pkg in $INSTALLED/*
 			do
+				EXTRAVERSION=""
 				. $pkg/receipt
 				if [ "$CATEGORY" == "$ASKED_CATEGORY" ]; then
 					echo -n "$PACKAGE"
-					echo -e "\033[24G $VERSION"
+					echo -e "\033[24G $VERSION$EXTRAVERSION"
 					packages=$(($packages+1))
 				fi
 			done
@@ -624,9 +630,10 @@ case "$COMMAND" in
 			echo "================================================================================"
 			for pkg in $INSTALLED/*
 			do
+				EXTRAVERSION=""
 				. $pkg/receipt
 				echo -n "$PACKAGE"
-				echo -en "\033[24G $VERSION"
+				echo -en "\033[24G $VERSION$EXTRAVERSION"
 				echo -e "\033[42G $CATEGORY"
 				packages=$(($packages+1))
 			done
@@ -653,6 +660,7 @@ case "$COMMAND" in
 		echo -n "Creating packages informations..."
 		for pkg in $INSTALLED/*
 		do
+			EXTRAVERSION=""
 			. $pkg/receipt
 			xhtml_pkg_info
 			packages=$(($packages+1))
@@ -721,12 +729,13 @@ case "$COMMAND" in
 		#
 		check_for_package_on_cmdline
 		check_for_receipt
+		EXTRAVERSION=""
 		. $INSTALLED/$PACKAGE/receipt
 		echo ""
 		echo -e "\033[1mTazpkg informations\033[0m
 ================================================================================
 Package    : $PACKAGE
-Version    : $VERSION
+Version    : $VERSION$EXTRAVERSION
 Category   : $CATEGORY
 Short desc : $SHORT_DESC
 Maintainer : $MAINTAINER"
@@ -949,6 +958,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 				*\ $THE_PACKAGE\ *) ALTERED="$ALTERED $i";;
 				esac
 			done
+			EXTRAVERSION=""
 			. $INSTALLED/$THE_PACKAGE/receipt
 		fi
 		echo ""
@@ -958,7 +968,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 				echo "  $i"
 			done
 		fi
-		echo "Remove $PACKAGE ($VERSION) ?"
+		echo "Remove $PACKAGE ($VERSION$EXTRAVERSION) ?"
 		echo -n "Please confirm uninstallation (y/N) : "; read anser
 		if [ "$anser" = "y" ]; then
 			echo ""
@@ -1029,9 +1039,10 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		#
 		check_for_package_on_cmdline
 		check_for_receipt
-		eval $(grep ^VERSION= $INSTALLED/$PACKAGE/receipt)
+		EXTRAVERSION=""
+		. $INSTALLED/$PACKAGE/receipt
 		echo ""
-		echo -e "\033[1mRepacking :\033[0m $PACKAGE-$VERSION.tazpkg"
+		echo -e "\033[1mRepacking :\033[0m $PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
 		echo "================================================================================"
 		if grep -qs ^NO_REPACK= $INSTALLED/$PACKAGE/receipt; then
 			echo "Can't repack $PACKAGE"
@@ -1079,11 +1090,11 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		fi
 		find fs | cpio -o -H newc 2> /dev/null | gzip -9 > fs.cpio.gz
 		echo -e "$FILES" | cpio -o -H newc 2> /dev/null > \
-			$TOP_DIR/$PACKAGE-$VERSION.tazpkg
+			$TOP_DIR/$PACKAGE-$VERSION$EXTRAVERSION.tazpkg
 		cd $TOP_DIR
 		\rm -R $TMP_DIR
 		echo "Package $PACKAGE repacked successfully."
-		echo "Size : `du -sh $PACKAGE-$VERSION.tazpkg`"
+		echo "Size : `du -sh $PACKAGE-$VERSION$EXTRAVERSION.tazpkg`"
 		echo ""
 		;;
 	pack)
@@ -1178,6 +1189,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		FIRST_CLASS=""
 		for pkg in $INSTALLED/*
 		do
+			EXTRAVERSION=""
 			. $pkg/receipt
 			# Diplay package name to show that Tazpkg is working...
 			echo -en "\\033[0G                                         "
@@ -1196,7 +1208,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 					NEW_VERSION=`echo $NEW_PACKAGE | sed s/$PACKAGE-/''/`
 					# Change '-' and 'pre' to points.
 					NEW_VERSION=`echo $NEW_VERSION | sed s/'-'/'.'/`
-					VERSION=`echo $VERSION | sed s/'-'/'.'/`
+					VERSION=`echo $VERSION | sed s/'-'/'.'/`$EXTRAVERSION
 					NEW_VERSION=`echo $NEW_VERSION | sed s/'pre'/'.'/`
 					VERSION=`echo $VERSION | sed s/'pre'/'.'/`
 					NEW_VERSION=`echo $NEW_VERSION | sed 's/[A-Z]\.//'`
@@ -1292,14 +1304,15 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		cd $INSTALLED
 		for PACKAGE in `ls`; do
 			DEPENDS=""
+			EXTRAVERSION=""
 			. $PACKAGE/receipt
 			if [ -s $PACKAGE/modifiers ]; then
-				echo "The package $PACKAGE $VERSION has been modified by :"
+				echo "The package $PACKAGE $VERSION$EXTRAVERSION has been modified by :"
 				for i in $(cat $PACKAGE/modifiers); do
 					echo "  $i"
 				done
 			fi
-			MSG="Files lost from $PACKAGE $VERSION :\n"
+			MSG="Files lost from $PACKAGE $VERSION$EXTRAVERSION :\n"
 			while read file; do
 				[ -e "$file" ] && continue
 				if [ -L "$file" ]; then
@@ -1308,7 +1321,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 				echo -e "$MSG  $file"
 				MSG=""
 			done < $PACKAGE/files.list
-			MSG="Missing dependencies for $PACKAGE $VERSION :\n"
+			MSG="Missing dependencies for $PACKAGE $VERSION$EXTRAVERSION :\n"
 			for i in $DEPENDS; do
 				[ -d $i ] && continue
 				echo -e "$MSG  $i"
