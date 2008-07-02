@@ -218,12 +218,15 @@ packages avalaible on the mirror.\n"
 get_package_fullname_in_list()
 {
 	local pkg=$1
+	local i
 	while [ "$pkg" != "${pkg%-*}" ]; do
 		pkg=${pkg%-*}
-		if grep -q ^$pkg $2; then
-			grep ^$pkg $2 # echo
-			break
-		fi
+		for i in '-[0-9]' '-.[0-9]' '-'; do
+			if grep -q ^$pkg$i $2; then
+				grep ^$pkg$i $2 | head -1 # echo
+				return
+			fi
+		done
 	done
 }
 
@@ -1200,7 +1203,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			else
 				# Check if the installed package is in the current list (other
 				# mirror or local).
-				NEW_PACKAGE=$(get_package_fullname_in_list $PACKAGE packages.list)
+				NEW_PACKAGE=$(grep "^$PACKAGE-[0-9]" packages.list | head -1)
+				[ -n "$NEW_PACKAGE" ] || NEW_PACKAGE=$(grep "^$PACKAGE-.[\.0-9]" packages.list | head -1)
+
 				if [ -n "$NEW_PACKAGE" ]; then
 					# Set new pkg and version for futur comparaison
 					NEW_VERSION=`echo $NEW_PACKAGE | sed s/$PACKAGE-/''/`
@@ -1209,6 +1214,8 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 					VERSION=`echo $VERSION | sed s/'-'/'.'/`
 					NEW_VERSION=`echo $NEW_VERSION | sed s/'pre'/'.'/`
 					VERSION=`echo $VERSION | sed s/'pre'/'.'/`
+					NEW_VERSION=`echo $NEW_VERSION | sed 's/[A-Z]\.//'`
+					VERSION=`echo $VERSION | sed 's/[A-Z]\.//'`
 					# Compare version. Upgrade are only avalaible for official
 					# packages, so we control de mirror and it should be ok if
 					# we just check for egality.
