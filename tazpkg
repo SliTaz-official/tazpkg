@@ -214,28 +214,13 @@ packages avalaible on the mirror.\n"
 	fi
 }
 
-# Get a package name in packages.list (whatever the version is).
-get_package_fullname_in_list()
-{
-	local pkg=$1
-	local i
-	while [ "$pkg" != "${pkg%-*}" ]; do
-		pkg=${pkg%-*}
-		for i in '-[0-9]' '-.[0-9]' '-'; do
-			if grep -q ^$pkg$i $2; then
-				grep ^$pkg$i $2 | head -1 # echo
-				return
-			fi
-		done
-	done
-}
-
 # Check for a package in packages.list. Used by get and get-install to grep
 # package basename.
 check_for_package_in_list()
 {
 	local pkg
-	pkg=$(get_package_fullname_in_list $PACKAGE $LOCALSTATE/packages.list)
+	pkg=$(grep "^$PACKAGE-[0-9]" $LOCALSTATE/packages.list | head -1)
+	[ -n "$pkg" ] || pkg=$(grep "^$PACKAGE-.[\.0-9]" $LOCALSTATE/packages.list | head -1)
 	if [ -n "$pkg" ]; then
 		PACKAGE=$pkg
 	else
