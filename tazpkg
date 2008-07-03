@@ -181,6 +181,7 @@ package_fullname_in_dir()
 get_installed_package_pathname()
 {
 	for i in $INSTALLED/${1%%-*}*; do
+		[ -d $i ] || continue
 		if [ "$1" = "$(package_fullname_in_dir $i)" ]; then
 			echo $i
 			return
@@ -536,6 +537,7 @@ install_flavor()
 		zcat $FLAVOR.flavor | cpio -i 2>/dev/null
 		while read file; do
 			for pkg in $(ls -d $INSTALLED/${file%%-*}*); do
+				[ -d $pkg ] || continue
 				EXTRAVERSION=""
 				. $pkg/receipt
 				[ "$PACKAGE-$VERSION$EXTRAVERSION" = "$file" ] && break
