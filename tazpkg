@@ -321,6 +321,13 @@ install_package()
 # Check for missing deps listed in a receipt packages.
 check_for_deps()
 {
+	local saved;
+	saved=$PACKAGE
+	mkdir -p $TMP_DIR
+	( cd $TMP_DIR ; cpio -i receipt ) < $PACKAGE_FILE
+	. $TMP_DIR/receipt
+	PACKAGE=$saved
+	rm -rf $TMP_DIR
 	for i in $DEPENDS
 	do
 		if [ ! -d "$INSTALLED/$i" ]; then
@@ -880,12 +887,12 @@ Maintainer : $MAINTAINER"
 		if [ "$DO_CHECK" = "yes" ]; then
 			check_for_installed_package
 		fi
-		install_package
 		# Resolv package deps.
 		check_for_deps
 		if [ ! "$MISSING_PACKAGE" = "" ]; then
 			install_deps
 		fi
+		install_package
 		;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
@@ -1434,11 +1441,11 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			download $PACKAGE.tazpkg
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
-		install_package
 		check_for_deps
 		if [ ! "$MISSING_PACKAGE" = "" ]; then
 			install_deps
 		fi
+		install_package
 		;;
 	clean-cache)
 		# Remove all downloaded packages.
