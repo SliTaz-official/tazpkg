@@ -306,6 +306,11 @@ export TAZPKG_DIALOG='
 	</hbox>
 
 	<hbox>
+		<button>
+			<label>Wok</label>
+			<input file icon="gtk-open"></input>
+			<action>firefox http://hg.slitaz.org/wok/file/</action>
+		</button>
 		<button help>
 			<label>Help</label>
 			<action type="launch">HELP</action>
