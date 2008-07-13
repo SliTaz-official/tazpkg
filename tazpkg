@@ -5,7 +5,7 @@
 # SHell script. It works well with Busybox ash shell and bash. Tazpkg let you
 # list, install, remove, download or get information about a package, you can
 # use 'tazpkg usage' to get a list of commands with a short description. Tazpkg
-# also relolv dependencies and can upgrade packages from a mirror.
+# also resolves dependencies and can upgrade packages from a mirror.
 #
 # (C) 2007-2008 SliTaz - GNU General Public License v3.
 #
@@ -36,7 +36,7 @@ meta
 non-free"
 
 # Initialize some variables to use words
-# rater than numbers for functions and actions.
+# rather than numbers for functions and actions.
 COMMAND=$1
 if [ -f "$2" ]; then
 	# Set pkg basename for install, extract
@@ -59,11 +59,11 @@ PACKAGES_LIST=$LOCALSTATE/packages.list
 BLOCKED=$LOCALSTATE/blocked-packages.list
 DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
 
-# Bold red warnig for upgrade.
+# Bold red warning for upgrade.
 WARNING="\\033[1;31mWARNING\\033[0;39m"
 
 # Check if the directories and files used by Tazpkg
-# exists. If not and user is root we creat them.
+# exists. If not and user is root we create them.
 if test $(id -u) = 0 ; then
 	if [ ! -d "$CACHE_DIR" ]; then
 		mkdir -p $CACHE_DIR
@@ -734,7 +734,7 @@ case "$COMMAND" in
 		echo ""
 		;;
 	info)
-		# Informations about package.
+		# Information about package.
 		#
 		check_for_package_on_cmdline
 		check_for_receipt
@@ -1541,7 +1541,7 @@ address to the directory of the packages and packages.list file."
 		done
 		;;
 	usage|*)
-		# Print a short help or give usage for an unknow or empty command.
+		# Print a short help or give usage for an unknown or empty command.
 		#
 		usage
 		;;
