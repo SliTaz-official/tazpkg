@@ -58,6 +58,8 @@ MIRROR=$LOCALSTATE/mirror
 PACKAGES_LIST=$LOCALSTATE/packages.list
 BLOCKED=$LOCALSTATE/blocked-packages.list
 DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
+INSTALL_LIST=""
+PROCESSED_LIST="${TMP_DIR}_processed"
 
 # Bold red warning for upgrade.
 WARNING="\\033[1;31mWARNING\\033[0;39m"
@@ -257,7 +259,13 @@ install_package()
 		 # get absolute path
 		 ROOT=$(cd $ROOT; pwd)
 	fi
+	# Resolv package deps.
+	check_for_deps $ROOT
+	if [ ! "$MISSING_PACKAGE" = "" ]; then
+		install_deps $ROOT
+	fi
 	mkdir -p $TMP_DIR
+	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $PROCESSED_LIST
 	echo ""
 	echo -e "\033[1mInstallation of :\033[0m $PACKAGE"
 	echo "================================================================================"
@@ -330,7 +338,7 @@ check_for_deps()
 	rm -rf $TMP_DIR
 	for i in $DEPENDS
 	do
-		if [ ! -d "$INSTALLED/$i" ]; then
+		if [ ! -d "$1$INSTALLED/$i" ]; then
 			MISSING_PACKAGE=$i
 			deps=$(($deps+1))
 		fi
@@ -340,7 +348,7 @@ check_for_deps()
 		echo "================================================================================"
 		for i in $DEPENDS
 		do
-			if [ ! -d "$INSTALLED/$i" ]; then
+			if [ ! -d "$1$INSTALLED/$i" ]; then
 				MISSING_PACKAGE=$i
 				echo "Missing : $MISSING_PACKAGE"
 			fi
@@ -355,12 +363,15 @@ check_for_deps()
 # install packages from local, we need a packages.list to find the version.
 install_deps()
 {
+	local root
+	root=""
+	[ -n "$1" ] && root="--root $1"
 	echo ""
 	echo -n "Install all missing dependencies (y/N) ? "; read anser
 	if [ "$anser" = "y" ]; then
 		for pkg in $DEPENDS
 		do
-			if [ ! -d "$INSTALLED/$pkg" ]; then
+			if [ ! -d "$1$INSTALLED/$pkg" ]; then
 				# We can install packages from a local dir by greping
 				# the TAZPKG_BASENAME in the local packages.list.
 				if [ -f "$TOP_DIR/packages.list" ]; then
@@ -370,17 +381,17 @@ install_deps()
 						( cd $TMP_DIR ; cpio -i receipt ) < $i
 						if grep -q ^$(package_fullname_in_dir $TMP_DIR)$ $TOP_DIR/packages.list
 						then
-							tazpkg install $i
+							tazpkg install $i $root
 							break
 						fi
 					done
 					rm -rf $TMP_DIR
 				# Install deps from the mirror.
 				else
-					if [ ! -f "$LOCALSTATE/packages.list" ]; then
+					if [ ! -f "$1$LOCALSTATE/packages.list" ]; then
 						tazpkg recharge
 					fi
-					tazpkg get-install $pkg
+					tazpkg get-install $pkg $root
 				fi
 			fi
 		done
@@ -868,14 +879,14 @@ Maintainer : $MAINTAINER"
 		check_for_package_file
 		# Check if forced install.
 		DO_CHECK="yes"
+		ROOT=""
 		while [ -n "$3" ]; do
 			case "$3" in
 			--forced)
 				DO_CHECK="no"
 				;;
 			--root=*)
-				install_package ${3#--root=}
-				exit $?
+				ROOT="${3#--root=}"
 				;;
 			*)	shift 2
 				echo -e "\nUnknown option $*.\n"
@@ -887,12 +898,7 @@ Maintainer : $MAINTAINER"
 		if [ "$DO_CHECK" = "yes" ]; then
 			check_for_installed_package
 		fi
-		# Resolv package deps.
-		check_for_deps
-		if [ ! "$MISSING_PACKAGE" = "" ]; then
-			install_deps
-		fi
-		install_package
+		install_package $ROOT
 		;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
@@ -911,20 +917,23 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		else
 			LIST=`cat $2`
 		fi
+		
+		# Remember processed list
+		INSTALL_LIST="$2"
+
 		# Set $COMMAND and install all packages.
 		if [ "$1" = "get-install-list" ]; then
 			COMMAND=get-install
 		else
 			COMMAND=install
 		fi
+		touch $PROCESSED_LIST
 		for pkg in $LIST
 		do
-			if [ "$3" = "--forced" ]; then
-				tazpkg $COMMAND $pkg --forced
-			else
-				tazpkg $COMMAND $pkg
-			fi
+			grep -qs ^$pkg$ $PROCESSED_LIST && continue
+			tazpkg $COMMAND $pkg "$3" "$4" "$5"
 		done
+		rm -f $PROCESSED_LIST
 		;;
 	add-flavor)
 		# Install a set of packages from a flavor.
@@ -1194,8 +1203,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		echo "================================================================================"
 		echo ""
 		# Some packages must be installed first
-		FIRST_CLASS_PACKAGE=" glibc-base "
-		FIRST_CLASS=""
+		FIRST_CLASS_PACKAGE=" glibc-base slitaz-base-files slitaz-boot-scripts
 		for pkg in $INSTALLED/*
 		do
 			EXTRAVERSION=""
@@ -1262,7 +1270,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 						up=$(($up+1))
 						echo "$PACKAGE" >> upradable-packages.list
 						case "$FIRST_CLASS_PACKAGE" in
-						*\ $PACKAGE\ *) FIRST_CLASS="$FIRST_CLASS $PACKAGE";;
+						*\ $PACKAGE\ *) echo "$PACKAGE" >> upradable-packages.list$$;;
 						esac
 						unset RELEASE
 					fi
@@ -1301,10 +1309,10 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			exit 0
 		fi
 		# If anser is yes (y). Install all new version.
-		for pkg in $FIRST_CLASS `cat upradable-packages.list`
-		do
-			tazpkg get-install $pkg --forced
-		done
+		cat upradable-packages.list >> upradable-packages.list$$
+		mv -f upradable-packages.list$$ upradable-packages.list
+		yes y | tazpkg get-install-list upradable-packages.list
+		#rm -f upradable-packages.list
 		;;
 	check)
 		# check installed packages set.
@@ -1441,10 +1449,6 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			download $PACKAGE.tazpkg
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
-		check_for_deps
-		if [ ! "$MISSING_PACKAGE" = "" ]; then
-			install_deps
-		fi
 		install_package
 		;;
 	clean-cache)
