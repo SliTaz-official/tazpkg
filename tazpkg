@@ -290,7 +290,7 @@ install_package()
 	. $PWD/receipt
 	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
 		echo -n "Checking post install dependencies... "
-		[ -n "$(get_installed_package_pathname $PACKAGE)" ]
+		[ -f $INSTALLED/$PACKAGE/receipt ]
 		if ! status; then
 			echo "Please run 'tazpkg install $PACKAGE_FILE' in / and retry."
 			cd .. && rm -rf $TMP_DIR
