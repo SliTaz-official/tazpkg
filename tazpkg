@@ -173,6 +173,7 @@ check_for_receipt()
 # Get package name in a directory
 package_fullname_in_dir()
 {
+	[ -f $2$1/receipt ] || return
 	EXTRAVERSION=""
 	. $2$1/receipt
 	echo $PACKAGE-$VERSION$EXTRAVERSION
