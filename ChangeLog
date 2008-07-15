@@ -1,3 +1,9 @@
+2008-07-15  Christophe Lincoln  <pankso@slitaz.org>
+
+ * ChangeLog is available throught Mercurial repository:
+   
+   http://hg.slitaz.org/tazpkg
+
 2008-03-05  Christophe Lincoln  <pankso@slitaz.org>
 
  * Release - Tazpkg 1.9
