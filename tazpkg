@@ -258,6 +258,16 @@ install_package()
 		 # get absolute path
 		 ROOT=$(cd $ROOT; pwd)
 	fi
+	(
+		# Create package path early to avoid dependancies loop
+		mkdir -p $TMP_DIR
+		( cd $TMP_DIR ; cpio -i receipt > /dev/null) < $PACKAGE_FILE
+		. $TMP_DIR/receipt
+		rm -rf $TMP_DIR
+		# Make the installed package data dir to store
+		# the receipt and the files list.
+		mkdir -p $ROOT$INSTALLED/$PACKAGE
+	)
 	# Resolv package deps.
 	check_for_deps $ROOT
 	if [ ! "$MISSING_PACKAGE" = "" ]; then
@@ -296,9 +306,6 @@ install_package()
 			echo "$PACKAGE" >> $(dirname $j)/modifiers
 		done
 	done
-	# Make the installed package data dir to store
-	# the receipt and the files list.
-	mkdir -p $ROOT$INSTALLED/$PACKAGE
 	cp receipt files.list $ROOT$INSTALLED/$PACKAGE
 	# Copy the description if found.
 	if [ -f "description.txt" ]; then
@@ -325,13 +332,41 @@ install_package()
 	echo ""
 }
 
+# Check for loop in deps tree.
+check_for_deps_loop()
+{
+	local list
+	local pkg
+	local deps
+	pkg=$1
+	shift
+	[ -n "$1" ] || return
+	list=""
+	# Filter out already processed deps
+	for i in $@; do
+		case " $ALL_DEPS" in
+		*\ $i\ *);;
+		*) list="$list $i";;
+		esac
+	done
+	ALL_DEPS="$ALL_DEPS$list "
+	for i in $list; do
+		[ -f $i/receipt ] || continue
+		deps="$(DEPENDS=""; . $i/receipt; echo $DEPENDS)"
+		case " $deps " in
+		*\ $pkg\ *) echo -e "$MSG  $i"; MSG="";;
+		*) check_for_deps_loop $pkg $deps;;
+		esac
+	done
+}
+
 # Check for missing deps listed in a receipt packages.
 check_for_deps()
 {
 	local saved;
 	saved=$PACKAGE
 	mkdir -p $TMP_DIR
-	( cd $TMP_DIR ; cpio -i receipt ) < $PACKAGE_FILE
+	( cd $TMP_DIR ; cpio -i receipt > /dev/null ) < $PACKAGE_FILE
 	. $TMP_DIR/receipt
 	PACKAGE=$saved
 	rm -rf $TMP_DIR
@@ -340,6 +375,8 @@ check_for_deps()
 		if [ ! -d "$1$INSTALLED/$i" ]; then
 			MISSING_PACKAGE=$i
 			deps=$(($deps+1))
+		elif [ ! -f "$1$INSTALLED/$i/receipt" ]; then
+			echo -e "$WARNING Dependancy loop between $PACKAGE and $i."
 		fi
 	done
 	if [ ! "$MISSING_PACKAGE" = "" ]; then
@@ -481,6 +518,7 @@ search_in_installed_packages()
 	for pkg in $list
 	do
 		EXTRAVERSION=""
+		[ -f $INSTALLED/$pkg/receipt ] || continue
 		. $INSTALLED/$pkg/receipt
 		echo -n "$PACKAGE "
 		echo -en "\033[24G $VERSION$EXTRAVERSION"
@@ -558,7 +596,7 @@ install_flavor()
 		zcat $FLAVOR.flavor | cpio -i 2>/dev/null
 		while read file; do
 			for pkg in $(ls -d $INSTALLED/${file%%-*}*); do
-				[ -d $pkg ] || continue
+				[ -f $pkg/receipt ] || continue
 				EXTRAVERSION=""
 				. $pkg/receipt
 				[ "$PACKAGE-$VERSION$EXTRAVERSION" = "$file" ] && break
@@ -575,7 +613,7 @@ install_flavor()
 			get-$pkg
 		done < $FLAVOR.nonfree
 		[ "$ARG" == "--purge" ] && for pkg in $(ls $INSTALLED); do
-			[ -d $INSTALLED/$pkg ] || continue
+			[ -f $INSTALLED/$pkg/receipt ] || continue
 			EXTRAVERSION=""
 			. $INSTALLED/$pkg/receipt
 			grep -q ^$PACKAGE-$VERSION$EXTRAVERSION$ $FLAVOR.pkglist && continue
@@ -635,6 +673,7 @@ case "$COMMAND" in
 			echo "================================================================================"
 			for pkg in $INSTALLED/*
 			do
+				[ -f $pkg/receipt ] || continue
 				EXTRAVERSION=""
 				. $pkg/receipt
 				if [ "$CATEGORY" == "$ASKED_CATEGORY" ]; then
@@ -653,6 +692,7 @@ case "$COMMAND" in
 			echo "================================================================================"
 			for pkg in $INSTALLED/*
 			do
+				[ -f $pkg/receipt ] || continue
 				EXTRAVERSION=""
 				. $pkg/receipt
 				echo -n "$PACKAGE"
@@ -683,6 +723,7 @@ case "$COMMAND" in
 		echo -n "Creating packages informations..."
 		for pkg in $INSTALLED/*
 		do
+			[ -f $pkg/receipt ] || continue
 			EXTRAVERSION=""
 			. $pkg/receipt
 			xhtml_pkg_info
@@ -852,7 +893,7 @@ Maintainer : $MAINTAINER"
 		# name and the full path to the file(s).
 		for pkg in $INSTALLED/*
 		do
-			if grep -q "$2" $pkg/files.list; then
+			if grep -qs "$2" $pkg/files.list; then
 				. $pkg/receipt
 				echo ""
 				echo -e "\033[1mPackage $PACKAGE :\033[0m"
@@ -969,7 +1010,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		#
 		check_root
 		check_for_package_on_cmdline
-		if [ ! -d "$INSTALLED/$PACKAGE" ]; then
+		if [ ! -f "$INSTALLED/$PACKAGE/receipt" ]; then
 			echo -e "\n$PACKAGE is not installed.\n"
 			exit 0
 		else
@@ -1211,7 +1252,8 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		# Some packages must be installed first
 		FIRST_CLASS_PACKAGE=" glibc-base slitaz-base-files slitaz-boot-scripts "
 		for pkg in $INSTALLED/*
-		do
+		do 
+			[ -f $pkg/receipt ] || continue
 			EXTRAVERSION=""
 			. $pkg/receipt
 			# Diplay package name to show that Tazpkg is working...
@@ -1326,6 +1368,10 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		check_root
 		cd $INSTALLED
 		for PACKAGE in `ls`; do
+			if [ ! -f $PACKAGE/receipt ]; then
+				echo "The package $PACKAGE installation is not completed"
+				continue
+			fi
 			DEPENDS=""
 			EXTRAVERSION=""
 			. $PACKAGE/receipt
@@ -1350,6 +1396,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 				echo -e "$MSG  $i"
 				MSG=""
 			done
+			MSG="Dependencies loop between $PACKAGE and :\n"
+			ALL_DEPS=""
+			check_for_deps_loop $PACKAGE $DEPENDS
 		done
 		if [ "$PACKAGE_FILE" = "--full" ]; then
 			for file in */md5sum; do
