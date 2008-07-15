@@ -419,6 +419,7 @@ install_deps()
 					echo "Checking if $pkg exist in local list... "
 					mkdir $TMP_DIR
 					for i in $pkg-*.tazpkg; do
+						[ -f $i ] || continue
 						( cd $TMP_DIR ; cpio -i receipt > /dev/null) < $i
 						if grep -q ^$(package_fullname_in_dir $TMP_DIR).tazpkg$ $list
 						then
