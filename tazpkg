@@ -13,7 +13,7 @@
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
 #
-VERSION=2.3
+VERSION=2.2
 
 ####################
 # Script variables #
@@ -304,6 +304,12 @@ install_package()
 		for j in $(grep -l "^$i$" $ROOT$INSTALLED/*/files.list); do
 			[ "$j" = "$ROOT$INSTALLED/$PACKAGE/files.list" ] && continue
 			grep -qs ^$PACKAGE$ $(dirname $j)/modifiers && continue
+			if [ -s "$(dirname $j)/volatile.cpio.gz" ]; then
+				# We can modify backuped files
+				zcat $(dirname $j)/volatile.cpio.gz | \
+					cpio -t 2> /dev/null | \
+					grep -q "^${i#/}$" && continue
+			fi
 			echo "$PACKAGE" >> $(dirname $j)/modifiers
 		done
 	done
@@ -311,6 +317,10 @@ install_package()
 	# Copy the description if found.
 	if [ -f "description.txt" ]; then
 		cp description.txt $ROOT$INSTALLED/$PACKAGE
+	fi
+	# Copy the md5sum if found.
+	if [ -f "md5sum" ]; then
+		cp md5sum $ROOT$INSTALLED/$PACKAGE
 	fi
 	# Pre install commands.
 	if grep -q ^pre_install $ROOT$INSTALLED/$PACKAGE/receipt; then
@@ -1135,6 +1145,8 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		mkdir -p $TMP_DIR && cd $TMP_DIR
 		FILES="fs.cpio.gz\n"
 		for i in $(ls $INSTALLED/$PACKAGE) ; do
+			[ "$i" = "volatile.cpio.gz" ] && continue
+			[ "$i" = "modifiers" ] && continue
 			cp $INSTALLED/$PACKAGE/$i . && FILES="$FILES$i\n"
 		done
 		ln -s / rootfs
@@ -1189,8 +1201,8 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -n "Creating full cpio archive... "
 			find . -print | cpio -o -H newc > ../$PACKAGE.tazpkg
 			echo -n "Restoring original package tree... "
-			gzip -d fs.cpio.gz && cpio -id < fs.cpio
-			rm fs.cpio && cd ..
+			zcat fs.cpio.gz | cpio -id
+			rm fs.cpio.gz && cd ..
 			echo "================================================================================"
 			echo "Package $PACKAGE compressed successfully."
 			echo "Size : `du -sh $PACKAGE.tazpkg`"
