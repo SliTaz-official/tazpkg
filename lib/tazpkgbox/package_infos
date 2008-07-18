@@ -62,7 +62,9 @@ export LIST_FILES_MIRROR="
 if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 	PACKED_SIZE=""
 	DEPENDS=""
+	MAINTAINER=""
 	. /var/lib/tazpkg/installed/$PKG/receipt
+	MAINTAINER=$(echo "$MAINTAINER" | sed 's/[<>|]/ /g')
 	PACKAGE_INFOS="
 <window title=\"Package: $PKG\" icon-name=\"package-x-generic\">
 <vbox>
