@@ -70,15 +70,17 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 	<tree>
 		<width>460</width><height>160</height>
 		<label>Package|$PKG</label>
+		<variable>FIELD</variable>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
 		<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
 [ -n "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
-		<item icon=\"tazpkg\">Depends: | $DEPENDS</item>"
+		<item icon=\"tazpkg\">Depends: | $(echo $DEPENDS)</item>"
 [ -n "$PACKED_SIZE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"tazpkg\">Size: | $PACKED_SIZE ($UNPACKED_SIZE installed)</item>"
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
+		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; esac</action>
 	</tree>
 
 	<hbox>"
