@@ -82,6 +82,14 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 	</tree>
 
 	<hbox>"
+[ $CATEGORY = non-free -a ! -d /var/lib/tazpkg/installed/${PKG#get-} ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Install</label>
+			<input file icon=\"go-next\"></input>
+			<action>xterm -T \"Install ${PKG#get-}\" $XTERM_OPTS -e \"\
+			$PKG; sleep 5\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>"
 grep -q post_install /var/lib/tazpkg/installed/$PKG/receipt && PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Reconfigure</label>
@@ -163,12 +171,27 @@ else
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
 	</tree>
 
-	<hbox>
+	<hbox>"
+	[ $CATEGORY = non-free ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		<checkbox>
+			<label>Auto exec</label>
+			<variable>AUTO_EXEC</variable>
+			<default>true</default>
+		</checkbox>"
+	PACKAGE_INFOS="$PACKAGE_INFOS
+		<checkbox>
+			<label>Auto install depends</label>
+			<variable>AUTO_DEPENDS</variable>
+			<default>true</default>
+		</checkbox>
 		<button>
 			<label>Get-install</label>
 			<input file icon=\"go-next\"></input>
 			<action>xterm -T \"Install $PACKAGE\" $XTERM_OPTS -e \"\
-			tazpkg get-install $PACKAGE; sleep 2\"</action>
+			if [ \$AUTO_DEPENDS != true ]; then tazpkg get-install $PACKAGE;\
+			else yes y | tazpkg get-install $PACKAGE; fi; \
+			[ \${AUTO_EXEC}$CATEGORY = truenon-free ] && $PACKAGE; \
+			sleep 2\"</action>
 			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
 		</button>
 		<button>

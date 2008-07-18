@@ -4,23 +4,37 @@
 # List mirrored packages using the packages.desc file.
 #
 
+installable_list()
+{
+	IFS="|"
+	while read PACKAGE VERSION SHORT_DESC; do
+		[ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ] && continue
+		echo "$PACKAGE|$VERSION|$SHORT_DESC"
+	done < /var/lib/tazpkg/packages.desc 2> /dev/null
+	unset IFS
+}
+
+installed_list()
+{
+	for pkg in /var/lib/tazpkg/installed/*
+	do
+		. $pkg/receipt
+		if [ "$CAT" == "all" -o "$CATEGORY" == "$CAT" ]; then
+			echo "$PACKAGE|$VERSION|$SHORT_DESC"
+		fi
+	done
+}
+
 case $1 in
 	installed)
 		CAT=`cat /tmp/tazpkgbox/installed-category`
+		installed_list $CAT;;
+	installable)
+		CAT=`cat /tmp/tazpkgbox/installable-category`
 		if [ "$CAT" == "all" ]; then
-			for pkg in /var/lib/tazpkg/installed/*
-			do
-				. $pkg/receipt
-				echo "$PACKAGE|$VERSION|$SHORT_DESC"
-			done
+			installable_list
 		else
-			for pkg in /var/lib/tazpkg/installed/*
-			do
-				. $pkg/receipt
-				if [ "$CATEGORY" == "$CAT" ]; then
-					echo "$PACKAGE|$VERSION|$SHORT_DESC"
-				fi
-			done	
+			installable_list | grep "$CAT"
 		fi ;;
 	mirrored)
 		CAT=`cat /tmp/tazpkgbox/mirrored-category`
@@ -28,20 +42,9 @@ case $1 in
 			cat /var/lib/tazpkg/packages.desc
 		else
 			grep "$CAT" /var/lib/tazpkg/packages.desc
-			#for pkg in `grep "$CAT" /var/lib/tazpkg/packages.desc | cut -d "|" -f 1`
-			#do
-				#RES=`grep "^$pkg"  /var/lib/tazpkg/packages.desc | head -n 1`
-				#CATEGORY=`echo "$RES" | cut -d "|" -f 4`
-				##echo "$pkg|$CATEGORY"
-				#if [ "$CATEGORY" == "$CAT" ]; then
-					#VERSION=`echo $RES | cut -d "|" -f 2`
-					#SHORT_DESC=`echo $RES | cut -d "|" -f 3`
-					#echo "$pkg | $VERSION | $SHORT_DESC"
-				#fi
-			#done
 		fi ;;
 	*)
-		echo "Usage: /usr/lib/slitaz/tazpkgbox/list [installed|mirrored]" ;;
+		echo "Usage: /usr/lib/slitaz/tazpkgbox/list [installed|installable|mirrored]" ;;
 esac
 
 exit 0

@@ -23,6 +23,7 @@ fi
 # list and search files to load less data and have a faster start.
 mkdir -p /tmp/tazpkgbox
 echo "all" > /tmp/tazpkgbox/installed-category
+echo "all" > /tmp/tazpkgbox/installable-category
 echo "all" > /tmp/tazpkgbox/mirrored-category
 echo "" > /tmp/tazpkgbox/search-installed
 echo "" > /tmp/tazpkgbox/search-mirrored
@@ -85,7 +86,7 @@ export TAZPKG_DIALOG='
 		</pixmap>
 	</hbox>
 
-	<notebook labels="Installed|Mirrored|Search|Configuration">
+	<notebook labels="Installed|Installable|Mirrored|Search|Configuration">
 
 	<vbox>
 		<tree>
@@ -129,10 +130,60 @@ export TAZPKG_DIALOG='
 			<button>
 				<label>Upgrade all</label>
 				<input file icon="system-software-update"></input>
-				<action>xterm -T "Package upgrade" -geometry 80x16+120+120 -e "tazpkg upgrade; sleep 2"</action>
+				<action>xterm -T "Package upgrade" -geometry 80x16+120+120 -e "tazpkg upgrade; sleep 2" 2>/dev/null</action>
 				<action>refresh:PKG</action>
 				<action>refresh:PKG_STATS</action>
 				<action>refresh:CACHE_STATS</action>
+			</button>
+		</hbox>
+	</vbox>
+
+	<vbox>
+		<tree>
+			<width>620</width><height>240</height>
+			<variable>GETIT</variable>
+			<label>Package name|Version|Description</label>
+			<input>/usr/lib/slitaz/tazpkgbox/list installable</input>
+			<action>echo "$GETIT" > /tmp/tazpkgbox/pkg</action>
+			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>refresh:PKG</action>
+			<action>refresh:GETIT</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</tree>
+		<hbox>
+			<text>
+				<label>"Category:"</label>
+			</text>
+			<combobox>
+				<variable>INSTALLABLE_CAT</variable>
+				<item>all</item>
+				<item>base-system</item>
+				<item>utilities</item>
+				<item>network</item>
+				<item>graphics</item>
+				<item>multimedia</item>
+				<item>office</item>
+				<item>development</item>
+				<item>system-tools</item>
+				<item>security</item>
+				<item>games</item>
+				<item>misc</item>
+				<item>meta</item>
+				<item>non-free</item>
+			</combobox>
+			<button>
+				<label>List</label>
+				<input file icon="reload"></input>
+				<action>echo "$INSTALLABLE_CAT" > /tmp/tazpkgbox/installable-category</action>
+				<action>refresh:GETIT</action>
+			</button>
+			<button>
+				<label>Recharge list</label>
+				<input file icon="system-software-update"></input>
+				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
+				<action>refresh:GETIT</action>
+				<action>refresh:PKG_STATS</action>
 			</button>
 		</hbox>
 	</vbox>
@@ -176,7 +227,7 @@ export TAZPKG_DIALOG='
 			<button>
 				<label>Recharge list</label>
 				<input file icon="system-software-update"></input>
-				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2"</action>
+				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
 				<action>refresh:GET</action>
 				<action>refresh:PKG_STATS</action>
 			</button>
@@ -285,12 +336,12 @@ export TAZPKG_DIALOG='
 				<button>
 					<label>Quick check</label>
 					<input file icon="go-next"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check | less "</action>
+					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check | less " 2> /dev/null</action>
 				</button>
 				<button>
 					<label>Full check</label>
 					<input file icon="go-next"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less "</action>
+					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less " 2> /dev/null</action>
 				</button>
 			</hbox>
 		</frame>
@@ -300,7 +351,7 @@ export TAZPKG_DIALOG='
 
 	<hbox>
 		<text>
-			<input>echo "Packages: `ls /var/lib/tazpkg/installed | wc -l` installed, `cat /var/lib/tazpkg/packages.list | wc -l` mirrored, `cat /var/lib/tazpkg/upradable-packages.list | wc -l` to upgrade "</input>
+			<input>echo "Packages: `ls /var/lib/tazpkg/installed | wc -l` installed, `cat /var/lib/tazpkg/packages.list | wc -l` mirrored, `cat /var/lib/tazpkg/upradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
 			<variable>PKG_STATS</variable>
 		</text>
 	</hbox>
