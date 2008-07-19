@@ -260,7 +260,7 @@ install_package()
 		 ROOT=$(cd $ROOT; pwd)
 	fi
 	(
-		# Create package path early to avoid dependancies loop
+		# Create package path early to avoid dependencies loop
 		mkdir -p $TMP_DIR
 		( cd $TMP_DIR ; cpio -i receipt > /dev/null) < $PACKAGE_FILE
 		. $TMP_DIR/receipt
@@ -269,7 +269,7 @@ install_package()
 		# the receipt and the files list.
 		mkdir -p $ROOT$INSTALLED/$PACKAGE
 	)
-	# Resolv package deps.
+	# Resolve package deps.
 	check_for_deps $ROOT
 	if [ ! "$MISSING_PACKAGE" = "" ]; then
 		install_deps $ROOT
@@ -305,7 +305,7 @@ install_package()
 			[ "$j" = "$ROOT$INSTALLED/$PACKAGE/files.list" ] && continue
 			grep -qs ^$PACKAGE$ $(dirname $j)/modifiers && continue
 			if [ -s "$(dirname $j)/volatile.cpio.gz" ]; then
-				# We can modify backuped files
+				# We can modify backed up files
 				zcat $(dirname $j)/volatile.cpio.gz | \
 					cpio -t 2> /dev/null | \
 					grep -q "^${i#/}$" && continue
@@ -387,7 +387,7 @@ check_for_deps()
 			MISSING_PACKAGE=$i
 			deps=$(($deps+1))
 		elif [ ! -f "$1$INSTALLED/$i/receipt" ]; then
-			echo -e "$WARNING Dependancy loop between $PACKAGE and $i."
+			echo -e "$WARNING Dependency loop between $PACKAGE and $i."
 		fi
 	done
 	if [ ! "$MISSING_PACKAGE" = "" ]; then
@@ -1258,7 +1258,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		# Touch the blocked pkgs list to avoid errors and remove any old
 		# upgrade list.
 		touch blocked-packages.list
-		rm -f upradable-packages.list
+		rm -f upgradeable-packages.list
 		echo ""
 		echo -e "\033[1mAvalaible upgrade\033[0m"
 		echo "================================================================================"
@@ -1330,9 +1330,9 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 						echo -en "\033[58G $CATEGORY"
 						echo -e "\033[72G $RELEASE"
 						up=$(($up+1))
-						echo "$PACKAGE" >> upradable-packages.list
+						echo "$PACKAGE" >> upgradeable-packages.list
 						case "$FIRST_CLASS_PACKAGE" in
-						*\ $PACKAGE\ *) echo "$PACKAGE" >> upradable-packages.list$$;;
+						*\ $PACKAGE\ *) echo "$PACKAGE" >> upgradeable-packages.list$$;;
 						esac
 						unset RELEASE
 					fi
@@ -1371,10 +1371,10 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			exit 0
 		fi
 		# If anser is yes (y). Install all new version.
-		cat upradable-packages.list >> upradable-packages.list$$
-		mv -f upradable-packages.list$$ upradable-packages.list
-		yes y | tazpkg get-install-list upradable-packages.list
-		#rm -f upradable-packages.list
+		cat upgradeable-packages.list >> upgradeable-packages.list$$
+		mv -f upgradeable-packages.list$$ upgradeable-packages.list
+		yes y | tazpkg get-install-list upgradeable-packages.list
+		#rm -f upgradeable-packages.list
 		;;
 	check)
 		# check installed packages set.
