@@ -2,9 +2,9 @@
 # Tazpkg - Tiny autonomus zone packages manager.
 #
 # This is a lightwight packages manager for *.tazpkg files, all written in
-# SHell script. It works well with Busybox ash shell and bash. Tazpkg let you
-# list, install, remove, download or get information about a package, you can
-# use 'tazpkg usage' to get a list of commands with a short description. Tazpkg
+# SHell script. It works well with Busybox ash shell and bash. Tazpkg lets you
+# list, install, remove, download or get information about a package. You can
+# use 'tazpkg usage' to get a list of commands with short descriptions. Tazpkg
 # also resolves dependencies and can upgrade packages from a mirror.
 #
 # (C) 2007-2008 SliTaz - GNU General Public License v3.
@@ -64,7 +64,7 @@ INSTALL_LIST=""
 WARNING="\\033[1;31mWARNING\\033[0;39m"
 
 # Check if the directories and files used by Tazpkg
-# exists. If not and user is root we create them.
+# exist. If not and user is root we create them.
 if test $(id -u) = 0 ; then
 	if [ ! -d "$CACHE_DIR" ]; then
 		mkdir -p $CACHE_DIR
@@ -84,17 +84,17 @@ fi
 # Print the usage.
 usage ()
 {
-	echo -e "SliTaz packages manager - Version: $VERSION\n
+	echo -e "SliTaz package manager - Version: $VERSION\n
 \033[1mUsage:\033[0m tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
        tazpkg shell\n
 \033[1mCommands: \033[0m
   usage            Print this short usage.
   list             List installed packages on the system by category or all.
-  xhtml-list       Creates a xHTML list of installed packges.
+  xhtml-list       Create a xHTML list of installed packges.
   list-mirror      List all available packages on the mirror (--diff for new).
-  info             Print informations about the package.
-  desc             Print description of a package (if it exist).
-  list-files       List of files installed with the package.
+  info             Print information about a package.
+  desc             Print description of a package (if it exists).
+  list-files       List the files installed with a package.
   search           Search for a package by pattern or name (options: -i|-l|-m).
   search-file	   Search for file(s) in all installed packages files.
   install          Install a local (*.tazpkg) package (--forced to force).
@@ -109,7 +109,7 @@ usage ()
   get              Download a package into the current directory.
   get-install      Download and install a package from the mirror.
   get-install-list Download and install a list of packages from the mirror.
-  check            Verify installed packages concistancy.
+  check            Verify consistency of installed packages.
   add-flavor       Install the flavor list of packages.
   install-flavor   Install the flavor list of packages and remove other ones.
   set-release      Change release and update packages
@@ -211,8 +211,8 @@ check_for_packages_list()
 		else
 			echo -e "
 Unable to find the list : $LOCALSTATE/packages.list\n
-You must probably run 'tazpkg recharge' as root to get the last list of 
-packages avalaible on the mirror.\n"
+You should probably run 'tazpkg recharge' as root to get the latest list of 
+packages available on the mirror.\n"
 			exit 0
 		fi
 	fi
@@ -251,12 +251,12 @@ extract_package()
 	cpio -id < fs.cpio && rm fs.cpio
 }
 
-# This function install a package in the rootfs.
+# This function installs a package in the rootfs.
 install_package()
 {
 	ROOT=$1
 	if [ -n "$ROOT" ]; then
-		 # get absolute path
+		 # Get absolute path
 		 ROOT=$(cd $ROOT; pwd)
 	fi
 	(
@@ -491,7 +491,7 @@ _packages_ packages installed - List generated on : $DATE
 _EOT_
 }
 
-# xHTML content with packages infos.
+# xHTML content with packages info.
 xhtml_pkg_info()
 {
 	cat >> $XHTML_LIST << _EOT_
@@ -548,7 +548,7 @@ search_in_installed_packages()
 	fi
 }
 
-# Search in packages.list for avalaible pkgs.	
+# Search in packages.list for available pkgs.	
 search_in_packages_list()
 {
 	echo "Available packages name-version"
@@ -559,7 +559,7 @@ search_in_packages_list()
 	else
 		echo -e "
 No 'packages.list' found to check for mirrored packages. For more results,
-please run once 'tazpkg recharge' as root before searching.\n"
+please run 'tazpkg recharge' once as root before searching.\n"
 	fi
 	if [ "$packages" = "0" ]; then
 		echo "0 available packages found for : $PATTERN"
@@ -571,8 +571,8 @@ please run once 'tazpkg recharge' as root before searching.\n"
 	fi
 }
 
-# search --mirror: Search in packages.txt for avalaible pkgs and give more 
-# infos than --list or default.	
+# search --mirror: Search in packages.txt for available pkgs and give more 
+# info than --list or default.	
 search_in_packages_txt()
 {
 	echo "Matching packages name with version and desc"
@@ -583,7 +583,7 @@ search_in_packages_txt()
 	else
 		echo -e "
 No 'packages.txt' found to check for mirrored packages. For more results,
-please run once 'tazpkg recharge' as root before searching.\n"
+please run 'tazpkg recharge' once as root before searching.\n"
 	fi
 	if [ "$packages" = "0" ]; then
 		echo "0 available packages found for : $PATTERN"
@@ -698,7 +698,7 @@ case "$COMMAND" in
 			echo -e "$packages packages installed of category $ASKED_CATEGORY."
 			echo ""
 		else
-			# By default list all packages and version.
+			# By default list all packages and versions.
 			echo ""
 			echo -e "\033[1mList of all installed packages\033[0m"
 			echo "================================================================================"
@@ -718,7 +718,7 @@ case "$COMMAND" in
 		fi
 		;;
 	xhtml-list)
-		# Get infos in receipts and build list.
+		# Get info in receipts and build list.
 		DATE=`date +%Y-%m-%d\ \%H:%M:%S`
 		if [ -n "$2" ]; then
 			XHTML_LIST=$2
@@ -732,7 +732,7 @@ case "$COMMAND" in
 		xhtml_header
 		status
 		# Packages
-		echo -n "Creating packages informations..."
+		echo -n "Creating packages information..."
 		for pkg in $INSTALLED/*
 		do
 			[ -f $pkg/receipt ] || continue
@@ -768,7 +768,7 @@ case "$COMMAND" in
 					echo ""
 				else
 					 echo -e "\nUnable to list anything, no packages.diff found."
-					 echo -e "Recharge your current list to creat a first diff.\n"
+					 echo -e "Recharge your current list to create a first diff.\n"
 				fi && exit 0 ;;
 			--text|--txt)
 				echo ""
@@ -808,7 +808,7 @@ case "$COMMAND" in
 		EXTRAVERSION=""
 		. $INSTALLED/$PACKAGE/receipt
 		echo ""
-		echo -e "\033[1mTazpkg informations\033[0m
+		echo -e "\033[1mTazpkg information\033[0m
 ================================================================================
 Package    : $PACKAGE
 Version    : $VERSION$EXTRAVERSION
@@ -851,7 +851,7 @@ Maintainer : $MAINTAINER"
 		#
 		PATTERN="$2"
 		if [ -z "$PATTERN" ]; then
-			echo -e "\nPlease specify a pattern or a package name to search."
+			echo -e "\nPlease specify a pattern or package name to search for."
 			echo -e "Example : 'tazpkg search paint'.\n"
 			exit 0
 		fi
@@ -875,7 +875,7 @@ Maintainer : $MAINTAINER"
 		# Search for a file by pattern or name in all files.list.
 		#
 		if [ -z "$2" ]; then
-			echo -e "\nPlease specify a pattern or a file name to search."
+			echo -e "\nPlease specify a pattern or file name to search for."
 			echo -e "Example : 'tazpkg search-file libnss'. \n"
 			exit 0
 		fi
@@ -1094,8 +1094,8 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo ""
 		echo -e "\033[1mExtracting :\033[0m $PACKAGE"
 		echo "================================================================================"
-		# If any directory destination is found on the cmdline
-		# we creat one in the current dir using the package name.
+		# If no directory destination is found on the cmdline
+		# we create one in the current dir using the package name.
 		if [ -n "$TARGET_DIR" ]; then
 			DESTDIR=$TARGET_DIR/$PACKAGE
 		else
@@ -1112,7 +1112,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo ""
 		;;
 	repack)
-		# Creat SliTaz package archive from an installed package.
+		# Create SliTaz package archive from an installed package.
 		#
 		check_for_package_on_cmdline
 		check_for_receipt
@@ -1177,7 +1177,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo ""
 		;;
 	pack)
-		# Creat SliTaz package archive using cpio and gzip.
+		# Create SliTaz package archive using cpio and gzip.
 		#
 		check_for_package_on_cmdline
 		cd $PACKAGE
@@ -1188,7 +1188,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo ""
 			echo -e "\033[1mPacking :\033[0m $PACKAGE"
 			echo "================================================================================"
-			# Creat files.list with redirecting find outpout.
+			# Create files.list with redirecting find outpout.
 			echo -n "Creating the list of files..." && cd fs
 			find . -type f -print > ../files.list
 			find . -type l -print >> ../files.list
@@ -1246,7 +1246,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -e "
 ================================================================================
 Last packages.list is ready to use. Note that next time you recharge the list,
-a list of differencies will be displayed to show new and upgradable packages.\n"
+a list of differencies will be displayed to show new and upgradeable packages.\n"
 		fi
 		;;
 	upgrade)
@@ -1270,7 +1270,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			[ -f $pkg/receipt ] || continue
 			EXTRAVERSION=""
 			. $pkg/receipt
-			# Diplay package name to show that Tazpkg is working...
+			# Display package name to show that Tazpkg is working...
 			echo -en "\\033[0G                                         "
 			echo -en "\\033[0G$PACKAGE"
 			# Skip specified pkgs listed in $LOCALSTATE/blocked-packages.list
@@ -1292,7 +1292,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 					VERSION=`echo $VERSION | sed s/'pre'/'.'/`
 					NEW_VERSION=`echo $NEW_VERSION | sed 's/[A-Z]\.//'`
 					VERSION=`echo $VERSION | sed 's/[A-Z]\.//'`
-					# Compare version. Upgrade are only avalaible for official
+					# Compare version. Upgrade are only available for official
 					# packages, so we control de mirror and it should be ok if
 					# we just check for egality.
 					if [ "$VERSION" != "$NEW_VERSION" ]; then
@@ -1364,20 +1364,20 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 			echo "Or upgrade package at you own risks."
 			echo ""
 		fi
-		# Ask for upgrade, it can be done an other time.
+		# Ask for upgrade, it can be done another time.
 		echo -n "Upgrade now (y/N) ? "; read anser
 		if [ ! "$anser" = "y" ]; then
 			echo -e "\nExiting. No package upgraded.\n"
 			exit 0
 		fi
-		# If anser is yes (y). Install all new version.
+		# If anser is yes (y). Install all new versions.
 		cat upgradeable-packages.list >> upgradeable-packages.list$$
 		mv -f upgradeable-packages.list$$ upgradeable-packages.list
 		yes y | tazpkg get-install-list upgradeable-packages.list
 		#rm -f upgradeable-packages.list
 		;;
 	check)
-		# check installed packages set.
+		# Check installed packages set.
 		#
 		check_root
 		cd $INSTALLED
@@ -1465,7 +1465,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		echo ""
 		;;
 	unblock)
-		# Remove a pkg name to the list of blocked packages.
+		# Remove a pkg name from the list of blocked packages.
 		#
 		check_root
 		check_for_package_on_cmdline
@@ -1527,7 +1527,7 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		cd $CACHE_DIR
 		if [ -f "$PACKAGE.tazpkg" ]; then
 			echo "$PACKAGE already in the cache : $CACHE_DIR"
-			# check package download was finished
+			# Check package download was finished
 			tail -c 2k $PACKAGE.tazpkg | grep -q 00000000TRAILER || {
 				echo "Continue $PACKAGE download"
 				download $PACKAGE.tazpkg
@@ -1567,13 +1567,13 @@ a list of differencies will be displayed to show new and upgradable packages.\n"
 		echo "================================================================================"
 		echo "  `cat $MIRROR`"
 		echo "
-Please enter URL of the new mirror (http or ftp). You must specify the complet
+Please enter URL of the new mirror (http or ftp). You must specify the complete
 address to the directory of the packages and packages.list file."
 		echo ""
 		echo -n "New mirror URL : "
 		read NEW_MIRROR_URL
 		if [ "$NEW_MIRROR_URL" = "" ]; then
-			echo "Nothing as been change."
+			echo "Nothing has been changed."
 		else
 			echo "Setting mirror(s) to : $NEW_MIRROR_URL"
 			echo "$NEW_MIRROR_URL" > $LOCALSTATE/mirror
@@ -1612,7 +1612,7 @@ address to the directory of the packages and packages.list file."
 			echo ""
 			echo -e "\033[1mTazpkg SHell.\033[0m"
 			echo "================================================================================"
-			echo "Type 'usage' to list all avalaible commands and 'quit' or 'q' to exit."
+			echo "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 			echo ""
 		fi
 		while true

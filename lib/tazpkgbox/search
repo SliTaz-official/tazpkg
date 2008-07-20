@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# This script provide a suitable output for the search results.
+# This script provides a suitable output for the search results.
 #
 
 # Clean preview results.

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Dialog box to provide package infos and actions
+# Dialog box to provide package info and actions
 #
 
 XTERM_OPTS="-geometry 80x16+120+120"
