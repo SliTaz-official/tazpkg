@@ -1260,7 +1260,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 		touch blocked-packages.list
 		rm -f upgradeable-packages.list
 		echo ""
-		echo -e "\033[1mAvalaible upgrade\033[0m"
+		echo -e "\033[1mAvailable upgrades\033[0m"
 		echo "================================================================================"
 		echo ""
 		# Some packages must be installed first
@@ -1350,7 +1350,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 			echo "$packages installed and listed packages to consider, $up to upgrade, $blocked blocked."
 			echo ""
 		else
-			echo -e "\\033[0GSystem is up to date.                    "
+			echo -e "\\033[0GSystem is up-to-date.                    "
 			echo ""
 			echo "================================================================================"
 			echo "$packages installed and listed packages to consider, 0 to upgrade, $blocked blocked."
