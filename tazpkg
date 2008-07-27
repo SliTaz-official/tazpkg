@@ -1133,11 +1133,6 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		done > etc/tazlito/config-packages.list
 		cd ..
 		echo "etc/tazlito/config-packages.list" >> files.list
-		while read file; do
-			[ -L "fs/$file" ] && continue
-			[ -f "fs/$file" ] || continue
-			md5sum "fs/$file" | sed 's/  fs/  /'
-		done < files.list > md5sum
 		cat > receipt <<EOT
 # SliTaz package receipt.
 
@@ -1236,10 +1231,17 @@ EOT
 			find . -type l -print >> ../files.list
 			cd .. && sed -i s/'^.'/''/ files.list
 			status
+			echo -n "Creating md5sum of files..."
+			while read file; do
+				[ -L "fs$file" ] && continue
+				[ -f "fs$file" ] || continue
+				md5sum "fs$file" | sed 's/  fs/  /'
+			done < files.list > md5sum
+			status
 			# Build cpio archives.
 			echo -n "Compressing the fs... "
-			find fs -print | cpio -o -H newc > fs.cpio
-			gzip fs.cpio && rm -rf fs
+			find fs -print | cpio -o -H newc | gzip > fs.cpio.gz
+			rm -rf fs
 			echo -n "Creating full cpio archive... "
 			find . -print | cpio -o -H newc > ../$PACKAGE.tazpkg
 			echo -n "Restoring original package tree... "
