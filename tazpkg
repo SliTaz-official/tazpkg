@@ -104,6 +104,7 @@ usage ()
   pack             Pack an unpacked or prepared package tree.
   recharge         Recharge your packages.list from the mirror.
   repack           Creates a package archive from an installed package.
+  save-config      Creates a package archive with configuration files.
   upgrade          Upgrade all installed and listed packages on the mirror.
   block|unblock    Block an installed package version or unblock it for upgrade.
   get              Download a package into the current directory.
@@ -1110,6 +1111,47 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo "================================================================================"
 		echo "$PACKAGE is extracted to : $DESTDIR"
 		echo ""
+		;;
+	save-config)
+		# Create SliTaz package archive from configuration files.
+		#
+		mkdir -p $TMP_DIR && cd $TMP_DIR
+		CONFIG_VERSION=1.0
+		mkdir config-$CONFIG_VERSION
+		cd config-$CONFIG_VERSION
+		for i in $INSTALLED/*/volatile.cpio.gz; do 
+			zcat $i | cpio -t | grep -v "[0-9]* blocks"
+		done > files.list
+		mkdir fs
+		cd fs
+		( cd / ; cpio -o -H newc ) < ../files.list | cpio -id > /dev/null
+		mkdir -p etc/tazlito
+		for i in $INSTALLED/*/receipt; do 
+			EXTRAVERSION=""
+			. $i
+			echo "$PACKAGE-$VERSION$EXTRAVERSION"
+		done > etc/tazlito/config-packages.list
+		cd ..
+		echo "etc/tazlito/config-packages.list" >> files.list
+		while read file; do
+			[ -L "fs/$file" ] && continue
+			[ -f "fs/$file" ] || continue
+			md5sum "fs/$file" | sed 's/  fs/  /'
+		done < files.list > md5sum
+		cat > receipt <<EOT
+# SliTaz package receipt.
+
+PACKAGE="config"
+VERSION="$CONFIG_VERSION"
+CATEGORY="base-system"
+SHORT_DESC="User configuration backup on $(date)"
+DEPENDS="$(ls $INSTALLED)"
+EOT
+		cd ..
+		tazpkg pack config-$CONFIG_VERSION
+		cp config-$CONFIG_VERSION.tazpkg $TOP_DIR
+		cd $TOP_DIR
+		rm -rf $TMP_DIR
 		;;
 	repack)
 		# Create SliTaz package archive from an installed package.
