@@ -19,6 +19,20 @@ if [ ! -f /var/lib/tazpkg/mirror ]; then
 	tazpkg >/dev/null
 fi
 
+if [ "$1" == "call" ]; then
+	case "$2" in
+	list_config_files)
+		tazpkg list-config | awk '
+BEGIN { ls=0 } {
+  if (/^===/) ls=1-ls;
+  else if (ls) system("stat -c \"%A|%U|%G|%s|%n\" " $0);
+}'
+		exit 0;;
+	*) echo "Invalid argument";;
+	esac
+	exit 1
+fi
+
 # Tmp dir and files used to get pkgs infos on the fly. Clean also
 # list and search files to load less data and have a faster start.
 mkdir -p /tmp/tazpkgbox
@@ -71,6 +85,24 @@ dans: /var/cache/tazpkg"
 </vbox>
 </window>
 '
+
+export LIST_CONFIG_FILES="
+<window title=\"configuration files\" icon-name=\"system-file-manager\">
+  <vbox>
+	<tree>
+		<width>600</width><height>160</height>
+		<label>Access | User | Group | Size | Name</label>
+		<input> $0 call list_config_files </input>
+	</tree>
+	<hbox>
+		<button>
+			<input file icon=\"gtk-close\"></input>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+	</hbox>
+  </vbox>
+</window>
+"
 
 # Main dialog
 export TAZPKG_DIALOG='
@@ -324,7 +356,7 @@ export TAZPKG_DIALOG='
 				</button>
 			</hbox>
 		</frame>
-		<frame Files path and packages check>
+		<frame Files path, configuration files and packages check>
 			<hbox>
 				<text use-markup="true" width-chars="60">
 					<label>
@@ -333,6 +365,16 @@ export TAZPKG_DIALOG='
 				</text>
 			</hbox>
 			<hbox>
+				<button>
+					<label>Repack config</label>
+					<input file icon="edit-redo"></input>
+					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Repack configs" -geometry 80x25+120+120 -e "tazpkg repack-config ; sleep 2" 2> /dev/null</action>
+				</button>
+				<button>
+					<label>Config Files</label>
+					<input file icon="tazpkg"></input>
+					<action type="launch">LIST_CONFIG_FILES</action>
+				</button>
 				<button>
 					<label>Quick check</label>
 					<input file icon="go-next"></input>

@@ -95,6 +95,7 @@ usage ()
   info             Print information about a package.
   desc             Print description of a package (if it exists).
   list-files       List the files installed with a package.
+  list-config      List the configuration files.
   search           Search for a package by pattern or name (options: -i|-l|-m).
   search-file	   Search for file(s) in all installed packages files.
   install          Install a local (*.tazpkg) package (--forced to force).
@@ -104,7 +105,7 @@ usage ()
   pack             Pack an unpacked or prepared package tree.
   recharge         Recharge your packages.list from the mirror.
   repack           Creates a package archive from an installed package.
-  save-config      Creates a package archive with configuration files.
+  repack-config    Creates a package archive with configuration files.
   upgrade          Upgrade all installed and listed packages on the mirror.
   block|unblock    Block an installed package version or unblock it for upgrade.
   get              Download a package into the current directory.
@@ -1112,7 +1113,19 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo "$PACKAGE is extracted to : $DESTDIR"
 		echo ""
 		;;
-	save-config)
+	list-config)
+		# List configuration files installed.
+		#
+		echo ""
+		echo -e "\033[1mConfiguration files"
+		echo "================================================================================"
+		for i in $INSTALLED/*/volatile.cpio.gz; do 
+			zcat $i | cpio -t | grep -v "[0-9]* blocks"
+		done | sed 's|^|/|' | sort
+		echo "================================================================================"
+		echo ""
+		;;
+	repack-config)
 		# Create SliTaz package archive from configuration files.
 		#
 		mkdir -p $TMP_DIR && cd $TMP_DIR
