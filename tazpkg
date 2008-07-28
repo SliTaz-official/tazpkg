@@ -1116,14 +1116,30 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 	list-config)
 		# List configuration files installed.
 		#
-		echo ""
-		echo -e "\033[1mConfiguration files"
-		echo "================================================================================"
-		for i in $INSTALLED/*/volatile.cpio.gz; do 
-			zcat $i | cpio -t | grep -v "[0-9]* blocks"
-		done | sed 's|^|/|' | sort
-		echo "================================================================================"
-		echo ""
+		if [ "$2" = "--box" ]; then
+			mkdir -p $TMP_DIR && cd $TMP_DIR
+			for i in $INSTALLED/*/volatile.cpio.gz; do 
+				zcat $i | cpio -id > /dev/null
+				find * -type f | while read file; do
+					echo -n "$(stat -c "%A|%U|%G|%s|" /$file)"
+					cmp $file /$file > /dev/null 2>&1 || \
+						echo -n "$(stat -c "%.16y" /$file)"
+					echo "|/$file"
+				done
+				rm -rf *
+			done | sed 's|  |  /|'
+			cd $TOP_DIR
+			rm -rf $TMP_DIR
+		else
+			echo ""
+			echo -e "\033[1mConfiguration files"
+			echo "================================================================================"
+			for i in $INSTALLED/*/volatile.cpio.gz; do 
+				zcat $i | cpio -t | grep -v "[0-9]* blocks"
+			done | sed 's|^|/|' | sort
+			echo "================================================================================"
+			echo ""
+		fi
 		;;
 	repack-config)
 		# Create SliTaz package archive from configuration files.
