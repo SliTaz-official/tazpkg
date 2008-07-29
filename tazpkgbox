@@ -72,26 +72,30 @@ dans: /var/cache/tazpkg"
 </window>
 '
 
-export LIST_CONFIG_FILES="
-<window title=\"configuration files\" icon-name=\"system-file-manager\">
+export LIST_CONFIG_FILES='
+<window title="configuration files" icon-name="system-file-manager">
   <vbox>
 	<tree>
 		<width>630</width><height>160</height>
-		<label>Access | User | Group | Size | Update Date | Name</label>
+		<variable>CONF_FILE</variable>
+		<label>Name | Update Date | Access | Size | User | Group</label>
 		<input>tazpkg list-config --box</input>
+		<action>leafpad $CONF_FILE</action>
 	</tree>
 	<hbox>
-		<text wrap=\"false\">
-			<label>\"Only files with Update Date have been modified after package installation\"</label>
+		<text wrap="false">
+			<label>
+"Only files with Update Date have been modified after package installation"
+			</label>
 		</text>
 		<button>
-			<input file icon=\"gtk-close\"></input>
-			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+			<input file icon="gtk-close"></input>
+			<action type="closewindow">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>
 	</hbox>
   </vbox>
 </window>
-"
+'
 
 # Main dialog
 export TAZPKG_DIALOG='
@@ -345,7 +349,7 @@ export TAZPKG_DIALOG='
 				</button>
 			</hbox>
 		</frame>
-		<frame Files path, configuration files and packages check>
+		<frame Files path>
 			<hbox>
 				<text use-markup="true" width-chars="60">
 					<label>
@@ -353,17 +357,24 @@ export TAZPKG_DIALOG='
 					</label>
 				</text>
 			</hbox>
-			<hbox>
+		</frame>
+		<hbox>
+			<frame Configuration files>
+				<hbox>
 				<button>
 					<label>Repack config</label>
 					<input file icon="edit-redo"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Repack configs" -geometry 80x25+120+120 -e "tazpkg repack-config ; sleep 2" 2> /dev/null</action>
+					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Repack configs" -geometry 80x25+120+120 -e "tazpkg repack-config ; sleep 5" 2> /dev/null</action>
 				</button>
 				<button>
 					<label>Config Files</label>
 					<input file icon="tazpkg"></input>
 					<action type="launch">LIST_CONFIG_FILES</action>
 				</button>
+				</hbox>
+			</frame>
+			<frame Packages check>
+			<hbox>
 				<button>
 					<label>Quick check</label>
 					<input file icon="go-next"></input>
@@ -374,8 +385,9 @@ export TAZPKG_DIALOG='
 					<input file icon="go-next"></input>
 					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less " 2> /dev/null</action>
 				</button>
-			</hbox>
-		</frame>
+				</hbox>
+			</frame>
+		</hbox>
 	</vbox>
 
 	</notebook>

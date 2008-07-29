@@ -1121,10 +1121,10 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			for i in $INSTALLED/*/volatile.cpio.gz; do 
 				zcat $i | cpio -id > /dev/null
 				find * -type f | while read file; do
-					echo -n "$(stat -c "%A|%U|%G|%s|" /$file)"
+					echo -n "/$file|"
 					cmp $file /$file > /dev/null 2>&1 || \
 						echo -n "$(stat -c "%.16y" /$file)"
-					echo "|/$file"
+					stat -c "|%A|%s|%U|%G" /$file
 				done
 				rm -rf *
 			done | sed 's|  |  /|'
