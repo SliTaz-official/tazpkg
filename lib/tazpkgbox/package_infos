@@ -6,21 +6,33 @@
 XTERM_OPTS="-geometry 80x16+120+120"
 
 PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
+TMP_DIR=/tmp/tazpkg-$$-$RANDOM
 
 if [ "$1" = "list_files" ]; then
 	AWK_FILTER='BEGIN { ls=0 } { if (/^===/) ls=1-ls; else if (ls) print; }'
 	CONF_FILES="$(tazpkg list-config $2 | awk "$AWK_FILTER")"
+	if [ -n "$CONF_FILES" ]; then
+		mkdir $TMP_DIR
+		zcat /var/lib/tazpkg/installed/$2/volatile.cpio.gz | \
+			( cd $TMP_DIR ; cpio -id > /dev/null )
+	fi
 	tazpkg list-files $2 | awk "$AWK_FILTER" | while read file; do
-		echo -n "$(stat -c "%A|%U|%G|%s|$type %n|" "$file")"
+		echo -n "$(stat -c "%A|%U|%G|%s|%n|" "$file")"
 		if [ -L "$file" ]; then
 			echo -n "$(readlink "$file")"
 		elif [ -f "$file" ]; then
 			case "$CONF_FILES" in
-			*$file*) echo -n "[configuration file]";;
+			*$file*) 
+				if cmp $file $TMP_DIR$file > /dev/null 2>&1; then
+					echo -n "[configuration]"
+				else
+					echo -n "$(stat -c "[configuration: %.16y]" $file)"
+				fi;;
 			esac
 		fi
 		echo ""
 	done
+	[ -n "$CONF_FILES" ] && rm -rf $TMP_DIR
 	exit 0
 fi
 

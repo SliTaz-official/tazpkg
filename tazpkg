@@ -1143,24 +1143,18 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 					echo "|/$file"
 				done
 				rm -rf *
-			done | sed 's|  |  /|'
+			done
 			cd $TOP_DIR
 			rm -rf $TMP_DIR
 		else
 			echo ""
 			echo -e "\033[1mConfiguration files"
 			echo "================================================================================"
-			if [ -n "$2" ]; then
-				for i in $INSTALLED/$2/volatile.cpio.gz; do 
-					[ -f "$i" ] || continue
-					zcat $i | cpio -t | grep -v "[0-9]* blocks"
-				done | sed 's|^|/|' | sort
-			else
-				for i in $INSTALLED/*/volatile.cpio.gz; do 
-					[ -f "$i" ] || continue
-					zcat $i | cpio -t | grep -v "[0-9]* blocks"
-				done | sed 's|^|/|' | sort
-			fi
+			for i in $INSTALLED/*/volatile.cpio.gz; do 
+				[ -n "$2" -a "$i" != "$INSTALLED/$2/volatile.cpio.gz" ] && continue
+				[ -f "$i" ] || continue
+				zcat $i | cpio -t | grep -v "[0-9]* blocks"
+			done | sed 's|^|/|' | sort
 			echo "================================================================================"
 			echo ""
 		fi
