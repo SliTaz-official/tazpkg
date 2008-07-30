@@ -8,11 +8,19 @@ XTERM_OPTS="-geometry 80x16+120+120"
 PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
 
 if [ "$1" = "list_files" ]; then
-	tazpkg list-files $2 | awk '
-BEGIN { ls=0 } {
-  if (/^===/) ls=1-ls;
-  else if (ls) system("stat -c \"%A|%U|%G|%s|%n\" " $0);
-}'
+	AWK_FILTER='BEGIN { ls=0 } { if (/^===/) ls=1-ls; else if (ls) print; }'
+	CONF_FILES="$(tazpkg list-config $2 | awk "$AWK_FILTER")"
+	tazpkg list-files $2 | awk "$AWK_FILTER" | while read file; do
+		echo -n "$(stat -c "%A|%U|%G|%s|$type %n|" "$file")"
+		if [ -L "$file" ]; then
+			echo -n "$(readlink "$file")"
+		elif [ -f "$file" ]; then
+			case "$CONF_FILES" in
+			*$file*) echo -n "[configuration file]";;
+			esac
+		fi
+		echo ""
+	done
 	exit 0
 fi
 
@@ -25,10 +33,12 @@ fi
 export LIST_FILES="
 <window title=\"$PKG files\" icon-name=\"system-file-manager\">
   <vbox>
-	<tree>
+	<tree exported_column=\"4\">
+		<variable>FILE</variable>
 		<width>600</width><height>160</height>
-		<label>Access | User | Group | Size | Name</label>
+		<label>Access | User | Group | Size | Name | Target</label>
 		<input> $0 list_files $PKG </input>
+		<action>tazpkg list-config $PKG | grep -q ^\$FILE$ && leafpad \$FILE</action>
 	</tree>
 	<hbox>
 		<button>

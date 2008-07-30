@@ -75,10 +75,10 @@ dans: /var/cache/tazpkg"
 export LIST_CONFIG_FILES='
 <window title="configuration files" icon-name="system-file-manager">
   <vbox>
-	<tree>
-		<width>630</width><height>160</height>
+	<tree exported_column="5">
+		<width>560</width><height>160</height>
 		<variable>CONF_FILE</variable>
-		<label>Name | Update Date | Access | Size | User | Group</label>
+		<label>Access | User | Group | Size | Update Date | Name</label>
 		<input>tazpkg list-config --box</input>
 		<action>leafpad $CONF_FILE</action>
 	</tree>
@@ -309,7 +309,7 @@ export TAZPKG_DIALOG='
 
 	<vbox>
 		<frame Cache directory>
-			<text use-markup="true" width-chars="60">
+			<text use-markup="true" width-chars="60" wrap="false">
 				<label>
 "The cache directory is used to store downloaded or repacked packages."
 				</label>
@@ -393,8 +393,8 @@ export TAZPKG_DIALOG='
 	</notebook>
 
 	<hbox>
-		<text>
-			<input>echo "Packages: `ls /var/lib/tazpkg/installed | wc -l` installed, `cat /var/lib/tazpkg/packages.list | wc -l` mirrored, `cat /var/lib/tazpkg/upradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
+		<text wrap="false">
+			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; echo "Packages: $installed installed, $(($mirrored - $installed)) installable, $mirrored mirrored, `cat /var/lib/tazpkg/upradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
 			<variable>PKG_STATS</variable>
 		</text>
 	</hbox>

@@ -1121,10 +1121,10 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			for i in $INSTALLED/*/volatile.cpio.gz; do 
 				zcat $i | cpio -id > /dev/null
 				find * -type f | while read file; do
-					echo -n "/$file|"
+					echo -n "$(stat -c "%A|%U|%G|%s|" /$file)"
 					cmp $file /$file > /dev/null 2>&1 || \
 						echo -n "$(stat -c "%.16y" /$file)"
-					stat -c "|%A|%s|%U|%G" /$file
+					echo "|/$file"
 				done
 				rm -rf *
 			done | sed 's|  |  /|'
@@ -1134,9 +1134,17 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo ""
 			echo -e "\033[1mConfiguration files"
 			echo "================================================================================"
-			for i in $INSTALLED/*/volatile.cpio.gz; do 
-				zcat $i | cpio -t | grep -v "[0-9]* blocks"
-			done | sed 's|^|/|' | sort
+			if [ -n "$2" ]; then
+				for i in $INSTALLED/$2/volatile.cpio.gz; do 
+					[ -f "$i" ] || continue
+					zcat $i | cpio -t | grep -v "[0-9]* blocks"
+				done | sed 's|^|/|' | sort
+			else
+				for i in $INSTALLED/*/volatile.cpio.gz; do 
+					[ -f "$i" ] || continue
+					zcat $i | cpio -t | grep -v "[0-9]* blocks"
+				done | sed 's|^|/|' | sort
+			fi
 			echo "================================================================================"
 			echo ""
 		fi
