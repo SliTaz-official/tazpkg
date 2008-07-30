@@ -1244,7 +1244,10 @@ EOT
 		sed 's/^/rootfs/' < files.list | cpio -o -H newc 2>/dev/null |\
 		      ( cd tmp ; cpio -id 2>/dev/null )
 		mv tmp/rootfs fs
-		zcat $INSTALLED/$PACKAGE/volatile.cpio.gz | ( cd fs; cpio -id )
+		if [ -f $INSTALLED/$PACKAGE/volatile.cpio.gz ]; then
+			zcat $INSTALLED/$PACKAGE/volatile.cpio.gz | \
+				( cd fs; cpio -id )
+		fi
 		if grep -q repack_cleanup $INSTALLED/$PACKAGE/receipt; then
 			. $INSTALLED/$PACKAGE/receipt
 			repack_cleanup fs
