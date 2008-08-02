@@ -1289,14 +1289,28 @@ EOT
 				md5sum "fs$file" | sed 's/  fs/  /'
 			done < files.list > md5sum
 			status
+			UNPACKED_SIZE=$(du -chs fs receipt files.list md5sum \
+				description.txt 2> /dev/null | awk \
+				'{ sz=$1 } END { print sz }')
 			# Build cpio archives.
 			echo -n "Compressing the fs... "
 			find fs -print | cpio -o -H newc | gzip > fs.cpio.gz
 			rm -rf fs
+			status
+			PACKED_SIZE=$(du -chs fs.cpio.gz receipt files.list \
+				md5sum description.txt 2> /dev/null | awk \
+				'{ sz=$1 } END { print sz }')
+			echo -n "Undating receipt sizes..."
+			sed -i s/^PACKED_SIZE.*$// receipt	
+			sed -i s/^UNPACKED_SIZE.*$// receipt	
+			sed -i "s/^PACKAGE=/PACKED_SIZE=\"$PACKED_SIZE\"\nUNPACKED_SIZE=\"$UNPACKED_SIZE\"\nPACKAGE=/" receipt
+			status
 			echo -n "Creating full cpio archive... "
 			find . -print | cpio -o -H newc > ../$PACKAGE.tazpkg
+			status
 			echo -n "Restoring original package tree... "
 			zcat fs.cpio.gz | cpio -id
+			status
 			rm fs.cpio.gz && cd ..
 			echo "================================================================================"
 			echo "Package $PACKAGE compressed successfully."
