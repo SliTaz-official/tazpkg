@@ -333,14 +333,16 @@ install_package()
 		# save 'official' configuration files
 		echo -n "Save configuration files for $PACKAGE... "
 		for i in $CONFIG_FILES; do
-			echo ${i#/}
+			( cd fs ; find ${i#/} -type f )
 		done | ( cd fs ; cpio -o -H newc | gzip -9 ) > \
 			$ROOT$INSTALLED/$PACKAGE/volatile.cpio.gz
 		# keep user configuration files
 		for i in $CONFIG_FILES; do
-			[ -e $ROOT$i ] || continue
-			rm -f fs$i
-			cp -a $ROOT$i fs$i
+			( cd fs ; find ${i#/} -type f )
+		done | while read i; do
+			[ -e $ROOT/$i ] || continue
+			rm -f fs/$i
+			cp -a $ROOT/$i fs/$i
 		done
 		status
 	fi
