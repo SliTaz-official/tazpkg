@@ -93,7 +93,7 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 
 	<tree>
 		<width>460</width><height>160</height>
-		<label>Package|$PKG</label>
+		<label>$PKG|$SHORT_DESC</label>
 		<variable>FIELD</variable>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
 		<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
@@ -179,6 +179,7 @@ else
 	RES=`grep "^$PKG" /var/lib/tazpkg/packages.desc | head -n 1`
 	PACKAGE=`echo "$RES" | cut -d "|" -f 1`
 	VERSION=`echo "$RES" | cut -d "|" -f 2`
+	SHORT_DESC=`echo "$RES" | cut -d "|" -f 3`
 	CATEGORY=`echo "$RES" | cut -d "|" -f 4`
 	WEB_SITE=`echo "$RES" | cut -d "|" -f 5`
 	SIZES=`grep -A 3 "^$(echo $PACKAGE)$" /var/lib/tazpkg/packages.txt | tail -1`
@@ -188,7 +189,7 @@ else
 
 	<tree>
 		<width>460</width><height>140</height>
-		<label>Package|$PKG</label>
+		<label>$PKG|$SHORT_DESC</label>
 		<item icon=\"tazpkg\">Name: | $PACKAGE</item>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
 		<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
