@@ -341,7 +341,6 @@ install_package()
 			( cd fs ; find ${i#/} -type f )
 		done | while read i; do
 			[ -e $ROOT/$i ] || continue
-			rm -f fs/$i
 			cp -a $ROOT/$i fs/$i
 		done
 		status
