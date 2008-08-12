@@ -89,6 +89,7 @@ usage ()
        tazpkg shell\n
 \033[1mCommands: \033[0m
   usage            Print this short usage.
+  bugs             Show known bugs in packages
   list             List installed packages on the system by category or all.
   xhtml-list       Create a xHTML list of installed packges.
   list-mirror      List all available packages on the mirror (--diff for new).
@@ -1486,6 +1487,28 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 		yes y | tazpkg get-install-list upgradeable-packages.list
 		#rm -f upgradeable-packages.list
 		;;
+	bugs)
+		# Show known bugs in package(s)
+		#
+		cd $INSTALLED
+		LIST=$2
+		[ -n "$2" ] || LIST=`ls`
+		MSG="No known bugs."
+		for PACKAGE in $LIST; do
+			BUGS=""
+			. $PACKAGE/receipt
+			if [ -n "$BUGS" ]; then
+				MSG="
+Bug list completed"
+				cat <<EOT
+
+Package $PACKAGE version $VERSION$EXTRAVERSION:
+  $BUGS
+EOT
+			fi
+		done
+		echo "$MSG"
+		;;
 	check)
 		# Check installed packages set.
 		#
@@ -1524,6 +1547,8 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 			ALL_DEPS=""
 			check_for_deps_loop $PACKAGE $DEPENDS
 		done
+		echo "Looking for known bugs..."
+		tazpkg bugs
 		if [ "$PACKAGE_FILE" = "--full" ]; then
 			for file in */md5sum; do
 				[ -s "$file" ] || continue
