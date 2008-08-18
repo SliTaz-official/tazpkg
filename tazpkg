@@ -445,21 +445,25 @@ install_deps()
 				[ -n "$list" ] || list="$TOP_DIR/packages.list"
 				# We can install packages from a local dir by greping
 				# the TAZPKG_BASENAME in the local packages.list.
+				found=0
 				if [ -f "$list" ]; then
 					echo "Checking if $pkg exist in local list... "
 					mkdir $TMP_DIR
 					for i in $pkg-*.tazpkg; do
 						[ -f $i ] || continue
 						( cd $TMP_DIR ; cpio -i receipt > /dev/null) < $i
+						[ "$(. $TMP_DIR/receipt; echo $PACKAGE)" = "$pkg" ] || continue
 						if grep -q ^$(package_fullname_in_dir $TMP_DIR).tazpkg$ $list
 						then
+							found=1
 							tazpkg install $i $root --list=$list
 							break
 						fi
 					done
 					rm -rf $TMP_DIR
+				fi
 				# Install deps from the mirror.
-				else
+				if [ $found -eq 0 ]; then
 					if [ ! -f "$LOCALSTATE/packages.list" ]; then
 						tazpkg recharge
 					fi
@@ -1567,7 +1571,7 @@ EOT
 					pkg=${f%/files.list}
 					echo -n "  $pkg"
 					if [ -f $pkg/modifiers ]; then
-						echo -n " (known as overridden by $(cat $pkg/modifiers))"
+						echo -n " (overridden by $(echo "$(cat $pkg/modifiers)"))"
 					fi
 					echo ""
 				done
