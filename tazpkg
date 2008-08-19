@@ -1500,6 +1500,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 		MSG="No known bugs."
 		for PACKAGE in $LIST; do
 			BUGS=""
+			EXTRAVERSION=""
 			. $PACKAGE/receipt
 			if [ -n "$BUGS" ]; then
 				MSG="
