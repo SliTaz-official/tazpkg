@@ -1578,7 +1578,8 @@ EOT
 				done
 			done
 			MSG="No package has installed the following files:\n"
-			find /etc /bin /sbin /lib /usr /var/www -not -type d | while read file; do
+			find /etc /bin /sbin /lib /usr /var/www \
+				-not -type d 2> /dev/null | while read file; do
 				case "$file" in *\[*) continue;; esac
 				grep -q "^$file$" */files.list && continue
 				echo -e "$MSG  $file"
