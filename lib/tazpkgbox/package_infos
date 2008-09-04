@@ -17,7 +17,8 @@ if [ "$1" = "list_files" ]; then
 			( cd $TMP_DIR ; cpio -id > /dev/null )
 	fi
 	tazpkg list-files $2 | awk "$AWK_FILTER" | while read file; do
-		echo -n "$(stat -c "%A|%U|%G|%s|%n|" "$file")"
+		echo -n "$(stat -c "%A|%U|%G|%s|%n|" "$file" || \
+			   echo "File lost !||||$file")"
 		if [ -L "$file" ]; then
 			echo -n "$(readlink "$file")"
 		elif [ -f "$file" ]; then
