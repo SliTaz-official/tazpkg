@@ -105,8 +105,8 @@ usage ()
   extract          Extract a (*.tazpkg) package into a directory.
   pack             Pack an unpacked or prepared package tree.
   recharge         Recharge your packages.list from the mirror.
-  repack           Creates a package archive from an installed package.
-  repack-config    Creates a package archive with configuration files.
+  repack           Create a package archive from an installed package.
+  repack-config    Create a package archive with configuration files.
   upgrade          Upgrade all installed and listed packages on the mirror.
   block|unblock    Block an installed package version or unblock it for upgrade.
   get              Download a package into the current directory.
