@@ -1498,8 +1498,9 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 		# Show known bugs in package(s)
 		#
 		cd $INSTALLED
-		LIST=$2
-		[ -n "$2" ] || LIST=`ls`
+		shift
+		LIST=$@
+		[ -n "$LIST" ] || LIST=`ls`
 		MSG="No known bugs."
 		for PACKAGE in $LIST; do
 			BUGS=""
@@ -1555,12 +1556,13 @@ EOT
 			ALL_DEPS=""
 			check_for_deps_loop $PACKAGE $DEPENDS
 		done
-		echo "Looking for known bugs..."
+		echo -n "Looking for known bugs... "
 		tazpkg bugs
 		if [ "$PACKAGE_FILE" = "--full" ]; then
 			for file in */md5sum; do
 				[ -s "$file" ] || continue
-				md5sum -c "$file" 2> /dev/null | grep -v OK$
+				md5sum -c "$file" 2> /dev/null | grep -v OK$ |\
+					sed 's/FAILED$/MD5SUM MISMATCH/'
 			done
 			FILES=" "
 			for file in $(cat */files.list); do
