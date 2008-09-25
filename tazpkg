@@ -1292,6 +1292,9 @@ EOT
 			while read file; do
 				[ -L "fs$file" ] && continue
 				[ -f "fs$file" ] || continue
+				case "$file" in
+				/lib/modules/*/modules.*|*.pyc) continue;;
+				esac
 				md5sum "fs$file" | sed 's/  fs/  /'
 			done < files.list > md5sum
 			status
