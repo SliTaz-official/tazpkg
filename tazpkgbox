@@ -133,6 +133,7 @@ export TAZPKG_DIALOG='
 				<variable>INSTALLED_CAT</variable>
 				<item>all</item>
 				<item>base-system</item>
+				<item>x-window</item>
 				<item>utilities</item>
 				<item>network</item>
 				<item>graphics</item>
@@ -184,6 +185,7 @@ export TAZPKG_DIALOG='
 				<variable>INSTALLABLE_CAT</variable>
 				<item>all</item>
 				<item>base-system</item>
+				<item>x-window</item>
 				<item>utilities</item>
 				<item>network</item>
 				<item>graphics</item>
@@ -230,6 +232,7 @@ export TAZPKG_DIALOG='
 				<variable>MIRRORED_CAT</variable>
 				<item>all</item>
 				<item>base-system</item>
+				<item>x-window</item>
 				<item>utilities</item>
 				<item>network</item>
 				<item>graphics</item>

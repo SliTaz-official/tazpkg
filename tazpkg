@@ -22,6 +22,7 @@ VERSION=2.3
 # Packages categories.
 CATEGORIES="
 base-system
+x-window
 utilities
 network
 graphics
