@@ -1512,7 +1512,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 Bug list completed"
 				cat <<EOT
 
-Package $PACKAGE version $VERSION$EXTRAVERSION:
+Bugs in package $PACKAGE version $VERSION$EXTRAVERSION:
   $BUGS
 EOT
 			fi
