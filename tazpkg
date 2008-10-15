@@ -1054,6 +1054,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			ALTERED=""
 			THE_PACKAGE=$PACKAGE	# altered by receipt
 			for i in $(cd $INSTALLED ; ls); do
+				[ -f $i/receipt ] || continue
 				DEPENDS=""
 				. $INSTALLED/$i/receipt
 				case " $(echo $DEPENDS) " in
@@ -1067,6 +1068,13 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		if [ -n "$ALTERED" ]; then
 			echo "The following packages depend on $PACKAGE :"
 			for i in $ALTERED; do
+				echo "  $i"
+			done
+		fi
+		REFRESH=$(cd $INSTALLED ; grep -sl ^$PACKAGE$ */modifiers)
+		if [ -n "$REFRESH" ]; then
+			echo "The following packages have been modified $PACKAGE :"
+			for i in $REFRESH; do
 				echo "  $i"
 			done
 		fi
@@ -1102,6 +1110,20 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 						if [ -d "$INSTALLED/$i" ]; then
 							tazpkg remove $i
 						fi
+					done
+				fi
+			fi
+			if [ -n "$REFRESH" ]; then
+				echo -n "Reinstall packages modified by $PACKAGE"
+				echo -n " (y/N) ? "; read anser
+				if [ "$anser" = "y" ]; then
+					for i in $REFRESH; do
+						if [ $(wc -l $INSTALLED/$i/modifiers) -gt 1 ]; then
+							echo "Check $INSTALLED/$i/modifiers for reinstallation"
+							continue
+						fi
+						rm -r $INSTALLED/$i/modifiers
+						tazpkg get-install $i --forced
 					done
 				fi
 			fi
