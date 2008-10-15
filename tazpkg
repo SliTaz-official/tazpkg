@@ -392,6 +392,31 @@ check_for_deps_loop()
 	done
 }
 
+# get package from packages.equiv
+equivalent_pkg()
+{
+	for i in $(grep -s "^$1=" $2$LOCALSTATE/packages.equiv | sed "s/^$1=//"); do
+		if echo $i | grep -q : ; then
+			# format 'alternative:newname'
+			# if alternative is installed then substitute newname
+			if [ -f $2$INSTALLED/${i%:*}/receipt ]; then
+				# substitute package dependancy
+				echo ${i#*:}
+				return
+			fi
+		else
+			# if alternative is installed then nothing to install
+			if [ -f $2$INSTALLED/$i/receipt ]; then
+				# substitute installed package
+				echo $i
+				return
+			fi
+		fi
+	done
+	# if not found in packages.equiv then no substitution
+	echo $1
+}
+
 # Check for missing deps listed in a receipt packages.
 check_for_deps()
 {
@@ -402,8 +427,9 @@ check_for_deps()
 	. $TMP_DIR/receipt
 	PACKAGE=$saved
 	rm -rf $TMP_DIR
-	for i in $DEPENDS
+	for pkgorg in $DEPENDS
 	do
+		i=$(equivalent_pkg $pkgorg $1)
 		if [ ! -d "$1$INSTALLED/$i" ]; then
 			MISSING_PACKAGE=$i
 			deps=$(($deps+1))
@@ -414,8 +440,9 @@ check_for_deps()
 	if [ ! "$MISSING_PACKAGE" = "" ]; then
 		echo -e "\033[1mTracking dependencies for :\033[0m $PACKAGE"
 		echo "================================================================================"
-		for i in $DEPENDS
+		for pkgorg in $DEPENDS
 		do
+			i=$(equivalent_pkg $pkgorg $1)
 			if [ ! -d "$1$INSTALLED/$i" ]; then
 				MISSING_PACKAGE=$i
 				echo "Missing : $MISSING_PACKAGE"
@@ -438,8 +465,9 @@ install_deps()
 	echo -n "Install all missing dependencies (y/N) ? "; read anser
 	echo ""
 	if [ "$anser" = "y" ]; then
-		for pkg in $DEPENDS
+		for pkgorg in $DEPENDS
 		do
+			pkg=$(equivalent_pkg $pkgorg $1)
 			if [ ! -d "$1$INSTALLED/$pkg" ]; then
 				local list
 				list="$INSTALL_LIST"
@@ -1361,12 +1389,14 @@ EOT
 			mv -f packages.desc packages.desc.bak 2>/dev/null
 			mv -f packages.txt packages.txt.bak 2>/dev/null
 			mv -f packages.list packages.list.bak 2>/dev/null
+			mv -f packages.equiv packages.equiv.bak 2>/dev/null
 			mv -f files.list.lzma files.list.lzma.bak 2> /dev/nul
 			status
 		fi
 		download packages.desc
 		download packages.txt
 		download packages.list
+		download packages.equiv
 		download files.list.lzma
 		if [ -f "$LOCALSTATE/packages.list.bak" ]; then
 			diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
