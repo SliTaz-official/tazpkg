@@ -12,8 +12,13 @@ list_files()
 	sed 's/.\[[01]m//g' | awk 'BEGIN { show=0 } {
 		if (/^===/) show=1-show;
 		else if (/^Package/) pkg=$2;
-		else if ($0 != "" && show != 0) printf("%s||%s\n",pkg,$0);
-	}'
+		else if ($0 != "" && show != 0) printf("%s %s\n",pkg,$0);
+	}' | while read pkg file; do
+		[ "$pkg" = "0" ] && continue
+		version=$(grep "^$pkg " /var/lib/tazpkg/packages.desc | \
+			  awk '{ print $3 }' )
+		echo "$pkg|$version|$file"
+	done
 }
 
 if [ "$1" = "--files" ]; then
