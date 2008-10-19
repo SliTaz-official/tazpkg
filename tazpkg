@@ -1101,9 +1101,9 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		fi
 		REFRESH=$(cd $INSTALLED ; grep -sl ^$PACKAGE$ */modifiers)
 		if [ -n "$REFRESH" ]; then
-			echo "The following packages have been modified $PACKAGE :"
+			echo "The following packages have been modified by $PACKAGE :"
 			for i in $REFRESH; do
-				echo "  $i"
+				echo "  ${i%/modifiers}"
 			done
 		fi
 		echo "Remove $PACKAGE ($VERSION$EXTRAVERSION) ?"
@@ -1146,12 +1146,12 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 				echo -n " (y/N) ? "; read anser
 				if [ "$anser" = "y" ]; then
 					for i in $REFRESH; do
-						if [ $(wc -l $INSTALLED/$i/modifiers) -gt 1 ]; then
-							echo "Check $INSTALLED/$i/modifiers for reinstallation"
+						if [ $(wc -l $INSTALLED/$i) -gt 1 ]; then
+							echo "Check $INSTALLED/$i for reinstallation"
 							continue
 						fi
-						rm -r $INSTALLED/$i/modifiers
-						tazpkg get-install $i --forced
+						rm -r $INSTALLED/$i
+						tazpkg get-install ${i%/modifiers} --forced
 					done
 				fi
 			fi
