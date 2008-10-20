@@ -18,7 +18,7 @@ if [ "$1" = "list_files" ]; then
 	fi
 	tazpkg list-files $2 | awk "$AWK_FILTER" | while read file; do
 		echo -n "$(stat -c "%A|%U|%G|%s|%n|" "$file" || \
-			   echo "File lost !||||$file")"
+			   echo "File lost !||||$file|")"
 		if [ -L "$file" ]; then
 			echo -n "$(readlink "$file")"
 		elif [ -f "$file" ]; then
@@ -179,7 +179,7 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 "
 	export PACKAGE_INFOS
 else
-	RES=`grep "^$PKG" /var/lib/tazpkg/packages.desc | head -n 1`
+	RES=`grep "^$PKG " /var/lib/tazpkg/packages.desc`
 	PACKAGE=`echo "$RES" | cut -d "|" -f 1`
 	VERSION=`echo "$RES" | cut -d "|" -f 2`
 	SHORT_DESC=`echo "$RES" | cut -d "|" -f 3`
