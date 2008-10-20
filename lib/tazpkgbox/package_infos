@@ -200,6 +200,7 @@ else
 		<item icon=\"tazpkg\">Size: | $SIZES</item>"
 	PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
+		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; esac</action>
 	</tree>
 
 	<hbox>"
