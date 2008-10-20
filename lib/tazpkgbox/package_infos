@@ -43,6 +43,52 @@ if [ "$1" = "list_files_mirror" ]; then
 	exit 0
 fi
 
+if [ "$1" = "list_packages" ]; then
+	PKG="$2"
+	if [ -n "$3" ]; then
+		shift
+		export LIST_PKGS='
+<window title="Packages" icon-name="tazpkg">
+  <vbox>
+     <tree>
+	<width>600</width><height>160</height>
+	<label>Package|Version|Size|Description</label>
+	<variable>PKG</variable>
+'
+		for i in "$@"; do
+			if [ -d /var/lib/tazpkg/installed/$i ]; then
+				. /var/lib/tazpkg/installed/$i/receipt
+				LIST_PKGS="$LIST_PKGS
+	<item icon=\"tazpkg\">$i|$VERSION|Installed|$SHORT_DESC</item>
+"
+			else
+				RES=`grep "^$i " /var/lib/tazpkg/packages.desc`
+				PACKAGE=`echo "$RES" | cut -d "|" -f 1`
+				VERSION=`echo "$RES" | cut -d "|" -f 2`
+				SHORT_DESC=`echo "$RES" | cut -d "|" -f 3`
+				SIZE=`grep -A 3 "^$(echo $PACKAGE)$" /var/lib/tazpkg/packages.txt | tail -1 | sed 's/.*(\(.*\) .*/\1/'`
+				LIST_PKGS="$LIST_PKGS
+	<item icon=\"tazpkg\">$i|$VERSION|$SIZE|$SHORT_DESC</item>
+"
+			fi
+		done
+		LIST_PKGS="$LIST_PKGS
+     </tree>
+     <hbox>
+	<button ok>
+	</button>
+	<button cancel>
+		<action type=\"closewindow\">LIST_PKGS</action>
+	</button>
+     </hbox>
+  </vbox>
+</window>
+"
+		eval `gtkdialog --center --program=LIST_PKGS`
+		[ "$EXIT" = "OK" ] || exit 0
+	fi
+fi
+
 export LIST_FILES="
 <window title=\"$PKG files\" icon-name=\"system-file-manager\">
   <vbox>
@@ -94,7 +140,7 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 <vbox>
 
 	<tree>
-		<width>460</width><height>160</height>
+		<width>460</width><height>200</height>
 		<label>$PKG|$SHORT_DESC</label>
 		<variable>FIELD</variable>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
@@ -111,7 +157,7 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 		<item icon=\"error\">Bugs: | $BUGS</item>"
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
-		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; esac</action>
+		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; Sug*) $0 list_packages $SUGGESTED;; Dep*) $0 list_packages $DEPENDS;; esac</action>
 	</tree>
 
 	<hbox>"
@@ -194,7 +240,7 @@ else
 <vbox>
 
 	<tree>
-		<width>460</width><height>140</height>
+		<width>460</width><height>160</height>
 		<label>$PKG|$SHORT_DESC</label>
 		<item icon=\"tazpkg\">Name: | $PACKAGE</item>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
