@@ -86,6 +86,7 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 	PACKED_SIZE=""
 	DEPENDS=""
 	MAINTAINER=""
+	BUGS=""
 	. /var/lib/tazpkg/installed/$PKG/receipt
 	MAINTAINER=$(echo "$MAINTAINER" | sed 's/[<>|]/ /g')
 	PACKAGE_INFOS="
@@ -106,6 +107,8 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 		<item icon=\"tazpkg\">Size: | $PACKED_SIZE ($UNPACKED_SIZE installed)</item>"
 [ -n "$MAINTAINER" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>"
+[ -n "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		<item icon=\"error\">Bugs: | $BUGS</item>"
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
 		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; esac</action>
