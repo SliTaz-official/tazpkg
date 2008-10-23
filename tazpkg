@@ -1613,9 +1613,19 @@ EOT
 		tazpkg bugs
 		if [ "$PACKAGE_FILE" = "--full" ]; then
 			for file in */md5sum; do
+				CONFIG_FILES=""
+				. $(dirname "$file")/receipt
 				[ -s "$file" ] || continue
-				md5sum -c "$file" 2> /dev/null | grep -v OK$ |\
-					sed 's/FAILED$/MD5SUM MISMATCH/'
+				while read md5 f; do
+					[ -f $f ] || continue
+					for i in $CONFIG_FILES; do
+						case "$f" in
+						$i|$i/*) continue 2;;
+						esac
+					done
+					echo "$md5  $f"
+				done < "$file" | md5sum -c - 2> /dev/null | \
+				  grep -v OK$ | sed 's/FAILED$/MD5SUM MISMATCH/'
 			done
 			FILES=" "
 			for file in $(cat */files.list); do
