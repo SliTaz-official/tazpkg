@@ -250,6 +250,7 @@ else
 	<tree>
 		<width>460</width><height>160</height>
 		<label>$PKG|$SHORT_DESC</label>
+		<variable>FIELD2</variable>
 		<item icon=\"tazpkg\">Name: | $PACKAGE</item>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
 		<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
@@ -257,7 +258,7 @@ else
 		<item icon=\"tazpkg\">Size: | $SIZES</item>"
 	PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
-		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; esac</action>
+		<action>case \$FIELD2 in Web*) firefox $WEB_SITE &;; esac</action>
 	</tree>
 
 	<hbox>"
