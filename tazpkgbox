@@ -273,7 +273,15 @@ export TAZPKG_DIALOG='
 			<input>/usr/lib/slitaz/tazpkgbox/list blocked</input>
 			<action>echo "$BLOCKED" > /tmp/tazpkgbox/pkg</action>
 			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>refresh:BLOCKED</action>
 		</tree>
+		<hbox>
+			<button>
+				<label>Refresh</label>
+				<input file icon="reload"></input>
+				<action>refresh:BLOCKED</action>
+			</button>
+		</hbox>
 	</vbox>
 
 	<vbox>
