@@ -29,6 +29,9 @@ if [ "$1" = "list_files" ]; then
 				else
 					echo -n "$(stat -c "[configuration: %.16y]" $file)"
 				fi;;
+			#*	if [ "$(tazpkg check-file $file $2)" = "failure" ]; then
+			#		echo -n "Invalid md5"
+			#	fi;;
 			esac
 		fi
 		echo ""
@@ -73,6 +76,11 @@ if [ "$1" = "list_packages" ]; then
 			fi
 		done
 		LIST_PKGS="$LIST_PKGS
+	<action>echo "\$PKG" > /tmp/tazpkgbox/pkg</action>
+	<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+	<action>refresh:PKG</action>
+	<action>refresh:PKG_STATS</action>
+	<action>refresh:CACHE_STATS</action>
      </tree>
      <hbox>
 	<button ok>

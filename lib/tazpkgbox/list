@@ -25,6 +25,19 @@ installed_list()
 	done
 }
 
+blocked_list()
+{
+	for pkg in /var/lib/tazpkg/installed/*
+	do
+		. $pkg/receipt
+		if grep -qs "^$(basename $pkg)$" /var/lib/tazpkg/blocked-packages.list; then
+			AVAILABLE=$(grep "^$(basename $pkg) " /var/lib/tazpkg/packages.desc | awk '{ print $3 }')
+			
+			echo "$PACKAGE|$VERSION|$AVAILABLE|$SHORT_DESC"
+		fi
+	done
+}
+
 case $1 in
 	installed)
 		CAT=`cat /tmp/tazpkgbox/installed-category`
@@ -43,8 +56,10 @@ case $1 in
 		else
 			grep "$CAT" /var/lib/tazpkg/packages.desc
 		fi ;;
+	blocked)
+		blocked_list;;
 	*)
-		echo "Usage: /usr/lib/slitaz/tazpkgbox/list [installed|installable|mirrored]" ;;
+		echo "Usage: /usr/lib/slitaz/tazpkgbox/list [installed|installable|mirrored|blocked]" ;;
 esac
 
 exit 0

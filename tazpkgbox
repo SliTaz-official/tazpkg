@@ -111,7 +111,7 @@ export TAZPKG_DIALOG='
 		</pixmap>
 	</hbox>
 
-	<notebook labels="Installed|Installable|Mirrored|Search|Configuration">
+	<notebook labels="Installed|Installable|Mirrored|Blocked|Search|Configuration">
 
 	<vbox>
 		<tree>
@@ -228,6 +228,9 @@ export TAZPKG_DIALOG='
 			<action>refresh:CACHE_STATS</action>
 		</tree>
 		<hbox>
+			<text>
+				<label>"Category:"</label>
+			</text>
 			<combobox>
 				<variable>MIRRORED_CAT</variable>
 				<item>all</item>
@@ -260,6 +263,17 @@ export TAZPKG_DIALOG='
 				<action>refresh:PKG_STATS</action>
 			</button>
 		</hbox>
+	</vbox>
+
+	<vbox>
+		<tree>
+			<width>620</width><height>240</height>
+			<variable>BLOCKED</variable>
+			<label>Package name|Version|Available|Description</label>
+			<input>/usr/lib/slitaz/tazpkgbox/list blocked</input>
+			<action>echo "$BLOCKED" > /tmp/tazpkgbox/pkg</action>
+			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+		</tree>
 	</vbox>
 
 	<vbox>
@@ -397,7 +411,7 @@ export TAZPKG_DIALOG='
 
 	<hbox>
 		<text wrap="false">
-			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; echo "Packages: $installed installed, $(($mirrored - $installed)) installable, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
+			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list | wc -l`; echo "Packages: $installed installed, $blocked blocked, $(($mirrored - $installed)) installable, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
 			<variable>PKG_STATS</variable>
 		</text>
 	</hbox>
