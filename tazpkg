@@ -373,7 +373,7 @@ install_package()
 	echo "$PACKAGE ($VERSION$EXTRAVERSION) is installed."
 	echo ""
 	# Log this activity
-	log Installed
+	[ -n "$ROOT" ] || log Installed
 
 }
 
