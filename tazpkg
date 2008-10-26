@@ -60,6 +60,7 @@ PACKAGES_LIST=$LOCALSTATE/packages.list
 BLOCKED=$LOCALSTATE/blocked-packages.list
 DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
 INSTALL_LIST=""
+LOG=/var/log/tazpkg.log
 
 # Bold red warning for upgrade.
 WARNING="\\033[1;31mWARNING\\033[0;39m"
@@ -237,6 +238,15 @@ check_for_package_in_list()
 	fi
 }
 
+# Log this activity
+log()
+{
+	[ -e $LOG ] || touch $LOG
+	DATE=`date +'%F %T'`
+	[ -w $LOG ] && 
+	echo "$DATE - $1 - $PACKAGE ($VERSION$EXTRAVERSION)" >> $LOG
+}
+
 # Download a file trying all mirrors
 download()
 {
@@ -362,6 +372,9 @@ install_package()
 	echo "================================================================================"
 	echo "$PACKAGE ($VERSION$EXTRAVERSION) is installed."
 	echo ""
+	# Log this activity
+	log Installed
+
 }
 
 # Check for loop in deps tree.
@@ -701,14 +714,11 @@ case "$COMMAND" in
 		# List all installed packages or a specific category.
 		#
 		if [ "$2" = "blocked" ]; then
-			if [ -f $BLOCKED ]; then
-				LIST=`cat $BLOCKED`
-			fi
 			echo ""
 			echo -e "\033[1mBlocked packages\033[0m"
 			echo "================================================================================"
-			if [ -n $LIST ];then
-				echo $LIST
+			if [ -s "$BLOCKED" ];then
+				cat $BLOCKED
 				echo ""
 			else
 				echo -e "No blocked packages found.\n"
@@ -1130,6 +1140,8 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -n "Removing package receipt..."
 			rm -rf $INSTALLED/$PACKAGE
 			status
+			# Log this activity
+			log Removed
 			if [ -n "$ALTERED" ]; then
 				echo -n "Remove packages depending on $PACKAGE"
 				echo -n " (y/N) ? "; read anser
@@ -1670,6 +1682,9 @@ EOT
 			echo -n "Add $PACKAGE to : $BLOCKED..."
 			echo $PACKAGE >> $BLOCKED
 			status
+			# Log this activity
+			. $INSTALLED/$PACKAGE/receipt
+			log Blocked
 		fi
 		echo ""
 		;;
@@ -1684,6 +1699,9 @@ EOT
 			sed -i s/$PACKAGE/''/ $BLOCKED
 			sed -i '/^$/d' $BLOCKED
 			status
+			# Log this activity
+			. $INSTALLED/$PACKAGE/receipt
+			log Unblocked
 		else
 			echo "$PACKAGE is not in the blocked packages list."
 			echo ""
@@ -1800,6 +1818,8 @@ address to the directory of the packages and packages.list file."
 			if grep -q ^post_install $INSTALLED/$PACKAGE/receipt; then
 				. $INSTALLED/$PACKAGE/receipt
 				post_install
+				# Log this activity
+				log Reconfigure
 			else 
 				echo -e "\nNothing to do for $PACKAGE."
 			fi

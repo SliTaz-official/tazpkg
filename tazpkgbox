@@ -386,6 +386,15 @@ export TAZPKG_DIALOG='
 			</hbox>
 		</frame>
 		<hbox>
+			<frame Journal>
+				<hbox>
+				<button>
+					<label>Show journal</label>
+					<input file icon="find"></input>
+					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Tazpkg journal (q to quit)" -geometry 80x25+120+120 -e "ls -l /var/log/tazpkg.log | cat - /var/log/tazpkg.log | less"</action>
+				</button>
+				</hbox>
+			</frame>
 			<frame Configuration files>
 				<hbox>
 				<button>
