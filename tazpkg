@@ -251,7 +251,10 @@ log()
 download()
 {
 	for i in $(cat $MIRROR); do
-		wget -c $i$@ && break
+		case "$i" in
+		http://*|ftp://*) wget -c $i$@ && break;;
+		*) cp $i$1 . && break;;
+		esac
 	done
 }
 

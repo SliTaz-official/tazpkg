@@ -430,7 +430,7 @@ export TAZPKG_DIALOG='
 
 	<hbox>
 		<text wrap="false">
-			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list | wc -l`; echo "Packages: $installed installed, $blocked blocked, $(($mirrored - $installed)) installable, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
+			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list | wc -l`; installable=$(($mirrored - $installed)); [ $installable -lt 0 ] && installable=0; echo "Packages: $installed installed, $blocked blocked, $installable installable, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
 			<variable>PKG_STATS</variable>
 		</text>
 	</hbox>
