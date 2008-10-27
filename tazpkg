@@ -1822,7 +1822,7 @@ address to the directory of the packages and packages.list file."
 				. $INSTALLED/$PACKAGE/receipt
 				post_install
 				# Log this activity
-				log Reconfigure
+				log Reconfigured
 			else 
 				echo -e "\nNothing to do for $PACKAGE."
 			fi
