@@ -13,7 +13,7 @@
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
 #
-VERSION=2.4.1
+VERSION=2.5
 
 ####################
 # Script variables #
@@ -120,7 +120,11 @@ usage ()
   set-release      Change release and update packages
   clean-cache      Clean all packages downloaded in cache directory.
   setup-mirror     Change the mirror url configuration.
-  reconfigure	   Replay post install script from package."
+  list-undigest    List undigest mirrors.
+  remove-undigest  Remove an undigest mirror.
+  add-undigest     Add an undigest mirror.
+  setup-undigest   Update an undigest mirror.
+  reconfigure      Replay post install script from package."
 }
 
 # Status function with color (supported by Ash).
@@ -228,8 +232,11 @@ packages available on the mirror.\n"
 check_for_package_in_list()
 {
 	local pkg
-	pkg=$(grep "^$PACKAGE-[0-9]" $LOCALSTATE/packages.list | head -1)
-	[ -n "$pkg" ] || pkg=$(grep "^$PACKAGE-.[\.0-9]" $LOCALSTATE/packages.list | head -1)
+	pkg=$(grep -sh "^$PACKAGE-[0-9]" $LOCALSTATE/packages.list \
+		$LOCALSTATE/undigest/*/packages.list | head -1)
+	[ -n "$pkg" ] || pkg=$(grep -sh "^$PACKAGE-.[\.0-9]" \
+		$LOCALSTATE/packages.list \
+		$LOCALSTATE/undigest/*/packages.list | head -1)
 	if [ -n "$pkg" ]; then
 		PACKAGE=$pkg
 	else
@@ -247,14 +254,27 @@ log()
 	echo "$DATE - $1 - $PACKAGE ($VERSION$EXTRAVERSION)" >> $LOG
 }
 
+# Download a file from this mirror
+download_from()
+{
+	local i
+	local mirrors
+	mirrors="$1"
+	shift
+	for i in $mirrors; do
+		case "$i" in
+		http://*|ftp://*) wget -c $i$@ && break;;
+		*) cp $i/$1 . && break;;
+		esac
+	done
+}
+
 # Download a file trying all mirrors
 download()
 {
-	for i in $(cat $MIRROR); do
-		case "$i" in
-		http://*|ftp://*) wget -c $i$@ && break;;
-		*) cp $i$1 . && break;;
-		esac
+	local i
+	for i in $(cat $MIRROR $LOCALSTATE/undigest/*/mirror 2> /dev/null); do
+		download_from "$i" "$@"
 	done
 }
 
@@ -622,10 +642,12 @@ search_in_packages_list()
 {
 	echo "Available packages name-version"
 	echo "================================================================================"
-	if [ -f "$LOCALSTATE/packages.list" ]; then
-		cat $LOCALSTATE/packages.list | grep -i "$PATTERN"
-		packages=`cat $LOCALSTATE/packages.list | grep "$PATTERN" | wc -l`
-	else
+	packages=0
+	for i in $LOCALSTATE/packages.list $LOCALSTATE/undigest/*/packages.list; do
+		grep -is "$PATTERN" $i
+		packages=$(($packages + `grep -is "$PATTERN" $i | wc -l`))
+	done
+	if [ ! -f "$LOCALSTATE/packages.list" ]; then
 		echo -e "
 No 'packages.list' found to check for mirrored packages. For more results,
 please run 'tazpkg recharge' once as root before searching.\n"
@@ -646,10 +668,12 @@ search_in_packages_txt()
 {
 	echo "Matching packages name with version and desc"
 	echo "================================================================================"
-	if [ -f "$LOCALSTATE/packages.txt" ]; then
-		cat $LOCALSTATE/packages.txt | grep -A 2 "^$PATTERN"
-		packages=`cat $LOCALSTATE/packages.txt | grep -i "^$PATTERN" | wc -l`
-	else
+	packages=0
+	for i in $LOCALSTATE/packages.txt $LOCALSTATE/undigest/*/packages.txt; do
+		grep -is -A 2 "^$PATTERN" $i
+		packages=$(($packages + `grep -is "^$PATTERN" $i | wc -l`))
+	done
+	if [ ! -f "$LOCALSTATE/packages.txt" ]; then
 		echo -e "
 No 'packages.txt' found to check for mirrored packages. For more results,
 please run 'tazpkg recharge' once as root before searching.\n"
@@ -706,6 +730,40 @@ install_flavor()
 	fi
 	cd $TOP_DIR
 	rm -rf $TMP_DIR
+}
+
+# Update mirror urls
+setup_mirror()
+{
+	# Backup old list.
+	if [ -f "$1/mirror" ]; then
+		cp -f $1/mirror $1/mirror.bak
+	fi
+	echo ""
+	echo -e "\033[1mCurrent mirror(s)\033[0m"
+	echo "================================================================================"
+	echo "  `cat $1/mirror 2> /dev/null`"
+	echo "
+Please enter URL of the new mirror (http, ftp or local path). You must specify
+the complete address to the directory of the packages and packages.list file."
+	echo ""
+	echo -n "New mirror(s) URL : "
+	NEW_MIRROR_URL=$2
+	if [ -n "$NEW_MIRROR_URL" ]; then
+		echo $NEW_MIRROR_URL
+	else
+		read NEW_MIRROR_URL
+	fi
+	if [ "$NEW_MIRROR_URL" = "" ]; then
+		echo "Nothing has been changed."
+	else
+		echo "Setting mirror(s) to : $NEW_MIRROR_URL"
+		rm -f $1/mirror
+		for i in $NEW_MIRROR_URL; do
+			echo "$i" >> $1/mirror
+		done 
+	fi
+	echo ""
 }
 
 ###################
@@ -951,7 +1009,11 @@ Maintainer : $MAINTAINER"
 
 		if [ "$3" == "--mirror" ]; then
 		
-		unlzma -c $LOCALSTATE/files.list.lzma | grep -- ".*:.*$2" | awk '
+			match=0
+			for i in $LOCALSTATE/files.list.lzma \
+				 $LOCALSTATE/undigest/*/files.list.lzma; do
+				 [ -f $i ] || continue
+				unlzma -c $i | grep -- ".*:.*$2" | awk '
                             BEGIN { last="" }
                             {
 			    	pkg=substr($0,0,index($0,":")-1);
@@ -962,8 +1024,8 @@ Maintainer : $MAINTAINER"
 				}
                                 printf("%s\n",file);
                             }'
-		match=`unlzma -c $LOCALSTATE/files.list.lzma | \
-			grep -- ".*:.*$2" | wc -l`
+				match=$(($match + `unlzma -c $i | grep -- ".*:.*$2" | wc -l`))
+			done
 
 		else
 
@@ -1397,43 +1459,51 @@ EOT
 		# Recharge packages.list from a mirror.
 		#
 		check_root
-		cd $LOCALSTATE
-		echo ""
-		if [ -f "$LOCALSTATE/packages.list" ]; then
-			echo -n "Creating backup of the last packages list..."
-			mv -f packages.desc packages.desc.bak 2>/dev/null
-			mv -f packages.txt packages.txt.bak 2>/dev/null
-			mv -f packages.list packages.list.bak 2>/dev/null
-			mv -f packages.equiv packages.equiv.bak 2>/dev/null
-			mv -f files.list.lzma files.list.lzma.bak 2> /dev/nul
-			status
-		fi
-		download packages.desc
-		download packages.txt
-		download packages.list
-		download packages.equiv
-		download files.list.lzma
-		if [ -f "$LOCALSTATE/packages.list.bak" ]; then
-			diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
-			sed -i s/+// packages.diff
+		for path in $LOCALSTATE $LOCALSTATE/undigest/*; do
+			[ -f $path/mirror ] || continue
 			echo ""
-			echo -e "\033[1mMirrored packages diff\033[0m"
-			echo "================================================================================"
-			cat packages.diff
-			if [ ! "`cat packages.diff | wc -l`" = 0 ]; then
-				echo "================================================================================"
-				echo "`cat packages.diff | wc -l` new packages on the mirror."
-				echo ""
-			else
-				echo "`cat packages.diff | wc -l` new packages on the mirror."
-				echo ""
+			if [ "$path" != "$LOCALSTATE" ]; then
+				echo "Recharge undigest $(basename $path):"
 			fi
-		else
-			echo -e "
+			cd $path
+			if [ -f "packages.list" ]; then
+				echo -n "Creating backup of the last packages list..."
+				mv -f packages.desc packages.desc.bak 2>/dev/null
+				mv -f packages.md5 packages.md5.txt 2>/dev/null
+				mv -f packages.txt packages.txt.bak 2>/dev/null
+				mv -f packages.list packages.list.bak 2>/dev/null
+				mv -f packages.equiv packages.equiv.bak 2>/dev/null
+				mv -f files.list.lzma files.list.lzma.bak 2> /dev/nul
+				status
+			fi
+			download_from "$(cat mirror)" packages.desc
+			download_from "$(cat mirror)" packages.md5
+			download_from "$(cat mirror)" packages.txt
+			download_from "$(cat mirror)" packages.list
+			download_from "$(cat mirror)" packages.equiv
+			download_from "$(cat mirror)" files.list.lzma
+			if [ -f "packages.list.bak" ]; then
+				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
+				sed -i s/+// packages.diff
+				echo ""
+				echo -e "\033[1mMirrored packages diff\033[0m"
+				echo "================================================================================"
+				cat packages.diff
+				if [ ! "`cat packages.diff | wc -l`" = 0 ]; then
+					echo "================================================================================"
+					echo "`cat packages.diff | wc -l` new packages on the mirror."
+					echo ""
+				else
+					echo "`cat packages.diff | wc -l` new packages on the mirror."
+					echo ""
+				fi
+			else
+				echo -e "
 ================================================================================
 Last packages.list is ready to use. Note that next time you recharge the list,
 a list of differencies will be displayed to show new and upgradeable packages.\n"
-		fi
+			fi
+		done
 		;;
 	upgrade)
 		# Upgrade all installed packages with the new version from the mirror.
@@ -1784,31 +1854,68 @@ EOT
 		echo "$files file(s) removed from cache."
 		echo ""
 		;;
+	list-undigest)
+		# list undigest URLs.
+		#
+		if [ "$2" = "--box" ]; then
+			for i in $LOCALSTATE/undigest/*/mirror; do
+				[ -f $i ] || continue
+				echo "$(basename $(dirname $i))|$(cat $i)"
+			done
+		else
+			echo ""
+			echo -e "\033[1mCurrent undigest(s)\033[0m"
+			echo "================================================================================"
+			for i in $LOCALSTATE/undigest/*/mirror; do
+				if [ ! -f $i ]; then
+					echo "No undigest mirror found."
+					exit 1
+				fi
+				echo "$(basename $(dirname $i))	$(cat $i)"
+			done
+			echo ""
+		fi
+		;;
+	remove-undigest)
+		# remove undigest URL.
+		#
+		check_root
+		if [ -d $LOCALSTATE/undigest/$2 ]; then
+			echo -n "Remove $2 undigest (y/N) ? "; read anser
+			if [ "$anser" = "y" ]; then
+				echo -n "Removing $2 undigest..."
+				rm -rf $LOCALSTATE/undigest/$2
+				status
+				rmdir $LOCALSTATE/undigest 2> /dev/null
+			fi
+		else
+			echo "Undigest $2 not found"
+		fi
+		;;
+	add-undigest|setup-undigest)
+		# Add undigest URL.
+		#
+		check_root
+		undigest=$2
+		[ -d $LOCALSTATE/undigest ] || mkdir $LOCALSTATE/undigest
+		if [ -z "$undigest" ]; then
+			i=1
+			while [ -d $LOCALSTATE/undigest/$i ]; do
+				i=$(($i+1))
+			done
+			undigest=$i
+		fi
+		if [ ! -d $LOCALSTATE/undigest/$undigest ]; then
+			echo "Creating new undigest $undigest."
+			mkdir $LOCALSTATE/undigest/$undigest
+		fi
+		setup_mirror $LOCALSTATE/undigest/$undigest $3
+		;;
 	setup-mirror)
 		# Change mirror URL.
 		#
 		check_root
-		# Backup old list.
-		if [ -f "$LOCALSTATE/mirror" ]; then
-			cp -f $LOCALSTATE/mirror $LOCALSTATE/mirror.bak
-		fi
-		echo ""
-		echo -e "\033[1mCurrent mirror(s)\033[0m"
-		echo "================================================================================"
-		echo "  `cat $MIRROR`"
-		echo "
-Please enter URL of the new mirror (http or ftp). You must specify the complete
-address to the directory of the packages and packages.list file."
-		echo ""
-		echo -n "New mirror URL : "
-		read NEW_MIRROR_URL
-		if [ "$NEW_MIRROR_URL" = "" ]; then
-			echo "Nothing has been changed."
-		else
-			echo "Setting mirror(s) to : $NEW_MIRROR_URL"
-			echo "$NEW_MIRROR_URL" > $LOCALSTATE/mirror
-		fi
-		echo ""
+		setup_mirror $LOCALSTATE $2
 		;;
 	reconfigure)
 		# Replay post_install from receipt

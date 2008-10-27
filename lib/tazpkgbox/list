@@ -4,13 +4,28 @@
 # List mirrored packages using the packages.desc file.
 #
 
+undigest_list()
+{
+	IFS="|"
+	if [ -n "$1" ]; then
+		cat /var/lib/tazpkg/undigest/$1/packages.desc
+	else
+		cat /var/lib/tazpkg/undigest/*/packages.desc
+	fi 2> /dev/null | sort | while read PACKAGE VERSION SHORT_DESC; do
+		echo "$PACKAGE|$VERSION|$SHORT_DESC"
+	done
+	unset IFS
+}
+
 installable_list()
 {
 	IFS="|"
+	cat /var/lib/tazpkg/packages.desc \
+	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
 	while read PACKAGE VERSION SHORT_DESC; do
 		[ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ] && continue
 		echo "$PACKAGE|$VERSION|$SHORT_DESC"
-	done < /var/lib/tazpkg/packages.desc 2> /dev/null
+	done
 	unset IFS
 }
 
@@ -49,6 +64,13 @@ case $1 in
 		else
 			installable_list | grep "$CAT"
 		fi ;;
+	undigest)
+		set -- `cat /tmp/tazpkgbox/undigest-category`
+		if [ "$1" == "all" -o "$1" == "" ]; then
+			undigest_list $2
+		else
+			undigest_list $2 | grep "$1"
+		fi ;;
 	mirrored)
 		CAT=`cat /tmp/tazpkgbox/mirrored-category`
 		if [ "$CAT" == "all" ]; then
@@ -59,7 +81,7 @@ case $1 in
 	blocked)
 		blocked_list;;
 	*)
-		echo "Usage: /usr/lib/slitaz/tazpkgbox/list [installed|installable|mirrored|blocked]" ;;
+		echo "Usage: /usr/lib/slitaz/tazpkgbox/list [installed|installable|mirrored|undigest|blocked]" ;;
 esac
 
 exit 0

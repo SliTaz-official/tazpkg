@@ -6,7 +6,7 @@
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2008.
 #
-VERSION=2.3
+VERSION=2.5
 
 # Tazpkgbox is only for root.
 if test $(id -u) != 0 ; then
@@ -25,6 +25,7 @@ mkdir -p /tmp/tazpkgbox
 echo "all" > /tmp/tazpkgbox/installed-category
 echo "all" > /tmp/tazpkgbox/installable-category
 echo "all" > /tmp/tazpkgbox/mirrored-category
+echo "all" > /tmp/tazpkgbox/undigest-category
 echo "" > /tmp/tazpkgbox/search-installed
 echo "" > /tmp/tazpkgbox/search-mirrored
 
@@ -97,6 +98,58 @@ export LIST_CONFIG_FILES='
 </window>
 '
 
+export SETUP_UNDIGEST='
+<window title="undigest mirrors" icon-name="tazpkg">
+  <vbox>
+	<tree>
+		<width>560</width><height>160</height>
+		<variable>UNDIGEST_LIST</variable>
+		<label>Name | URL</label>
+		<input>tazpkg list-undigest --box</input>
+		<action>xterm -T "Remove undigest" -geometry 80x16+120+120 -e "tazpkg remove-undigest $UNDIGEST_LIST; sleep 2"</action>
+	</tree>
+	<hbox>
+		<text>
+			<label>URL:</label>
+		</text>
+		<entry>
+			<variable>UNDIGEST_URL</variable>
+		</entry>
+	</hbox>
+	<hbox>
+		<text>
+			<label>Name:</label>
+		</text>
+		<entry>
+			<variable>UNDIGEST_NAME</variable>
+		</entry>
+		<button>
+			<label>Add</label>
+			<input file icon="gtk-add"></input>
+			<action>tazpkg add-undigest "$UNDIGEST_NAME" $UNDIGEST_URL</action>
+			<action>refresh:UNDIGEST_LIST</action>
+		</button>
+		<button>
+			<label>Remove</label>
+			<input file icon="gtk-remove"></input>
+			<action>xterm -T "Remove undigest" -geometry 80x16+120+120 -e "tazpkg remove-undigest $UNDIGEST_NAME; sleep 2"</action>
+			<action>refresh:UNDIGEST_LIST</action>
+		</button>
+		<button>
+			<label>Update</label>
+			<input file icon="reload"></input>
+			<action>tazpkg setup-undigest "$UNDIGEST_NAME" $UNDIGEST_URL</action>
+			<action>refresh:UNDIGEST_LIST</action>
+		</button>
+		<button>
+			<input file icon="gtk-close"></input>
+			<action type="closewindow">SETUP_UNDIGEST</action>
+		</button>
+	</hbox>
+  </vbox>
+</window>
+'
+
 # Main dialog
 export TAZPKG_DIALOG='
 <window title="SliTaz Packages Manager" icon-name="package-x-generic">
@@ -111,7 +164,7 @@ export TAZPKG_DIALOG='
 		</pixmap>
 	</hbox>
 
-	<notebook labels="Installed|Installable|Mirrored|Blocked|Search|Configuration">
+	<notebook labels="Installed|Installable|Mirrored|Undigest|Blocked|Search|Configuration">
 
 	<vbox>
 		<tree>
@@ -122,6 +175,7 @@ export TAZPKG_DIALOG='
 			<action>echo "$PKG" > /tmp/tazpkgbox/pkg</action>
 			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
 			<action>refresh:PKG</action>
+			<action>refresh:GETIT</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
 		</tree>
@@ -209,6 +263,8 @@ export TAZPKG_DIALOG='
 				<label>Recharge list</label>
 				<input file icon="system-software-update"></input>
 				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
+				<action>refresh:DEV</action>
+				<action>refresh:GET</action>
 				<action>refresh:GETIT</action>
 				<action>refresh:PKG_STATS</action>
 			</button>
@@ -224,6 +280,7 @@ export TAZPKG_DIALOG='
 			<action>echo "$GET" > /tmp/tazpkgbox/pkg</action>
 			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
 			<action>refresh:PKG</action>
+			<action>refresh:GETIT</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
 		</tree>
@@ -259,8 +316,77 @@ export TAZPKG_DIALOG='
 				<label>Recharge list</label>
 				<input file icon="system-software-update"></input>
 				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
+				<action>refresh:DEV</action>
 				<action>refresh:GET</action>
+				<action>refresh:GETIT</action>
 				<action>refresh:PKG_STATS</action>
+			</button>
+		</hbox>
+	</vbox>
+
+	<vbox>
+		<tree>
+			<width>620</width><height>240</height>
+			<variable>DEV</variable>
+			<label>Package name|Version|Description</label>
+			<input>/usr/lib/slitaz/tazpkgbox/list undigest</input>
+			<action>echo "$DEV" > /tmp/tazpkgbox/pkg</action>
+			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>refresh:PKG</action>
+			<action>refresh:GETIT</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</tree>
+		<hbox>
+			<button>
+				<label>Setup undigest mirrors</label>
+				<input file icon="go-next"></input>
+				<action type="launch">SETUP_UNDIGEST</action>
+			</button>
+			<button>
+				<label>Recharge list</label>
+				<input file icon="system-software-update"></input>
+				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
+				<action>refresh:DEV</action>
+				<action>refresh:GET</action>
+				<action>refresh:GETIT</action>
+				<action>refresh:PKG_STATS</action>
+			</button>
+		</hbox>
+		<hbox>
+			<text>
+				<label>"Undigest:"</label>
+			</text>
+			<combobox>
+				<variable>UNDIGEST_ENTRY</variable>
+				<input>echo all; ls /var/lib/tazpkg/undigest 2> /dev/null</input>
+			</combobox>
+			<text>
+				<label>"Category:"</label>
+			</text>
+			<combobox>
+				<variable>UNDIGEST_CAT</variable>
+				<item>all</item>
+				<item>base-system</item>
+				<item>x-window</item>
+				<item>utilities</item>
+				<item>network</item>
+				<item>graphics</item>
+				<item>multimedia</item>
+				<item>office</item>
+				<item>development</item>
+				<item>system-tools</item>
+				<item>security</item>
+				<item>games</item>
+				<item>misc</item>
+				<item>meta</item>
+				<item>non-free</item>
+			</combobox>
+			<button>
+				<label>List</label>
+				<input file icon="reload"></input>
+				<action>echo "$UNDIGEST_CAT $UNDIGEST_ENTRY" > /tmp/tazpkgbox/undigest-category</action>
+				<action>refresh:DEV</action>
 			</button>
 		</hbox>
 	</vbox>
@@ -430,7 +556,7 @@ export TAZPKG_DIALOG='
 
 	<hbox>
 		<text wrap="false">
-			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list | wc -l`; installable=$(($mirrored - $installed)); [ $installable -lt 0 ] && installable=0; echo "Packages: $installed installed, $blocked blocked, $installable installable, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
+			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; undigest=`cat /var/lib/tazpkg/undigest/*/packages.list 2> /dev/null | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list 2> /dev/null | wc -l`; installable=$(($mirrored + $undigest - $installed)); [ $installable -lt 0 ] && installable=0; echo "Packages: $installed installed, $blocked blocked, $installable installable, $undigest undigest, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
 			<variable>PKG_STATS</variable>
 		</text>
 	</hbox>

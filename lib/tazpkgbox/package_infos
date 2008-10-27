@@ -41,8 +41,11 @@ if [ "$1" = "list_files" ]; then
 fi
 
 if [ "$1" = "list_files_mirror" ]; then
-	unlzma -c /var/lib/tazpkg/files.list.lzma | grep -- "^$2:" | \
-		awk '{ print substr($0,index($0,":")+2) }'
+	for i in /var/lib/tazpkg/files.list.lzma \
+		/var/lib/tazpkg/undigest/*/files.list.lzma ; do
+		[ -f $i ] || continue
+		unlzma -c $i
+	done | grep -- "^$2:" | awk '{ print substr($0,index($0,":")+2) }'
 	exit 0
 fi
 
@@ -65,11 +68,16 @@ if [ "$1" = "list_packages" ]; then
 	<item icon=\"tazpkg\">$i|$VERSION|Installed|$SHORT_DESC</item>
 "
 			else
-				RES=`grep "^$i " /var/lib/tazpkg/packages.desc`
+				RES=`grep -sh "^$i " \
+				/var/lib/tazpkg/packages.desc \
+				/var/lib/tazpkg/undigest/*/packages.desc`
 				PACKAGE=`echo "$RES" | cut -d "|" -f 1`
 				VERSION=`echo "$RES" | cut -d "|" -f 2`
 				SHORT_DESC=`echo "$RES" | cut -d "|" -f 3`
-				SIZE=`grep -A 3 "^$(echo $PACKAGE)$" /var/lib/tazpkg/packages.txt | tail -1 | sed 's/.*(\(.*\) .*/\1/'`
+				SIZE=`grep -sh -A 3 "^$(echo $PACKAGE)$" \
+				/var/lib/tazpkg/packages.txt \
+				/var/lib/tazpkg/undigest/*/packages.txt | \
+				tail -1 | sed 's/.*(\(.*\) .*/\1/'`
 				LIST_PKGS="$LIST_PKGS
 	<item icon=\"tazpkg\">$i|$VERSION|$SIZE|$SHORT_DESC</item>
 "
@@ -236,13 +244,15 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 "
 	export PACKAGE_INFOS
 else
-	RES=`grep "^$PKG " /var/lib/tazpkg/packages.desc`
+	RES=`grep -sh "^$PKG " /var/lib/tazpkg/packages.desc \
+		/var/lib/tazpkg/undigest/*/packages.desc`
 	PACKAGE=`echo "$RES" | cut -d "|" -f 1`
 	VERSION=`echo "$RES" | cut -d "|" -f 2`
 	SHORT_DESC=`echo "$RES" | cut -d "|" -f 3`
 	CATEGORY=`echo "$RES" | cut -d "|" -f 4`
 	WEB_SITE=`echo "$RES" | cut -d "|" -f 5`
-	SIZES=`grep -A 3 "^$(echo $PACKAGE)$" /var/lib/tazpkg/packages.txt | tail -1`
+	SIZES=`grep -sh -A 3 "^$(echo $PACKAGE)$" /var/lib/tazpkg/packages.txt \
+		/var/lib/tazpkg/undigest/*/packages.txt | tail -1`
 	PACKAGE_INFOS="
 <window title=\"Package: $PACKAGE\" icon-name=\"package-x-generic\">
 <vbox>
