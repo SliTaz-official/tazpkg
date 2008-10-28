@@ -15,8 +15,8 @@ list_files()
 		else if ($0 != "" && show != 0) printf("%s %s\n",pkg,$0);
 	}' | while read pkg file; do
 		[ "$pkg" = "0" ] && continue
-		version=$(grep "^$pkg " /var/lib/tazpkg/packages.desc | \
-			  awk '{ print $3 }' )
+		version=$(grep -hs "^$pkg " /var/lib/tazpkg/packages.desc \
+		  /var/lib/tazpkg/undigest/*/packages.desc | awk '{ print $3 }')
 		echo "$pkg|$version|$file"
 	done
 }
@@ -39,6 +39,7 @@ do
 done
 
 # Search mirrored.
-grep "$SEARCH" /var/lib/tazpkg/packages.desc > /tmp/tazpkgbox/search-mirrored
+grep -sh "$SEARCH" /var/lib/tazpkg/packages.desc \
+  /var/lib/tazpkg/undigest/*/packages.desc | sort > /tmp/tazpkgbox/search-mirrored
 
 exit 0
