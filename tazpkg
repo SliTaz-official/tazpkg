@@ -56,7 +56,6 @@ LOCALSTATE=/var/lib/tazpkg
 INSTALLED=$LOCALSTATE/installed
 CACHE_DIR=/var/cache/tazpkg
 MIRROR=$LOCALSTATE/mirror
-PACKAGES_LIST=$LOCALSTATE/packages.list
 BLOCKED=$LOCALSTATE/blocked-packages.list
 DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
 INSTALL_LIST=""
@@ -227,18 +226,33 @@ packages available on the mirror.\n"
 	fi
 }
 
+# Get package filename available on the mirror
+get_package_filename()
+{
+	local pkg
+	pkg=$(grep -A 1 -sh "^$1$" $LOCALSTATE/packages.txt \
+		$LOCALSTATE/undigest/*/packages.txt | tail -1)
+	pkg=$(echo $pkg)
+	[ -n "$pkg" ] && pkg=$(grep -sh "^$1-$pkg" \
+		$LOCALSTATE/packages.list \
+		$LOCALSTATE/undigest/*/packages.list | head -1)
+	[ -n "$pkg" ] || pkg=$(grep -sh "^$1-[0-9]" \
+		$LOCALSTATE/packages.list \
+		$LOCALSTATE/undigest/*/packages.list | head -1)
+	[ -n "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" \
+		$LOCALSTATE/packages.list \
+		$LOCALSTATE/undigest/*/packages.list | head -1)
+	echo $pkg
+}
+
 # Check for a package in packages.list. Used by get and get-install to grep
 # package basename.
 check_for_package_in_list()
 {
-	local pkg
-	pkg=$(grep -sh "^$PACKAGE-[0-9]" $LOCALSTATE/packages.list \
-		$LOCALSTATE/undigest/*/packages.list | head -1)
-	[ -n "$pkg" ] || pkg=$(grep -sh "^$PACKAGE-.[\.0-9]" \
-		$LOCALSTATE/packages.list \
-		$LOCALSTATE/undigest/*/packages.list | head -1)
-	if [ -n "$pkg" ]; then
-		PACKAGE=$pkg
+	local filename
+	filename=$(get_package_filename $PACKAGE)
+	if [ -n "$filename" ]; then
+		PACKAGE=$filename
 	else
 		echo -e "\nUnable to find : $PACKAGE in the mirrored packages list.\n"
 		exit 0
@@ -1270,10 +1284,14 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			mkdir -p $TMP_DIR && cd $TMP_DIR
 			for i in $INSTALLED/*/volatile.cpio.gz; do 
 				zcat $i | cpio -id > /dev/null
-				find * -type f | while read file; do
+				find * -type f 2>/dev/null | while read file; do
+					if [ ! -e /$file ]; then
+					echo -n "|--|--|--|File lost"
+					else
 					echo -n "$(stat -c "%A|%U|%G|%s|" /$file)"
 					cmp $file /$file > /dev/null 2>&1 || \
 						echo -n "$(stat -c "%.16y" /$file)"
+					fi
 					echo "|/$file"
 				done
 				rm -rf *
@@ -1535,8 +1553,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 			else
 				# Check if the installed package is in the current list (other
 				# mirror or local).
-				NEW_PACKAGE=$(grep "^$PACKAGE-[0-9]" packages.list | head -1)
-				[ -n "$NEW_PACKAGE" ] || NEW_PACKAGE=$(grep "^$PACKAGE-.[\.0-9]" packages.list | head -1)
+				NEW_PACKAGE=$(get_package_filename $PACKAGE)
 
 				if [ -n "$NEW_PACKAGE" ]; then
 					# Set new pkg and version for futur comparaison
