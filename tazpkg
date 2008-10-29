@@ -288,7 +288,7 @@ download()
 {
 	local i
 	for i in $(cat $MIRROR $LOCALSTATE/undigest/*/mirror 2> /dev/null); do
-		download_from "$i" "$@"
+		download_from "$i" "$@" && break
 	done
 }
 
@@ -319,6 +319,9 @@ install_package()
 		# Make the installed package data dir to store
 		# the receipt and the files list.
 		mkdir -p $ROOT$INSTALLED/$PACKAGE
+		sed -i "/\/$(basename $PACKAGE_FILE)$/d" \
+			$ROOT$LOCALSTATE/installed.md5 2> /dev/null
+		md5sum $PACKAGE_FILE >> $ROOT$LOCALSTATE/installed.md5
 	)
 	# Resolve package deps.
 	check_for_deps $ROOT
@@ -1568,7 +1571,14 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 					# Compare version. Upgrade are only available for official
 					# packages, so we control de mirror and it should be ok if
 					# we just check for egality.
-					if [ "$VERSION" != "$NEW_VERSION" ]; then
+					RELEASE=""
+					if [ -f installed.md5 -a -f packages.md5 ]; then
+						current_md5=$(grep -s "/$PACKAGE-$VERSION" installed.md5 | awk '{ print $1 }')
+						new_md5=$(grep -s "  $PACKAGE-$VERSION" packages.md5 | awk '{ print $1 }')
+						[ -n "$current_md5" ] && [ -n "$new_md5" ] &&
+						[ "$current_md5" != "$new_md5" ] && RELEASE=build
+					fi
+					if [ "$VERSION" != "$NEW_VERSION" -o -n "$RELEASE" ]; then
 						# Version seems different. Check for major, minor or 
 						# revision
 						PKG_MAJOR=`echo ${VERSION%_*} | cut -f1 -d"."`
@@ -1646,8 +1656,8 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 		# If anser is yes (y). Install all new versions.
 		cat upgradeable-packages.list >> upgradeable-packages.list$$
 		mv -f upgradeable-packages.list$$ upgradeable-packages.list
-		yes y | tazpkg get-install-list upgradeable-packages.list
-		#rm -f upgradeable-packages.list
+		yes y | tazpkg get-install-list upgradeable-packages.list --forced
+		rm -f upgradeable-packages.list
 		;;
 	bugs)
 		# Show known bugs in package(s)
