@@ -288,9 +288,9 @@ else
 			<label>Get-install</label>
 			<input file icon=\"go-next\"></input>
 			<action>xterm -T \"Install $PACKAGE\" $XTERM_OPTS -e \"\
-			if [ \$AUTO_DEPENDS != true ]; then tazpkg get-install $PACKAGE;\
+			if [ x\$AUTO_DEPENDS != xtrue ]; then tazpkg get-install $PACKAGE;\
 			else yes y | tazpkg get-install $PACKAGE; fi; \
-			[ \${AUTO_EXEC} = true -a $CATEGORY = non-free ] && $PACKAGE; \
+			[ x\${AUTO_EXEC} = xtrue -a $CATEGORY = non-free ] && $PACKAGE; \
 			sleep 2\"</action>
 			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
 		</button>
