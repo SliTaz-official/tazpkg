@@ -1575,7 +1575,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 					RELEASE=""
 					if [ -f installed.md5 -a -f packages.md5 ]; then
 						current_md5=$(grep -s "  $PACKAGE-$VERSION" installed.md5 | awk '{ print $1 }')
-						new_md5=$(grep -s "  $PACKAGE-$VERSION" packages.md5 | awk '{ print $1 }')
+						new_md5=$(grep -hs "  $PACKAGE-$VERSION" packages.md5 undigest/*/packages.md5 | head -1 | awk '{ print $1 }')
 						[ -n "$current_md5" ] && [ -n "$new_md5" ] &&
 						[ "$current_md5" != "$new_md5" ] && RELEASE=build
 					fi
