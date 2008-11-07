@@ -13,7 +13,7 @@
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
 #
-VERSION=2.5.1
+VERSION=2.5.2
 
 ####################
 # Script variables #
@@ -319,9 +319,10 @@ install_package()
 		# Make the installed package data dir to store
 		# the receipt and the files list.
 		mkdir -p $ROOT$INSTALLED/$PACKAGE
-		sed -i "/\/$(basename $PACKAGE_FILE)$/d" \
+		sed -i "/ $(basename $PACKAGE_FILE)$/d" \
 			$ROOT$LOCALSTATE/installed.md5 2> /dev/null
-		md5sum $PACKAGE_FILE >> $ROOT$LOCALSTATE/installed.md5
+		cd $(dirname $PACKAGE_FILE)
+		md5sum $(basename $PACKAGE_FILE) >> $ROOT$LOCALSTATE/installed.md5
 	)
 	# Resolve package deps.
 	check_for_deps $ROOT
@@ -1573,7 +1574,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 					# we just check for egality.
 					RELEASE=""
 					if [ -f installed.md5 -a -f packages.md5 ]; then
-						current_md5=$(grep -s "/$PACKAGE-$VERSION" installed.md5 | awk '{ print $1 }')
+						current_md5=$(grep -s "  $PACKAGE-$VERSION" installed.md5 | awk '{ print $1 }')
 						new_md5=$(grep -s "  $PACKAGE-$VERSION" packages.md5 | awk '{ print $1 }')
 						[ -n "$current_md5" ] && [ -n "$new_md5" ] &&
 						[ "$current_md5" != "$new_md5" ] && RELEASE=build
