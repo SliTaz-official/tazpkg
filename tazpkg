@@ -1241,7 +1241,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 				echo -n " (y/N) ? "; read anser
 				if [ "$anser" = "y" ]; then
 					for i in $REFRESH; do
-						if [ $(wc -l $INSTALLED/$i) -gt 1 ]; then
+						if [ $(wc -l < $INSTALLED/$i) -gt 1 ]; then
 							echo "Check $INSTALLED/$i for reinstallation"
 							continue
 						fi
