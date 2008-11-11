@@ -171,9 +171,11 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 		<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>"
 [ -n "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"error\">Bugs: | $BUGS</item>"
+[ -n "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		<item icon=\"ascii\">Handbook: | $HANDBOOK_URL</item>"
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
-		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; Sug*) $0 list_packages $SUGGESTED;; Dep*) $0 list_packages $DEPENDS;; esac</action>
+		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; Hand*) firefox $HANDBOOK_URL &;; Sug*) $0 list_packages $SUGGESTED;; Dep*) $0 list_packages $DEPENDS;; esac</action>
 	</tree>
 
 	<hbox>"
