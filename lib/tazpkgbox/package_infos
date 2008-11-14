@@ -179,7 +179,7 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 	</tree>
 
 	<hbox>"
-[ ${PKG%-*} = get -a ! -d /var/lib/tazpkg/installed/${PKG#get-} ] && PACKAGE_INFOS="$PACKAGE_INFOS
+[ ${PKG%%-*} = get -a ! -d /var/lib/tazpkg/installed/${PKG#get-} ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Install</label>
 			<input file icon=\"go-next\"></input>
@@ -274,7 +274,7 @@ else
 	</tree>
 
 	<hbox>"
-	[ ${PACKAGE%-*} = get ] && PACKAGE_INFOS="$PACKAGE_INFOS
+	[ ${PACKAGE%%-*} = get ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<checkbox>
 			<label>Auto exec</label>
 			<variable>AUTO_EXEC</variable>
