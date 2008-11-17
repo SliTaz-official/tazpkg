@@ -250,11 +250,14 @@ get_package_filename()
 check_for_package_in_list()
 {
 	local filename
+	local check_only
+	check_only="$1"
 	filename=$(get_package_filename $PACKAGE)
 	if [ -n "$filename" ]; then
 		PACKAGE=$filename
 	else
 		echo -e "\nUnable to find : $PACKAGE in the mirrored packages list.\n"
+		[ -n "$check_only" ] && return 1
 		exit 0
 	fi
 }
@@ -1826,7 +1829,6 @@ EOT
 		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
-		check_for_package_in_list
 		DO_CHECK=""
 		while [ -n "$3" ]; do
 			case "$3" in
@@ -1846,6 +1848,16 @@ EOT
 			esac
 			shift
 		done
+		AUTOEXEC="no"
+		if ! check_for_package_in_list check; then
+			PACKAGE=get-$PACKAGE
+			AUTOEXEC=$PACKAGE
+			check_for_package_in_list
+			if [ -n "$(get_installed_package_pathname $PACKAGE $ROOT)" ]; then
+				$AUTOEXEC $ROOT
+				exit 0
+			fi
+		fi
 		# Check if forced install.
 		if [ "$DO_CHECK" = "no" ]; then
 			rm -f $CACHE_DIR/$PACKAGE.tazpkg
@@ -1866,6 +1878,7 @@ EOT
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		install_package $ROOT
+		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT
 		;;
 	clean-cache)
 		# Remove all downloaded packages.
