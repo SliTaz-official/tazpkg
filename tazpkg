@@ -13,7 +13,7 @@
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
 #
-VERSION=2.5.2
+VERSION=2.5.3
 
 ####################
 # Script variables #
@@ -1178,7 +1178,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			ALTERED=""
 			THE_PACKAGE=$PACKAGE	# altered by receipt
 			for i in $(cd $INSTALLED ; ls); do
-				[ -f $i/receipt ] || continue
+				[ -f $INSTALLED/$i/receipt ] || continue
 				DEPENDS=""
 				. $INSTALLED/$i/receipt
 				case " $(echo $DEPENDS) " in
