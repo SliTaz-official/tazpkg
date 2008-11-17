@@ -118,6 +118,8 @@ usage ()
   install-flavor   Install the flavor list of packages and remove other ones.
   set-release      Change release and update packages
   clean-cache      Clean all packages downloaded in cache directory.
+  depends          Display dependancies tree.
+  rdepends         Display reverse dependancies tree.
   setup-mirror     Change the mirror url configuration.
   list-undigest    List undigest mirrors.
   remove-undigest  Remove an undigest mirror.
@@ -785,6 +787,45 @@ the complete address to the directory of the packages and packages.list file."
 		done 
 	fi
 	echo ""
+}
+
+# recursive dependancies scan
+dep_scan()
+{
+for i in $1; do
+	case " $ALL_DEPS " in
+	*\ $i\ *) continue;;
+	esac
+	ALL_DEPS="$ALL_DEPS $i"
+	[ -n "$2" ] && echo "$2$i"
+	[ -f $i/receipt ] || continue
+	DEPENDS=""
+	. $i/receipt
+	[ -n "$DEPENDS" ] && dep_scan "$DEPENDS" "$2  "
+done
+}
+
+# recursive reverse dependancies scan
+rdep_scan()
+{
+for i in $1; do
+	case " $ALL_DEPS " in
+	*\ $i\ *) continue;;
+	esac
+	ALL_DEPS="$ALL_DEPS $i"
+	[ -n "$2" ] && echo "$2$i"
+	RDEPENDS=""
+	for j in *; do
+		[ -f $j/receipt ] || continue
+		DEPENDS=""
+		. $j/receipt
+		case " $(echo $DEPENDS) " in
+		*\ $i\ *)
+			RDEPENDS="$RDEPENDS $j";;
+		esac
+	done
+	[ -n "$RDEPENDS" ] && rdep_scan "$RDEPENDS" "$2  "
+done
 }
 
 ###################
@@ -2011,6 +2052,22 @@ EOT
 					tazpkg $cmd ;;
 			esac
 		done
+		;;
+	depends)
+		# Display dependancies tree
+		cd $INSTALLED
+		ALL_DEPS=""
+		if [ -f $2/receipt ]; then
+			dep_scan $2 ""
+		fi
+		;;
+	rdepends)
+		# Display reverse dependancies tree
+		cd $INSTALLED
+		ALL_DEPS=""
+		if [ -f $2/receipt ]; then
+			rdep_scan $2 ""
+		fi
 		;;
 	usage|*)
 		# Print a short help or give usage for an unknown or empty command.
