@@ -1257,7 +1257,12 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			for file in `cat $INSTALLED/$PACKAGE/files.list`
 			do
 				[ $(grep ^$file$ $INSTALLED/*/files.list | wc -l) -gt 1 ] && continue
-				rm -rf $file 2>/dev/null
+				rm -f $file 2>/dev/null
+				dir="$file"
+				while [ "$dir" != "/" ]; do
+					dir="$(dirname $dir)"
+					rmdir $dir 2> /dev/null || break
+				done
 			done
 			status
 			if grep -q ^post_remove $INSTALLED/$PACKAGE/receipt; then
