@@ -73,30 +73,36 @@ dans: /var/cache/tazpkg"
 </window>
 '
 
-export LIST_CONFIG_FILES='
-<window title="configuration files" icon-name="system-file-manager">
+FILES="$2"
+[ "$1" = "list_config" ] || FILES=""
+export LIST_CONFIG_FILES="
+<window title=\"configuration files\" icon-name=\"system-file-manager\">
   <vbox>
-	<tree exported_column="5">
+	<tree exported_column=\"5\">
 		<width>560</width><height>160</height>
 		<variable>CONF_FILE</variable>
 		<label>Access | User | Group | Size | Update Date | Name</label>
-		<input>tazpkg list-config --box</input>
-		<action>leafpad $CONF_FILE</action>
+		<input>tazpkg list-config --box $FILES</input>
+		<action>leafpad \$CONF_FILE</action>
 	</tree>
 	<hbox>
-		<text wrap="false">
+		<text wrap=\"false\">
 			<label>
-"Only files with Update Date have been modified after package installation"
+\"Only files with Update Date have been modified after package installation\"
 			</label>
 		</text>
 		<button>
-			<input file icon="gtk-close"></input>
-			<action type="closewindow">INSTALLED_PACKAGE_ACTIONS</action>
+			<input file icon=\"gtk-close\"></input>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>
 	</hbox>
   </vbox>
 </window>
-'
+"
+if [ "$1" = "list_config" ]; then
+	gtkdialog --center --program=LIST_CONFIG_FILES >/dev/null
+	exit 0
+fi
 
 export SETUP_UNDIGEST='
 <window title="undigest mirrors" icon-name="tazpkg">

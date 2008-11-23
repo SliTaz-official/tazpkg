@@ -1338,7 +1338,9 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		#
 		if [ "$2" = "--box" ]; then
 			mkdir -p $TMP_DIR && cd $TMP_DIR
-			for i in $INSTALLED/*/volatile.cpio.gz; do 
+			FILES="$INSTALLED/*/volatile.cpio.gz"
+			[ -n "$3" ] && FILES="$INSTALLED/$3/volatile.cpio.gz"
+			for i in $FILES; do 
 				zcat $i | cpio -id > /dev/null
 				find * -type f 2>/dev/null | while read file; do
 					if [ ! -e /$file ]; then

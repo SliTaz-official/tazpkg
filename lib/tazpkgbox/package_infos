@@ -17,6 +17,7 @@ if [ "$1" = "info" ]; then
 	Sug*) $0 list_packages $SUGGESTED;;
 	Dep*) $0 list_packages $DEPENDS;;
 	Mod*) $0 list_packages $(xargs echo < /var/lib/tazpkg/installed/$3/modifiers);;
+	Con*) tazpkgbox list_config $3;;
 	Ver*) xterm -T "$3 receipt (q to quit)" -e "cat $RECEIPT | less";;
 	esac
 	exit 0
