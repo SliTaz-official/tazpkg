@@ -290,8 +290,8 @@ else
 			<label>Get-install</label>
 			<input file icon=\"go-next\"></input>
 			<action>xterm -T \"Install $PACKAGE\" $XTERM_OPTS -e \"\
-			if [ x\$AUTO_DEPENDS != xtrue ]; then tazpkg get-install $PACKAGE;\
-			else yes y | tazpkg get-install $PACKAGE; fi; \
+			if [ x\$AUTO_DEPENDS != xtrue ]; then script -c \\\"tazpkg get-install $PACKAGE\\\" /var/log/tazpkg-install.log;\
+			else script -c \\\"yes y | tazpkg get-install $PACKAGE\\\" /var/log/tazpkg-install.log; fi; \
 			[ x\${AUTO_EXEC} = xtrue ] && $PACKAGE; \
 			sleep 2\"</action>
 			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
