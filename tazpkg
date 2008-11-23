@@ -267,10 +267,13 @@ check_for_package_in_list()
 # Log this activity
 log()
 {
+	local extra
+	[ "$1" = "Installed" ] && \
+	extra=" - $(grep $PACKAGE-$VERSION $LOCALSTATE/installed.md5 | awk '{ print $1 }')"
 	[ -e $LOG ] || touch $LOG
 	DATE=`date +'%F %T'`
 	[ -w $LOG ] && 
-	echo "$DATE - $1 - $PACKAGE ($VERSION$EXTRAVERSION)" >> $LOG
+	echo "$DATE - $1 - $PACKAGE ($VERSION$EXTRAVERSION)$extra" >> $LOG
 }
 
 # Download a file from this mirror

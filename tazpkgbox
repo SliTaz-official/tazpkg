@@ -212,6 +212,9 @@ export TAZPKG_DIALOG='
 				<input file icon="system-software-update"></input>
 				<action>xterm -T "Package upgrade" -geometry 80x16+120+120 -e "tazpkg upgrade; sleep 2" 2>/dev/null</action>
 				<action>refresh:PKG</action>
+				<action>refresh:DEV</action>
+				<action>refresh:GET</action>
+				<action>refresh:GETIT</action>
 				<action>refresh:PKG_STATS</action>
 				<action>refresh:CACHE_STATS</action>
 			</button>
@@ -517,7 +520,7 @@ export TAZPKG_DIALOG='
 				<button>
 					<label>Show journal</label>
 					<input file icon="find"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Tazpkg journal (q to quit)" -geometry 80x25+120+120 -e "ls -l /var/log/tazpkg.log | cat - /var/log/tazpkg.log | less"</action>
+					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "$(ls -l /var/log/tazpkg.log | while read mod links user grep remain ; do echo $remain ; done) (q to quit)" -geometry 80x25+120+120 -e "cat /var/log/tazpkg.log | less"</action>
 				</button>
 				</hbox>
 			</frame>
