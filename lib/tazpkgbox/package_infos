@@ -8,6 +8,20 @@ XTERM_OPTS="-geometry 80x16+120+120"
 PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
 TMP_DIR=/tmp/tazpkg-$$-$RANDOM
 
+if [ "$1" = "info" ]; then
+	RECEIPT=/var/lib/tazpkg/installed/$3/receipt
+	. $RECEIPT
+	case "$2" in
+	Web*) firefox $WEB_SITE &;;
+	Hand*) firefox $HANDBOOK_URL &;;
+	Sug*) $0 list_packages $SUGGESTED;;
+	Dep*) $0 list_packages $DEPENDS;;
+	Mod*) $0 list_packages $(xargs echo < /var/lib/tazpkg/installed/$3/modifiers);;
+	Ver*) xterm -T "$3 receipt (q to quit)" -e "cat $RECEIPT | less";;
+	esac
+	exit 0
+fi
+
 if [ "$1" = "list_files" ]; then
 	AWK_FILTER='BEGIN { ls=0 } { if (/^===/) ls=1-ls; else if (ls) print; }'
 	CONF_FILES="$(tazpkg list-config $2 | awk "$AWK_FILTER")"
@@ -173,9 +187,14 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 		<item icon=\"error\">Bugs: | $BUGS</item>"
 [ -n "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"ascii\">Handbook: | $HANDBOOK_URL</item>"
+[ -n "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
+[ -f /var/lib/tazpkg/installed/$PKG/modifiers ] && 
+PACKAGE_INFOS="$PACKAGE_INFOS
+		<item icon=\"tazpkg\">Modified by: | $(xargs echo < /var/lib/tazpkg/installed/$PKG/modifiers)</item>"
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
-		<action>case \$FIELD in Web*) firefox $WEB_SITE &;; Hand*) firefox $HANDBOOK_URL &;; Sug*) $0 list_packages $SUGGESTED;; Dep*) $0 list_packages $DEPENDS;; esac</action>
+		<action> $0 info \"\$FIELD\" $PKG </action>
 	</tree>
 
 	<hbox>"
