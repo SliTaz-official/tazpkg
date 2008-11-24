@@ -8,11 +8,22 @@ XTERM_OPTS="-geometry 80x16+120+120"
 PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
 TMP_DIR=/tmp/tazpkg-$$-$RANDOM
 
+if [ "$1" = "sizes" ]; then
+	cat <<EOT
+Dependancies for $2:
+$(tazpkg depends $2)
+
+Reverse dependancies for $2:
+$(tazpkg rdepends $2)
+EOT
+	exit 0
+fi
 if [ "$1" = "info" ]; then
 	RECEIPT=/var/lib/tazpkg/installed/$3/receipt
 	. $RECEIPT
 	case "$2" in
 	Web*) firefox $WEB_SITE &;;
+	Siz*) xterm -T "$3 depends (q to quit)" -e "$0 sizes $3 | less";;
 	Hand*) firefox $HANDBOOK_URL &;;
 	Sug*) $0 list_packages $SUGGESTED;;
 	Dep*) $0 list_packages $DEPENDS;;
@@ -185,7 +196,7 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 [ -n "$MAINTAINER" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>"
 [ -n "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
-		<item icon=\"error\">Bugs: | $BUGS</item>"
+		<item icon=\"important\">Bugs: | $BUGS</item>"
 [ -n "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"ascii\">Handbook: | $HANDBOOK_URL</item>"
 [ -n "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
