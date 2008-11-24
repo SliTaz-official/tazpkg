@@ -7,7 +7,7 @@
 undigest_list()
 {
 	IFS="|"
-	if [ -n "$1" ]; then
+	if [ -n "$1" -a "$1" != "all" ]; then
 		cat /var/lib/tazpkg/undigest/$1/packages.desc
 	else
 		cat /var/lib/tazpkg/undigest/*/packages.desc
