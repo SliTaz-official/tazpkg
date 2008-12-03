@@ -24,6 +24,7 @@ if [ "$1" = "info" ]; then
 	case "$2" in
 	Web*) firefox $WEB_SITE &;;
 	Siz*) xterm -T "$3 depends (q to quit)" -e "$0 sizes $3 | less";;
+	Upg*) xterm -T "$3 upgrade" -e "tazpkg get-install $3 --forced ; sleep 2";;
 	Hand*) firefox $HANDBOOK_URL &;;
 	Sug*) $0 list_packages $SUGGESTED;;
 	Dep*) $0 list_packages $DEPENDS;;
@@ -177,6 +178,25 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 	BUGS=""
 	. /var/lib/tazpkg/installed/$PKG/receipt
 	MAINTAINER=$(echo "$MAINTAINER" | sed 's/[<>|]/ /g')
+	upgrade_version="$(cat /var/lib/tazpkg/packages.desc \
+		/var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | \
+		awk "/^$PACKAGE / { print \$3 }" | head -1 )"
+	UPGRADE=""
+	if [ -n "$upgrade_version" ]; then
+		if [ "$upgrade_version" != "$VERSION" ]; then
+			UPGRADE="$upgrade_version"
+		else
+			cur_md5="$(awk "/ $PACKAGE-$VERSION/ { print \$1 }" \
+				/var/lib/tazpkg/installed.md5)"
+			new_md5="$(cat /var/lib/tazpkg/packages.md5 \
+				/var/lib/tazpkg/undigest/*/packages.md5 \
+				2> /dev/null | awk "/ $PACKAGE-$VERSION/ { print \$1 }")"
+			if [ -n "$cur_md5" -a -n "$new_md5" -a \
+				"$cur_md5" != "$new_md5" ]; then
+				UPGRADE="build"
+			fi
+		fi
+	fi
 	PACKAGE_INFOS="
 <window title=\"Package: $PKG\" icon-name=\"package-x-generic\">
 <vbox>
@@ -187,6 +207,8 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 		<variable>FIELD</variable>
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
 		<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
+[ -n "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		<item icon=\"tazpkg\">Upgrade: | $(echo $UPGRADE)</item>"
 [ -n "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"tazpkg\">Depends: | $(echo $DEPENDS)</item>"
 [ -n "$SUGGESTED" ] && PACKAGE_INFOS="$PACKAGE_INFOS
@@ -245,20 +267,34 @@ else
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>"
 fi
-PACKAGE_INFOS="$PACKAGE_INFOS
-		<button>
-			<label>Remove</label>
-			<input file icon=\"edit-delete\"></input>
-			<action>xterm -T \"Remove $PACKAGE\" $XTERM_OPTS -e \"\
-			tazpkg remove $PACKAGE; sleep 2\"</action>
-			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
-		</button>
+if [ -s /var/lib/tazpkg/installed/$PKG/modifiers ]; then
+	PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Repack</label>
 			<input file icon=\"edit-redo\"></input>
 			<action>xterm -T \"Repack $PACKAGE\" $XTERM_OPTS -e \"\
 			cd /var/cache/tazpkg; \
 			tazpkg repack $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+"
+else
+	PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Re-install</label>
+			<input file icon=\"edit-redo\"></input>
+			<action>xterm -T \"Re-install $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg get-install $PACKAGE --forced; sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+"
+fi
+PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Remove</label>
+			<input file icon=\"edit-delete\"></input>
+			<action>xterm -T \"Remove $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg remove $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>
 		<button>
