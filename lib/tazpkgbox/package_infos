@@ -267,7 +267,7 @@ else
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>"
 fi
-if [ -s /var/lib/tazpkg/installed/$PKG/modifiers ]; then
+if [ ! -s /var/lib/tazpkg/installed/$PKG/modifiers ]; then
 	PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Repack</label>
