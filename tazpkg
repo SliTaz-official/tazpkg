@@ -1558,6 +1558,12 @@ EOT
 			download_from "$(cat mirror)" packages.list
 			download_from "$(cat mirror)" packages.equiv
 			download_from "$(cat mirror)" files.list.lzma
+			download_from "$(cat mirror)" mirrors
+			suffix=$(head -1 mirror)
+			suffix=packages${suffix#*/packages}
+			for i in $(cat mirrors 2> /dev/null); do
+				grep -q $i mirror || echo $i$suffix >> mirror
+			done
 			if [ -f "packages.list.bak" ]; then
 				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
 				sed -i s/+// packages.diff
