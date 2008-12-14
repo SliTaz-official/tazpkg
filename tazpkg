@@ -457,7 +457,8 @@ check_for_deps_loop()
 # get package from packages.equiv
 equivalent_pkg()
 {
-	for i in $(grep -s "^$1=" $2$LOCALSTATE/packages.equiv | sed "s/^$1=//"); do
+	for i in $(grep -hs "^$1=" $LOCALSTATE/packages.equiv \
+		   $LOCALSTATE/undigest/*/packages.equiv | sed "s/^$1=//"); do
 		if echo $i | grep -q : ; then
 			# format 'alternative:newname'
 			# if alternative is installed then substitute newname
