@@ -232,6 +232,14 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 	</tree>
 
 	<hbox>"
+[ -s /var/lib/tazpkg/installed/$PACKAGE/description.txt ] &&
+	PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Description</label>
+			<input file icon=\"help\"></input>
+			<action>xterm -T \"$PKG description (q to quit)\" $XTERM_OPTS \
+			-e \"less /var/lib/tazpkg/installed/$PKG/description.txt\"</action>
+		</button>"
 [ ${PKG%%-*} = get -a ! -d /var/lib/tazpkg/installed/${PKG#get-} ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Install</label>
