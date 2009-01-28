@@ -1210,6 +1210,16 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		rm /var/lib/tazpkg/mirror
 		echo "$RELEASE" > /etc/slitaz-release
 		tazpkg recharge && tazpkg upgrade
+
+		# Install missing depends
+		cd $INSTALLED
+		for i in * ; do
+			DEPENDS=""
+			. $i/receipt
+			for j in $DEPENDS ; do
+				[ -d $j ] || tazpkg get-install $j
+			done
+		done
 		;;
 	remove)
 		# Remove packages.
