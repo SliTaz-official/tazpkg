@@ -1573,7 +1573,7 @@ EOT
 			suffix=$(head -1 mirror)
 			suffix=packages${suffix#*/packages}
 			for i in $(cat mirrors 2> /dev/null); do
-				grep -q $i mirror || echo $i$suffix >> mirror
+				grep -qs $i mirror || echo $i$suffix >> mirror
 			done
 			if [ -f "packages.list.bak" ]; then
 				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
@@ -1623,7 +1623,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 			echo -en "\\033[0G                                         "
 			echo -en "\\033[0G$PACKAGE"
 			# Skip specified pkgs listed in $LOCALSTATE/blocked-packages.list
-			if grep -q "^$PACKAGE" $BLOCKED; then
+			if grep -qs "^$PACKAGE" $BLOCKED; then
 				blocked=$(($blocked+1))
 			else
 				# Check if the installed package is in the current list (other
@@ -1846,7 +1846,7 @@ EOT
 		check_root
 		check_for_package_on_cmdline
 		echo ""
-		if grep -q "^$PACKAGE" $BLOCKED; then
+		if grep -qs "^$PACKAGE" $BLOCKED; then
 			echo "$PACKAGE is already in the blocked packages list."
 			echo ""
 			exit 0
@@ -1866,7 +1866,7 @@ EOT
 		check_root
 		check_for_package_on_cmdline
 		echo ""
-		if grep -q "^$PACKAGE" $BLOCKED; then
+		if grep -qs "^$PACKAGE" $BLOCKED; then
 			echo -n "Removing $PACKAGE from : $BLOCKED..."
 			sed -i s/$PACKAGE/''/ $BLOCKED
 			sed -i '/^$/d' $BLOCKED
