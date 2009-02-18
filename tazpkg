@@ -295,6 +295,13 @@ download_from()
 download()
 {
 	local i
+	case "$1" in
+	*.tazpkg)
+		for i in $LOCALSTATE $LOCALSTATE/undigest/* ; do
+			grep "^${1%.tazpkg}$" $i/packages.list || continue
+			download_from "$(cat $i/mirror)" "$@" && return
+		done
+	esac
 	for i in $(cat $MIRROR $LOCALSTATE/undigest/*/mirror 2> /dev/null); do
 		download_from "$i" "$@" && break
 	done
