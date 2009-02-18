@@ -323,6 +323,9 @@ install_package()
 		mkdir -p $TMP_DIR
 		( cd $TMP_DIR ; cpio -i receipt > /dev/null) < $PACKAGE_FILE
 		. $TMP_DIR/receipt
+		if grep -q ^pre_depends $TMP_DIR/receipt; then
+			pre_depends $ROOT
+		fi
 		rm -rf $TMP_DIR $ROOT$INSTALLED/$PACKAGE 2> /dev/null
 		# Make the installed package data dir to store
 		# the receipt and the files list.
