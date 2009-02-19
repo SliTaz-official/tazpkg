@@ -228,6 +228,32 @@ packages available on the mirror.\n"
 	fi
 }
 
+# get package from packages.equiv
+equivalent_pkg()
+{
+	for i in $(grep -hs "^$1=" $LOCALSTATE/packages.equiv \
+		   $LOCALSTATE/undigest/*/packages.equiv | sed "s/^$1=//"); do
+		if echo $i | grep -q : ; then
+			# format 'alternative:newname'
+			# if alternative is installed then substitute newname
+			if [ -f $2$INSTALLED/${i%:*}/receipt ]; then
+				# substitute package dependancy
+				echo ${i#*:}
+				return
+			fi
+		else
+			# if alternative is installed then nothing to install
+			if [ -f $2$INSTALLED/$i/receipt -o -n "$2" ]; then
+				# substitute installed package
+				echo $i
+				return
+			fi
+		fi
+	done
+	# if not found in packages.equiv then no substitution
+	echo $1
+}
+
 # Get package filename available on the mirror
 get_package_filename()
 {
@@ -244,6 +270,16 @@ get_package_filename()
 	[ -n "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" \
 		$LOCALSTATE/packages.list \
 		$LOCALSTATE/undigest/*/packages.list | head -1)
+	if [ -z "$pkg" ]; then
+		# Check for vitual package
+		local equiv
+		equiv=$(equivalent_pkg $1 virtual)
+		if [ "$equiv" != "$1" ]; then
+			PACKAGE=$equiv
+			get_package_filename $PACKAGE
+			return
+		fi
+	fi
 	echo $pkg
 }
 
@@ -462,32 +498,6 @@ check_for_deps_loop()
 		*) check_for_deps_loop $pkg $deps;;
 		esac
 	done
-}
-
-# get package from packages.equiv
-equivalent_pkg()
-{
-	for i in $(grep -hs "^$1=" $LOCALSTATE/packages.equiv \
-		   $LOCALSTATE/undigest/*/packages.equiv | sed "s/^$1=//"); do
-		if echo $i | grep -q : ; then
-			# format 'alternative:newname'
-			# if alternative is installed then substitute newname
-			if [ -f $2$INSTALLED/${i%:*}/receipt ]; then
-				# substitute package dependancy
-				echo ${i#*:}
-				return
-			fi
-		else
-			# if alternative is installed then nothing to install
-			if [ -f $2$INSTALLED/$i/receipt ]; then
-				# substitute installed package
-				echo $i
-				return
-			fi
-		fi
-	done
-	# if not found in packages.equiv then no substitution
-	echo $1
 }
 
 # Check for missing deps listed in a receipt packages.
