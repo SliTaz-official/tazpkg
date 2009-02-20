@@ -257,15 +257,6 @@ export TAZPKG_DIALOG='
 				<action>echo "$INSTALLABLE_CAT" > /tmp/tazpkgbox/installable-category</action>
 				<action>refresh:GETIT</action>
 			</button>
-			<button>
-				<label>Recharge list</label>
-				<input file icon="system-software-update"></input>
-				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
-				<action>refresh:DEV</action>
-				<action>refresh:GET</action>
-				<action>refresh:GETIT</action>
-				<action>refresh:PKG_STATS</action>
-			</button>
 		</hbox>
 	</vbox>
 
