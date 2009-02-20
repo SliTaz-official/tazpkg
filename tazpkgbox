@@ -213,17 +213,6 @@ export TAZPKG_DIALOG='
 				<action>echo "$INSTALLED_CAT" > /tmp/tazpkgbox/installed-category</action>
 				<action>refresh:PKG</action>
 			</button>
-			<button>
-				<label>Upgrade all</label>
-				<input file icon="system-software-update"></input>
-				<action>xterm -T "Package upgrade" -geometry 80x16+120+120 -e "tazpkg upgrade; sleep 2" 2>/dev/null</action>
-				<action>refresh:PKG</action>
-				<action>refresh:DEV</action>
-				<action>refresh:GET</action>
-				<action>refresh:GETIT</action>
-				<action>refresh:PKG_STATS</action>
-				<action>refresh:CACHE_STATS</action>
-			</button>
 		</hbox>
 	</vbox>
 
@@ -321,15 +310,6 @@ export TAZPKG_DIALOG='
 				<action>echo "$MIRRORED_CAT" > /tmp/tazpkgbox/mirrored-category</action>
 				<action>refresh:GET</action>
 			</button>
-			<button>
-				<label>Recharge list</label>
-				<input file icon="system-software-update"></input>
-				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
-				<action>refresh:DEV</action>
-				<action>refresh:GET</action>
-				<action>refresh:GETIT</action>
-				<action>refresh:PKG_STATS</action>
-			</button>
 		</hbox>
 	</vbox>
 
@@ -351,15 +331,6 @@ export TAZPKG_DIALOG='
 				<label>Setup undigest mirrors</label>
 				<input file icon="go-next"></input>
 				<action type="launch">SETUP_UNDIGEST</action>
-			</button>
-			<button>
-				<label>Recharge list</label>
-				<input file icon="system-software-update"></input>
-				<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
-				<action>refresh:DEV</action>
-				<action>refresh:GET</action>
-				<action>refresh:GETIT</action>
-				<action>refresh:PKG_STATS</action>
 			</button>
 		</hbox>
 		<hbox>
@@ -473,11 +444,12 @@ tmp='			</combobox>
 	</vbox>
 
 	<vbox>
-		<frame Cache directory>
+		<frame Files and Cache directory>
 			<text use-markup="true" width-chars="60" wrap="false">
-				<label>
-"The cache directory is used to store downloaded or repacked packages."
-				</label>
+				<label>"
+Lists, mirror URL and installed packages: <b>/var/lib/tazpkg</b>
+The cache directory is used to store downloaded or repacked packages.
+				"</label>
 			</text>
 			<hbox>
 				<entry editable="false">
@@ -512,15 +484,6 @@ tmp='			</combobox>
 					<action>clear:MIRROR</action>
 					<action>refresh:MIRROR</action>
 				</button>
-			</hbox>
-		</frame>
-		<frame Files path>
-			<hbox>
-				<text use-markup="true" width-chars="60">
-					<label>
-"Lists, mirror URL and installed packages: <b>/var/lib/tazpkg</b>"
-					</label>
-				</text>
 			</hbox>
 		</frame>
 		<hbox>
@@ -574,6 +537,26 @@ tmp='			</combobox>
 	</hbox>
 
 	<hbox>
+		<button>
+			<label>Recharge lists</label>
+			<input file icon="system-software-update"></input>
+			<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
+			<action>refresh:DEV</action>
+			<action>refresh:GET</action>
+			<action>refresh:GETIT</action>
+			<action>refresh:PKG_STATS</action>
+		</button>
+		<button>
+			<label>Upgrade all</label>
+			<input file icon="system-software-update"></input>
+			<action>xterm -T "Package upgrade" -geometry 80x16+120+120 -e "tazpkg upgrade; sleep 2" 2>/dev/null</action>
+			<action>refresh:PKG</action>
+			<action>refresh:DEV</action>
+			<action>refresh:GET</action>
+			<action>refresh:GETIT</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</button>
 		<button>
 			<label>Wok</label>
 			<input file icon="gtk-open"></input>
