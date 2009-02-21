@@ -14,6 +14,8 @@ if test $(id -u) != 0 ; then
 	exit 0
 fi
 
+export LIB=$PWD/lib/tazpkgbox
+
 # We need at least a mirror URL.
 if [ ! -f /var/lib/tazpkg/mirror ]; then
 	tazpkg >/dev/null
@@ -22,9 +24,8 @@ fi
 # Tmp dir and files used to get pkgs infos on the fly. Clean also
 # list and search files to load less data and have a faster start.
 mkdir -p /tmp/tazpkgbox
-echo "all" > /tmp/tazpkgbox/installed-category
-echo "all" > /tmp/tazpkgbox/installable-category
-echo "all" > /tmp/tazpkgbox/mirrored-category
+echo "all" > /tmp/tazpkgbox/status
+echo "all" > /tmp/tazpkgbox/category
 echo "all" > /tmp/tazpkgbox/undigest-category
 echo "" > /tmp/tazpkgbox/search-installed
 echo "" > /tmp/tazpkgbox/search-mirrored
@@ -173,17 +174,16 @@ export TAZPKG_DIALOG='
 		</pixmap>
 	</hbox>
 
-	<notebook labels="Installed|Installable|Mirrored|Undigest|Blocked|Search|Configuration">
+	<notebook labels="Packages list|Search|Undigest|Configuration">
 
 	<vbox>
 		<tree>
 			<width>620</width><height>240</height>
 			<variable>PKG</variable>
-			<label>Package name|Version|Description</label>
-			<input>/usr/lib/slitaz/tazpkgbox/list installed</input>
-			<item icon="tazpkg">dummy | -</item>
+			<label>Name|Version|Description</label>
+			<input icon_column="0">$LIB/list all</input>
 			<action>echo "$PKG" > /tmp/tazpkgbox/pkg</action>
-			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>$LIB/package_infos</action>
 			<action>refresh:PKG</action>
 			<action>refresh:GETIT</action>
 			<action>refresh:PKG_STATS</action>
@@ -191,10 +191,20 @@ export TAZPKG_DIALOG='
 		</tree>
 		<hbox>
 			<text>
+				<label>"Status:"</label>
+			</text>
+			<combobox>
+				<variable>STATUS</variable>
+				<item>all</item>
+				<item>installed</item>
+				<item>installable</item>
+				<item>blocked</item>
+			</combobox>
+			<text>
 				<label>"Category:"</label>
 			</text>
 			<combobox>
-				<variable>INSTALLED_CAT</variable>
+				<variable>CAT</variable>
 				<item>all</item>
 				<item>base-system</item>
 				<item>x-window</item>
@@ -214,98 +224,57 @@ export TAZPKG_DIALOG='
 			<button>
 				<label>List</label>
 				<input file icon="reload"></input>
-				<action>echo "$INSTALLED_CAT" > /tmp/tazpkgbox/installed-category</action>
+				<action>echo "$CAT" > /tmp/tazpkgbox/category</action>
+				<action>echo "$STATUS" > /tmp/tazpkgbox/status</action>
 				<action>refresh:PKG</action>
 			</button>
 		</hbox>
 	</vbox>
-
-	<vbox>
-		<tree>
-			<width>620</width><height>240</height>
-			<variable>GETIT</variable>
-			<label>Package name|Version|Description</label>
-			<input>/usr/lib/slitaz/tazpkgbox/list installable</input>
-			<item icon="tazpkg">dummy | -</item>
-			<action>echo "$GETIT" > /tmp/tazpkgbox/pkg</action>
-			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+	
+		<vbox>
+		<tree icon="tazpkg">
+			<width>620</width><height>120</height>
+			<variable>RESULT_INSTALLED</variable>
+			<label>Installed packages|Version|Description / File</label>
+			<input>cat /tmp/tazpkgbox/search-installed</input>
+			<action>echo "$RESULT_INSTALLED" > /tmp/tazpkgbox/pkg</action>
+			<action>$LIB/package_infos</action>
+			<action>$LIB/search</action>
+			<action>refresh:RESULT_INSTALLED</action>
 			<action>refresh:PKG</action>
-			<action>refresh:GETIT</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</tree>
+		<tree icon="tazpkg">
+			<width>620</width><height>120</height>
+			<variable>RESULT_MIRROR</variable>
+			<label>Mirrored packages|Version|Description / File</label>
+			<input>cat /tmp/tazpkgbox/search-mirrored</input>
+			<action>echo "$RESULT_MIRROR" > /tmp/tazpkgbox/pkg</action>
+			<action>$LIB/package_infos</action>
+			<action>$LIB/search</action>
+			<action>refresh:RESULT_INSTALLED</action>
+			<action>refresh:PKG</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
 		</tree>
 		<hbox>
-			<text>
-				<label>"Category:"</label>
-			</text>
-			<combobox>
-				<variable>INSTALLABLE_CAT</variable>
-				<item>all</item>
-				<item>base-system</item>
-				<item>x-window</item>
-				<item>utilities</item>
-				<item>network</item>
-				<item>graphics</item>
-				<item>multimedia</item>
-				<item>office</item>
-				<item>development</item>
-				<item>system-tools</item>
-				<item>security</item>
-				<item>games</item>
-				<item>misc</item>
-				<item>meta</item>
-				<item>non-free</item>
-			</combobox>
+			<entry>
+				<variable>SEARCH</variable>
+			</entry>
 			<button>
-				<label>List</label>
-				<input file icon="reload"></input>
-				<action>echo "$INSTALLABLE_CAT" > /tmp/tazpkgbox/installable-category</action>
-				<action>refresh:GETIT</action>
+				<label>Search Packages</label>
+				<input file icon="system-search"></input>
+				<action>$LIB/search</action>
+				<action>refresh:RESULT_INSTALLED</action>
+				<action>refresh:RESULT_MIRROR</action>
 			</button>
-		</hbox>
-	</vbox>
-
-	<vbox>
-		<tree>
-			<width>620</width><height>240</height>
-			<variable>GET</variable>
-			<label>Package name|Version|Description</label>
-			<input>/usr/lib/slitaz/tazpkgbox/list mirrored</input>
-			<item icon="tazpkg">dummy | -</item>
-			<action>echo "$GET" > /tmp/tazpkgbox/pkg</action>
-			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
-			<action>refresh:PKG</action>
-			<action>refresh:GETIT</action>
-			<action>refresh:PKG_STATS</action>
-			<action>refresh:CACHE_STATS</action>
-		</tree>
-		<hbox>
-			<text>
-				<label>"Category:"</label>
-			</text>
-			<combobox>
-				<variable>MIRRORED_CAT</variable>
-				<item>all</item>
-				<item>base-system</item>
-				<item>x-window</item>
-				<item>utilities</item>
-				<item>network</item>
-				<item>graphics</item>
-				<item>multimedia</item>
-				<item>office</item>
-				<item>development</item>
-				<item>system-tools</item>
-				<item>security</item>
-				<item>games</item>
-				<item>misc</item>
-				<item>meta</item>
-				<item>non-free</item>
-			</combobox>
 			<button>
-				<label>List</label>
-				<input file icon="reload"></input>
-				<action>echo "$MIRRORED_CAT" > /tmp/tazpkgbox/mirrored-category</action>
-				<action>refresh:GET</action>
+				<label>Search Files</label>
+				<input file icon="system-search"></input>
+				<action>$LIB/search --files</action>
+				<action>refresh:RESULT_INSTALLED</action>
+				<action>refresh:RESULT_MIRROR</action>
 			</button>
 		</hbox>
 	</vbox>
@@ -315,9 +284,9 @@ export TAZPKG_DIALOG='
 			<width>620</width><height>240</height>
 			<variable>DEV</variable>
 			<label>Package name|Version|Description</label>
-			<input>/usr/lib/slitaz/tazpkgbox/list undigest</input>
+			<input>$LIB/list undigest</input>
 			<action>echo "$DEV" > /tmp/tazpkgbox/pkg</action>
-			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
+			<action>$LIB/package_infos</action>
 			<action>refresh:PKG</action>
 			<action>refresh:GETIT</action>
 			<action>refresh:PKG_STATS</action>
@@ -367,75 +336,6 @@ tmp='			</combobox>
 				<input file icon="reload"></input>
 				<action>echo "$UNDIGEST_CAT $UNDIGEST_ENTRY" > /tmp/tazpkgbox/undigest-category</action>
 				<action>refresh:DEV</action>
-			</button>
-		</hbox>
-	</vbox>
-
-	<vbox>
-		<tree>
-			<width>620</width><height>240</height>
-			<variable>BLOCKED</variable>
-			<label>Package name|Version|Available|Description</label>
-			<input>/usr/lib/slitaz/tazpkgbox/list blocked</input>
-			<action>echo "$BLOCKED" > /tmp/tazpkgbox/pkg</action>
-			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
-			<action>refresh:BLOCKED</action>
-			<action>refresh:PKG_STATS</action>
-		</tree>
-		<hbox>
-			<button>
-				<label>Refresh</label>
-				<input file icon="reload"></input>
-				<action>refresh:BLOCKED</action>
-				<action>refresh:PKG_STATS</action>
-			</button>
-		</hbox>
-	</vbox>
-
-	<vbox>
-		<tree icon="tazpkg">
-			<width>620</width><height>120</height>
-			<variable>RESULT_INSTALLED</variable>
-			<label>Installed packages|Version|Description / File</label>
-			<input>cat /tmp/tazpkgbox/search-installed</input>
-			<action>echo "$RESULT_INSTALLED" > /tmp/tazpkgbox/pkg</action>
-			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
-			<action>/usr/lib/slitaz/tazpkgbox/search</action>
-			<action>refresh:RESULT_INSTALLED</action>
-			<action>refresh:PKG</action>
-			<action>refresh:PKG_STATS</action>
-			<action>refresh:CACHE_STATS</action>
-		</tree>
-		<tree icon="tazpkg">
-			<width>620</width><height>120</height>
-			<variable>RESULT_MIRROR</variable>
-			<label>Mirrored packages|Version|Description / File</label>
-			<input>cat /tmp/tazpkgbox/search-mirrored</input>
-			<action>echo "$RESULT_MIRROR" > /tmp/tazpkgbox/pkg</action>
-			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
-			<action>/usr/lib/slitaz/tazpkgbox/search</action>
-			<action>refresh:RESULT_INSTALLED</action>
-			<action>refresh:PKG</action>
-			<action>refresh:PKG_STATS</action>
-			<action>refresh:CACHE_STATS</action>
-		</tree>
-		<hbox>
-			<entry>
-				<variable>SEARCH</variable>
-			</entry>
-			<button>
-				<label>Search Packages</label>
-				<input file icon="system-search"></input>
-				<action>/usr/lib/slitaz/tazpkgbox/search</action>
-				<action>refresh:RESULT_INSTALLED</action>
-				<action>refresh:RESULT_MIRROR</action>
-			</button>
-			<button>
-				<label>Search Files</label>
-				<input file icon="system-search"></input>
-				<action>/usr/lib/slitaz/tazpkgbox/search --files</action>
-				<action>refresh:RESULT_INSTALLED</action>
-				<action>refresh:RESULT_MIRROR</action>
 			</button>
 		</hbox>
 	</vbox>
@@ -528,7 +428,7 @@ The cache directory is used to store downloaded or repacked packages.
 
 	<hbox>
 		<text wrap="false">
-			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; undigest=`cat /var/lib/tazpkg/undigest/*/packages.list 2> /dev/null | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list 2> /dev/null | wc -l`; installable=$(($mirrored + $undigest - $installed)); [ $installable -lt 0 ] && installable=0; echo "Packages: $installed installed, $blocked blocked, $installable installable, $undigest undigest, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
+			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; undigest=`cat /var/lib/tazpkg/undigest/*/packages.list 2> /dev/null | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list 2> /dev/null | wc -l`; installable=$(($mirrored + $undigest - $installed)); [ $installable -lt 0 ] && installable=0; echo "Packages statistics: $installed installed, $blocked blocked, $installable installable, $undigest undigest, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
 			<variable>PKG_STATS</variable>
 		</text>
 	</hbox>
