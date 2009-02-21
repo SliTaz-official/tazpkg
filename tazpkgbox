@@ -9,7 +9,7 @@
 VERSION=2.6
 
 # Functions path.
-export LIB=/usr/lib/lib/tazpkgbox
+export LIB=/usr/lib/tazpkgbox
 
 # Tazpkgbox is only for root.
 if test $(id -u) != 0 ; then
