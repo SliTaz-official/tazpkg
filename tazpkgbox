@@ -4,7 +4,7 @@
 # path: /usr/lib/slitaz/tazpkgbox. Notes: Notebook tab are vbox, tab are
 # used to indent.
 #
-# (C) GNU gpl v3 - SliTaz GNU/Linux 2008.
+# (C) GNU gpl v3 - SliTaz GNU/Linux 2009.
 #
 VERSION=2.6
 
@@ -156,6 +156,9 @@ export SETUP_UNDIGEST='
 </window>
 '
 
+# Scan notifycation
+desktopbox notify "Scanning packages database" 6 &
+
 # Main dialog
 export TAZPKG_DIALOG='
 <window title="SliTaz Packages Manager" icon-name="package-x-generic">
@@ -178,6 +181,7 @@ export TAZPKG_DIALOG='
 			<variable>PKG</variable>
 			<label>Package name|Version|Description</label>
 			<input>/usr/lib/slitaz/tazpkgbox/list installed</input>
+			<item icon="tazpkg">dummy | -</item>
 			<action>echo "$PKG" > /tmp/tazpkgbox/pkg</action>
 			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
 			<action>refresh:PKG</action>
@@ -222,6 +226,7 @@ export TAZPKG_DIALOG='
 			<variable>GETIT</variable>
 			<label>Package name|Version|Description</label>
 			<input>/usr/lib/slitaz/tazpkgbox/list installable</input>
+			<item icon="tazpkg">dummy | -</item>
 			<action>echo "$GETIT" > /tmp/tazpkgbox/pkg</action>
 			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
 			<action>refresh:PKG</action>
@@ -266,6 +271,7 @@ export TAZPKG_DIALOG='
 			<variable>GET</variable>
 			<label>Package name|Version|Description</label>
 			<input>/usr/lib/slitaz/tazpkgbox/list mirrored</input>
+			<item icon="tazpkg">dummy | -</item>
 			<action>echo "$GET" > /tmp/tazpkgbox/pkg</action>
 			<action>/usr/lib/slitaz/tazpkgbox/package_infos</action>
 			<action>refresh:PKG</action>
