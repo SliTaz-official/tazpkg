@@ -23,8 +23,12 @@ installable_list()
 	cat /var/lib/tazpkg/packages.desc \
 	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
 	while read PACKAGE VERSION SHORT_DESC; do
-		[ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ] && continue
-		echo "$PACKAGE|$VERSION|$SHORT_DESC"
+		# Check first for category for more speed.
+		CATEGORY=${CATEGORY%| *}
+		if [ "$CAT" == "all" ] || [ "$CATEGORY" == " $CAT " ]; then
+			[ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ] && continue
+			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
+		fi
 	done
 	unset IFS
 }
@@ -35,9 +39,29 @@ installed_list()
 	do
 		. $pkg/receipt
 		if [ "$CAT" == "all" -o "$CATEGORY" == "$CAT" ]; then
-			echo "$PACKAGE|$VERSION|$SHORT_DESC"
+			echo "go-next|$PACKAGE|$VERSION|$SHORT_DESC"
 		fi
 	done
+}
+
+all_list()
+{
+	IFS="|"
+	cat /var/lib/tazpkg/packages.desc \
+	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
+	while read PACKAGE VERSION SHORT_DESC CATEGORY; do
+	# Check first for category for more speed.
+	CATEGORY=${CATEGORY%| *}
+	if [ "$CAT" == "all" ] || [ "$CATEGORY" == " $CAT " ]; then
+		if [ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ]; then
+			. /var/lib/tazpkg/installed/${PACKAGE%% *}/receipt
+			echo "go-next|$PACKAGE|$VERSION|$SHORT_DESC"
+		else
+			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
+		fi
+	fi
+	done
+	unset IFS
 }
 
 blocked_list()
@@ -47,23 +71,27 @@ blocked_list()
 		. $pkg/receipt
 		if grep -qs "^$(basename $pkg)$" /var/lib/tazpkg/blocked-packages.list; then
 			AVAILABLE=$(grep "^$(basename $pkg) " /var/lib/tazpkg/packages.desc | awk '{ print $3 }')
-			
-			echo "$PACKAGE|$VERSION|$AVAILABLE|$SHORT_DESC"
+			echo "stop|$PACKAGE|$VERSION (Available: $AVAILABLE)|$SHORT_DESC"
 		fi
 	done
 }
 
 case $1 in
-	installed)
-		CAT=`cat /tmp/tazpkgbox/installed-category`
-		installed_list $CAT;;
-	installable)
-		CAT=`cat /tmp/tazpkgbox/installable-category`
-		if [ "$CAT" == "all" ]; then
-			installable_list
-		else
-			installable_list | grep "$CAT"
-		fi ;;
+	all)
+		STATUS=`cat /tmp/tazpkgbox/status`
+		case $STATUS in
+			blocked)
+				blocked_list ;;
+			installed)
+				CAT=`cat /tmp/tazpkgbox/category`
+				installed_list ;;
+			installable)
+				CAT=`cat /tmp/tazpkgbox/category`
+				installable_list ;;
+			*)
+				CAT=`cat /tmp/tazpkgbox/category`
+				all_list ;;
+		esac ;;
 	undigest)
 		set -- `cat /tmp/tazpkgbox/undigest-category`
 		if [ "$1" == "all" -o "$1" == "" ]; then
@@ -71,17 +99,10 @@ case $1 in
 		else
 			undigest_list $2 | grep "$1"
 		fi ;;
-	mirrored)
-		CAT=`cat /tmp/tazpkgbox/mirrored-category`
-		if [ "$CAT" == "all" ]; then
-			cat /var/lib/tazpkg/packages.desc
-		else
-			grep "$CAT" /var/lib/tazpkg/packages.desc
-		fi ;;
 	blocked)
-		blocked_list;;
+		blocked_list ;;
 	*)
-		echo "Usage: /usr/lib/slitaz/tazpkgbox/list [installed|installable|mirrored|undigest|blocked]" ;;
+		echo "Usage: $0 [all|undigest|blocked]" ;;
 esac
 
 exit 0
