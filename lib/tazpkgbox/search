@@ -18,12 +18,12 @@ list_files()
 		version=$(grep -hs "^$pkg " /var/lib/tazpkg/packages.desc \
 		  /var/lib/tazpkg/undigest/*/packages.desc | awk '{ print $3 }')
 		if [ -d /var/lib/tazpkg/installed/$pkg ]; then
-			if [ -f $file ]; then
+			if [ -x $file ]; then
+				echo "exec|$pkg|$version|$file"
+			elif [ -f $file ]; then
 				echo "txt|$pkg|$version|$file"
 			elif [ -d $file ] ; then
 				echo "folder|$pkg|$version|$file"
-			elif [ -x $file ]; then
-				echo "exec|$pkg|$version|$file"
 			else
 				# Missing installed file.
 				echo "dialog-warning|$pkg|$version|$file"
