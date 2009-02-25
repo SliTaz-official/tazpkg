@@ -9,7 +9,7 @@
 VERSION=2.6
 
 # Functions path.
-export LIB=$PWD/lib/tazpkgbox
+export LIB=/usr/lib/slitaz/tazpkgbox
 
 # Tazpkgbox is only for root.
 if test $(id -u) != 0 ; then
@@ -46,9 +46,7 @@ export HELP='
 Tazpkgbox is a simple and easy to use interface to the SliTaz
 package manager - aka Tazpkg. You can install, remove, repack or
 get packages by double-clicking on the package item. A Search engine
-lets you find and install new applications in a few mouse clicks.
-
-Downloaded and repacked packages are stored in: /var/cache/tazpkg"
+lets you find and install new applications in a few mouse clicks."
 			</label>
 		</text>
 	</frame>
@@ -58,9 +56,9 @@ Downloaded and repacked packages are stored in: /var/cache/tazpkg"
 			<label>"
 Tazpkgbox est une interface graphique au gestionnaire de paquet
 de Slitaz aka Tazpkg. Simple et facile à utiliser, vous pouvez
-installer, télécharger ou supprimer des paquet en double-cliquant
-sur sa ligne. Les paquets téléchargés ou recréés sont stocké
-dans: /var/cache/tazpkg"
+installer, télécharger ou supprimer des paquets en double-cliquant
+sur sa ligne. La fonction de recherche permet de facilement trouver
+et installer des logiciels ou fichiers."
 			</label>
 		</text>
 	</frame>
