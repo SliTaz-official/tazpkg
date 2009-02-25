@@ -9,7 +9,7 @@
 VERSION=2.6
 
 # Functions path.
-export LIB=/usr/lib/slitaz/tazpkgbox
+export LIB=$PWD/lib/tazpkgbox
 
 # Tazpkgbox is only for root.
 if test $(id -u) != 0 ; then
@@ -174,7 +174,7 @@ export TAZPKG_DIALOG='
 		</pixmap>
 	</hbox>
 
-	<notebook labels="Packages list|Search|Undigest|Configuration">
+	<notebook labels="Packages|Search|Undigest|Configuration">
 
 	<vbox>
 		<tree>
@@ -235,7 +235,7 @@ export TAZPKG_DIALOG='
 		<tree>
 			<width>620</width><height>120</height>
 			<variable>RESULT</variable>
-			<label>Installed packages|Version|Description / File</label>
+			<label>Packages Name|Version|Description / File</label>
 			<input icon_column="0">cat /tmp/tazpkgbox/search</input>
 			<action>echo "$RESULT" > /tmp/tazpkgbox/pkg</action>
 			<action>$LIB/package_infos</action>
