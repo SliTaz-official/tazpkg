@@ -28,8 +28,7 @@ mkdir -p /tmp/tazpkgbox
 echo "all" > /tmp/tazpkgbox/status
 echo "all" > /tmp/tazpkgbox/category
 echo "all" > /tmp/tazpkgbox/undigest-category
-echo "" > /tmp/tazpkgbox/search-installed
-echo "" > /tmp/tazpkgbox/search-mirrored
+echo "" > /tmp/tazpkgbox/search
 
 # English/French help dialod.
 export HELP='
@@ -233,28 +232,15 @@ export TAZPKG_DIALOG='
 	</vbox>
 	
 		<vbox>
-		<tree icon="tazpkg">
+		<tree>
 			<width>620</width><height>120</height>
-			<variable>RESULT_INSTALLED</variable>
+			<variable>RESULT</variable>
 			<label>Installed packages|Version|Description / File</label>
-			<input>cat /tmp/tazpkgbox/search-installed</input>
-			<action>echo "$RESULT_INSTALLED" > /tmp/tazpkgbox/pkg</action>
+			<input icon_column="0">cat /tmp/tazpkgbox/search</input>
+			<action>echo "$RESULT" > /tmp/tazpkgbox/pkg</action>
 			<action>$LIB/package_infos</action>
 			<action>$LIB/search</action>
-			<action>refresh:RESULT_INSTALLED</action>
-			<action>refresh:PKG</action>
-			<action>refresh:PKG_STATS</action>
-			<action>refresh:CACHE_STATS</action>
-		</tree>
-		<tree icon="tazpkg">
-			<width>620</width><height>120</height>
-			<variable>RESULT_MIRROR</variable>
-			<label>Mirrored packages|Version|Description / File</label>
-			<input>cat /tmp/tazpkgbox/search-mirrored</input>
-			<action>echo "$RESULT_MIRROR" > /tmp/tazpkgbox/pkg</action>
-			<action>$LIB/package_infos</action>
-			<action>$LIB/search</action>
-			<action>refresh:RESULT_INSTALLED</action>
+			<action>refresh:RESULT</action>
 			<action>refresh:PKG</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
@@ -264,18 +250,16 @@ export TAZPKG_DIALOG='
 				<variable>SEARCH</variable>
 			</entry>
 			<button>
-				<label>Search Packages</label>
+				<label>Packages</label>
 				<input file icon="system-search"></input>
-				<action>$LIB/search</action>
-				<action>refresh:RESULT_INSTALLED</action>
-				<action>refresh:RESULT_MIRROR</action>
+				<action>$LIB/search packages</action>
+				<action>refresh:RESULT</action>
 			</button>
 			<button>
-				<label>Search Files</label>
+				<label>Files</label>
 				<input file icon="system-search"></input>
-				<action>$LIB/search --files</action>
-				<action>refresh:RESULT_INSTALLED</action>
-				<action>refresh:RESULT_MIRROR</action>
+				<action>$LIB/search files</action>
+				<action>refresh:RESULT</action>
 			</button>
 		</hbox>
 	</vbox>

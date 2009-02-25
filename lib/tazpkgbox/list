@@ -39,7 +39,7 @@ installed_list()
 	do
 		. $pkg/receipt
 		if [ "$CAT" == "all" -o "$CATEGORY" == "$CAT" ]; then
-			echo "go-next|$PACKAGE|$VERSION|$SHORT_DESC"
+			echo "tazpkg-installed|$PACKAGE|$VERSION|$SHORT_DESC"
 		fi
 	done
 }
@@ -55,7 +55,7 @@ all_list()
 	if [ "$CAT" == "all" ] || [ "$CATEGORY" == " $CAT " ]; then
 		if [ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ]; then
 			. /var/lib/tazpkg/installed/${PACKAGE%% *}/receipt
-			echo "go-next|$PACKAGE|$VERSION|$SHORT_DESC"
+			echo "tazpkg-installed|$PACKAGE|$VERSION|$SHORT_DESC"
 		else
 			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
 		fi

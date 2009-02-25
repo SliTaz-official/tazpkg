@@ -4,8 +4,8 @@
 #
 
 # Clean preview results.
-rm -f /tmp/tazpkgbox/search-installed
-touch /tmp/tazpkgbox/search-installed
+rm -f /tmp/tazpkgbox/search
+touch /tmp/tazpkgbox/search
 
 list_files()
 {
@@ -17,29 +17,50 @@ list_files()
 		[ "$pkg" = "0" ] && continue
 		version=$(grep -hs "^$pkg " /var/lib/tazpkg/packages.desc \
 		  /var/lib/tazpkg/undigest/*/packages.desc | awk '{ print $3 }')
-		echo "$pkg|$version|$file"
+		if [ -d /var/lib/tazpkg/installed/$pkg ]; then
+			if [ -f $file ]; then
+				echo "txt|$pkg|$version|$file"
+			elif [ -d $file ] ; then
+				echo "folder|$pkg|$version|$file"
+			elif [ -x $file ]; then
+				echo "exec|$pkg|$version|$file"
+			else
+				# Missing installed file.
+				echo "dialog-warning|$pkg|$version|$file"
+			fi
+		else
+			echo "tazpkg|$pkg|$version|$file"
+		fi
 	done
 }
 
-if [ "$1" = "--files" ]; then
-	tazpkg search-file "$SEARCH" | list_files > \
-		/tmp/tazpkgbox/search-installed
-	tazpkg search-file "$SEARCH" --mirror | list_files > \
-		/tmp/tazpkgbox/search-mirrored
-	exit 0
-fi
-
-# Search installed.
-for i in `ls /var/lib/tazpkg/installed`
-do
-	. /var/lib/tazpkg/installed/$i/receipt
+search_package()
+{
+	IFS="|"
+	cat /var/lib/tazpkg/packages.desc \
+	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
+	while read PACKAGE VERSION SHORT_DESC; do
 	if echo "$PACKAGE $SHORT_DESC" | grep -q "$SEARCH"; then
-		echo "$PACKAGE|$VERSION|$SHORT_DESC" >> /tmp/tazpkgbox/search-installed
+		if [ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ]; then
+			. /var/lib/tazpkg/installed/${PACKAGE%% *}/receipt
+			echo "tazpkg-installed|$PACKAGE|$VERSION|$SHORT_DESC"
+		else
+			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
+		fi
 	fi
-done
+	done 
+	unset IFS
+}
 
-# Search mirrored.
-grep -sh "$SEARCH" /var/lib/tazpkg/packages.desc \
-  /var/lib/tazpkg/undigest/*/packages.desc | sort > /tmp/tazpkgbox/search-mirrored
+case "$1" in
+	files)
+		tazpkg search-file "$SEARCH" --mirror | list_files > \
+			/tmp/tazpkgbox/search ;;
+	packages)
+		search_package > /tmp/tazpkgbox/search ;;
+	*)
+		echo "Usage: $0 [packages|files]" ;;
+esac
+
 
 exit 0
