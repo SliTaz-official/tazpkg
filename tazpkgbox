@@ -183,7 +183,6 @@ export TAZPKG_DIALOG='
 			<action>echo "$PKG" > /tmp/tazpkgbox/pkg</action>
 			<action>$LIB/package_infos</action>
 			<action>refresh:PKG</action>
-			<action>refresh:GETIT</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
 		</tree>
@@ -229,7 +228,7 @@ export TAZPKG_DIALOG='
 		</hbox>
 	</vbox>
 	
-		<vbox>
+	<vbox>
 		<tree>
 			<width>620</width><height>120</height>
 			<variable>RESULT</variable>
@@ -237,7 +236,7 @@ export TAZPKG_DIALOG='
 			<input icon_column="0">cat /tmp/tazpkgbox/search</input>
 			<action>echo "$RESULT" > /tmp/tazpkgbox/pkg</action>
 			<action>$LIB/package_infos</action>
-			<action>$LIB/search</action>
+			<action>$LIB/search packages</action>
 			<action>refresh:RESULT</action>
 			<action>refresh:PKG</action>
 			<action>refresh:PKG_STATS</action>
@@ -271,7 +270,6 @@ export TAZPKG_DIALOG='
 			<action>echo "$DEV" > /tmp/tazpkgbox/pkg</action>
 			<action>$LIB/package_infos</action>
 			<action>refresh:PKG</action>
-			<action>refresh:GETIT</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
 		</tree>
@@ -422,9 +420,9 @@ The cache directory is used to store downloaded or repacked packages.
 			<input file icon="system-software-update"></input>
 			<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
 			<action>refresh:DEV</action>
-			<action>refresh:GET</action>
-			<action>refresh:GETIT</action>
+			<action>refresh:PKG</action>
 			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
 		</button>
 		<button>
 			<label>Upgrade all</label>
@@ -432,8 +430,6 @@ The cache directory is used to store downloaded or repacked packages.
 			<action>xterm -T "Package upgrade" -geometry 80x16+120+120 -e "tazpkg upgrade; sleep 2" 2>/dev/null</action>
 			<action>refresh:PKG</action>
 			<action>refresh:DEV</action>
-			<action>refresh:GET</action>
-			<action>refresh:GETIT</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
 		</button>
