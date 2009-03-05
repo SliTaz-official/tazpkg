@@ -408,8 +408,8 @@ The cache directory is used to store downloaded or repacked packages.
 	</notebook>
 
 	<hbox>
-		<text wrap="false">
-			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; undigest=`cat /var/lib/tazpkg/undigest/*/packages.list 2> /dev/null | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list 2> /dev/null | wc -l`; installable=$(($mirrored + $undigest - $installed)); [ $installable -lt 0 ] && installable=0; echo "Packages statistics: $installed installed, $blocked blocked, $installable installable, $undigest undigest, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
+		<text wrap="false" width-chars="82">
+			<input>installed=`ls /var/lib/tazpkg/installed | wc -l`; mirrored=`cat /var/lib/tazpkg/packages.list | wc -l`; undigest=`cat /var/lib/tazpkg/undigest/*/packages.list 2> /dev/null | wc -l`; blocked=`cat /var/lib/tazpkg/blocked-packages.list 2> /dev/null | wc -l`; installable=$(($mirrored + $undigest - $installed)); [ $installable -lt 0 ] && installable=0; echo -n "Packages statistics: $installed installed, $blocked blocked, $installable installable, $undigest undigest, $mirrored mirrored, `cat /var/lib/tazpkg/upgradable-packages.list 2> /dev/null | wc -l` to upgrade "</input>
 			<variable>PKG_STATS</variable>
 		</text>
 	</hbox>
