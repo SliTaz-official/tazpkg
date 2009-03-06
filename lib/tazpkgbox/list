@@ -16,6 +16,9 @@ undigest_list()
 		if [ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ]; then
 			. /var/lib/tazpkg/installed/${PACKAGE%% *}/receipt
 			ICON=tazpkg-installed
+			if grep -qs "^$PACKAGE$" /var/lib/tazpkg/blocked-packages.list; then
+				ICON=stop
+			fi
 		fi
 		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done
@@ -59,9 +62,15 @@ all_list()
 	CATEGORY=${CATEGORY%| *}
 	if [ "$CAT" == "all" ] || [ "$CATEGORY" == " $CAT " ]; then
 		ICON=tazpkg
+		if grep -qs "^$PACKAGE" /var/lib/tazpkg/undigest/*/packages.desc ; then
+			ICON=add
+		fi
 		if [ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ]; then
 			. /var/lib/tazpkg/installed/${PACKAGE%% *}/receipt
 			ICON=tazpkg-installed
+			if grep -qs "^$PACKAGE$" /var/lib/tazpkg/blocked-packages.list; then
+				ICON=stop
+			fi
 		fi
 		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	fi
