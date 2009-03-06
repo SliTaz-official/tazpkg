@@ -33,10 +33,13 @@ installable_list()
 	while read PACKAGE VERSION SHORT_DESC; do
 		# Check first for category for more speed.
 		CATEGORY=${CATEGORY%| *}
+		ICON=tazpkg
 		if [ "$CAT" == "all" ] || [ "$CATEGORY" == " $CAT " ]; then
 			[ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ] && continue
-			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
 		fi
+		grep -qs "^$PACKAGE" /var/lib/tazpkg/undigest/*/packages.desc &&
+			ICON=add
+		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done
 	unset IFS
 }
@@ -46,9 +49,13 @@ installed_list()
 	for pkg in /var/lib/tazpkg/installed/*
 	do
 		. $pkg/receipt
-		if [ "$CAT" == "all" -o "$CATEGORY" == "$CAT" ]; then
-			echo "tazpkg-installed|$PACKAGE|$VERSION|$SHORT_DESC"
-		fi
+		ICON=tazpkg-installed
+		[ "$CAT" == "all" -o "$CATEGORY" == "$CAT" ] || continue
+		grep -qs "^$PACKAGE" /var/lib/tazpkg/undigest/*/packages.desc &&
+			ICON=add
+		grep -qs "^$PACKAGE$" /var/lib/tazpkg/blocked-packages.list &&
+			ICON=stop
+		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done
 }
 
@@ -84,7 +91,7 @@ blocked_list()
 	do
 		. $pkg/receipt
 		if grep -qs "^$(basename $pkg)$" /var/lib/tazpkg/blocked-packages.list; then
-			AVAILABLE=$(grep "^$(basename $pkg) " /var/lib/tazpkg/packages.desc | awk '{ print $3 }')
+			AVAILABLE=$(grep -s "^$(basename $pkg) " /var/lib/tazpkg/packages.desc /var/lib/tazpkg/undigest/*/packages.desc | awk '{ print $3 }')
 			echo "stop|$PACKAGE|$VERSION (Available: $AVAILABLE)|$SHORT_DESC"
 		fi
 	done
