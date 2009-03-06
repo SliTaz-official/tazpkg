@@ -265,8 +265,8 @@ export TAZPKG_DIALOG='
 		<tree>
 			<width>620</width><height>240</height>
 			<variable>DEV</variable>
-			<label>Package name|Version|Description</label>
-			<input>$LIB/list undigest</input>
+			<label>Name|Version|Description</label>
+			<input icon_column="0">$LIB/list undigest</input>
 			<action>echo "$DEV" > /tmp/tazpkgbox/pkg</action>
 			<action>$LIB/package_infos</action>
 			<action>refresh:PKG</action>

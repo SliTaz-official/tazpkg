@@ -12,7 +12,12 @@ undigest_list()
 	else
 		cat /var/lib/tazpkg/undigest/*/packages.desc
 	fi 2> /dev/null | sort | while read PACKAGE VERSION SHORT_DESC; do
-		echo "$PACKAGE|$VERSION|$SHORT_DESC"
+		ICON=tazpkg
+		if [ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ]; then
+			. /var/lib/tazpkg/installed/${PACKAGE%% *}/receipt
+			ICON=tazpkg-installed
+		fi
+		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done
 	unset IFS
 }
@@ -53,12 +58,12 @@ all_list()
 	# Check first for category for more speed.
 	CATEGORY=${CATEGORY%| *}
 	if [ "$CAT" == "all" ] || [ "$CATEGORY" == " $CAT " ]; then
+		ICON=tazpkg
 		if [ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ]; then
 			. /var/lib/tazpkg/installed/${PACKAGE%% *}/receipt
-			echo "tazpkg-installed|$PACKAGE|$VERSION|$SHORT_DESC"
-		else
-			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
+			ICON=tazpkg-installed
 		fi
+		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	fi
 	done
 	unset IFS
