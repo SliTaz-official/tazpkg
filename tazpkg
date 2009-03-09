@@ -347,10 +347,9 @@ download()
 extract_package()
 {
 	echo -n "Extracting $PACKAGE... "
-	cpio -id < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
-	gzip -d fs.cpio.gz
+	cpio -idm < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
 	echo -n "Extracting the pseudo fs... "
-	cpio -id < fs.cpio && rm fs.cpio
+	zcat fs.cpio.gz | cpio -idm && rm fs.cpio.gz
 }
 
 # This function installs a package in the rootfs.
@@ -1372,7 +1371,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			FILES="$INSTALLED/*/volatile.cpio.gz"
 			[ -n "$3" ] && FILES="$INSTALLED/$3/volatile.cpio.gz"
 			for i in $FILES; do 
-				zcat $i | cpio -id > /dev/null
+				zcat $i | cpio -idm > /dev/null
 				find * -type f 2>/dev/null | while read file; do
 					if [ ! -e /$file ]; then
 					echo -n "|--|--|--|File lost"
@@ -1412,7 +1411,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		done > files.list
 		mkdir fs
 		cd fs
-		( cd / ; cpio -o -H newc ) < ../files.list | cpio -id > /dev/null
+		( cd / ; cpio -o -H newc ) < ../files.list | cpio -idm > /dev/null
 		mkdir -p etc/tazlito
 		for i in $INSTALLED/*/receipt; do 
 			EXTRAVERSION=""
@@ -1477,11 +1476,11 @@ EOT
 		ln -s / rootfs
 		mkdir tmp
 		sed 's/^/rootfs/' < files.list | cpio -o -H newc 2>/dev/null |\
-		      ( cd tmp ; cpio -id 2>/dev/null )
+		      ( cd tmp ; cpio -idm 2>/dev/null )
 		mv tmp/rootfs fs
 		if [ -f $INSTALLED/$PACKAGE/volatile.cpio.gz ]; then
 			zcat $INSTALLED/$PACKAGE/volatile.cpio.gz | \
-				( cd fs; cpio -id )
+				( cd fs; cpio -idm )
 		fi
 		if grep -q repack_cleanup $INSTALLED/$PACKAGE/receipt; then
 			. $INSTALLED/$PACKAGE/receipt
@@ -1553,7 +1552,7 @@ EOT
 			find . -print | cpio -o -H newc > ../$PACKAGE.tazpkg
 			status
 			echo -n "Restoring original package tree... "
-			zcat fs.cpio.gz | cpio -id
+			zcat fs.cpio.gz | cpio -idm
 			status
 			rm fs.cpio.gz && cd ..
 			echo "================================================================================"
