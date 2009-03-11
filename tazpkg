@@ -1,5 +1,5 @@
 #!/bin/sh
-# Tazpkg - Tiny autonomus zone packages manager.
+# Tazpkg - Tiny autonomous zone packages manager.
 #
 # This is a lightwight packages manager for *.tazpkg files, all written in
 # SHell script. It works well with Busybox ash shell and bash. Tazpkg lets you
@@ -118,8 +118,8 @@ usage ()
   install-flavor   Install the flavor list of packages and remove other ones.
   set-release      Change release and update packages
   clean-cache      Clean all packages downloaded in cache directory.
-  depends          Display dependancies tree.
-  rdepends         Display reverse dependancies tree.
+  depends          Display dependencies tree.
+  rdepends         Display reverse dependencies tree.
   setup-mirror     Change the mirror url configuration.
   list-undigest    List undigest mirrors.
   remove-undigest  Remove an undigest mirror.
@@ -558,7 +558,7 @@ install_deps()
 				# the TAZPKG_BASENAME in the local packages.list.
 				found=0
 				if [ -f "$list" ]; then
-					echo "Checking if $pkg exist in local list... "
+					echo "Checking if $pkg exists in local list... "
 					mkdir $TMP_DIR
 					for i in $pkg-*.tazpkg; do
 						[ -f $i ] || continue
@@ -812,7 +812,7 @@ the complete address to the directory of the packages and packages.list file."
 	echo ""
 }
 
-# recursive dependancies scan
+# recursive dependencies scan
 dep_scan()
 {
 for i in $1; do
@@ -828,7 +828,7 @@ for i in $1; do
 done
 }
 
-# recursive reverse dependancies scan
+# recursive reverse dependencies scan
 rdep_scan()
 {
 for i in $1; do
@@ -961,7 +961,7 @@ case "$COMMAND" in
 		echo ""
 		;;
 	list-mirror)
-		# List all available packages on the mirror. Option --diff display
+		# List all available packages on the mirror. Option --diff displays
 		# last mirrored packages diff (see recharge).
 		check_for_packages_list
 		case $2 in
@@ -1650,7 +1650,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 				NEW_PACKAGE=$(get_package_filename $PACKAGE)
 
 				if [ -n "$NEW_PACKAGE" ]; then
-					# Set new pkg and version for futur comparaison
+					# Set new pkg and version for future comparison
 					NEW_VERSION=`echo $NEW_PACKAGE | sed s/$PACKAGE-/''/`
 					# Change '-' and 'pre' to points.
 					NEW_VERSION=`echo $NEW_VERSION | sed s/'-'/'.'/`
@@ -1659,9 +1659,9 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 					VERSION=`echo $VERSION | sed s/'pre'/'.'/`
 					NEW_VERSION=`echo $NEW_VERSION | sed 's/[A-Z]\.//'`
 					VERSION=`echo $VERSION | sed 's/[A-Z]\.//'`
-					# Compare version. Upgrade are only available for official
-					# packages, so we control de mirror and it should be ok if
-					# we just check for egality.
+					# Compare version. Upgrades are only available for official
+					# packages, so we control the mirror and it should be ok if
+					# we just check for equality.
 					RELEASE=""
 					if [ -f installed.md5 -a -f packages.md5 ]; then
 						current_md5=$(grep -s "  $PACKAGE-$VERSION" installed.md5 | awk '{ print $1 }')
@@ -1735,7 +1735,7 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 		if [ "$FIXE" == "yes" ]; then
 			echo -e "$WARNING ---> Installed package seems more recent than the mirrored one."
 			echo "You can block packages using the command : 'tazpkg block package'"
-			echo "Or upgrade package at you own risks."
+			echo "Or upgrade packages at your own risk."
 			echo ""
 		fi
 		# Ask for upgrade, it can be done another time.
@@ -2100,7 +2100,7 @@ EOT
 		done
 		;;
 	depends)
-		# Display dependancies tree
+		# Display dependencies tree
 		cd $INSTALLED
 		ALL_DEPS=""
 		if [ -f $2/receipt ]; then
@@ -2108,7 +2108,7 @@ EOT
 		fi
 		;;
 	rdepends)
-		# Display reverse dependancies tree
+		# Display reverse dependencies tree
 		cd $INSTALLED
 		ALL_DEPS=""
 		if [ -f $2/receipt ]; then

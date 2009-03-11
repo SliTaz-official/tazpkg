@@ -170,7 +170,7 @@ export LIST_FILES_MIRROR="
 </window>
 "
 
-# Installed or not installed, that the question.
+# Installed or not installed, that is the question!
 if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 	PACKED_SIZE=""
 	DEPENDS=""

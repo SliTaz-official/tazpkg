@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 # GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Notes: 
-# Notebook tab are vbox, tab are used to indent and functions are 
-# splited ang found in $LIB.
+# Notebook tab are vbox, tabs are used to indent and functions are 
+# split and found in $LIB.
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2009.
 #
@@ -22,15 +22,15 @@ if [ ! -f /var/lib/tazpkg/mirror ]; then
 	tazpkg >/dev/null
 fi
 
-# Tmp dir and files used to get pkgs infos on the fly. Clean also
-# list and search files to load less data and have a faster start.
+# Tmp dir and files used to get pkgs info on the fly. Clean also
+# lists and searches for files to load less data and have a faster start.
 mkdir -p /tmp/tazpkgbox
 echo "all" > /tmp/tazpkgbox/status
 echo "all" > /tmp/tazpkgbox/category
 echo "all" > /tmp/tazpkgbox/undigest-category
 echo "" > /tmp/tazpkgbox/search
 
-# English/French help dialod.
+# English/French help dialog.
 export HELP='
 <window title="Tazpkgbox Help" icon-name="help">
 <vbox>
@@ -155,7 +155,7 @@ export SETUP_UNDIGEST='
 </window>
 '
 
-# Scan notifycation
+# Scan notification
 desktopbox notify "Scanning packages database" 6 &
 
 # Main dialog
