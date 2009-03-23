@@ -1579,7 +1579,8 @@ EOT
 				mv -f packages.txt packages.txt.bak 2>/dev/null
 				mv -f packages.list packages.list.bak 2>/dev/null
 				mv -f packages.equiv packages.equiv.bak 2>/dev/null
-				mv -f files.list.lzma files.list.lzma.bak 2> /dev/nul
+				mv -f files.list.lzma files.list.lzma.bak 2> /dev/null
+				mv -f mirrors mirrors.bak 2> /dev/null
 				status
 			fi
 			download_from "$(cat mirror)" packages.desc
@@ -1589,6 +1590,7 @@ EOT
 			download_from "$(cat mirror)" packages.equiv
 			download_from "$(cat mirror)" files.list.lzma
 			download_from "$(cat mirror)" mirrors
+			[ -f mirrors ] || mv mirrors.bak mirrors 2> /dev/null
 			suffix=$(head -1 mirror)
 			suffix=packages${suffix#*/packages}
 			for i in $(cat mirrors 2> /dev/null); do
