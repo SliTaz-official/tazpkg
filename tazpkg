@@ -174,8 +174,8 @@ Unable to find : $PACKAGE_FILE\n"
 # Check for the receipt of an installed package.
 check_for_receipt()
 {
-	if [ ! -f "$INSTALLED/$PACKAGE/receipt" ]; then
-		echo -e "\nUnable to find the receipt : $INSTALLED/$PACKAGE/receipt\n"
+	if [ ! -f "$1$INSTALLED/$PACKAGE/receipt" ]; then
+		echo -e "\nUnable to find the receipt : $1$INSTALLED/$PACKAGE/receipt\n"
 		exit 0
 	fi
 }
@@ -2064,14 +2064,27 @@ EOT
 		#
 		check_for_package_on_cmdline
 		check_root
-		if [ -d "$INSTALLED/$PACKAGE" ]; then
-			check_for_receipt
+		ROOT=""
+		while [ -n "$3" ]; do
+			case "$3" in
+			--root=*)
+				ROOT="${3#--root=}/"
+				;;
+			*)	shift 2
+				echo -e "\nUnknown option $*.\n"
+				exit 1
+				;;
+			esac
+			shift
+		done
+		if [ -d "$ROOT$INSTALLED/$PACKAGE" ]; then
+			check_for_receipt $ROOT
 			# Check for post_install
-			if grep -q ^post_install $INSTALLED/$PACKAGE/receipt; then
-				. $INSTALLED/$PACKAGE/receipt
-				post_install
+			if grep -q ^post_install $ROOT$INSTALLED/$PACKAGE/receipt; then
+				. $ROOT$INSTALLED/$PACKAGE/receipt
+				post_install $ROOT
 				# Log this activity
-				log Reconfigured
+				[ -n "$ROOT" ] || log Reconfigured
 			else 
 				echo -e "\nNothing to do for $PACKAGE."
 			fi
