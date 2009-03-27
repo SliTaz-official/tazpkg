@@ -368,10 +368,14 @@ install_package()
 		if grep -q ^pre_depends $TMP_DIR/receipt; then
 			pre_depends $ROOT
 		fi
-		rm -rf $TMP_DIR $ROOT$INSTALLED/$PACKAGE 2> /dev/null
+		# keep modifers list on upgrade
+		cp $ROOT$INSTALLED/$PACKAGE/modifiers $TMP_DIR 2> /dev/null
+		rm -rf $ROOT$INSTALLED/$PACKAGE 2> /dev/null
 		# Make the installed package data dir to store
 		# the receipt and the files list.
 		mkdir -p $ROOT$INSTALLED/$PACKAGE
+		cp $TMP_DIR/modifiers $ROOT$INSTALLED/$PACKAGE 2> /dev/null
+		rm -rf $TMP_DIR 2> /dev/null
 		sed -i "/ $(basename $PACKAGE_FILE)$/d" \
 			$ROOT$LOCALSTATE/installed.md5 2> /dev/null
 		cd $(dirname $PACKAGE_FILE)
@@ -411,15 +415,23 @@ install_package()
 		[ -e "$ROOT$i" ] || continue
 		[ -d "$ROOT$i" ] && continue
 		for j in $(grep -l "^$i$" $ROOT$INSTALLED/*/files.list); do
+			local dir
+			dir=$(dirname $j)
 			[ "$j" = "$ROOT$INSTALLED/$PACKAGE/files.list" ] && continue
-			grep -qs ^$PACKAGE$ $(dirname $j)/modifiers && continue
-			if [ -s "$(dirname $j)/volatile.cpio.gz" ]; then
+			if grep -qs ^$(basename $dir)$ \
+				  $ROOT$INSTALLED/$PACKAGE/modifiers; then
+				# Do not overload an overloaded file !
+				rm .$i 2> /dev/null
+				continue
+			fi
+			grep -qs ^$PACKAGE$ $dir/modifiers && continue
+			if [ -s "$dir/volatile.cpio.gz" ]; then
 				# We can modify backed up files
-				zcat $(dirname $j)/volatile.cpio.gz | \
+				zcat $dir/volatile.cpio.gz | \
 					cpio -t 2> /dev/null | \
 					grep -q "^${i#/}$" && continue
 			fi
-			echo "$PACKAGE" >> $(dirname $j)/modifiers
+			echo "$PACKAGE" >> $dir/modifiers
 		done
 	done
 	cp receipt files.list $ROOT$INSTALLED/$PACKAGE
