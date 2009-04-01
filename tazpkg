@@ -1299,14 +1299,17 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 				pre_remove
 			fi
 			echo -n "Removing all files installed..."
-			for file in `cat $INSTALLED/$PACKAGE/files.list`
+			for mod in `cat $INSTALLED/$PACKAGE/modifiers 2> /dev/null`
 			do
-				[ $(grep ^$file$ $INSTALLED/*/files.list | wc -l) -gt 1 ] && continue
-				rm -f $file 2>/dev/null
-				dir="$file"
-				while [ "$dir" != "/" ]; do
-					dir="$(dirname $dir)"
-					rmdir $dir 2> /dev/null || break
+				for file in `cat $INSTALLED/$PACKAGE/files.list`
+				do
+					[ $(grep ^$file$ $INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue
+					rm -f $file 2>/dev/null
+					dir="$file"
+					while [ "$dir" != "/" ]; do
+						dir="$(dirname $dir)"
+						rmdir $dir 2> /dev/null || break
+					done
 				done
 			done
 			status
