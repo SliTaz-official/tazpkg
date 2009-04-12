@@ -1320,6 +1320,8 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo -n "Removing package receipt..."
 			rm -rf $INSTALLED/$PACKAGE
 			status
+			sed -i "/ $PACKAGE-$VERSION$EXTRAVERSION$/d" \
+				$LOCALSTATE/installed.md5 2> /dev/null
 			# Log this activity
 			log Removed
 			if [ -n "$ALTERED" ]; then
