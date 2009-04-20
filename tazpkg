@@ -13,7 +13,7 @@
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
 #
-VERSION=2.6.1
+VERSION=2.8.1
 
 ####################
 # Script variables #
