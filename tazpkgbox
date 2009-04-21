@@ -22,6 +22,26 @@ if [ ! -f /var/lib/tazpkg/mirror ]; then
 	tazpkg >/dev/null
 fi
 
+RELEASE=$(cat /etc/slitaz-release)
+case "$1" in
+dliso)
+	echo "Downloading packages-$RELEASE.iso into $2..."
+	cd $2
+	for i in $(cat /var/lib/tazpkg/mirror) ; do
+		wget ${i%packages*}/iso/$RELEASE/packages-$RELEASE.iso && break
+	done
+	exit 0;;
+instiso)
+	PKGSIGN="LABEL=\"packages-$RELEASE\" TYPE=\"iso9660\""
+	PKGDEV=$(blkid $2 | grep "$PKGSIGN" | cut -d: -f1)
+	[ -z "$PKGDEV$2" -a -L /dev/cdrom ] && PKGDEV=$(blkid /dev/cdrom | grep "$PKGSIGN" | cut -d: -f1)
+	if [ -n "$PKGDEV" ]; then
+		mkdir /packages 2> /dev/null
+		mount -t iso9660 -o ro $PKGDEV /packages
+		/packages/install.sh
+	fi
+	exit 0;;
+esac
 # Tmp dir and files used to get pkgs info on the fly. Clean also
 # lists and searches for files to load less data and have a faster start.
 mkdir -p /tmp/tazpkgbox
@@ -74,6 +94,85 @@ et installer des logiciels ou fichiers."
 
 FILES="$2"
 [ "$1" = "list_config" ] || FILES=""
+
+export SETUP_DVD="
+<window title=\"Packages archive\" icon-name=\"media-cdrom\">
+<vbox>
+	<text use-markup=\"true\" width-chars=\"54\">
+		<label>\"
+<b>Tazpkgbox - Packages Archive Manager</b>\"
+		</label>
+	</text>
+	<frame English>
+		<text wrap=\"false\">
+			<label>\"
+An ISO image with all $(cat /etc/slitaz-release) packages is available on Slitaz mirrors.
+You can burn it on a DVD or install it on an USB key and each
+package becomes installable without Internet connexion.\"
+			</label>
+		</text>
+	</frame>
+
+	<frame Français>
+		<text wrap=\"false\">
+			<label>\"
+Une image ISO installable sur clé USB ou gravable sur DVD est 
+disponible sur les mirroirs Slitaz. Elle contient tous les paquets
+de la version $(cat /etc/slitaz-release) pour pouvoir installer des paquets sans
+connexion Internet.\"
+			</label>
+		</text>
+	</frame>
+	<frame>
+	<hbox>
+		<text use-markup=\"true\">
+			<label>\"<b>ISO image : </b>\"</label>
+		</text>
+		<entry>
+			<variable>PKGISO</variable>
+		</entry>
+		<button>
+			<input file stock=\"gtk-open\"></input>
+			<action type=\"fileselect\">PKGISO</action>
+		</button>
+		<button>
+			<label>Install ISO</label>
+			<input file icon=\"go-jump\"></input>
+			<action>xterm -T \"Install ISO\" -geometry 80x16+120+120 -e \"tazpkgbox instiso \$PKGISO; sleep 2\" 2>/dev/null</action>
+			<action>refresh:PKG</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</button>
+	</hbox>
+	</frame>
+	<hbox>
+		<button>
+			<label>Download ISO</label>
+			<input file icon=\"system-software-update\"></input>
+			<action>xterm -T \"Download ISO\" -geometry 80x16+120+120 -e \"tazpkgbox dliso /tmp; sleep 2\" 2>/dev/null</action>
+		</button>
+		<button>
+			<input file icon=\"media-cdrom\"></input>
+			<label>Burn DVD</label>
+			<action>burnbox</action>
+		</button>
+		<button>
+			<label>Install DVD/USB key</label>
+			<input file icon=\"go-jump\"></input>
+			<action>xterm -T \"Install DVD/USB key\" -geometry 80x16+120+120 -e \"tazpkgbox instiso; sleep 2\" 2>/dev/null</action>
+			<action>refresh:PKG</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		</button>
+		<button>
+			<input file icon=\"gtk-close\"></input>
+			<action type=\"closewindow\">SETUP_DVD</action>
+		</button>
+	</hbox>
+</vbox>
+</window>
+"
+
 export LIST_CONFIG_FILES="
 <window title=\"configuration files\" icon-name=\"system-file-manager\">
   <vbox>
@@ -361,6 +460,11 @@ The cache directory is used to store downloaded or repacked packages.
 					<action>echo "$MIRROR" >> /var/lib/tazpkg/mirror</action>
 					<action>clear:MIRROR</action>
 					<action>refresh:MIRROR</action>
+				</button>
+				<button>
+					<input file icon="media-cdrom"></input>
+					<label>DVD</label>
+					<action type="launch">SETUP_DVD</action>
 				</button>
 			</hbox>
 		</frame>
