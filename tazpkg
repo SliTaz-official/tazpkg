@@ -843,24 +843,33 @@ done
 # recursive reverse dependencies scan
 rdep_scan()
 {
-for i in $1; do
-	case " $ALL_DEPS " in
-	*\ $i\ *) continue;;
-	esac
-	ALL_DEPS="$ALL_DEPS $i"
-	[ -n "$2" ] && echo "$2$i"
-	RDEPENDS=""
-	for j in *; do
-		[ -f $j/receipt ] || continue
-		DEPENDS=""
-		. $j/receipt
-		case " $(echo $DEPENDS) " in
-		*\ $i\ *)
-			RDEPENDS="$RDEPENDS $j";;
-		esac
-	done
-	[ -n "$RDEPENDS" ] && rdep_scan "$RDEPENDS" "$2  "
-done
+SEARCH=$1
+
+for i in * ; do
+	DEPENDS=""
+	. $i/receipt
+	echo "$i $(echo $DEPENDS)"
+done | awk -v search=$SEARCH '
+function show_deps(deps, all_deps, pkg, space)
+{
+	if (all_deps[pkg] == 1) return
+	all_deps[pkg] = 1
+	if (space != "") printf "%s%s\n",space,pkg
+	for (i = 1; i <= split(deps[pkg], mydeps, " "); i++) {
+		show_deps(deps, all_deps, mydeps[i],"  " space)
+	}
+}
+
+{
+	all_deps[$1] = 0
+	for (i = 2; i <= NF; i++)
+		deps[$i] = deps[$i] " " $1
+}
+
+END {
+	show_deps(deps, all_deps, search, "")
+}
+'
 }
 
 ###################
@@ -2156,7 +2165,7 @@ EOT
 		cd $INSTALLED
 		ALL_DEPS=""
 		if [ -f $2/receipt ]; then
-			rdep_scan $2 ""
+			rdep_scan $2
 		fi
 		;;
 	usage|*)
