@@ -228,7 +228,7 @@ packages available on the mirror.\n"
 	fi
 }
 
-# get package from packages.equiv
+# get an already installed package from packages.equiv
 equivalent_pkg()
 {
 	for i in $(grep -hs "^$1=" $LOCALSTATE/packages.equiv \
@@ -254,6 +254,27 @@ equivalent_pkg()
 	echo $1
 }
 
+# get a virtual package from packages.equiv
+virtual_pkg()
+{
+	for i in $(grep -hs "^$1=" $LOCALSTATE/packages.equiv \
+		   $LOCALSTATE/undigest/*/packages.equiv | sed "s/^$1=//"); do
+		if echo $i | grep -q : ; then
+			# format 'alternative:newname'
+			# if alternative is installed then substitute newname
+			if [ -f $2$INSTALLED/${i%:*}/receipt ]; then
+				# substitute package dependancy
+				echo ${i#*:}
+				return
+			fi
+		else
+			# if alternative is installed then nothing to install
+			echo $i
+			return
+		fi
+	done
+}
+
 # Get package filename available on the mirror
 get_package_filename()
 {
@@ -273,7 +294,7 @@ get_package_filename()
 	if [ -z "$pkg" ]; then
 		# Check for vitual package
 		local equiv
-		equiv=$(equivalent_pkg $1 virtual)
+		equiv=$(virtual_pkg $1)
 		if [ "$equiv" != "$1" ]; then
 			PACKAGE=$equiv
 			get_package_filename $PACKAGE
