@@ -933,7 +933,7 @@ convert_rpm()
 	mkdir -p $TMP_DIR
 	cp $PACKAGE_FILE $TMP_DIR
 	PACKAGE_FILE=$TMP_DIR/$(basename $PACKAGE_FILE)
-	rpm -qip $PACKAGE_FILE | awk -v pkg=$PACKAGE_FILE '
+	rpm -qip $PACKAGE_FILE | awk -v pkg=$(basename $PACKAGE_FILE) '
 BEGIN {
 	goturl=0;
 	printf "# Taz package receipt.\n";
