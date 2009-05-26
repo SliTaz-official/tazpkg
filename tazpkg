@@ -895,6 +895,53 @@ END {
 '
 }
 
+# Check for ELF file
+is_elf()
+{
+	[ "$(dd if=$1 bs=1 skip=1 count=3 2> /dev/null)" = "ELF" ]
+}
+
+# Print shared library dependencies
+ldd()
+{
+	LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so $1 2> /dev/null
+}
+
+# search dependencies for files in $TMP_DIR/$file/fs
+find_depends()
+{
+	DEFAULT_DEPENDS="glibc-base gcc-lib-base"
+
+	[ -f /var/lib/tazpkg/files.list.lzma ] || tazpkg recharge
+	for i in /var/lib/tazpkg/files.list.lzma \
+ 		/var/lib/tazpkg/undigest/*/files.list.lzma ; do
+ 		[ -f $i ] && lzma d $i -so >> $TMP_DIR/files.list
+	done
+	find $TMP_DIR/$file/fs -type f | while read file ; do
+		is_elf $file || continue
+		case "$file" in
+		*.o|*.ko|*.ko.gz) continue;;
+		esac
+		ldd $file | while read lib rem; do
+			case "$lib" in
+			statically|linux-gate.so*|ld-*.so|*/ld-*.so)
+				continue;;
+			esac
+			for dep in $(grep $lib files.list | cut -d: -f1); do
+				case " $DEFAULT_DEPENDS $ALL_DEPENDS " in
+				*\ $dep\ *) continue 2;;
+				esac
+			done
+			ALL_DEPENDS="$ALL_DEPENDS $dep"
+			if [ -n "$dep" ]; then
+				echo -n " $dep"
+			else
+				echo "$WARNING: unknown dependency for $lib" 1>&2
+			fi
+		done
+	done
+}
+
 # convert a .deb package to .tazpkg
 convert_deb()
 {
@@ -919,8 +966,14 @@ CATEGORY="misc"
 SHORT_DESC="$descrip"
 WEB_SITE="http://packages.debian.org/search?keywords=$package"
 MAINTAINER="nobody@slitaz.org" 
-DEPENDS=""
+DEPENDS="$(find_depends)"
 EOT
+	awk '
+{
+   if (/^ / && show) print substr($0,2);
+   else show=0;
+   if (/^Description/) show=1;
+}' < $TMP_DIR/control > $file/description.txt
 	tazpkg pack $file
 	mv $file.tazpkg $TOP_DIR
 	cd $TOP_DIR
@@ -967,6 +1020,7 @@ DEGIN { show=0 }
 	cd $TMP_DIR/$file/fs/
 	rpm2cpio $PACKAGE_FILE | cpio -idm
 	cd ../..
+	echo "DEPENDS=\"$(find_depends)\"" >> $TMP_DIR/receipt
 	tazpkg pack $file
 	mv $file.tazpkg $TOP_DIR
 	cd $TOP_DIR
