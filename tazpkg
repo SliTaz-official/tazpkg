@@ -936,10 +936,20 @@ find_depends()
 			if [ -n "$dep" ]; then
 				echo -n " $dep"
 			else
-				echo "WARNING: unknown dependency for $lib" 1>&2
+				echo "$lib" >> $TMP_DIR/unresolved
 			fi
 		done
 	done
+}
+
+show_unresolved_lib()
+{
+	if [ -s $TMP_DIR/unresolved ]; then
+		echo "BUGS=\"No dependency for $(cat $TMP_DIR/unresolved)\"" >> $1
+		for lib in $(cat $TMP_DIR/unresolved) ; do
+			echo -e "$WARNING: unknown dependency for $lib"
+		done
+	fi
 }
 
 # convert a .deb package to .tazpkg
@@ -968,6 +978,7 @@ WEB_SITE="http://packages.debian.org/search?keywords=$package"
 MAINTAINER="nobody@slitaz.org" 
 DEPENDS="$(find_depends)"
 EOT
+	show_unresolved_lib $file/receipt
 	awk '
 {
    if (/^ / && show) print substr($0,2);
@@ -1021,7 +1032,8 @@ DEGIN { show=0 }
 	cd $TMP_DIR/$file/fs/
 	rpm2cpio $PACKAGE_FILE | cpio -idm
 	cd ../..
-	echo "DEPENDS=\"$(find_depends)\"" >> $TMP_DIR/receipt
+	echo "DEPENDS=\"$(find_depends)\"" >> $TMP_DIR/$file/receipt
+	show_unresolved_lib $TMP_DIR/$file/receipt
 	tazpkg pack $file
 	mv $file.tazpkg $TOP_DIR
 	cd $TOP_DIR
