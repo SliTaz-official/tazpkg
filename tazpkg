@@ -936,7 +936,7 @@ find_depends()
 			if [ -n "$dep" ]; then
 				echo -n " $dep"
 			else
-				echo "$WARNING: unknown dependency for $lib" 1>&2
+				echo "WARNING: unknown dependency for $lib" 1>&2
 			fi
 		done
 	done
@@ -974,6 +974,7 @@ EOT
    else show=0;
    if (/^Description/) show=1;
 }' < $TMP_DIR/control > $file/description.txt
+	sed -i 's/^\.$//' $file/description.txt
 	tazpkg pack $file
 	mv $file.tazpkg $TOP_DIR
 	cd $TOP_DIR
