@@ -108,7 +108,7 @@ usage ()
   recharge         Recharge your packages.list from the mirror.
   repack           Create a package archive from an installed package.
   repack-config    Create a package archive with configuration files.
-  upgrade          Upgrade all installed and listed packages on the mirror.
+  upgrade          Upgrade one or all installed and listed packages on the mirror.
   block|unblock    Block an installed package version or unblock it for upgrade.
   get              Download a package into the current directory.
   get-install      Download and install a package from the mirror.
@@ -1841,7 +1841,12 @@ a list of differencies will be displayed to show new and upgradeable packages.\n
 		echo ""
 		# Some packages must be installed first
 		FIRST_CLASS_PACKAGE=" glibc-base slitaz-base-files slitaz-boot-scripts "
-		for pkg in $INSTALLED/*
+		if [ -n "$PACKAGE_FILE" -a -d "$INSTALLED/$PACKAGE_FILE" ]; then
+			ALL=$INSTALLED/$PACKAGE_FILE
+		else
+			ALL="$(ls -d $INSTALLED/*)"
+		fi
+		for pkg in $ALL
 		do 
 			[ -f $pkg/receipt ] || continue
 			EXTRAVERSION=""
