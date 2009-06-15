@@ -90,9 +90,9 @@ usage ()
        tazpkg shell\n
 \033[1mCommands: \033[0m
   usage            Print this short usage.
-  bugs             Show known bugs in packages
+  bugs             Show known bugs in packages.
   list             List installed packages on the system by category or all.
-  xhtml-list       Create a xHTML list of installed packges.
+  xhtml-list       Create a xHTML list of installed packages.
   list-mirror      List all available packages on the mirror (--diff for new).
   info             Print information about a package.
   desc             Print description of a package (if it exists).
@@ -116,12 +116,12 @@ usage ()
   check            Verify consistency of installed packages.
   add-flavor       Install the flavor list of packages.
   install-flavor   Install the flavor list of packages and remove other ones.
-  set-release      Change release and update packages
+  set-release      Change release and update packages.
   clean-cache      Clean all packages downloaded in cache directory.
   depends          Display dependencies tree.
   rdepends         Display reverse dependencies tree.
-  convert          convert a debian or rpm package to a slitaz package (.tazpkg)
-  link             link a package from another slitaz installation
+  convert          Convert a debian or rpm package to a slitaz package (.tazpkg).
+  link             Link a package from another slitaz installation.
   setup-mirror     Change the mirror url configuration.
   list-undigest    List undigest mirrors.
   remove-undigest  Remove an undigest mirror.
@@ -1821,7 +1821,7 @@ EOT
 				echo -e "
 ================================================================================
 Last packages.list is ready to use. Note that next time you recharge the list,
-a list of differencies will be displayed to show new and upgradeable packages.\n"
+a list of differences will be displayed to show new and upgradeable packages.\n"
 			fi
 		done
 		;;
@@ -2360,7 +2360,7 @@ EOT
 		     ! -d "$TARGET_DIR$INSTALLED/$PACKAGE" ]; then
 			cat <<EOT
 usage:   tazpkg link package_name slitaz_root
-example: 'tazpkg link openoffice /mnt' will heat less than 100k in
+example: 'tazpkg link openoffice /mnt' will use less than 100k in
          your ram running system.
 EOT
 			exit 1
