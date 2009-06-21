@@ -509,7 +509,7 @@ install_package()
 			rm -f $ROOT$file
 			dir=$(dirname $ROOT$file)
 			while true; do
-				rmdir $dir 2> /dev/null || break
+				rmdir $dir 2> /dev/null || { true; break; }
 				dir=$(dirname $dir)
 			done
 		done < files2remove.list
