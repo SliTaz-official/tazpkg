@@ -391,13 +391,15 @@ install_package()
 		if grep -q ^pre_depends $TMP_DIR/receipt; then
 			pre_depends $ROOT
 		fi
-		# keep modifers list on upgrade
-		cp $ROOT$INSTALLED/$PACKAGE/modifiers $TMP_DIR 2> /dev/null
+		# keep modifers and file list on upgrade
+		cp $ROOT$INSTALLED/$PACKAGE/modifiers \
+		   $ROOT$INSTALLED/$PACKAGE/files.list $TMP_DIR 2> /dev/null
 		rm -rf $ROOT$INSTALLED/$PACKAGE 2> /dev/null
 		# Make the installed package data dir to store
 		# the receipt and the files list.
 		mkdir -p $ROOT$INSTALLED/$PACKAGE
 		cp $TMP_DIR/modifiers $ROOT$INSTALLED/$PACKAGE 2> /dev/null
+		cp $TMP_DIR/files.list $ROOT$INSTALLED/$PACKAGE 2> /dev/null
 		rm -rf $TMP_DIR 2> /dev/null
 		sed -i "/ $(basename $PACKAGE_FILE)$/d" \
 			$ROOT$LOCALSTATE/installed.md5 2> /dev/null
@@ -424,27 +426,38 @@ install_package()
 	CONFIG_FILES=""
 	# Include temporary receipt to get the right variables.
 	. $PWD/receipt
+	cd $ROOT$INSTALLED
 	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
 		echo -n "Checking post install dependencies... "
 		[ -f $INSTALLED/$PACKAGE/receipt ]
 		if ! status; then
 			echo "Please run 'tazpkg install $PACKAGE_FILE' in / and retry."
-			cd .. && rm -rf $TMP_DIR
+			rm -rf $TMP_DIR
 			exit 1
 		fi
+	fi
+	# Get files to remove if upgrading
+	if [ -f $PACKAGE/files.list ]; then
+		while read file; do
+			grep -q "^$file$" $TMP_DIR/files.list && continue
+			for i in $(cat $PACKAGE/modifiers 2> /dev/null ; 
+			    grep -sl $PACKAGE */modifiers | cut -d/ -f1 ); do
+				grep -q "^$file$" $i/files.list && continue 2
+			done
+			echo $file
+		done < $PACKAGE/files.list > $TMP_DIR/files2remove.list
 	fi
 	# Remember modified packages
 	for i in $(grep -v '\[' files.list); do
 		[ -e "$ROOT$i" ] || continue
 		[ -d "$ROOT$i" ] && continue
-		for j in $(grep -l "^$i$" $ROOT$INSTALLED/*/files.list); do
+		for j in $(grep -l "^$i$" */files.list); do
 			local dir
 			dir=$(dirname $j)
-			[ "$j" = "$ROOT$INSTALLED/$PACKAGE/files.list" ] && continue
-			if grep -qs ^$(basename $dir)$ \
-				  $ROOT$INSTALLED/$PACKAGE/modifiers; then
+			[ "$j" = "$PACKAGE/files.list" ] && continue
+			if grep -qs ^$dir$ $PACKAGE/modifiers; then
 				# Do not overload an overloaded file !
-				rm .$i 2> /dev/null
+				rm $TMP_DIR$i 2> /dev/null
 				continue
 			fi
 			grep -qs ^$PACKAGE$ $dir/modifiers && continue
@@ -457,6 +470,7 @@ install_package()
 			echo "$PACKAGE" >> $dir/modifiers
 		done
 	done
+	cd $TMP_DIR
 	cp receipt files.list $ROOT$INSTALLED/$PACKAGE
 	# Copy the description if found.
 	if [ -f "description.txt" ]; then
@@ -489,6 +503,18 @@ install_package()
 	echo -n "Installing $PACKAGE... "
 	cp -a fs/* $ROOT/
 	status
+	if [ -s files2remove.list ]; then
+		echo -n "Removing old $PACKAGE... "
+		while read file; do
+			rm -f $ROOT$file
+			dir=$(dirname $ROOT$file)
+			while true; do
+				rmdir $dir 2> /dev/null || break
+				dir=$(dirname $dir)
+			done
+		done < files2remove.list
+		status
+	fi
 	# Remove the temporary random directory.
 	echo -n "Removing all tmp files... "
 	cd .. && rm -rf $TMP_DIR
@@ -503,7 +529,6 @@ install_package()
 	echo ""
 	# Log this activity
 	[ -n "$ROOT" ] || log Installed
-
 }
 
 # Check for loop in deps tree.
