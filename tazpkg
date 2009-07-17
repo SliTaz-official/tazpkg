@@ -980,8 +980,9 @@ show_unresolved_lib()
 # convert a .tgz package to .tazpkg
 convert_tgz()
 {
+	package=$(basename $PACKAGE_FILE)
 	IFS='-'
-	set -- $(basename $PACKAGE_FILE)
+	set -- $package
 	unset IFS
 	package=$1
 	version=$2
@@ -1010,7 +1011,7 @@ post_install()
 {
 chroot \$1/ sh - << EOT
 cd /
-$(cat $file/fs/install/doinst.sh)
+$(cat $file/fs/install/doinst.sh | sed -e 's/\\/\\\\/g' -e 's/\$/$$/g')
 EOT
 }
 EOM
