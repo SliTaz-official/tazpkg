@@ -1011,7 +1011,7 @@ post_install()
 {
 chroot \$1/ sh - << EOT
 cd /
-$(cat $file/fs/install/doinst.sh | sed -e 's/\\/\\\\/g' -e 's/\$/$$/g')
+$(cat $file/fs/install/doinst.sh)
 EOT
 }
 EOM
