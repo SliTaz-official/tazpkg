@@ -1,12 +1,12 @@
 #!/bin/sh
 #
-# GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Notes: 
-# Notebook tab are vbox, tabs are used to indent and functions are 
+# GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Notes:
+# Notebook tab are vbox, tabs are used to indent and functions are
 # split and found in $LIB.
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2009.
 #
-VERSION=2.8.1
+VERSION=3.0
 
 # Functions path.
 export LIB=/usr/lib/slitaz/tazpkgbox
@@ -116,7 +116,7 @@ package becomes installable without Internet connexion.\"
 	<frame Français>
 		<text wrap=\"false\">
 			<label>\"
-Une image ISO installable sur clé USB ou gravable sur DVD est 
+Une image ISO installable sur clé USB ou gravable sur DVD est
 disponible sur les mirroirs Slitaz. Elle contient tous les paquets
 de la version $(cat /etc/slitaz-release) pour pouvoir installer des paquets sans
 connexion Internet.\"
@@ -326,7 +326,7 @@ export TAZPKG_DIALOG='
 			</button>
 		</hbox>
 	</vbox>
-	
+
 	<vbox>
 		<tree>
 			<width>620</width><height>120</height>

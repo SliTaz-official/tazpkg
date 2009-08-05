@@ -1,9 +1,9 @@
-README for Tazpkg -  Tiny autonomus packages manager                       2008
+README for Tazpkg -  Tiny autonomus packages manager                       2009
 ===============================================================================
 
 
-Tazpkg est un gestionnaire de paquets ultra légé (~35 Ko) permettant 
-d'installer, lister, télécharger, enlever des paquets sur un système 
+Tazpkg est un gestionnaire de paquets ultra légé (~35 Ko) permettant
+d'installer, lister, télécharger, enlever des paquets sur un système
 GNU/Linux. Tazpkg propose aussi une commande de recherche, pour générer une
 liste et des commandes pour la création de paquets. Il a été créé pour les
 besoins de SliTaz GNU/Linux, mini distribution autonome. Le format des paquets
@@ -42,7 +42,7 @@ INSTALL
 
  # cd into/tazpkg-sources
  # make install
- 
+
 Uninstall :
  # make uninstall
 

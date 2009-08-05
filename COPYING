@@ -2,23 +2,23 @@ Tazpkg Copyright License
 ===============================================================================
 
 
-Copyright (c)  2007-2008  SliTaz GNU/Linux
+Copyright (c)  2007-2009  SliTaz GNU/Linux
 
 
 Français
 --------
 
-Tazpkg est un logiciel libre ; vous pouvez le redistribuer et/ou le 
-modifier conformément aux dispositions de la Licence Publique Générale GNU, 
-telle que publiée par la Free Software Foundation ; version 3 de la 
+Tazpkg est un logiciel libre ; vous pouvez le redistribuer et/ou le
+modifier conformément aux dispositions de la Licence Publique Générale GNU,
+telle que publiée par la Free Software Foundation ; version 3 de la
 licence, ou encore (à votre choix) toute version ultérieure.
 
-Tazpkg est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE 
-GARANTIE ; sans même la garantie implicite de COMMERCIALISATION ou 
-D'ADAPTATION À UN OBJET PARTICULIER. Pour plus de détails, voir la Licence 
+Tazpkg est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE
+GARANTIE ; sans même la garantie implicite de COMMERCIALISATION ou
+D'ADAPTATION À UN OBJET PARTICULIER. Pour plus de détails, voir la Licence
 Publique Générale GNU.
 
-Un exemplaire de la Licence Publique Générale GNU doit être fourni avec 
+Un exemplaire de la Licence Publique Générale GNU doit être fourni avec
 Tazpkg si ce n'est pas le cas, écrivez à la Free Software Foundation
 Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
@@ -33,7 +33,7 @@ the Free Software Foundation; either version 3 of the License, or
 
 Tazpkg is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details.
 
 You should have received a copy of the GNU General Public License

@@ -12,8 +12,9 @@
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
+#           Paul Issott <paul@slitaz.org>
 #
-VERSION=2.8.1
+VERSION=3.0
 
 ####################
 # Script variables #
@@ -61,8 +62,27 @@ DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
 INSTALL_LIST=""
 LOG=/var/log/tazpkg.log
 
-# Bold red warning for upgrade.
-WARNING="\\033[1;31mWARNING\\033[0;39m"
+# Messages language setting --> line 230.
+case $LANG in
+	fr*)
+		#. /usr/share/slitaz/messages/fr/tazpkg.msg
+		# Bold red warning for upgrade.
+		WARNING="\\033[1;31mATTENTION\\033[0;39m"
+		CHECK_FOR_PACKAGE_FILE_MSG="Impossible de trouver"
+		CHECK_FOR_RECEIPT_MSG="Impossible de trouver la receipt"
+		CHECK_FOR_INSTALLED_PACKAGE_MSG="\
+$PACKAGE est déjà installé. Vous pouvez utiliser l'option --forced pour
+forcer l'installation ou supprimer le paquet et le réinstaller." ;;
+	*)
+		#. /usr/share/slitaz/messages/en/tazpkg.msg
+		# Bold red warning for upgrade.
+		WARNING="\\033[1;31mWARNING\\033[0;39m"
+		CHECK_FOR_PACKAGE_FILE_MSG="Unable to find"
+		CHECK_FOR_RECEIPT_MSG="Unable to find the receipt"
+		CHECK_FOR_INSTALLED_PACKAGE_MSG="\
+$PACKAGE is already installed. You can use the --forced option to force
+installation or remove it and reinstall." ;;
+esac
 
 # Check if the directories and files used by Tazpkg
 # exist. If not and user is root we create them.
@@ -168,7 +188,7 @@ check_for_package_file()
 {
 	if [ ! -f "$PACKAGE_FILE" ]; then
 		echo -e "
-Unable to find : $PACKAGE_FILE\n"
+$CHECK_FOR_PACKAGE_FILE_MSG : $PACKAGE_FILE\n"
 		exit 0
 	fi
 }
@@ -177,7 +197,7 @@ Unable to find : $PACKAGE_FILE\n"
 check_for_receipt()
 {
 	if [ ! -f "$1$INSTALLED/$PACKAGE/receipt" ]; then
-		echo -e "\nUnable to find the receipt : $1$INSTALLED/$PACKAGE/receipt\n"
+		echo -e "\n$CHECK_FOR_RECEIPT_MSG : $1$INSTALLED/$PACKAGE/receipt\n"
 		exit 0
 	fi
 }
@@ -207,9 +227,7 @@ get_installed_package_pathname()
 check_for_installed_package()
 {
 	if [ -n "$(get_installed_package_pathname $PACKAGE $1)" ]; then
-		echo -e "
-$PACKAGE is already installed. You can use the --forced option to force
-installation or remove it and reinstall.\n"
+		echo -e "\n$CHECK_FOR_INSTALLED_PACKAGE_MSG\n"
 		exit 0
 	fi
 }
@@ -221,9 +239,8 @@ check_for_packages_list()
 		if test $(id -u) = 0 ; then
 			tazpkg recharge
 		else
-			echo -e "
-Unable to find the list : $LOCALSTATE/packages.list\n
-You should probably run 'tazpkg recharge' as root to get the latest list of 
+			echo -e "\nUnable to find the list : $LOCALSTATE/packages.list\n
+You should probably run 'tazpkg recharge' as root to get the latest list of
 packages available on the mirror.\n"
 			exit 0
 		fi
@@ -331,7 +348,7 @@ log()
 	extra=" - $(grep $PACKAGE-$VERSION $LOCALSTATE/installed.md5 | awk '{ print $1 }')"
 	[ -e $LOG ] || touch $LOG
 	DATE=`date +'%F %T'`
-	[ -w $LOG ] && 
+	[ -w $LOG ] &&
 	echo "$DATE - $1 - $PACKAGE ($VERSION$EXTRAVERSION)$extra" >> $LOG
 }
 
@@ -440,7 +457,7 @@ install_package()
 	if [ -f $PACKAGE/files.list ]; then
 		while read file; do
 			grep -q "^$file$" $TMP_DIR/files.list && continue
-			for i in $(cat $PACKAGE/modifiers 2> /dev/null ; 
+			for i in $(cat $PACKAGE/modifiers 2> /dev/null ;
 			    grep -sl $PACKAGE */modifiers | cut -d/ -f1 ); do
 				grep -q "^$file$" $i/files.list && continue 2
 			done
@@ -716,7 +733,7 @@ $packages packages installed - List generated on : $DATE
 _EOT_
 }
 
-# Search pattern in installed packages.		
+# Search pattern in installed packages.
 search_in_installed_packages()
 {
 	echo "Installed packages"
@@ -743,7 +760,7 @@ search_in_installed_packages()
 	fi
 }
 
-# Search in packages.list for available pkgs.	
+# Search in packages.list for available pkgs.
 search_in_packages_list()
 {
 	echo "Available packages name-version"
@@ -768,8 +785,8 @@ please run 'tazpkg recharge' once as root before searching.\n"
 	fi
 }
 
-# search --mirror: Search in packages.txt for available pkgs and give more 
-# info than --list or default.	
+# search --mirror: Search in packages.txt for available pkgs and give more
+# info than --list or default.
 search_in_packages_txt()
 {
 	echo "Matching packages name with version and desc"
@@ -867,7 +884,7 @@ the complete address to the directory of the packages and packages.list file."
 		rm -f $1/mirror
 		for i in $NEW_MIRROR_URL; do
 			echo "$i" >> $1/mirror
-		done 
+		done
 	fi
 	echo ""
 }
@@ -1001,7 +1018,7 @@ VERSION="$version"
 CATEGORY="misc"
 SHORT_DESC="$descrip"
 WEB_SITE="http://www.slackware.com/packages/"
-MAINTAINER="nobody@slitaz.org" 
+MAINTAINER="nobody@slitaz.org"
 DEPENDS="$(find_depends)"
 EOT
 		show_unresolved_lib $file/receipt
@@ -1050,7 +1067,7 @@ VERSION="$version"
 CATEGORY="misc"
 SHORT_DESC="$descrip"
 WEB_SITE="http://packages.debian.org/search?keywords=$package"
-MAINTAINER="nobody@slitaz.org" 
+MAINTAINER="nobody@slitaz.org"
 DEPENDS="$(find_depends)"
 EOT
 	show_unresolved_lib $file/receipt
@@ -1087,7 +1104,7 @@ BEGIN {
 	if (/^URL/) { goturl=1; printf "WEB_SITE=\"%s\"\n",$3; }
 }
 END {
-	if (goturl == 0) 
+	if (goturl == 0)
 		printf "WEB_SITE=\"http://rpmfind.net/linux/rpm2html/search.php?query=%s\"\n",name;
 	printf "CATEGORY=\"misc\"\n";
 	printf "MAINTAINER=\"nobody@slitaz.org\"\n";
@@ -1099,7 +1116,7 @@ END {
 	mv $TMP_DIR/receipt $TMP_DIR/$file
 	rpm -qip $PACKAGE_FILE | awk '
 DEGIN { show=0 }
-{ 
+{
   if (show) print;
   if (/^Description/) show=1;
 }
@@ -1257,7 +1274,7 @@ case "$COMMAND" in
 		echo "================================================================================"
 		pkgs=`cat $LOCALSTATE/packages.list | wc -l`
 		echo "$pkgs packages in the last recharged list."
-		echo "" 
+		echo ""
 		;;
 	list-files)
 		# List files installed with the package.
@@ -1357,7 +1374,7 @@ Maintainer : $MAINTAINER"
 		echo "================================================================================"
 
 		if [ "$3" == "--mirror" ]; then
-		
+
 			match=0
 			for i in $LOCALSTATE/files.list.lzma \
 				 $LOCALSTATE/undigest/*/files.list.lzma; do
@@ -1453,7 +1470,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		else
 			LIST=`cat $2`
 		fi
-		
+
 		# Remember processed list
 		export INSTALL_LIST="$2"
 
@@ -1651,7 +1668,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			mkdir -p $TMP_DIR && cd $TMP_DIR
 			FILES="$INSTALLED/*/volatile.cpio.gz"
 			[ -n "$3" ] && FILES="$INSTALLED/$3/volatile.cpio.gz"
-			for i in $FILES; do 
+			for i in $FILES; do
 				zcat $i | cpio -idm > /dev/null
 				find * -type f 2>/dev/null | while read file; do
 					if [ ! -e /$file ]; then
@@ -1671,7 +1688,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo ""
 			echo -e "\033[1mConfiguration files"
 			echo "================================================================================"
-			for i in $INSTALLED/*/volatile.cpio.gz; do 
+			for i in $INSTALLED/*/volatile.cpio.gz; do
 				[ -n "$2" -a "$i" != "$INSTALLED/$2/volatile.cpio.gz" ] && continue
 				[ -f "$i" ] || continue
 				zcat $i | cpio -t | grep -v "[0-9]* blocks"
@@ -1687,14 +1704,14 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		CONFIG_VERSION=1.0
 		mkdir config-$CONFIG_VERSION
 		cd config-$CONFIG_VERSION
-		for i in $INSTALLED/*/volatile.cpio.gz; do 
+		for i in $INSTALLED/*/volatile.cpio.gz; do
 			zcat $i | cpio -t | grep -v "[0-9]* blocks"
 		done > files.list
 		mkdir fs
 		cd fs
 		( cd / ; cpio -o -H newc ) < ../files.list | cpio -idm > /dev/null
 		mkdir -p etc/tazlito
-		for i in $INSTALLED/*/receipt; do 
+		for i in $INSTALLED/*/receipt; do
 			EXTRAVERSION=""
 			. $i
 			echo "$PACKAGE-$VERSION$EXTRAVERSION"
@@ -1825,8 +1842,8 @@ EOT
 				md5sum description.txt 2> /dev/null | awk \
 				'{ sz=$1 } END { print sz }')
 			echo -n "Undating receipt sizes..."
-			sed -i s/^PACKED_SIZE.*$// receipt	
-			sed -i s/^UNPACKED_SIZE.*$// receipt	
+			sed -i s/^PACKED_SIZE.*$// receipt
+			sed -i s/^UNPACKED_SIZE.*$// receipt
 			sed -i "s/^PACKAGE=/PACKED_SIZE=\"$PACKED_SIZE\"\nUNPACKED_SIZE=\"$UNPACKED_SIZE\"\nPACKAGE=/" receipt
 			status
 			echo -n "Creating full cpio archive... "
@@ -1922,7 +1939,7 @@ a list of differences will be displayed to show new and upgradeable packages.\n"
 			ALL="$(ls -d $INSTALLED/*)"
 		fi
 		for pkg in $ALL
-		do 
+		do
 			[ -f $pkg/receipt ] || continue
 			EXTRAVERSION=""
 			. $pkg/receipt
@@ -1958,7 +1975,7 @@ a list of differences will be displayed to show new and upgradeable packages.\n"
 						[ "$current_md5" != "$new_md5" ] && RELEASE=build
 					fi
 					if [ "$VERSION" != "$NEW_VERSION" -o -n "$RELEASE" ]; then
-						# Version seems different. Check for major, minor or 
+						# Version seems different. Check for major, minor or
 						# revision
 						PKG_MAJOR=`echo ${VERSION%_*} | cut -f1 -d"."`
 						NEW_MAJOR=`echo ${NEW_VERSION%_*} | cut -f1 -d"."`
@@ -2359,7 +2376,7 @@ EOT
 				post_install $ROOT
 				# Log this activity
 				[ -n "$ROOT" ] || log Reconfigured
-			else 
+			else
 				echo -e "\nNothing to do for $PACKAGE."
 			fi
 		else
@@ -2486,9 +2503,7 @@ EOT
 		;;
 	usage|*)
 		# Print a short help or give usage for an unknown or empty command.
-		#
-		usage
-		;;
+		usage ;;
 esac
 
 exit 0
