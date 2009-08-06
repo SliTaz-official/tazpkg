@@ -2,7 +2,7 @@ README for Tazpkg -  Tiny autonomus packages manager                       2009
 ===============================================================================
 
 
-Tazpkg est un gestionnaire de paquets ultra légé (~35 Ko) permettant
+Tazpkg est un gestionnaire de paquets ultra léger (~35 Ko) permettant
 d'installer, lister, télécharger, enlever des paquets sur un système
 GNU/Linux. Tazpkg propose aussi une commande de recherche, pour générer une
 liste et des commandes pour la création de paquets. Il a été créé pour les
@@ -12,11 +12,11 @@ fichiers (fs) compressés avec gzip, la recette et une éventuelle description.
 Tazpkg fournit aussi un système de gestion des dépendances basé sur les
 recettes des paquets. La recette contient toutes les informations au sujet du
 paquet, elle peu aussi contenir les fonctions de pre et post installation.
-Cette même recette est par ailleur utilisée par Tazwok pour compiler les
+Cette même recette est par ailleurs utilisée par Tazwok pour compiler les
 sources et créer un paquet tazpkg.
 
-Tazpkg est écript en script shell depuis rien (from scratch), compatible
-Bash, et fonctionnant avec Ash du projet Busybox. Tazpkg est distribué
+Tazpkg est écrit en script shell depuis rien (from scratch), compatible
+Bash, et fonctionne avec Ash du projet Busybox. Tazpkg est distribué
 sous license libre GNU gpl v3.
 
 

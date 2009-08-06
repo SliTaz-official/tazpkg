@@ -57,7 +57,7 @@ sources et créer un paquet tazpkg.
 </p>
 <p>
 Tazpkg est écrit en script shell depuis rien (from scratch), compatible
-Bash, et fonctionnant avec Ash du projet Busybox. Tazpkg est distribué
+Bash, et fonctionne avec Ash du projet Busybox. Tazpkg est distribué
 sous license libre GNU gpl v3.
 </p>
 
@@ -388,6 +388,15 @@ pre-installation d'un paquet afin de le reconfigurer si besoin est :
 </p>
 <pre>
  # tazpkg reconfigure package
+</pre>
+<a name="convert"></a>
+<h3><font color="#6c0023">convert</font></h3>
+<p>
+La commande 'convert' permet de convertir un paquet Debian (.deb), 
+Redhat (.rpm) ou Slackware (.tgz) en paquet Slitaz (.tazpkg) :
+</p>
+<pre>
+ # tazpkg convert alien-package
 </pre>
 
 <h2>MAINTENEUR</h2>
