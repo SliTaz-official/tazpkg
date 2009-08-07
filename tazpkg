@@ -465,7 +465,7 @@ install_package()
 		done < $PACKAGE/files.list > $TMP_DIR/files2remove.list
 	fi
 	# Remember modified packages
-	for i in $(grep -v '\[' files.list); do
+	for i in $(grep -v '\[' $TMP_DIR/files.list); do
 		[ -e "$ROOT$i" ] || continue
 		[ -d "$ROOT$i" ] && continue
 		for j in $(grep -l "^$i$" */files.list); do
