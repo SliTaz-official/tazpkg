@@ -107,8 +107,8 @@ export SETUP_DVD="
 		<text wrap=\"false\">
 			<label>\"
 An ISO image with all $(cat /etc/slitaz-release) packages is available on Slitaz mirrors.
-You can burn it on a DVD or install it on an USB key and each
-package becomes installable without Internet connexion.\"
+You can burn it onto a DVD or install it on an USB key and each
+package becomes installable without an Internet connection.\"
 			</label>
 		</text>
 	</frame>
