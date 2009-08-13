@@ -128,7 +128,7 @@ usage ()
   recharge         Recharge your packages.list from the mirror.
   repack           Create a package archive from an installed package.
   repack-config    Create a package archive with configuration files.
-  upgrade          Upgrade one or all installed and listed packages on the mirror.
+  upgrade          Upgrade one or all installed/listed package(s) on the mirror.
   block|unblock    Block an installed package version or unblock it for upgrade.
   get              Download a package into the current directory.
   get-install      Download and install a package from the mirror.
