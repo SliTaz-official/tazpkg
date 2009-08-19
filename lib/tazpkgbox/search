@@ -34,6 +34,16 @@ list_files()
 	done
 }
 
+list_package()
+{
+		if [ -d /var/lib/tazpkg/installed/$1 ]; then
+			. /var/lib/tazpkg/installed/$1/receipt
+			echo "tazpkg-installed|$PACKAGE|$VERSION|$SHORT_DESC"
+		else
+			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
+		fi
+}
+
 search_package()
 {
 	IFS="|"
@@ -41,12 +51,7 @@ search_package()
 	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
 	while read PACKAGE VERSION SHORT_DESC; do
 	if echo "$PACKAGE $SHORT_DESC" | grep -q "$SEARCH"; then
-		if [ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ]; then
-			. /var/lib/tazpkg/installed/${PACKAGE%% *}/receipt
-			echo "tazpkg-installed|$PACKAGE|$VERSION|$SHORT_DESC"
-		else
-			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
-		fi
+		list_package ${PACKAGE%% *}
 	fi
 	done 
 	unset IFS
@@ -57,9 +62,22 @@ case "$1" in
 		tazpkg search-file "$SEARCH" --mirror | list_files > \
 			/tmp/tazpkgbox/search ;;
 	packages)
-		search_package > /tmp/tazpkgbox/search ;;
+		( search_package ;
+		  for i in $(grep ^$SEARCH= /var/lib/tazpkg/packages.equiv | \
+		          cut -d= -f2); do
+		        SEARCH=${i#*:}
+		        search_package
+		  done ) > /tmp/tazpkgbox/search ;;
+	tags)
+		grep -ls TAGS /home/slitaz/wok/*/receipt | while read file; do
+			TAGS=""
+			. $file
+			case "$TAGS" in
+			*$SEARCH*) list_package $PACKAGE ;;
+			esac
+		done > /tmp/tazpkgbox/search ;;
 	*)
-		echo "Usage: $0 [packages|files]" ;;
+		echo "Usage: $0 [packages|files|tags]" ;;
 esac
 
 

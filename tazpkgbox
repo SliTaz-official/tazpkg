@@ -357,6 +357,17 @@ export TAZPKG_DIALOG='
 				<action>$LIB/search files</action>
 				<action>refresh:RESULT</action>
 			</button>
+'
+tmp='
+			<button>
+				<label>Tags</label>
+				<input file icon="system-search"></input>
+				<action>$LIB/search tags</action>
+				<action>refresh:RESULT</action>
+			</button>
+'
+[ -d /home/slitaz/wok ] && TAZPKG_DIALOG="$TAZPKG_DIALOG $tmp"
+tmp='
 		</hbox>
 	</vbox>
 
@@ -386,6 +397,7 @@ export TAZPKG_DIALOG='
 			<combobox>
 				<variable>UNDIGEST_ENTRY</variable>
 '
+TAZPKG_DIALOG="$TAZPKG_DIALOG $tmp"
 for i in all $(ls /var/lib/tazpkg/undigest 2> /dev/null); do
 	TAZPKG_DIALOG="$TAZPKG_DIALOG <item>$i</item> "
 done
