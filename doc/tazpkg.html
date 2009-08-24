@@ -205,6 +205,17 @@ forcée :
  # tazpkg install-list my-packages.list
  # tazpkg install-list my-packages.list --forced
 </pre>
+<a name="link"></a>
+<h3><font color="#6c0023">link</font></h3>
+<p>
+Cette commande permet l'installation d'un paquet déjà installé sur un
+autre media. Cette installation s'effectue par des liens symboliques et
+consomme très peu de mémoire. Elle est utilisée généralement avec un système
+en RAM pour installer des compléments depuis une clé USB. 
+</p>
+<pre>
+ # tazpkg link openoffice /media/usbdisk
+</pre>
 <a name="add-flavor"></a>
 <h3><font color="#6c0023">add-flavor</font></h3>
 <p>
@@ -318,6 +329,7 @@ des paquets sont bien présents :
 </p>
 <pre>
  # tazpkg check
+ # tazpkg check --full
 </pre>
 <a name="block"></a>
 <h3><font color="#6c0023">block ou unblock</font></h3>
@@ -380,6 +392,36 @@ la liste (packages.list) et les paquets :
 <pre>
  # tazpkg setup-mirror
 </pre>
+<a name="setup-undigest"></a>
+<h3><font color="#6c0023">setup-undigest ou add-undigest</font></h3>
+<p>
+Configurer l'URL d'un miroir complémentaire non officiel pour tester des
+paquets non encore présents sur les miroirs.
+A noter que vous pouvez aussi modifier à la main le fichier 
+/var/lib/tazpkg/undigest/&lt;undisgest-name&gt;/mirror.
+L'URL doit pointer sur le répertoire contenant
+la liste (packages.list) et les paquets :
+</p>
+<pre>
+ # tazpkg setup-undigest public-repository http://my.home.org/slitaz
+ # tazpkg setup-undigest local-repository /home/slitaz/packages
+</pre>
+<a name="remove-undigest"></a>
+<h3><font color="#6c0023">remove-undigest</font></h3>
+<p>
+Supprime l'URL un miroir complémentaire non officiel.
+</p>
+<pre>
+ # tazpkg remove-undigest my-repository
+</pre>
+<a name="list-undigest"></a>
+<h3><font color="#6c0023">list-undigest</font></h3>
+<p>
+Affiche les miroirs complémentaires.
+</p>
+<pre>
+ # tazpkg list-undigest
+</pre>
 <a name="reconfigure"></a>
 <h3><font color="#6c0023">reconfigure</font></h3>
 <p>
@@ -398,6 +440,32 @@ Slitaz (.tazpkg) :
 </p>
 <pre>
  # tazpkg convert alien-package
+</pre>
+<a name="depend"></a>
+<h3><font color="#6c0023">depend</font></h3>
+<p>
+Affiche l'arbre des dépendances d'un paquet, c'est à dire tous les
+paquets qui devront être installés en plus :
+</p>
+<pre>
+ # tazpkg depend package
+</pre>
+<a name="rdepend"></a>
+<h3><font color="#6c0023">rdepend</font></h3>
+<p>
+Affiche l'arbre des dépendances inversé d'un paquet, c'est à dire tous les
+paquets qui en dépendent directement ou indirectement :
+</p>
+<pre>
+ # tazpkg rdepend package
+</pre>
+<a name="bugs"></a>
+<h3><font color="#6c0023">bugs</font></h3>
+<p>
+Affiche les bugs connus :
+</p>
+<pre>
+ # tazpkg bugs package
 </pre>
 
 <h2>MAINTENEUR</h2>
