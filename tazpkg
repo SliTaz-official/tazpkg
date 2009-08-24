@@ -2147,6 +2147,7 @@ EOT
 			MSG="Missing dependencies for $PACKAGE $VERSION$EXTRAVERSION :\n"
 			for i in $DEPENDS; do
 				[ -d $i ] && continue
+				[ -d $(equivalent_pkg $i) ] && continue
 				echo -e "$MSG  $i"
 				MSG=""
 			done
