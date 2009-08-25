@@ -14,7 +14,7 @@
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
 #           Paul Issott <paul@slitaz.org>
 #
-VERSION=3.0
+VERSION=3.1
 
 ####################
 # Script variables #
