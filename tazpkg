@@ -959,38 +959,47 @@ find_depends()
  		/var/lib/tazpkg/undigest/*/files.list.lzma ; do
  		[ -f $i ] && lzma d $i -so >> $TMP_DIR/files.list
 	done
-	find $TMP_DIR/$file/fs -type f | while read file ; do
-		is_elf $file || continue
-		case "$file" in
+	find $TMP_DIR/$file/fs -type f | while read chkfile ; do
+		is_elf $chkfile || continue
+		case "$chkfile" in
 		*.o|*.ko|*.ko.gz) continue;;
 		esac
-		ldd $file | while read lib rem; do
+		ldd $chkfile | while read lib rem; do
 			case "$lib" in
 			statically|linux-gate.so*|ld-*.so|*/ld-*.so)
 				continue;;
 			esac
+			find $TMP_DIR/$file/fs | grep -q /$lib$ && continue
 			for dep in $(grep $lib files.list | cut -d: -f1); do
-				case " $DEFAULT_DEPENDS $ALL_DEPENDS " in
+				case " $DEFAULT_DEPENDS " in
 				*\ $dep\ *) continue 2;;
 				esac
+				grep -qs "^$dep$" $TMP_DIR/depends && continue 2
 			done
-			ALL_DEPENDS="$ALL_DEPENDS $dep"
 			if [ -n "$dep" ]; then
-				echo -n " $dep"
+				echo "$dep" >> $TMP_DIR/depends
 			else
+				grep -qs ^$lib$ $TMP_DIR/unresolved ||
 				echo "$lib" >> $TMP_DIR/unresolved
 			fi
 		done
+	done
+	spc=""
+	cat $TMP_DIR/depends | sort | uniq | while read file; do
+		echo -n "$spc$file"
+		spc=" "
 	done
 }
 
 show_unresolved_lib()
 {
 	if [ -s $TMP_DIR/unresolved ]; then
-		echo "BUGS=\"No dependency for $(cat $TMP_DIR/unresolved)\"" >> $1
-		for lib in $(cat $TMP_DIR/unresolved) ; do
+		echo "BUGS=\"No dependency for" >> $1
+		cat $TMP_DIR/unresolved | sort | uniq | while read file; do
 			echo -e "$WARNING: unknown dependency for $lib"
+			echo -n " $file" >> $1
 		done
+		echo "\"" >> $1
 	fi
 }
 
