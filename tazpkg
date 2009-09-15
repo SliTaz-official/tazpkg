@@ -128,6 +128,7 @@ usage ()
   recharge         Recharge your packages.list from the mirror.
   repack           Create a package archive from an installed package.
   repack-config    Create a package archive with configuration files.
+  recompress       Rebuild a package with the better compression ratio.
   upgrade          Upgrade one or all installed/listed package(s) on the mirror.
   block|unblock    Block an installed package version or unblock it for upgrade.
   get              Download a package into the current directory.
@@ -383,13 +384,18 @@ download()
 	done
 }
 
-# Extract a package with cpio and gzip.
+# Extract a package with cpio and gzip/lzma.
 extract_package()
 {
 	echo -n "Extracting $PACKAGE... "
 	cpio -idm < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
 	echo -n "Extracting the pseudo fs... "
-	zcat fs.cpio.gz | cpio -idm && rm fs.cpio.gz
+	if [ -f fs.cpio.lzma ]; then
+		echo -n "(lzma) "
+		unlzma -c fs.cpio.lzma | cpio -idm && rm fs.cpio.lzma
+	else
+		zcat fs.cpio.gz | cpio -idm && rm fs.cpio.gz
+	fi
 }
 
 # This function installs a package in the rootfs.
@@ -1785,6 +1791,33 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		echo "================================================================================"
 		echo "$PACKAGE is extracted to : $DESTDIR"
 		echo ""
+		;;
+	recompress)
+		# Recompress .tazpkg cpio archive with lzma.
+		#
+		check_for_package_on_cmdline
+		check_for_package_file
+		echo ""
+		echo -e "\033[1mRecompressing :\033[0m $PACKAGE"
+		echo "================================================================================"
+		mkdir -p $TMP_DIR
+		echo -n "Copying original package..."
+		cp $PACKAGE_FILE $TMP_DIR
+		status
+		cd $TMP_DIR
+		extract_package
+		echo -n "Recompressing the fs... "
+		find fs | cpio -o -H newc 2> /dev/null | lzma e fs.cpio.lzma -si
+		rm -rf fs
+		status
+		echo -n "Creating new package... "
+		find . -print | cpio -o -H newc > \
+			$TOP_DIR/$(basename $PACKAGE_FILE).$$ && mv -f \
+			$TOP_DIR/$(basename $PACKAGE_FILE).$$ \
+			$TOP_DIR/$(basename $PACKAGE_FILE)
+		status
+		cd $TOP_DIR
+		rm -rf $TMP_DIR
 		;;
 	list-config)
 		# List configuration files installed.
