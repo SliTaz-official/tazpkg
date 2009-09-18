@@ -1923,7 +1923,7 @@ EOT
 			exit 1
 		fi
 		mkdir -p $TMP_DIR && cd $TMP_DIR
-		FILES="fs.cpio.gz\n"
+		FILES="fs.cpio.lzma\n"
 		for i in $(ls $INSTALLED/$PACKAGE) ; do
 			[ "$i" = "volatile.cpio.gz" ] && continue
 			[ "$i" = "modifiers" ] && continue
@@ -1951,7 +1951,7 @@ EOT
 				exit 1
 			}
 		fi
-		find fs | cpio -o -H newc 2> /dev/null | gzip -9 > fs.cpio.gz
+		find fs | cpio -o -H newc 2> /dev/null | lzma e fs.cpio.lzma -si
 		echo -e "$FILES" | cpio -o -H newc 2> /dev/null > \
 			$TOP_DIR/$PACKAGE-$VERSION$EXTRAVERSION.tazpkg
 		cd $TOP_DIR
@@ -1993,10 +1993,10 @@ EOT
 				'{ sz=$1 } END { print sz }')
 			# Build cpio archives.
 			echo -n "Compressing the fs... "
-			find fs -print | cpio -o -H newc | gzip > fs.cpio.gz
+			find fs | cpio -o -H newc | lzma e fs.cpio.lzma -si
 			rm -rf fs
 			status
-			PACKED_SIZE=$(du -chs fs.cpio.gz receipt files.list \
+			PACKED_SIZE=$(du -chs fs.cpio.lzma receipt files.list \
 				md5sum description.txt 2> /dev/null | awk \
 				'{ sz=$1 } END { print sz }')
 			echo -n "Undating receipt sizes..."
@@ -2008,9 +2008,9 @@ EOT
 			find . -print | cpio -o -H newc > ../$PACKAGE.tazpkg
 			status
 			echo -n "Restoring original package tree... "
-			zcat fs.cpio.gz | cpio -idm
+			unlzma -c fs.cpio.lzma | cpio -idm
 			status
-			rm fs.cpio.gz && cd ..
+			rm fs.cpio.lzma && cd ..
 			echo "================================================================================"
 			echo "Package $PACKAGE compressed successfully."
 			echo "Size : `du -sh $PACKAGE.tazpkg`"
