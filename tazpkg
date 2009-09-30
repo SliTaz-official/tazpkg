@@ -398,6 +398,17 @@ extract_package()
 	fi
 }
 
+remove_with_path()
+{
+	local dir
+	rm -f $1 2>/dev/null
+	dir="$1"
+	while [ "$dir" != "/" ]; do
+		dir="$(dirname $dir)"
+		rmdir $dir 2> /dev/null || break
+	done
+}
+
 # This function installs a package in the rootfs.
 install_package()
 {
@@ -471,28 +482,46 @@ install_package()
 		done < $PACKAGE/files.list > $TMP_DIR/files2remove.list
 	fi
 	# Remember modified packages
-	for i in $(grep -v '\[' $TMP_DIR/files.list); do
+	{ check=false
+	  for i in $(grep -v '\[' $TMP_DIR/files.list); do
 		[ -e "$ROOT$i" ] || continue
 		[ -d "$ROOT$i" ] && continue
-		for j in $(grep -l "^$i$" */files.list); do
-			local dir
-			dir=$(dirname $j)
-			[ "$j" = "$PACKAGE/files.list" ] && continue
-			if grep -qs ^$dir$ $PACKAGE/modifiers; then
-				# Do not overload an overloaded file !
-				rm $TMP_DIR$i 2> /dev/null
-				continue
-			fi
-			grep -qs ^$PACKAGE$ $dir/modifiers && continue
-			if [ -s "$dir/volatile.cpio.gz" ]; then
-				# We can modify backed up files
-				zcat $dir/volatile.cpio.gz | \
-					cpio -t 2> /dev/null | \
-					grep -q "^${i#/}$" && continue
-			fi
-			echo "$PACKAGE" >> $dir/modifiers
-		done
+		echo "- $i"
+		check=true
+	  done ; 
+	  $check && for i in *; do 
+	  	[ "$i" == "$PACKAGE" ] && continue
+	  	awk "{ printf \"$i %s\\n\",\$1 }" < $i/files.list
+	  done } | awk '
+{
+	if ($1 == "-" || file[$2] != "") {
+		file[$2] = file[$2] " " $1
+		if ($1 != "-") {
+			if (pkg[$1] == "") all = all " " $1
+			pkg[$1] = pkg[$1] " " $2
+		}
+	}
+}
+END {
+	for (i = split(all, p, " "); i > 0; i--)
+		for (j = split(pkg[p[i]], f, " "); j > 0; j--)
+			printf "%s %s\n",p[i],f[j];
+}
+		' | while read dir file; do
+		if grep -qs ^$dir$ $PACKAGE/modifiers; then
+			# Do not overload an overloaded file !
+			rm $TMP_DIR$file 2> /dev/null
+			continue
+		fi
+		grep -qs ^$PACKAGE$ $dir/modifiers && continue
+		if [ -s "$dir/volatile.cpio.gz" ]; then
+			# We can modify backed up files without notice
+			zcat $dir/volatile.cpio.gz | cpio -t 2> /dev/null | \
+				grep -q "^${file#/}$" && continue
+		fi
+		echo "$PACKAGE" >> $dir/modifiers
 	done
+
 	cd $TMP_DIR
 	cp receipt files.list $ROOT$INSTALLED/$PACKAGE
 	# Copy the description if found.
@@ -529,13 +558,9 @@ install_package()
 	if [ -s files2remove.list ]; then
 		echo -n "Removing old $PACKAGE... "
 		while read file; do
-			rm -f $ROOT$file
-			dir=$(dirname $ROOT$file)
-			while true; do
-				rmdir $dir 2> /dev/null || { true; break; }
-				dir=$(dirname $dir)
-			done
+			remove_with_path $ROOT$file
 		done < files2remove.list
+		true
 		status
 	fi
 	# Remove the temporary random directory.
@@ -926,7 +951,7 @@ function show_deps(deps, all_deps, pkg, space)
 	if (all_deps[pkg] == 1) return
 	all_deps[pkg] = 1
 	if (space != "") printf "%s%s\n",space,pkg
-	for (i = 1; i <= split(deps[pkg], mydeps, " "); i++) {
+	for (i = 1, n = split(deps[pkg], mydeps, " "); i <= n; i++) {
 		show_deps(deps, all_deps, mydeps[i],"  " space)
 	}
 }
@@ -1705,23 +1730,13 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 				for file in `cat $INSTALLED/$PACKAGE/files.list`
 				do
 					[ $(grep ^$file$ $INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue
-					rm -f $file 2>/dev/null
-					dir="$file"
-					while [ "$dir" != "/" ]; do
-						dir="$(dirname $dir)"
-						rmdir $dir 2> /dev/null || break
-					done
+					remove_with_path $file
 				done
 			    done
 			else
 				for file in `cat $INSTALLED/$PACKAGE/files.list`
 				do
-					rm -f $file 2>/dev/null
-					dir="$file"
-					while [ "$dir" != "/" ]; do
-						dir="$(dirname $dir)"
-						rmdir $dir 2> /dev/null || break
-					done
+					remove_with_path $file
 				done
 			fi
 			status
