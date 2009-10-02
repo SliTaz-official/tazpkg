@@ -4,6 +4,6 @@ Name[fr]=Manuel de Tazpkg
 Comment=SliTaz packages manager manual
 Comment[fr]=Manuel du gestionnaire de paquets SliTaz
 Exec=browser /usr/share/doc/tazpkg/tazpkg.html
-Icon=/usr/share/icons/Tango/16x16/mimetypes/text-html.png
+Icon=text-html
 Type=Application
 Categories=Documentation;
