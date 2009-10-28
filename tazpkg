@@ -928,7 +928,8 @@ for i in $1; do
 	*\ $i\ *) continue;;
 	esac
 	ALL_DEPS="$ALL_DEPS $i"
-	[ -n "$2" ] && echo "$2$i"
+	[ -n "$2" ] && echo "$2$i ($(grep -A 3 $i $LOCALSTATE/packages.txt \
+				     | tail -1 | sed 's/.*(\([^ ]*\).*/\1/'))"
 	[ -f $i/receipt ] || continue
 	DEPENDS=""
 	. $i/receipt
