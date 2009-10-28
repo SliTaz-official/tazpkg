@@ -951,9 +951,9 @@ function show_deps(deps, all_deps, pkg, space)
 {
 	if (all_deps[pkg] == 1) return
 	all_deps[pkg] = 1
-	if (space != "") printf "%s%s\n",space,pkg
+	if (space != "") printf "%s %s\n",space,pkg
 	for (i = 1, n = split(deps[pkg], mydeps, " "); i <= n; i++) {
-		show_deps(deps, all_deps, mydeps[i],"  " space)
+		show_deps(deps, all_deps, mydeps[i],"==" space)
 	}
 }
 
@@ -966,7 +966,13 @@ function show_deps(deps, all_deps, pkg, space)
 END {
 	show_deps(deps, all_deps, search, "")
 }
-'
+' | while read spc pkg; do
+	echo -n $spc | sed 's/=/ /g'
+	echo -n $pkg
+	echo -n ' ('
+	grep -A 3 $pkg $LOCALSTATE/packages.txt  | tail -1 | \
+				    sed 's/.*(\([^ ]*\).*/\1)/'
+done
 }
 
 # Check for ELF file
