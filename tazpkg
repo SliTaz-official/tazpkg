@@ -2067,7 +2067,7 @@ EOT
 			download_from "$(cat mirror)" packages.list
 			download_from "$(cat mirror)" packages.equiv
 			download_from "$(cat mirror)" files.list.lzma
-			download_from "$(cat mirror)" mirrors
+			download_from "$(sed 's|packages/.*||' < mirror)" mirrors
 			[ -f mirrors ] || mv mirrors.bak mirrors 2> /dev/null
 			suffix=$(head -1 mirror)
 			suffix=packages${suffix#*/packages}
