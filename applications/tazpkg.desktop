@@ -1,9 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Name=Package manager (SHell)
-Name[fr]=Gestionnaire de paquets (SHell)
-Comment=Run tazpkg commands in a shell
-Exec=xterm -e 'tazpkg shell'
-Icon=tazpkg
-Type=Application
-Categories=System;
