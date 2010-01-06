@@ -1353,8 +1353,7 @@ case "$COMMAND" in
 			echo "================================================================================"
 			echo "$packages packages installed."
 			echo ""
-		fi
-		;;
+		fi ;;
 	xhtml-list)
 		# Get info in receipts and build list.
 		DATE=`date +%Y-%m-%d\ \%H:%M:%S`
@@ -1387,8 +1386,7 @@ case "$COMMAND" in
 		sed -i s/'_packages_'/"$packages"/ $XHTML_LIST
 		echo "================================================================================"
 		echo "$XHTML_LIST created - $packages packages."
-		echo ""
-		;;
+		echo "" ;;
 	list-mirror)
 		# List all available packages on the mirror. Option --diff displays
 		# last mirrored packages diff (see recharge).
@@ -1422,8 +1420,7 @@ case "$COMMAND" in
 		echo "================================================================================"
 		pkgs=`cat $LOCALSTATE/packages.list | wc -l`
 		echo "$pkgs packages in the last recharged list."
-		echo ""
-		;;
+		echo "" ;;
 	list-files)
 		# List files installed with the package.
 		#
@@ -1436,8 +1433,7 @@ case "$COMMAND" in
 		echo "================================================================================"
 		files=`cat $INSTALLED/$PACKAGE/files.list | wc -l`
 		echo "$files files installed with $PACKAGE."
-		echo ""
-		;;
+		echo "" ;;
 	info)
 		# Information about package.
 		#
@@ -1469,8 +1465,7 @@ Maintainer : $MAINTAINER"
 			echo -e "Web site   : $WEB_SITE"
 		fi
 		echo "================================================================================"
-		echo ""
-		;;
+		echo "" ;;
 	desc)
 		# Display package description.txt if available.
 		if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
@@ -1482,8 +1477,7 @@ Maintainer : $MAINTAINER"
 			echo ""
 		else
 			echo -e "\nSorry, no description available for this package.\n"
-		fi
-		;;
+		fi ;;
 	search)
 		# Search for a package by pattern or name.
 		#
@@ -1507,8 +1501,7 @@ Maintainer : $MAINTAINER"
 			*)
 				search_in_installed_packages
 				search_in_packages_list ;;
-		esac
-		;;
+		esac ;;
 	search-file)
 		# Search for a file by pattern or name in all files.list.
 		#
@@ -1567,8 +1560,7 @@ Maintainer : $MAINTAINER"
 			echo "================================================================================"
 			echo "$match file(s) found for : $2"
 			echo ""
-		fi
-		;;
+		fi ;;
 	install)
 		# Install .tazpkg packages.
 		#
@@ -1599,8 +1591,7 @@ Maintainer : $MAINTAINER"
 		if [ "$DO_CHECK" = "yes" ]; then
 			check_for_installed_package $ROOT
 		fi
-		install_package $ROOT
-		;;
+		install_package $ROOT ;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
 		#
@@ -1634,18 +1625,15 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			grep -qs ^$pkg$ $2-processed && continue
 			tazpkg $COMMAND $pkg --list=$2 "$3" "$4" "$5"
 		done
-		rm -f $2-processed
-		;;
+		rm -f $2-processed ;;
 	add-flavor)
 		# Install a set of packages from a flavor.
 		#
-		install_flavor $2
-		;;
+		install_flavor $2 ;;
 	install-flavor)
 		# Install a set of packages from a flavor and purge other ones.
 		#
-		install_flavor $2 --purge
-		;;
+		install_flavor $2 --purge ;;
 	set-release)
 		# Change curent release and upgrade packages.
 		#
@@ -1667,8 +1655,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			for j in $DEPENDS ; do
 				[ -d $j ] || tazpkg get-install $j
 			done
-		done
-		;;
+		done ;;
 	remove)
 		# Remove packages.
 		#
@@ -1772,8 +1759,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			echo ""
 			echo "Uninstallation of $PACKAGE cancelled."
 		fi
-		echo ""
-		;;
+		echo "" ;;
 	extract)
 		# Extract .tazpkg cpio archive into a directory.
 		#
@@ -1797,8 +1783,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		extract_package
 		echo "================================================================================"
 		echo "$PACKAGE is extracted to : $DESTDIR"
-		echo ""
-		;;
+		echo "" ;;
 	recompress)
 		# Recompress .tazpkg cpio archive with lzma.
 		#
@@ -1824,8 +1809,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			$TOP_DIR/$(basename $PACKAGE_FILE)
 		status
 		cd $TOP_DIR
-		rm -rf $TMP_DIR
-		;;
+		rm -rf $TMP_DIR ;;
 	list-config)
 		# List configuration files installed.
 		#
@@ -1860,8 +1844,7 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			done | sed 's|^|/|' | sort
 			echo "================================================================================"
 			echo ""
-		fi
-		;;
+		fi ;;
 	repack-config)
 		# Create SliTaz package archive from configuration files.
 		#
@@ -1965,8 +1948,7 @@ EOT
 		\rm -R $TMP_DIR
 		echo "Package $PACKAGE repacked successfully."
 		echo "Size : `du -sh $PACKAGE-$VERSION$EXTRAVERSION.tazpkg`"
-		echo ""
-		;;
+		echo "" ;;
 	pack)
 		# Create SliTaz package archive using cpio and gzip.
 		#
@@ -2022,8 +2004,7 @@ EOT
 			echo "Package $PACKAGE compressed successfully."
 			echo "Size : `du -sh $PACKAGE.tazpkg`"
 			echo ""
-		fi
-		;;
+		fi ;;
 	recharge)
 		# Recharge packages.list from a mirror.
 		#
@@ -2080,8 +2061,7 @@ EOT
 Last packages.list is ready to use. Note that next time you recharge the list,
 a list of differences will be displayed to show new and upgradeable packages.\n"
 			fi
-		done
-		;;
+		done ;;
 	upgrade)
 		# Upgrade all installed packages with the new version from the mirror.
 		#
@@ -2242,8 +2222,7 @@ Bugs in package $PACKAGE version $VERSION$EXTRAVERSION:
 EOT
 			fi
 		done
-		echo "$MSG"
-		;;
+		echo "$MSG" ;;
 	check)
 		# Check installed packages set.
 		#
@@ -2328,8 +2307,7 @@ EOT
 				MSG=""
 			done
 		fi
-		echo "Check completed."
-		;;
+		echo "Check completed." ;;
 	block)
 		# Add a pkg name to the list of blocked packages.
 		#
@@ -2348,8 +2326,7 @@ EOT
 			. $INSTALLED/$PACKAGE/receipt
 			log Blocked
 		fi
-		echo ""
-		;;
+		echo "" ;;
 	unblock)
 		# Remove a pkg name from the list of blocked packages.
 		#
@@ -2369,8 +2346,7 @@ EOT
 			echo ""
 			exit 0
 		fi
-		echo ""
-		;;
+		echo "" ;;
 	get)
 		# Downlowd a package with wget.
 		#
@@ -2379,8 +2355,7 @@ EOT
 		check_for_package_in_list
 		echo ""
 		download $PACKAGE.tazpkg
-		echo ""
-		;;
+		echo "" ;;
 	get-install)
 		# Download and install a package.
 		#
@@ -2436,8 +2411,7 @@ EOT
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		install_package $ROOT
-		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT
-		;;
+		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT ;;
 	clean-cache)
 		# Remove all downloaded packages.
 		#
@@ -2451,8 +2425,7 @@ EOT
 		status
 		echo "================================================================================"
 		echo "$files file(s) removed from cache."
-		echo ""
-		;;
+		echo "" ;;
 	list-undigest)
 		# list undigest URLs.
 		#
@@ -2473,8 +2446,7 @@ EOT
 				echo "$(basename $(dirname $i))	$(cat $i)"
 			done
 			echo ""
-		fi
-		;;
+		fi ;;
 	remove-undigest)
 		# remove undigest URL.
 		#
@@ -2489,8 +2461,7 @@ EOT
 			fi
 		else
 			echo "Undigest $2 not found"
-		fi
-		;;
+		fi ;;
 	add-undigest|setup-undigest)
 		# Add undigest URL.
 		#
@@ -2508,14 +2479,12 @@ EOT
 			echo "Creating new undigest $undigest."
 			mkdir $LOCALSTATE/undigest/$undigest
 		fi
-		setup_mirror $LOCALSTATE/undigest/$undigest $3
-		;;
+		setup_mirror $LOCALSTATE/undigest/$undigest $3 ;;
 	setup-mirror)
 		# Change mirror URL.
 		#
 		check_root
-		setup_mirror $LOCALSTATE $2
-		;;
+		setup_mirror $LOCALSTATE $2 ;;
 	reconfigure)
 		# Replay post_install from receipt
 		#
@@ -2525,12 +2494,10 @@ EOT
 		while [ -n "$3" ]; do
 			case "$3" in
 			--root=*)
-				ROOT="${3#--root=}/"
-				;;
+				ROOT="${3#--root=}/" ;;
 			*)	shift 2
 				echo -e "\nUnknown option $*.\n"
-				exit 1
-				;;
+				exit 1 ;;
 			esac
 			shift
 		done
@@ -2548,8 +2515,7 @@ EOT
 		else
 			echo -e "\npackage $PACKAGE is not installed."
 			echo -e "Install package with 'tazpkg install' or 'tazpkg get-install'\n"
-		fi
-		;;
+		fi ;;
 	shell)
 		# Tazpkg SHell
 		#
@@ -2581,24 +2547,21 @@ EOT
 				*)
 					tazpkg $cmd ;;
 			esac
-		done
-		;;
+		done ;;
 	depends)
 		# Display dependencies tree
 		cd $INSTALLED
 		ALL_DEPS=""
 		if [ -f $2/receipt ]; then
 			dep_scan $2 ""
-		fi
-		;;
+		fi ;;
 	rdepends)
 		# Display reverse dependencies tree
 		cd $INSTALLED
 		ALL_DEPS=""
 		if [ -f $2/receipt ]; then
 			rdep_scan $2
-		fi
-		;;
+		fi ;;
 	convert)
 		# convert misc package format to .tazpkg
 		check_for_package_file
@@ -2615,8 +2578,7 @@ EOT
 			convert_ipk;;
 		*)
 			echo "Unsupported format";;
-		esac
-		;;
+		esac ;;
 	link)
 		# link a package from another slitaz installation
 		PACKAGE=$2
@@ -2669,8 +2631,7 @@ EOT
 		done < $INSTALLED/$PACKAGE/files.list
 		if grep -q ^post_install $INSTALLED/$PACKAGE/receipt; then
 			post_install
-		fi
-		;;
+		fi ;;
 	usage|*)
 		# Print a short help or give usage for an unknown or empty command.
 		usage ;;
