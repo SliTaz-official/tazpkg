@@ -7,38 +7,23 @@
 # use 'tazpkg usage' to get a list of commands with short descriptions. Tazpkg
 # also resolves dependencies and can upgrade packages from a mirror.
 #
-# (C) 2007-2008 SliTaz - GNU General Public License v3.
+# (C) 2007-2010 SliTaz - GNU General Public License v3.
 #
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
 #           Paul Issott <paul@slitaz.org>
 #
-VERSION=3.1
+VERSION=3.2
 
 ####################
 # Script variables #
 ####################
 
-# Packages categories.
-CATEGORIES="
-base-system
-x-window
-utilities
-network
-graphics
-multimedia
-office
-development
-system-tools
-security
-games
-misc
-meta
-non-free"
+. /etc/slitaz/tazpkg.conf
 
-# Initialize some variables to use words
-# rather than numbers for functions and actions.
+# Initialize some variables to use words rather than numbers for functions
+# and actions.
 COMMAND=$1
 if [ -f "$2" ]; then
 	# Set pkg basename for install, extract
@@ -50,17 +35,13 @@ fi
 PACKAGE_FILE=$2
 TARGET_DIR=$3
 TOP_DIR=`pwd`
-TMP_DIR=/tmp/tazpkg-$$-$RANDOM
+INSTALL_LIST=""
 
 # Path to tazpkg used dir and configuration files
-LOCALSTATE=/var/lib/tazpkg
 INSTALLED=$LOCALSTATE/installed
-CACHE_DIR=/var/cache/tazpkg
 MIRROR=$LOCALSTATE/mirror
 BLOCKED=$LOCALSTATE/blocked-packages.list
 DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
-INSTALL_LIST=""
-LOG=/var/log/tazpkg.log
 
 # Messages language setting --> line 230.
 case $LANG in
