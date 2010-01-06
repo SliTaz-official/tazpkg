@@ -624,18 +624,22 @@ check_for_deps()
 	fi
 }
 
-# Install all missing deps. First ask user then install all missing deps
-# from local dir, cdrom, media or from the mirror. In case we want to
+# Install all missing deps. Auto install or ask user then install all missing 
+# deps from local dir, cdrom, media or from the mirror. In case we want to
 # install packages from local, we need a packages.list to find the version.
 install_deps()
 {
 	local root
 	root=""
 	[ -n "$1" ] && root="--root=$1"
-	echo ""
-	echo -n "Install all missing dependencies (y/N) ? "; read anser
-	echo ""
-	if [ "$anser" = "y" ]; then
+	if [ "$AUTO_INSTALL_DEPS" == "yes" ]; then
+		anser="y"
+	else
+		echo ""
+		echo -n "Install all missing dependencies (y/N) ? "; read anser
+		echo ""
+	fi
+	if [ "$anser" == "y" ]; then
 		for pkgorg in $DEPENDS
 		do
 			pkg=$(equivalent_pkg $pkgorg $1)
