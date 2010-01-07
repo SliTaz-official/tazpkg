@@ -4,9 +4,9 @@
 # Notebook tab are vbox, tabs are used to indent and functions are
 # split and found in $LIB.
 #
-# (C) GNU gpl v3 - SliTaz GNU/Linux 2009.
+# (C) GNU gpl v3 - SliTaz GNU/Linux 2010.
 #
-VERSION=3.1
+VERSION=3.2
 
 # Functions path.
 export LIB=/usr/lib/slitaz/tazpkgbox
