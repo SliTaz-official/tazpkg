@@ -519,7 +519,7 @@ END {
 	fi
 	if [ -n "$CONFIG_FILES" ]; then
 		# save 'official' configuration files
-		echo -n "Save configuration files for $PACKAGE... "
+		echo -n "Saving configuration files for $PACKAGE... "
 		for i in $CONFIG_FILES; do
 			( cd fs ; find ${i#/} -type f )
 		done | ( cd fs ; cpio -o -H newc | gzip -9 ) > \
@@ -865,7 +865,7 @@ install_flavor()
 			tazpkg remove $PACKAGE
 		done
 	else
-		echo "Can't find flavor $FLAVOR Abort."
+		echo "Can't find flavor $FLAVOR. Aborting."
 	fi
 	cd $TOP_DIR
 	rm -rf $TMP_DIR
@@ -2230,7 +2230,7 @@ EOT
 		cd $INSTALLED
 		for PACKAGE in `ls`; do
 			if [ ! -f $PACKAGE/receipt ]; then
-				echo "The package $PACKAGE installation is not completed"
+				echo "The package $PACKAGE installation has not completed"
 				continue
 			fi
 			DEPENDS=""
