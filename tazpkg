@@ -1620,6 +1620,12 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 			COMMAND=install
 		fi
 		touch $2-processed
+
+		# Upgrade tazpkg first. It may handle new features/formats...
+		case " $LIST " in
+		*\ tazpkg\ *) LIST="tazpkg $LIST";;
+		esac
+
 		for pkg in $LIST
 		do
 			grep -qs ^$pkg$ $2-processed && continue
