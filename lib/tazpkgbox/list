@@ -37,11 +37,11 @@ installable_list()
 	IFS="|"
 	cat /var/lib/tazpkg/packages.desc \
 	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
-	while read PACKAGE VERSION SHORT_DESC; do
+	while read PACKAGE VERSION SHORT_DESC CATEGORY; do
 		# Check first for category for more speed.
 		CATEGORY=${CATEGORY%| *}
 		ICON=tazpkg
-		[ $CAT == all -o $CATEGORY == $CAT ] || continue
+		[ $CAT == all -o $CATEGORY == " $CAT " ] || continue
 		[ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ] && continue
 		grep -qs "^$PACKAGE" /var/lib/tazpkg/undigest/*/packages.desc &&
 			ICON=add
