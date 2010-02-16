@@ -13,8 +13,9 @@
 #           Pascal Bellard <pascal.bellard@slitaz.org>
 #           Eric Joseph-Alexandre <erjo@slitaz.org>
 #           Paul Issott <paul@slitaz.org>
+#           Rohit Joshi <jozee@slitaz.org>
 #
-VERSION=3.2.1
+VERSION=3.2.2
 
 ####################
 # Script variables #
@@ -100,6 +101,7 @@ usage ()
   list-files       List the files installed with a package.
   list-config      List the configuration files.
   search           Search for a package by pattern or name (options: -i|-l|-m).
+  search-pkgname   Search on mirror for package having a particular file.
   search-file	   Search for file(s) in all installed packages files.
   install          Install a local (*.tazpkg) package (--forced to force).
   install-list     Install all packages from a list of packages.
@@ -1561,6 +1563,36 @@ Maintainer : $MAINTAINER"
 			echo "$match file(s) found for : $2"
 			echo ""
 		fi ;;
+	search-pkgname) 
+		#
+		if [ -z "$2" ]; then
+			echo -e "\nPlease specify a pattern or file name to search for."
+			echo -e "Example : 'tazpkg search-pkgname libnss'. \n"
+			exit 0
+		fi
+		echo ""
+		echo -e "\033[1mSearch result for file :\033[0m $2"
+		echo "================================================================================"
+       
+	 # Search for a file on mirror and output only the package name
+		match=0
+		for i in $LOCALSTATE/files.list.lzma \
+				 $LOCALSTATE/undigest/*/files.list.lzma; do
+				 [ -f $i ] || continue
+				unlzma -c $i | grep -- ".*:.*$2" | cut -d: -f1 | uniq | awk '{ print $1 }'
+				match=$(($match + `unlzma -c $i | grep -- ".*:.*$2" | cut -d: -f1 | uniq | wc -l`))
+		done
+			
+		if [ "$match" = "" ]; then
+			echo "0 file found for : $2"
+			echo ""
+		else
+			echo ""
+			echo "================================================================================"
+			echo "$match pkg(s) found with file : $2"
+			echo ""
+		fi
+		;;
 	install)
 		# Install .tazpkg packages.
 		#
