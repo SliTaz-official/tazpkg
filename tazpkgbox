@@ -295,6 +295,7 @@ export TAZPKG_DIALOG='
 				<item>installed</item>
 				<item>installable</item>
 				<item>blocked</item>
+				<item>upgradeable</item>
 			</combobox>
 			<text>
 				<label>"Category:"</label>
@@ -534,7 +535,7 @@ The cache directory is used to store downloaded or repacked packages.
 		<button>
 			<label>Recharge lists</label>
 			<input file icon="system-software-update"></input>
-			<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge; sleep 2" 2>/dev/null</action>
+			<action>xterm -T "Recharge" -geometry 80x16+120+120 -e "tazpkg recharge ; tazpkg upgradeable" 2>/dev/null</action>
 			<action>refresh:DEV</action>
 			<action>refresh:PKG</action>
 			<action>refresh:PKG_STATS</action>

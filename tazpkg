@@ -113,6 +113,7 @@ usage ()
   repack-config    Create a package archive with configuration files.
   recompress       Rebuild a package with the better compression ratio.
   upgrade          Upgrade one or all installed/listed package(s) on the mirror.
+  upgradeable      Build upgradeable packages list quickly.
   block|unblock    Block an installed package version or unblock it for upgrade.
   get              Download a package into the current directory.
   get-install      Download and install a package from the mirror.
@@ -2100,6 +2101,20 @@ Last packages.list is ready to use. Note that next time you recharge the list,
 a list of differences will be displayed to show new and upgradeable packages.\n"
 			fi
 		done ;;
+	upgradeable)
+		# Build upgradeable-packages.list quickly.
+		#
+		check_root
+		cd $LOCALSTATE
+		while read md5 file ; do
+			grep -qs "$md5  $file" packages.md5 && continue
+			for i in 1 2 3 4 5; do
+				file=${file%-*}
+				[ -d installed/$file ] || continue
+				echo $file
+				break
+			done
+		done < installed.md5 > upgradeable-packages.list ;;
 	upgrade)
 		# Upgrade all installed packages with the new version from the mirror.
 		#
