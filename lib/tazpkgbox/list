@@ -79,15 +79,19 @@ all_list()
 
 blocked_list()
 {
+	ICON=tazpkg-installed
+	[ "$1" = "blocked" ] && ICON=stop
 	for pkg in $(cat /var/lib/tazpkg/$1-packages.list 2> /dev/null); do
 		[ -f /var/lib/tazpkg/installed/$pkg/receipt ] || continue
 		. /var/lib/tazpkg/installed/$pkg/receipt
+		[ $CAT == all -o $CATEGORY == $CAT ] || continue
 		AVAILABLE=$(grep -s "^$pkg " /var/lib/tazpkg/packages.desc \
 			/var/lib/tazpkg/undigest/*/packages.desc | awk '{ print $3 }')
-		echo "stop|$PACKAGE|$VERSION (Available: $AVAILABLE)|$SHORT_DESC"
+		echo "$ICON|$PACKAGE|$VERSION (Available: $AVAILABLE)|$SHORT_DESC"
 	done
 }
 
+CAT=`cat /tmp/tazpkgbox/category`
 case $1 in
 	all)
 		STATUS=`cat /tmp/tazpkgbox/status`
@@ -95,13 +99,10 @@ case $1 in
 			blocked|upgradeable)
 				blocked_list $STATUS;;
 			installed)
-				CAT=`cat /tmp/tazpkgbox/category`
 				installed_list ;;
 			installable)
-				CAT=`cat /tmp/tazpkgbox/category`
 				installable_list ;;
 			*)
-				CAT=`cat /tmp/tazpkgbox/category`
 				all_list ;;
 		esac ;;
 	undigest)
