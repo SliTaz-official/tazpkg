@@ -8,18 +8,24 @@ undigest_list()
 {
 	IFS="|"
 	if [ -n "$1" -a "$1" != "all" ]; then
-		cat /var/lib/tazpkg/undigest/$1/packages.desc
+		cat undigest/$1/packages.desc
 	else
-		cat /var/lib/tazpkg/undigest/*/packages.desc
+		cat undigest/*/packages.desc
 	fi 2> /dev/null | sort | while read PACKAGE VERSION SHORT_DESC; do
 		ICON=tazpkg
 		PACKAGE=${PACKAGE%% *}
-		if [ -d /var/lib/tazpkg/installed/$PACKAGE ]; then
+		if [ -d installed/$PACKAGE ]; then
+			[ "$2" == "installable" ] && continue
 			ICON=tazpkg-installed
-			if grep -qs "^$PACKAGE$" /var/lib/tazpkg/blocked-packages.list; then
+			if grep -qs "^$PACKAGE$" blocked-packages.list; then
 				ICON=stop
 			fi
+		else
+			[ "$2" == "installed" ] && continue
 		fi
+		[ "$2" == "blocked" -a "$ICON" != "stop" ] && continue
+		[ "$2" == "upgradeable" ] && 
+		! grep -q ^$PACKAGE$ upgradeable-packages.list && continue
 		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done
 	unset IFS
@@ -28,23 +34,20 @@ undigest_list()
 installable_list()
 {
 	local cache
-	cache=/var/lib/tazpkg/packages.installable_list.$CAT
-	if [ -s $cache -a $cache -nt /var/lib/tazpkg/packages.desc \
-	     -a $cache -nt /var/lib/tazpkg/installed ]; then
+	cache=packages.installable_list.$CAT
+	if [ -s $cache -a $cache -nt packages.desc -a $cache -nt installed ]; then
 	     cat $cache
 	     return
 	fi
 	IFS="|"
-	cat /var/lib/tazpkg/packages.desc \
-	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
+	cat packages.desc undigest/*/packages.desc 2> /dev/null | sort | \
 	while read PACKAGE VERSION SHORT_DESC CATEGORY; do
 		# Check first for category for more speed.
 		CATEGORY=${CATEGORY%| *}
 		ICON=tazpkg
 		[ $CAT == all -o $CATEGORY == " $CAT " ] || continue
-		[ -d /var/lib/tazpkg/installed/${PACKAGE%% *} ] && continue
-		grep -qs "^$PACKAGE" /var/lib/tazpkg/undigest/*/packages.desc &&
-			ICON=add
+		[ -d installed/${PACKAGE%% *} ] && continue
+		grep -qs "^$PACKAGE" undigest/*/packages.desc && ICON=add
 		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done | tee $cache
 	unset IFS
@@ -52,15 +55,13 @@ installable_list()
 
 installed_list()
 {
-	for pkg in /var/lib/tazpkg/installed/*
+	for pkg in installed/*
 	do
 		. $pkg/receipt
 		ICON=tazpkg-installed
 		[ $CAT == all -o $CATEGORY == $CAT ] || continue
-		grep -qs "^$PACKAGE" /var/lib/tazpkg/undigest/*/packages.desc &&
-			ICON=add
-		grep -qs "^$PACKAGE$" /var/lib/tazpkg/blocked-packages.list &&
-			ICON=stop
+		grep -qs "^$PACKAGE" undigest/*/packages.desc && ICON=add
+		grep -qs "^$PACKAGE$" blocked-packages.list && ICON=stop
 		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done
 }
@@ -68,9 +69,8 @@ installed_list()
 all_list()
 {
 	local cache
-	cache=/var/lib/tazpkg/packages.all_list.$CAT
-	if [ -s $cache -a $cache -nt /var/lib/tazpkg/packages.desc \
-	     -a $cache -nt /var/lib/tazpkg/installed ]; then
+	cache=packages.all_list.$CAT
+	if [ -s $cache -a $cache -nt packages.desc -a $cache -nt installed ]; then
 	     cat $cache
 	     return
 	fi
@@ -81,16 +81,17 @@ blocked_list()
 {
 	ICON=tazpkg-installed
 	[ "$1" = "blocked" ] && ICON=stop
-	for pkg in $(cat /var/lib/tazpkg/$1-packages.list 2> /dev/null); do
-		[ -f /var/lib/tazpkg/installed/$pkg/receipt ] || continue
-		. /var/lib/tazpkg/installed/$pkg/receipt
+	for pkg in $(cat $1-packages.list 2> /dev/null); do
+		[ -f installed/$pkg/receipt ] || continue
+		. installed/$pkg/receipt
 		[ $CAT == all -o $CATEGORY == $CAT ] || continue
-		AVAILABLE=$(grep -s "^$pkg " /var/lib/tazpkg/packages.desc \
-			/var/lib/tazpkg/undigest/*/packages.desc | awk '{ print $3 }')
+		AVAILABLE=$(grep -s "^$pkg " packages.desc \
+			undigest/*/packages.desc | awk '{ print $3 }')
 		echo "$ICON|$PACKAGE|$VERSION (Available: $AVAILABLE)|$SHORT_DESC"
 	done
 }
 
+cd /var/lib/tazpkg
 CAT=`cat /tmp/tazpkgbox/category`
 case $1 in
 	all)
@@ -108,9 +109,9 @@ case $1 in
 	undigest)
 		set -- `cat /tmp/tazpkgbox/undigest-category`
 		if [ "$1" == "all" -o "$1" == "" ]; then
-			undigest_list $2
+			undigest_list $2 $3
 		else
-			undigest_list $2 | grep "$1"
+			undigest_list $2 $3 | grep "$1"
 		fi ;;
 	blocked|upgradeable)
 		blocked_list $1;;

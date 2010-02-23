@@ -385,13 +385,6 @@ tmp='
 			<action>refresh:CACHE_STATS</action>
 		</tree>
 		<hbox>
-			<button>
-				<label>Setup undigest mirrors</label>
-				<input file icon="go-next"></input>
-				<action type="launch">SETUP_UNDIGEST</action>
-			</button>
-		</hbox>
-		<hbox>
 			<text>
 				<label>"Undigest:"</label>
 			</text>
@@ -403,6 +396,24 @@ for i in all $(ls /var/lib/tazpkg/undigest 2> /dev/null); do
 	TAZPKG_DIALOG="$TAZPKG_DIALOG <item>$i</item> "
 done
 tmp='			</combobox>
+			<button>
+				<label>Setup undigest mirrors</label>
+				<input file icon="go-next"></input>
+				<action type="launch">SETUP_UNDIGEST</action>
+			</button>
+		</hbox>
+		<hbox>
+			<text>
+				<label>"Status:"</label>
+			</text>
+			<combobox>
+				<variable>UNDIGEST_STATUS</variable>
+				<item>all</item>
+				<item>installed</item>
+				<item>installable</item>
+				<item>blocked</item>
+				<item>upgradeable</item>
+			</combobox>
 			<text>
 				<label>"Category:"</label>
 			</text>
@@ -427,7 +438,7 @@ tmp='			</combobox>
 			<button>
 				<label>List</label>
 				<input file icon="reload"></input>
-				<action>echo "$UNDIGEST_CAT $UNDIGEST_ENTRY" > /tmp/tazpkgbox/undigest-category</action>
+				<action>echo "$UNDIGEST_CAT $UNDIGEST_ENTRY $UNDIGEST_STATUS" > /tmp/tazpkgbox/undigest-category</action>
 				<action>refresh:DEV</action>
 			</button>
 		</hbox>
