@@ -347,7 +347,7 @@ export TAZPKG_DIALOG='
 				<variable>SEARCH</variable>
 			</entry>
 			<button>
-				<label>Packages</label>
+				<label>Packages/Description</label>
 				<input file icon="system-search"></input>
 				<action>$LIB/search packages</action>
 				<action>refresh:RESULT</action>

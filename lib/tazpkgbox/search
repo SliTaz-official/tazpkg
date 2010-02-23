@@ -50,7 +50,7 @@ search_package()
 	cat /var/lib/tazpkg/packages.desc \
 	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
 	while read PACKAGE VERSION SHORT_DESC; do
-	if echo "$PACKAGE $SHORT_DESC" | grep -q "$SEARCH"; then
+	if echo "$PACKAGE $SHORT_DESC" | grep -iq "$SEARCH"; then
 		list_package ${PACKAGE%% *}
 	fi
 	done 
