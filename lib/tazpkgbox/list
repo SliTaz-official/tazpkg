@@ -55,12 +55,17 @@ installable_list()
 
 installed_list()
 {
-	for pkg in installed/*
+	for pkg in ${1}installed/*
 	do
+		[ -n "$1" -a -s installed/$(basename $pkg)/receipt ] && continue
 		. $pkg/receipt
 		ICON=tazpkg-installed
 		[ $CAT == all -o $CATEGORY == $CAT ] || continue
-		grep -qs "^$PACKAGE" undigest/*/packages.desc && ICON=add
+		if [ -n "$1" -o -L $pkg ]; then
+			ICON=media-flash
+		else
+			grep -qs "^$PACKAGE" undigest/*/packages.desc && ICON=add
+		fi
 		grep -qs "^$PACKAGE$" blocked-packages.list && ICON=stop
 		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done
@@ -99,6 +104,9 @@ case $1 in
 		case $STATUS in
 			blocked|upgradeable)
 				blocked_list $STATUS;;
+			linkable)
+				[ -d fslink ] && installed_list \
+					$(readlink fslink)/var/lib/tazpkg/;;
 			installed)
 				installed_list ;;
 			installable)

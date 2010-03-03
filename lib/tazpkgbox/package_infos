@@ -6,6 +6,10 @@
 XTERM_OPTS="-geometry 80x16+120+120"
 
 PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
+ROOT=/var/lib/tazpkg
+if [ "$(cat /tmp/tazpkgbox/status)" = "linkable" ]; then
+	ROOT=$(readlink /var/lib/tazpkg/fslink)$ROOT
+fi
 TMP_DIR=/tmp/tazpkg-$$-$RANDOM
 
 if [ "$1" = "sizes" ]; then
@@ -19,7 +23,7 @@ EOT
 	exit 0
 fi
 if [ "$1" = "info" ]; then
-	RECEIPT=/var/lib/tazpkg/installed/$3/receipt
+	RECEIPT=$ROOT/installed/$3/receipt
 	. $RECEIPT
 	case "$2" in
 	Web*) firefox $WEB_SITE &;;
@@ -28,7 +32,7 @@ if [ "$1" = "info" ]; then
 	Hand*) firefox $HANDBOOK_URL &;;
 	Sug*) $0 list_packages $SUGGESTED;;
 	Dep*) $0 list_packages $DEPENDS;;
-	Mod*) $0 list_packages $(xargs echo < /var/lib/tazpkg/installed/$3/modifiers);;
+	Mod*) $0 list_packages $(xargs echo < $ROOT/installed/$3/modifiers);;
 	Con*) tazpkgbox list_config $3;;
 	Ver*) xterm -T "$3 receipt (q to quit)" -e "cat $RECEIPT | less";;
 	esac
@@ -36,18 +40,21 @@ if [ "$1" = "info" ]; then
 fi
 
 if [ "$1" = "list_files" ]; then
-	AWK_FILTER='BEGIN { ls=0 } { if (/^===/) ls=1-ls; else if (ls) print; }'
 	CONF_FILES="$(tazpkg list-config $2 | awk "$AWK_FILTER")"
 	if [ -n "$CONF_FILES" ]; then
 		mkdir $TMP_DIR
-		zcat /var/lib/tazpkg/installed/$2/volatile.cpio.gz | \
+		zcat $ROOT/installed/$2/volatile.cpio.gz | \
 			( cd $TMP_DIR ; cpio -id > /dev/null )
 	fi
-	tazpkg list-files $2 | awk "$AWK_FILTER" | while read file; do
-		echo -n "$(stat -c "%A|%U|%G|%s|%n|" "$file" || \
+	cat $ROOT/installed/$2/files.list | grep ^/ | while read file; do
+		realfile="$file"
+		if [ "$(cat /tmp/tazpkgbox/status)" = "linkable" ]; then
+			realfile="$(readlink /var/lib/tazpkg/fslink)$file"
+		fi
+		echo -n "$(stat -c "%A|%U|%G|%s|$file|" "$realfile" || \
 			   echo "File lost !||||$file|")"
-		if [ -L "$file" ]; then
-			echo -n "$(readlink "$file")"
+		if [ -L "$realfile" ]; then
+			echo -n "$(readlink "$realfile")"
 		elif [ -f "$file" ]; then
 			case "$CONF_FILES" in
 			*$file*) 
@@ -89,8 +96,8 @@ if [ "$1" = "list_packages" ]; then
 	<variable>PKG</variable>
 '
 		for i in "$@"; do
-			if [ -d /var/lib/tazpkg/installed/$i ]; then
-				. /var/lib/tazpkg/installed/$i/receipt
+			if [ -d $ROOT/installed/$i ]; then
+				. $ROOT/installed/$i/receipt
 				LIST_PKGS="$LIST_PKGS
 	<item icon=\"tazpkg\">$i|$VERSION|Installed|$SHORT_DESC</item>
 "
@@ -171,13 +178,13 @@ export LIST_FILES_MIRROR="
 "
 
 # Installed or not installed, that is the question!
-if [ -d /var/lib/tazpkg/installed/$PKG ]; then
+if [ -d $ROOT/installed/$PKG ]; then
 	PACKED_SIZE=""
 	DEPENDS=""
 	MAINTAINER=""
 	BUGS=""
 	TAGS=""
-	. /var/lib/tazpkg/installed/$PKG/receipt
+	. $ROOT/installed/$PKG/receipt
 	MAINTAINER=$(echo "$MAINTAINER" | sed 's/[<>|]/ /g')
 	upgrade_version="$(cat /var/lib/tazpkg/packages.desc \
 		/var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | \
@@ -188,7 +195,7 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 			UPGRADE="$upgrade_version"
 		else
 			cur_md5="$(awk "/ $PACKAGE-$VERSION/ { print \$1 }" \
-				/var/lib/tazpkg/installed.md5)"
+				$ROOT/installed.md5)"
 			new_md5="$(cat /var/lib/tazpkg/packages.md5 \
 				/var/lib/tazpkg/undigest/*/packages.md5 \
 				2> /dev/null | awk "/ $PACKAGE-$VERSION/ { print \$1 }")"
@@ -226,24 +233,25 @@ if [ -d /var/lib/tazpkg/installed/$PKG ]; then
 		<item icon=\"tazpkg\">Tags: | $TAGS</item>"
 [ -n "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
-[ -f /var/lib/tazpkg/installed/$PKG/modifiers ] && 
+[ -f $ROOT/installed/$PKG/modifiers ] && 
 PACKAGE_INFOS="$PACKAGE_INFOS
-		<item icon=\"tazpkg\">Modified by: | $(xargs echo < /var/lib/tazpkg/installed/$PKG/modifiers)</item>"
+		<item icon=\"tazpkg\">Modified by: | $(xargs echo < $ROOT/installed/$PKG/modifiers)</item>"
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
 		<action> $0 info \"\$FIELD\" $PKG </action>
 	</tree>
 
 	<hbox>"
-[ -s /var/lib/tazpkg/installed/$PACKAGE/description.txt ] &&
+[ -s $ROOT/installed/$PACKAGE/description.txt ] &&
 	PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Description</label>
 			<input file icon=\"help\"></input>
 			<action>xterm -T \"$PKG description (q to quit)\" $XTERM_OPTS \
-			-e \"less /var/lib/tazpkg/installed/$PKG/description.txt\"</action>
+			-e \"less $ROOT/installed/$PKG/description.txt\"</action>
 		</button>"
-[ ${PKG%%-*} = get -a ! -d /var/lib/tazpkg/installed/${PKG#get-} ] && PACKAGE_INFOS="$PACKAGE_INFOS
+if [ ! -d /var/lib/tazpkg/fslink ]; then
+	[ ${PKG%%-*} = get -a ! -d $ROOT/installed/${PKG#get-} ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Install</label>
 			<input file icon=\"go-next\"></input>
@@ -251,7 +259,7 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 			$PKG; sleep 5\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>"
-[ -n "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+	[ -n "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Upgrade</label>
 			<input file icon=\"go-next\"></input>
@@ -259,7 +267,7 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 			tazpkg get-install $PKG --forced ; sleep 5\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>"
-grep -q post_install /var/lib/tazpkg/installed/$PKG/receipt && PACKAGE_INFOS="$PACKAGE_INFOS
+	grep -q post_install $ROOT/installed/$PKG/receipt && PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Reconfigure</label>
 			<input file icon=\"reload\"></input>
@@ -267,8 +275,8 @@ grep -q post_install /var/lib/tazpkg/installed/$PKG/receipt && PACKAGE_INFOS="$P
 			tazpkg reconfigure $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>"
-if grep -qs ^$PKG$ /var/lib/tazpkg/blocked-packages.list; then
-	PACKAGE_INFOS="$PACKAGE_INFOS
+	if grep -qs ^$PKG$ /var/lib/tazpkg/blocked-packages.list; then
+		PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Unblock</label>
 			<input file icon=\"up\"></input>
@@ -276,8 +284,8 @@ if grep -qs ^$PKG$ /var/lib/tazpkg/blocked-packages.list; then
 			tazpkg unblock $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>"
-else
-	PACKAGE_INFOS="$PACKAGE_INFOS
+	else
+		PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Block</label>
 			<input file icon=\"down\"></input>
@@ -285,15 +293,34 @@ else
 			tazpkg block $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>"
+	fi
 fi
-if [ ! -s /var/lib/tazpkg/installed/$PKG/modifiers ]; then
+if [ "$(cat /tmp/tazpkgbox/status)" = "linkable" ]; then
 	PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Link</label>
+			<input file icon=\"edit-redo\"></input>
+			<action>xterm -T \"Link $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg link $PACKAGE $(readlink /var/lib/tazpkg/fslink); sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>"
+elif [ ! -s $ROOT/installed/$PKG/modifiers ]; then
+	[ -L $ROOT/installed/$PKG ] || PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Repack</label>
 			<input file icon=\"edit-redo\"></input>
 			<action>xterm -T \"Repack $PACKAGE\" $XTERM_OPTS -e \"\
 			cd /var/cache/tazpkg; \
 			tazpkg repack $PACKAGE; sleep 2\"</action>
+			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+		</button>
+"
+	PACKAGE_INFOS="$PACKAGE_INFOS
+		<button>
+			<label>Remove</label>
+			<input file icon=\"edit-delete\"></input>
+			<action>xterm -T \"Remove $PACKAGE\" $XTERM_OPTS -e \"\
+			tazpkg remove $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>
 "
@@ -306,9 +333,6 @@ else
 			tazpkg get-install $PACKAGE --forced; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>
-"
-fi
-PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Remove</label>
 			<input file icon=\"edit-delete\"></input>
@@ -316,6 +340,9 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 			tazpkg remove $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 		</button>
+"
+fi
+PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
 			<label>Files</label>
 			<input file icon=\"tazpkg\"></input>

@@ -296,6 +296,7 @@ export TAZPKG_DIALOG='
 				<item>installable</item>
 				<item>blocked</item>
 				<item>upgradeable</item>
+				<item>linkable</item>
 			</combobox>
 			<text>
 				<label>"Category:"</label>
@@ -465,6 +466,26 @@ The cache directory is used to store downloaded or repacked packages.
 				</button>
 			</hbox>
 		</frame>
+		<frame Filesystem link (to install packages as soft link from another mounted Slitaz)>
+			<hbox>
+				<entry>
+					<input>readlink /var/lib/tazpkg/fslink</input>
+					<variable>FSLINK</variable>
+				</entry>
+				<button>
+					<label>Setup</label>
+					<input file icon="go-next"></input>
+					<action>rm -f /var/lib/tazpkg/fslink ; [ "$FSLINK" != "/" -a -d $FSLINK/var/lib/tazpkg ] && ln -s $FSLINK /var/lib/tazpkg/fslink</action>
+					<action>clear:FSLINK</action>
+					<action>refresh:FSLINK</action>
+				</button>
+				<button>
+					<label>Mountbox</label>
+					<input file icon="media-flash"></input>
+					<action>mountbox</action>
+				</button>
+			</hbox>
+		</frame>
 		<frame Mirror URL>
 			<hbox>
 				<entry>
@@ -510,7 +531,7 @@ The cache directory is used to store downloaded or repacked packages.
 					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Repack configs" -geometry 80x25+120+120 -e "tazpkg repack-config ; sleep 5" 2> /dev/null</action>
 				</button>
 				<button>
-					<label>Config Files</label>
+					<label>Show Files</label>
 					<input file icon="tazpkg"></input>
 					<action type="launch">LIST_CONFIG_FILES</action>
 				</button>
@@ -520,12 +541,12 @@ The cache directory is used to store downloaded or repacked packages.
 			<hbox>
 				<button>
 					<label>Quick check</label>
-					<input file icon="go-next"></input>
+					<input file icon="system-search"></input>
 					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check | less " 2> /dev/null</action>
 				</button>
 				<button>
 					<label>Full check</label>
-					<input file icon="go-next"></input>
+					<input file icon="system-search"></input>
 					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less " 2> /dev/null</action>
 				</button>
 				</hbox>
