@@ -466,7 +466,7 @@ The cache directory is used to store downloaded or repacked packages.
 				</button>
 			</hbox>
 		</frame>
-		<frame Filesystem link (to install packages as soft link from another mounted Slitaz)>
+		<frame Filesystem link (to install packages as a soft link from another mounted Slitaz)>
 			<hbox>
 				<entry>
 					<input>readlink /var/lib/tazpkg/fslink</input>
