@@ -840,7 +840,7 @@ install_flavor()
 	[ -f $FLAVOR.flavor ] && cp $FLAVOR.flavor $TMP_DIR
 	cd $TMP_DIR
 	if [ -f $FLAVOR.flavor ] || download $FLAVOR.flavor; then
-		zcat $FLAVOR.flavor | cpio -i 2>/dev/null
+		zcat $FLAVOR.flavor | cpio -i >/dev/null
 		while read file; do
 			for pkg in $(ls -d $INSTALLED/${file%%-*}*); do
 				[ -f $pkg/receipt ] || continue
@@ -1962,7 +1962,7 @@ EOT
 		ln -s / rootfs
 		mkdir tmp
 		sed 's/^/rootfs/' < files.list | cpio -o -H newc 2>/dev/null |\
-		      ( cd tmp ; cpio -idm 2>/dev/null )
+		      ( cd tmp ; cpio -idm >/dev/null )
 		mv tmp/rootfs fs
 		if [ -f $INSTALLED/$PACKAGE/volatile.cpio.gz ]; then
 			zcat $INSTALLED/$PACKAGE/volatile.cpio.gz | \
