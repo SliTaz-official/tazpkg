@@ -344,6 +344,9 @@ export TAZPKG_DIALOG='
 			<action>refresh:CACHE_STATS</action>
 		</tree>
 		<hbox>
+			<text>
+				<label>" Search: "</label>
+			</text>
 			<entry>
 				<variable>SEARCH</variable>
 			</entry>
