@@ -26,10 +26,10 @@ if [ "$1" = "info" ]; then
 	RECEIPT=$ROOT/installed/$3/receipt
 	. $RECEIPT
 	case "$2" in
-	Web*) firefox $WEB_SITE &;;
+	Web*) browser $WEB_SITE &;;
 	Siz*) xterm -T "$3 depends (q to quit)" -e "$0 sizes $3 | less";;
 	Upg*) xterm -T "$3 upgrade" -e "tazpkg get-install $3 --forced ; sleep 2";;
-	Hand*) firefox $HANDBOOK_URL &;;
+	Hand*) browser $HANDBOOK_URL &;;
 	Sug*) $0 list_packages $SUGGESTED;;
 	Dep*) $0 list_packages $DEPENDS;;
 	Mod*) $0 list_packages $(xargs echo < $ROOT/installed/$3/modifiers);;
@@ -212,7 +212,7 @@ if [ -d $ROOT/installed/$PKG ]; then
 	<tree>
 		<width>460</width><height>200</height>
 		<label>$PKG|$SHORT_DESC</label>
-		<variable>FIELD</variable>
+		<variable>FIELD</variable>		
 		<item icon=\"tazpkg\">Version: | $VERSION</item>
 		<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
 [ -n "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
@@ -239,6 +239,7 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
 		<action> $0 info \"\$FIELD\" $PKG </action>
+		<item icon=\"help\">Tip: | Double-click items above to view more information</item>
 	</tree>
 
 	<hbox>"
@@ -408,7 +409,8 @@ else
 		<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
 	PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
-		<action>case \$FIELD2 in Web*) firefox $WEB_SITE &;; esac</action>
+		<action>case \$FIELD2 in Web*) browser $WEB_SITE &;; esac</action>
+		<item icon=\"help\">Tip: | Double-click items above to view more information</item>
 	</tree>
 
 	<hbox>"
