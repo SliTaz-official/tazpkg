@@ -344,7 +344,7 @@ else
 fi
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<button>
-			<label>Files</label>
+			<label>View Files</label>
 			<input file icon=\"tazpkg\"></input>
 			<action type=\"launch\">LIST_FILES</action>
 		</button>
@@ -425,7 +425,7 @@ else
 			<default>true</default>
 		</checkbox>
 		<button>
-			<label>Get-install</label>
+			<label>Install Package</label>
 			<input file icon=\"go-next\"></input>
 			<action>xterm -T \"Install $PACKAGE\" $XTERM_OPTS -e \"\
 			if [ x\$AUTO_DEPENDS != xtrue ]; then script -c \\\"tazpkg get-install $PACKAGE\\\" /var/log/tazpkg-install.log;\
@@ -435,14 +435,14 @@ else
 			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
 		</button>
 		<button>
-			<label>Get</label>
+			<label>Download</label>
 			<input file icon=\"go-next\"></input>
 			<action>xterm -T \"Get $PACKAGE\" $XTERM_OPTS -e \"\
 			cd /var/cache/tazpkg; tazpkg get $PACKAGE; sleep 2\"</action>
 			<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
 		</button>
 		<button>
-			<label>Files</label>
+			<label>View Files</label>
 			<input file icon=\"tazpkg\"></input>
 			<action type=\"launch\">LIST_FILES_MIRROR</action>
 		</button>
