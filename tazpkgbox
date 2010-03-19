@@ -320,7 +320,7 @@ export TAZPKG_DIALOG='
 				<item>non-free</item>
 			</combobox>
 			<button>
-				<label>List</label>
+				<label>List Packages</label>
 				<input file icon="reload"></input>
 				<action>echo "$CAT" > /tmp/tazpkgbox/category</action>
 				<action>echo "$STATUS" > /tmp/tazpkgbox/status</action>
@@ -388,64 +388,75 @@ tmp='
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
 		</tree>
+		
 		<hbox>
-			<text>
-				<label>"Undigest:"</label>
-			</text>
-			<combobox>
-				<variable>UNDIGEST_ENTRY</variable>
+			
+			<button>
+				<label>Setup/Add undigest mirrors</label>
+				<input file icon="go-next"></input>
+				<action type="launch">SETUP_UNDIGEST</action>
+			</button>
+		</hbox>
+		<frame List packages on undigest mirrors>
+			<hbox> 
+				<text>
+					<label>"Undigest:"</label>
+				</text>
+				<combobox>
+					<variable>UNDIGEST_ENTRY</variable>
 '
 TAZPKG_DIALOG="$TAZPKG_DIALOG $tmp"
 for i in all $(ls /var/lib/tazpkg/undigest 2> /dev/null); do
 	TAZPKG_DIALOG="$TAZPKG_DIALOG <item>$i</item> "
 done
-tmp='			</combobox>
-			<button>
-				<label>Setup undigest mirrors</label>
-				<input file icon="go-next"></input>
-				<action type="launch">SETUP_UNDIGEST</action>
-			</button>
-		</hbox>
-		<hbox>
-			<text>
-				<label>"Status:"</label>
-			</text>
-			<combobox>
-				<variable>UNDIGEST_STATUS</variable>
-				<item>all</item>
-				<item>installed</item>
-				<item>installable</item>
-				<item>blocked</item>
-				<item>upgradeable</item>
-			</combobox>
-			<text>
-				<label>"Category:"</label>
-			</text>
-			<combobox>
-				<variable>UNDIGEST_CAT</variable>
-				<item>all</item>
-				<item>base-system</item>
-				<item>x-window</item>
-				<item>utilities</item>
-				<item>network</item>
-				<item>graphics</item>
-				<item>multimedia</item>
-				<item>office</item>
-				<item>development</item>
-				<item>system-tools</item>
-				<item>security</item>
-				<item>games</item>
-				<item>misc</item>
-				<item>meta</item>
-				<item>non-free</item>
-			</combobox>
-			<button>
-				<label>List</label>
-				<input file icon="reload"></input>
-				<action>echo "$UNDIGEST_CAT $UNDIGEST_ENTRY $UNDIGEST_STATUS" > /tmp/tazpkgbox/undigest-category</action>
-				<action>refresh:DEV</action>
-			</button>
-		</hbox>
+tmp='			</combobox>		
+            			
+				<text>
+					<label>"Status:"</label>
+				</text>
+				<combobox>
+					<variable>UNDIGEST_STATUS</variable>
+					<item>all</item>
+					<item>installed</item>
+					<item>installable</item>
+					<item>blocked</item>
+					<item>upgradeable</item>
+				</combobox>
+			</hbox>
+			<hbox>	
+				<text>
+					<label>"Category:"</label>
+				</text>
+				<combobox>
+					<variable>UNDIGEST_CAT</variable>
+					<item>all</item>
+					<item>base-system</item>
+					<item>x-window</item>
+					<item>utilities</item>
+					<item>network</item>
+					<item>graphics</item>
+					<item>multimedia</item>
+					<item>office</item>
+					<item>development</item>
+					<item>system-tools</item>
+					<item>security</item>
+					<item>games</item>
+					<item>misc</item>
+					<item>meta</item>
+					<item>non-free</item>
+				</combobox>
+				<text>
+					<label>"          "</label>
+				</text>
+				<button>
+					<label>"      List Packages            "</label>
+					<input file icon="reload"></input>
+					<action>echo "$UNDIGEST_CAT $UNDIGEST_ENTRY $UNDIGEST_STATUS" > /tmp/tazpkgbox/undigest-category</action>
+					<action>refresh:DEV</action>
+				</button>
+				</hbox>	
+		</frame>		
+			
 	</vbox>
 
 	<vbox>
@@ -489,6 +500,7 @@ The cache directory is used to store downloaded or repacked packages.
 				</button>
 			</hbox>
 		</frame>
+		<hbox>
 		<frame Mirror URL>
 			<hbox>
 				<entry>
@@ -509,20 +521,25 @@ The cache directory is used to store downloaded or repacked packages.
 					<action>clear:MIRROR</action>
 					<action>refresh:MIRROR</action>
 				</button>
-				<button>
-					<input file icon="media-cdrom"></input>
-					<label>DVD</label>
-					<action type="launch">SETUP_DVD</action>
-				</button>
 			</hbox>
 		</frame>
+		<frame Mirror Packages>
+				<hbox>	
+				<button>
+					<input file icon="media-cdrom"></input>
+					<label>DVD Box</label>
+					<action type="launch">SETUP_DVD</action>
+				</button>
+				</hbox>
+		</frame>
+		</hbox>
 		<hbox>
-			<frame Journal>
+			<frame Install Logs>
 				<hbox>
 				<button>
-					<label>Show journal</label>
+					<label>View Logs</label>
 					<input file icon="find"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "$(ls -l /var/log/tazpkg.log | while read mod links user grep remain ; do echo $remain ; done) (q to quit)" -geometry 80x25+120+120 -e "cat /var/log/tazpkg.log | less"</action>
+					<action>xterm -fa MiscFixed -fs 11 -T "$(ls -l /var/log/tazpkg.log | while read mod links user grep remain ; do echo $remain ; done) (q to quit)" -geometry 80x25+120+120 -e "cat /var/log/tazpkg.log | less"</action>
 				</button>
 				</hbox>
 			</frame>
@@ -531,10 +548,10 @@ The cache directory is used to store downloaded or repacked packages.
 				<button>
 					<label>Repack config</label>
 					<input file icon="edit-redo"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Repack configs" -geometry 80x25+120+120 -e "tazpkg repack-config ; sleep 5" 2> /dev/null</action>
+					<action>xterm -fa MiscFixed -fs 11 -T "Repack configs" -geometry 80x25+120+120 -e "tazpkg repack-config ; sleep 5" 2> /dev/null</action>
 				</button>
 				<button>
-					<label>Show Files</label>
+					<label>View Files</label>
 					<input file icon="tazpkg"></input>
 					<action type="launch">LIST_CONFIG_FILES</action>
 				</button>
@@ -545,12 +562,12 @@ The cache directory is used to store downloaded or repacked packages.
 				<button>
 					<label>Quick check</label>
 					<input file icon="system-search"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check | less " 2> /dev/null</action>
+					<action>xterm -fa MiscFixed -fs 11 -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check | less " 2> /dev/null</action>
 				</button>
 				<button>
 					<label>Full check</label>
 					<input file icon="system-search"></input>
-					<action>xterm -fa MiscFixed -fs 11 -bg gray93 -fg black -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less " 2> /dev/null</action>
+					<action>xterm -fa MiscFixed -fs 11 -T "Check packages (q to quit)" -geometry 80x25+120+120 -e "tazpkg check --full | less " 2> /dev/null</action>
 				</button>
 				</hbox>
 			</frame>
@@ -586,9 +603,9 @@ The cache directory is used to store downloaded or repacked packages.
 			<action>refresh:CACHE_STATS</action>
 		</button>
 		<button>
-			<label>Wok</label>
+			<label> View Wok</label>
 			<input file icon="gtk-open"></input>
-			<action>firefox http://hg.slitaz.org/wok/file/</action>
+			<action>browser http://hg.slitaz.org/wok/file/</action>
 		</button>
 		<button help>
 			<label>Help</label>
