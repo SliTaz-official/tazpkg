@@ -238,8 +238,8 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"tazpkg\">Modified by: | $(xargs echo < $ROOT/installed/$PKG/modifiers)</item>"
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
-		<action> $0 info \"\$FIELD\" $PKG </action>
-		<item icon=\"help\">Tip: | Double-click items above to view more information</item>
+		<item icon=\"help\">Tip: | double-click items above for more information</item>
+		<action> $0 info \"\$FIELD\" $PKG </action>		
 	</tree>
 
 	<hbox>"
@@ -408,9 +408,9 @@ else
 	[ -n "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
 	PACKAGE_INFOS="$PACKAGE_INFOS
-		<item icon=\"applications-internet\">Web site: | $WEB_SITE</item>
+		<item icon=\"applications-internet\">Website: | $WEB_SITE</item>		
+		<item icon=\"help\">Tip: | double-click Website item for more information</item>
 		<action>case \$FIELD2 in Web*) browser $WEB_SITE &;; esac</action>
-		<item icon=\"help\">Tip: | Double-click items above to view more information</item>
 	</tree>
 
 	<hbox>"
