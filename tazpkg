@@ -53,8 +53,8 @@ case $LANG in
 		CHECK_FOR_PACKAGE_FILE_MSG="Impossible de trouver"
 		CHECK_FOR_RECEIPT_MSG="Impossible de trouver la receipt"
 		CHECK_FOR_INSTALLED_PACKAGE_MSG="\
-$PACKAGE est dÈj‡ installÈ. Vous pouvez utiliser l'option --forced pour
-forcer l'installation ou supprimer le paquet et le rÈinstaller." ;;
+$PACKAGE est d√©j√† install√©. Vous pouvez utiliser l'option --forced pour
+forcer l'installation ou supprimer le paquet et le r√©installer." ;;
 	*)
 		#. /usr/share/slitaz/messages/en/tazpkg.msg
 		# Bold red warning for upgrade.
