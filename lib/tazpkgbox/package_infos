@@ -27,6 +27,7 @@ if [ "$1" = "info" ]; then
 	. $RECEIPT
 	case "$2" in
 	Web*) browser $WEB_SITE &;;
+	Tip*) browser http://hg.slitaz.org/wok/raw-file/tip/$3/receipt &;;
 	Siz*) xterm -T "$3 depends (q to quit)" -e "$0 sizes $3 | less";;
 	Upg*) xterm -T "$3 upgrade" -e "tazpkg get-install $3 --forced ; sleep 2";;
 	Hand*) browser $HANDBOOK_URL &;;
@@ -238,7 +239,7 @@ PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"tazpkg\">Modified by: | $(xargs echo < $ROOT/installed/$PKG/modifiers)</item>"
 PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Website: | $WEB_SITE</item>
-		<item icon=\"help\">Tip: | double-click items above for more information</item>
+		<item icon=\"help\">Tip: | double-click any item for more information</item>
 		<action> $0 info \"\$FIELD\" $PKG </action>		
 	</tree>
 
@@ -409,8 +410,10 @@ else
 		<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
 	PACKAGE_INFOS="$PACKAGE_INFOS
 		<item icon=\"applications-internet\">Website: | $WEB_SITE</item>		
-		<item icon=\"help\">Tip: | double-click Website for more information</item>
+		<item icon=\"text-editor\">Receipt: | double-click to view receipt</item>
 		<action>case \$FIELD2 in Web*) browser $WEB_SITE &;; esac</action>
+		<action>case \$FIELD2 in Rec*) browser http://hg.slitaz.org/wok/raw-file/tip/$PACKAGE/receipt &;; esac</action>
+		
 	</tree>
 
 	<hbox>"
