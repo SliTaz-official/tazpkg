@@ -1503,8 +1503,7 @@ Maintainer : $MAINTAINER"
 				search_in_packages_txt ;;
 			*)
 				search_in_installed_packages
-				search_in_packages_list 
-				$0 search-pkgname $2 | more;;
+				search_in_packages_list ;;
 		esac ;;
 	search-file)
 		# Search for a file by pattern or name in all files.list.
