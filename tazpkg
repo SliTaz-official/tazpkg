@@ -1655,9 +1655,12 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 		touch $2-processed
 
 		# Upgrade tazpkg first. It may handle new features/formats...
-		case " $LIST " in
-		*\ tazpkg\ *) LIST="tazpkg $LIST";;
-		esac
+		# then upgrade essential packages early
+		for pkg in busybox-pam busybox glibc-base tazpkg ; do
+			case " $LIST " in
+			*\ $pkg\ *) LIST="$pkg $LIST";;
+			esac
+		done
 
 		for pkg in $LIST
 		do
