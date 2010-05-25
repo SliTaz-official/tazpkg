@@ -15,7 +15,7 @@
 #           Paul Issott <paul@slitaz.org>
 #           Rohit Joshi <jozee@slitaz.org>
 #
-VERSION=3.2.2
+VERSION=3.2.3
 
 ####################
 # Script variables #
@@ -1656,10 +1656,13 @@ list of packages to install. Example : tazpkg install-list packages.list\n"
 
 		# Upgrade tazpkg first. It may handle new features/formats...
 		# then upgrade essential packages early
-		for pkg in busybox-pam busybox glibc-base tazpkg ; do
-			case " $LIST " in
-			*\ $pkg\ *) LIST="$pkg $LIST";;
-			esac
+		for pkg in busybox-pam busybox gcc-lib-base glibc-base \
+			   slitaz-base-files tazpkg ; do
+			pkg=$(egrep $pkg-[0-9] $INSTALL_LIST)
+			[ -n "$pkg" ] || continue
+			echo "Add implicit depend $pkg ..."
+			LIST="$pkg
+$LIST"
 		done
 
 		for pkg in $LIST
