@@ -460,7 +460,7 @@ install_package()
 			grep -q "^$file$" $TMP_DIR/files.list && continue
 			for i in $(cat $PACKAGE/modifiers 2> /dev/null ;
 			    grep -sl $PACKAGE */modifiers | cut -d/ -f1 ); do
-				grep -q "^$file$" $i/files.list && continue 2
+				grep -qs "^$file$" $i/files.list && continue 2
 			done
 			echo $file
 		done < $PACKAGE/files.list > $TMP_DIR/files2remove.list
@@ -475,6 +475,7 @@ install_package()
 	  done ; 
 	  $check && for i in *; do 
 	  	[ "$i" == "$PACKAGE" ] && continue
+	  	[ -s $i/files.list ] || continue
 	  	awk "{ printf \"$i %s\\n\",\$1 }" < $i/files.list
 	  done } | awk '
 {
