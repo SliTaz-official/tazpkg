@@ -1,0 +1,676 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Tazpkg\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-06-20 17:20+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: tazpkg:146
+msgid ""
+"You must be root to run tazpkg with this option. Please use the command:\n"
+"su followed by the root password to become super-user."
+msgstr ""
+
+#: tazpkg:157
+msgid "Please specify a package name on the command line."
+msgstr ""
+
+#: tazpkg:168
+#, sh-format
+msgid "Unable to find: $PACKAGE_FILE"
+msgstr ""
+
+#: tazpkg:179
+#, sh-format
+msgid "Unable to find the receipt: $FS$INSTALLED/$PACKAGE/receipt"
+msgstr ""
+
+#: tazpkg:210
+#, sh-format
+msgid ""
+"$PACKAGE package is already installed. You can\n"
+"use the --forced option to force installation or remove it and reinstall."
+msgstr ""
+
+#: tazpkg:224
+#, sh-format
+msgid "Unable to find the list: $LOCALSTATE/packages.list"
+msgstr ""
+
+#: tazpkg:226
+msgid ""
+"You must probably run 'tazpkg recharge' as root to get the latest list of\n"
+"packages available on the mirror."
+msgstr ""
+
+#: tazpkg:321
+#, sh-format
+msgid "Unable to find: $PACKAGE in the mirrored packages list."
+msgstr ""
+
+#: tazpkg:376
+msgid "Extracting the pseudo fs... "
+msgstr ""
+
+#: tazpkg:435
+msgid "Installation of :"
+msgstr ""
+
+#: tazpkg:437
+#, sh-format
+msgid "Copying $PACKAGE... "
+msgstr ""
+
+#: tazpkg:449
+msgid "Checking post install dependencies... "
+msgstr ""
+
+#: tazpkg:452
+#, sh-format
+msgid "Please run 'tazpkg install $PACKAGE_FILE' in / and retry."
+msgstr ""
+
+#: tazpkg:526
+#, sh-format
+msgid "Saving configuration files for $PACKAGE... "
+msgstr ""
+
+#: tazpkg:540
+#, sh-format
+msgid "Installing $PACKAGE... "
+msgstr ""
+
+#: tazpkg:544
+#, sh-format
+msgid "Removing old $PACKAGE... "
+msgstr ""
+
+#: tazpkg:552
+msgid "Removing all tmp files... "
+msgstr ""
+
+#: tazpkg:561
+#, sh-format
+msgid "$PACKAGE ($VERSION$EXTRAVERSION) is installed."
+msgstr ""
+
+#: tazpkg:612
+#, sh-format
+msgid "WARNING Dependency loop between $PACKAGE and $i."
+msgstr ""
+
+#: tazpkg:616
+msgid "Tracking dependencies for :"
+msgstr ""
+
+#: tazpkg:623
+#, sh-format
+msgid "Missing: $MISSING_PACKAGE"
+msgstr ""
+
+#: tazpkg:627
+#, sh-format
+msgid "$deps missing package(s) to install."
+msgstr ""
+
+#: tazpkg:643
+msgid "Install all missing dependencies (y/N) ? "
+msgstr ""
+
+#: tazpkg:658
+#, sh-format
+msgid "Checking if $pkg exists in local list... "
+msgstr ""
+
+#: tazpkg:685
+#, sh-format
+msgid ""
+"Leaving dependencies for $PACKAGE unsolved. The package is installed but\n"
+"will probably not work."
+msgstr ""
+
+#: tazpkg:762
+msgid "Installed packages"
+msgstr ""
+
+#: tazpkg:777
+#, sh-format
+msgid "0 installed packages found for : $PATTERN"
+msgstr ""
+
+#: tazpkg:781
+#, sh-format
+msgid "$packages installed package(s) found for : $PATTERN"
+msgstr ""
+
+#: tazpkg:789
+msgid "Available packages name-version"
+msgstr ""
+
+#: tazpkg:799
+msgid ""
+"No 'packages.list' found to check for mirrored packages. For more results,\n"
+"please run 'tazpkg recharge' once as root before searching."
+msgstr ""
+
+#: tazpkg:804 tazpkg:832
+#, sh-format
+msgid "0 available packages found for : $PATTERN"
+msgstr ""
+
+#: tazpkg:808 tazpkg:836
+#, sh-format
+msgid "$packages available package(s) found for : $PATTERN"
+msgstr ""
+
+#: tazpkg:817
+msgid "Matching packages name with version and desc"
+msgstr ""
+
+#: tazpkg:827
+msgid ""
+"No 'packages.txt' found to check for mirrored packages. For more results,\n"
+"please run 'tazpkg recharge' once as root before searching."
+msgstr ""
+
+#: tazpkg:879
+#, sh-format
+msgid "Can't find flavor $FLAVOR. Aborting."
+msgstr ""
+
+#: tazpkg:893
+msgid "Current mirror(s)"
+msgstr ""
+
+#: tazpkg:897
+msgid ""
+"Please enter URL of the new mirror (http, ftp or local path). You must "
+"specify\n"
+"the complete address to the directory of the packages and packages.list file."
+msgstr ""
+
+#: tazpkg:900
+msgid "New mirror(s) URL : "
+msgstr ""
+
+#: tazpkg:908
+msgid "Nothing has been changed."
+msgstr ""
+
+#: tazpkg:1137
+#, sh-format
+msgid "$PACKAGE_FILE does not look like a Archlinux package !"
+msgstr ""
+
+#: tazpkg:1188
+#, sh-format
+msgid "$PACKAGE_FILE does not look like a Slackware package !"
+msgstr ""
+
+#: tazpkg:1304
+msgid "Blocked packages"
+msgstr ""
+
+#: tazpkg:1309
+msgid "No blocked packages found."
+msgstr ""
+
+#: tazpkg:1316
+msgid "Packages categories"
+msgstr ""
+
+#: tazpkg:1332
+msgid "Installed packages of category:"
+msgstr ""
+
+#: tazpkg:1346
+#, sh-format
+msgid "$packages packages installed of category $ASKED_CATEGORY."
+msgstr ""
+
+#: tazpkg:1351
+msgid "List of all installed packages"
+msgstr ""
+
+#: tazpkg:1364
+#, sh-format
+msgid "$packages packages installed."
+msgstr ""
+
+#: tazpkg:1376
+msgid "Creating xHTML list of installed packages"
+msgstr ""
+
+#: tazpkg:1378
+msgid "Generating xHTML header..."
+msgstr ""
+
+#: tazpkg:1382
+msgid "Creating packages information..."
+msgstr ""
+
+#: tazpkg:1392
+msgid "Generating xHTML footer..."
+msgstr ""
+
+#: tazpkg:1408 tazpkg:2114
+msgid "Mirrored packages diff"
+msgstr ""
+
+#: tazpkg:1413
+#, sh-format
+msgid "$pkgs new packages listed on the mirror."
+msgstr ""
+
+#: tazpkg:1417
+msgid "Unable to list anything, no packages.diff found."
+msgstr ""
+
+#: tazpkg:1418
+msgid "Recharge your current list to create a first diff."
+msgstr ""
+
+#: tazpkg:1423 tazpkg:1428
+msgid "List of available packages on the mirror"
+msgstr ""
+
+#: tazpkg:1434
+#, sh-format
+msgid "$pkgs packages in the last recharged list."
+msgstr ""
+
+#: tazpkg:1442
+msgid "Installed files with:"
+msgstr ""
+
+#: tazpkg:1457
+msgid "Tazpkg information"
+msgstr ""
+
+#: tazpkg:1485
+msgid "Description of:"
+msgstr ""
+
+#: tazpkg:1492
+msgid "Sorry, no description available for this package."
+msgstr ""
+
+#: tazpkg:1501
+msgid "Please specify a pattern or package name to search for."
+msgstr ""
+
+#: tazpkg:1502
+msgid "Example : 'tazpkg search paint'"
+msgstr ""
+
+#: tazpkg:1507
+msgid "Search result for:"
+msgstr ""
+
+#: tazpkg:1526 tazpkg:1586
+msgid "Please specify a pattern or file name to search for."
+msgstr ""
+
+#: tazpkg:1527
+msgid "Example : 'tazpkg search-file libnss'"
+msgstr ""
+
+#: tazpkg:1532 tazpkg:1592
+msgid "Search result for file"
+msgstr ""
+
+#: tazpkg:1564
+msgid "Package"
+msgstr ""
+
+#: tazpkg:1574
+#, sh-format
+msgid "0 file found for: $pkg"
+msgstr ""
+
+#: tazpkg:1579
+#, sh-format
+msgid "$match file(s) found for: $pkg"
+msgstr ""
+
+#: tazpkg:1587
+msgid "Example : 'tazpkg search-pkgname libnss'"
+msgstr ""
+
+#: tazpkg:1605
+#, sh-format
+msgid "0 file found for : $file"
+msgstr ""
+
+#: tazpkg:1652
+msgid ""
+"Please change directory (cd) to the packages repository, and specify the\n"
+"list of packages to install. Example : tazpkg install-list packages.list"
+msgstr ""
+
+#: tazpkg:1707
+msgid "Please specify the release you want on the command line."
+msgstr ""
+
+#: tazpkg:1708
+msgid "Example: tazpkg set-release cooking"
+msgstr ""
+
+#: tazpkg:1732
+#, sh-format
+msgid "$PACKAGE is not installed."
+msgstr ""
+
+#: tazpkg:1750
+#, sh-format
+msgid "The following packages depend on $PACKAGE:"
+msgstr ""
+
+#: tazpkg:1757
+#, sh-format
+msgid "The following packages have been modified by $PACKAGE:"
+msgstr ""
+
+#: tazpkg:1762
+#, sh-format
+msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION) ?"
+msgstr ""
+
+#: tazpkg:1763
+msgid "Please confirm uninstallation (y/N) : "
+msgstr ""
+
+#: tazpkg:1766
+msgid "Removing:"
+msgstr ""
+
+#: tazpkg:1772
+msgid "Removing all files installed..."
+msgstr ""
+
+#: tazpkg:1793
+msgid "Removing package receipt..."
+msgstr ""
+
+#: tazpkg:1801
+#, sh-format
+msgid "Remove packages depending on $PACKAGE"
+msgstr ""
+
+#: tazpkg:1812
+#, sh-format
+msgid "Reinstall packages modified by $PACKAGE"
+msgstr ""
+
+#: tazpkg:1817
+#, sh-format
+msgid "Check $INSTALLED/$i for reinstallation"
+msgstr ""
+
+#: tazpkg:1827
+#, sh-format
+msgid "Uninstallation of $PACKAGE cancelled."
+msgstr ""
+
+#: tazpkg:1836
+msgid "Extracting:"
+msgstr ""
+
+#: tazpkg:1846 tazpkg:1863
+msgid "Copying original package..."
+msgstr ""
+
+#: tazpkg:1852
+#, sh-format
+msgid "$PACKAGE is extracted to: $DESTDIR"
+msgstr ""
+
+#: tazpkg:1860
+msgid "Recompressing:"
+msgstr ""
+
+#: tazpkg:1868
+msgid "Recompressing the fs... "
+msgstr ""
+
+#: tazpkg:1872
+msgid "Creating new package... "
+msgstr ""
+
+#: tazpkg:1905
+msgid "Configuration files"
+msgstr ""
+
+#: tazpkg:1966
+#, sh-format
+msgid "Can't repack, $PACKAGE files have been modified by:"
+msgstr ""
+
+#: tazpkg:1978
+msgid "Can't repack, the following files are lost:"
+msgstr ""
+
+#: tazpkg:2016
+#, sh-format
+msgid "Package $PACKAGE repacked successfully."
+msgstr ""
+
+#: tazpkg:2025
+msgid "Receipt is missing. Please read the documentation."
+msgstr ""
+
+#: tazpkg:2032
+msgid "Creating the list of files..."
+msgstr ""
+
+#: tazpkg:2037
+msgid "Creating md5sum of files..."
+msgstr ""
+
+#: tazpkg:2051
+msgid "Compressing the fs... "
+msgstr ""
+
+#: tazpkg:2058
+msgid "Undating receipt sizes..."
+msgstr ""
+
+#: tazpkg:2063
+msgid "Creating full cpio archive... "
+msgstr ""
+
+#: tazpkg:2066
+msgid "Restoring original package tree... "
+msgstr ""
+
+#: tazpkg:2071
+#, sh-format
+msgid "Package $PACKAGE compressed successfully."
+msgstr ""
+
+#: tazpkg:2087
+msgid "Creating backup of the last packages list..."
+msgstr ""
+
+#: tazpkg:2120
+#, sh-format
+msgid "$new_pkgs new packages on the mirror."
+msgstr ""
+
+#: tazpkg:2123
+msgid "No new packages on the mirror."
+msgstr ""
+
+#: tazpkg:2130
+msgid ""
+"Last packages.list is ready to use. Note that next time you recharge the\n"
+"list, a list of differences will be displayed to show new and upgradeable\n"
+"packages."
+msgstr ""
+
+#: tazpkg:2161
+msgid "Available upgrades"
+msgstr ""
+
+#: tazpkg:2259
+#, sh-format
+msgid ""
+"$packages installed and listed packages to consider, $up to upgrade, "
+"$blocked blocked."
+msgstr ""
+
+#: tazpkg:2262
+msgid "System is up-to-date."
+msgstr ""
+
+#: tazpkg:2265
+#, sh-format
+msgid ""
+"$packages installed and listed packages to consider, 0 to upgrade, $blocked "
+"blocked."
+msgstr ""
+
+#: tazpkg:2272
+msgid ""
+"WARNING ---> Installed package seems more recent than the mirrored\n"
+"one. You can block packages using the command : 'tazpkg block package'.\n"
+"Or upgrade packages at your own risk."
+msgstr ""
+
+#: tazpkg:2281
+msgid "Exiting. No package upgraded."
+msgstr ""
+
+#: tazpkg:2298
+msgid "No known bugs."
+msgstr ""
+
+#: tazpkg:2304
+msgid "Bug list completed"
+msgstr ""
+
+#: tazpkg:2306
+#, sh-format
+msgid "Bugs in package $PACKAGE version $VERSION$EXTRAVERSION:"
+msgstr ""
+
+#: tazpkg:2320
+#, sh-format
+msgid "The package $PACKAGE installation has not completed"
+msgstr ""
+
+#: tazpkg:2328
+#, sh-format
+msgid "The package $PACKAGE $VERSION$EXTRAVERSION has been modified by:"
+msgstr ""
+
+#: tazpkg:2406
+#, sh-format
+msgid "$PACKAGE is already in the blocked packages list."
+msgstr ""
+
+#: tazpkg:2410
+#, sh-format
+msgid "Add $PACKAGE to : $BLOCKED..."
+msgstr ""
+
+#: tazpkg:2425
+#, sh-format
+msgid "Removing $PACKAGE from : $BLOCKED..."
+msgstr ""
+
+#: tazpkg:2433
+#, sh-format
+msgid "$PACKAGE is not in the blocked packages list."
+msgstr ""
+
+#: tazpkg:2493
+#, sh-format
+msgid "Continue $PACKAGE download"
+msgstr ""
+
+#: tazpkg:2509
+msgid "Clean cache:"
+msgstr ""
+
+#: tazpkg:2511
+msgid "Cleaning cache directory..."
+msgstr ""
+
+#: tazpkg:2515
+#, sh-format
+msgid "$files file(s) removed from cache."
+msgstr ""
+
+#: tazpkg:2527
+msgid "Current undigest(s)"
+msgstr ""
+
+#: tazpkg:2531
+msgid "No undigest mirror found."
+msgstr ""
+
+#: tazpkg:2567
+#, sh-format
+msgid "Creating new undigest $undigest."
+msgstr ""
+
+#: tazpkg:2602
+#, sh-format
+msgid "Nothing to do for $PACKAGE."
+msgstr ""
+
+#: tazpkg:2606
+#, sh-format
+msgid "package $PACKAGE is not installed."
+msgstr ""
+
+#: tazpkg:2607
+msgid "Install package with 'tazpkg install' or 'tazpkg get-install'"
+msgstr ""
+
+#: tazpkg:2623
+msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
+msgstr ""
+
+#: tazpkg:2633
+msgid "You are already running a Tazpkg SHell."
+msgstr ""
+
+#: tazpkg:2671
+msgid "Unsupported format"
+msgstr ""
+
+#: tazpkg:2686
+#, sh-format
+msgid "$PACKAGE is already installed."
+msgstr ""
+
+#: tazpkg:2695
+#, sh-format
+msgid "Missing : $i"
+msgstr ""
+
+#: tazpkg:2699
+msgid "Link all missing dependencies (y/N) ? "
+msgstr ""
+
+#: tazpkg:2707
+#, sh-format
+msgid "Leaving dependencies for $PACKAGE unsolved."
+msgstr ""
+
+#: tazpkg:2708
+msgid "The package is installed but will probably not work."
+msgstr ""
