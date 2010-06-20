@@ -11,6 +11,8 @@ Tazpkg is entirely built from scratch using SHell script, compatible with
 Bash, it runs under Ash - part of the Busybox project. Tazpkg is distributed
 under the free GNU license GPL V3. 
 
+Developement HG repo: http://hg.slitaz.org/tazpkg
+
 
 Installation
 ------------

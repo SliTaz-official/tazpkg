@@ -12,7 +12,7 @@ all:
 # i18n.
 
 pot:
-	xgettext -o po/tazpkg/tazpkg.pot -L Shell ./tazpkg
+	xgettext -o po/tazpkg/tazpkg.pot -L Shell --package-name=Tazpkg ./tazpkg
 	
 msgmerge:
 	@for l in $(LINGUAS); do \
