@@ -1649,7 +1649,7 @@ Maintainer : $MAINTAINER"
 		if [ -z "$2" ]; then
 			echo ""
 			gettext \
-"Please change directory (cd) to the packages repository, and specify the
+"Please change directory (cd) to the packages repository and specify the
 list of packages to install. Example : tazpkg install-list packages.list"
 			echo "" && exit 0
 		fi
@@ -1679,7 +1679,7 @@ list of packages to install. Example : tazpkg install-list packages.list"
 			   slitaz-base-files tazpkg ; do
 			pkg=$(egrep $pkg-[0-9] $INSTALL_LIST)
 			[ -n "$pkg" ] || continue
-			echo "Add implicit depend $pkg ..."
+			echo "Adding implicit depends $pkg ..."
 			LIST="$pkg
 $LIST"
 		done
@@ -2055,7 +2055,7 @@ EOT
 			PACKED_SIZE=$(du -chs fs.cpio.lzma receipt files.list \
 				md5sum description.txt 2> /dev/null | awk \
 				'{ sz=$1 } END { print sz }')
-			gettext "Undating receipt sizes..."
+			gettext "Updating receipt sizes..."
 			sed -i s/^PACKED_SIZE.*$// receipt
 			sed -i s/^UNPACKED_SIZE.*$// receipt
 			sed -i "s/^PACKAGE=/PACKED_SIZE=\"$PACKED_SIZE\"\nUNPACKED_SIZE=\"$UNPACKED_SIZE\"\nPACKAGE=/" receipt
@@ -2080,7 +2080,7 @@ EOT
 			[ -f $path/mirror ] || continue
 			echo ""
 			if [ "$path" != "$LOCALSTATE" ]; then
-				echo "Recharge undigest $(basename $path):"
+				echo "Recharging undigest $(basename $path):"
 			fi
 			cd $path
 			if [ -f "packages.list" ]; then
@@ -2490,7 +2490,7 @@ EOT
 			echo "$PACKAGE already in the cache : $CACHE_DIR"
 			# Check package download was finished
 			tail -c 2k $PACKAGE.tazpkg | grep -q 00000000TRAILER || {
-				eval_gettext "Continue \$PACKAGE download"; echo
+				eval_gettext "Continuing \$PACKAGE download"; echo
 				download $PACKAGE.tazpkg
 			}
 		else
@@ -2603,7 +2603,7 @@ EOT
 			fi
 		else
 			echo ""
-			eval_gettext "package \$PACKAGE is not installed."; echo
+			eval_gettext "Package \$PACKAGE is not installed."; echo
 			gettext "Install package with 'tazpkg install' or 'tazpkg get-install'"; echo
 			echo ""
 		fi ;;

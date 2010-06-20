@@ -14,10 +14,10 @@ TMP_DIR=/tmp/tazpkg-$$-$RANDOM
 
 if [ "$1" = "sizes" ]; then
 	cat <<EOT
-Dependancies for $2:
+Dependencies for $2:
 $(tazpkg depends $2)
 
-Reverse dependancies for $2:
+Reverse dependencies for $2:
 $(tazpkg rdepends $2)
 EOT
 	exit 0

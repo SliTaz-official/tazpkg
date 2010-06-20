@@ -355,7 +355,7 @@ msgstr ""
 
 #: tazpkg:1652
 msgid ""
-"Please change directory (cd) to the packages repository, and specify the\n"
+"Please change directory (cd) to the packages repository and specify the\n"
 "list of packages to install. Example : tazpkg install-list packages.list"
 msgstr ""
 
@@ -483,7 +483,7 @@ msgid "Compressing the fs... "
 msgstr ""
 
 #: tazpkg:2058
-msgid "Undating receipt sizes..."
+msgid "Updating receipt sizes..."
 msgstr ""
 
 #: tazpkg:2063
@@ -597,7 +597,7 @@ msgstr ""
 
 #: tazpkg:2493
 #, sh-format
-msgid "Continue $PACKAGE download"
+msgid "Continuing $PACKAGE download"
 msgstr ""
 
 #: tazpkg:2509
@@ -633,7 +633,7 @@ msgstr ""
 
 #: tazpkg:2606
 #, sh-format
-msgid "package $PACKAGE is not installed."
+msgid "Package $PACKAGE is not installed."
 msgstr ""
 
 #: tazpkg:2607
