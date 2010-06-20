@@ -1,50 +1,48 @@
-README for Tazpkg -  Tiny autonomus packages manager                       2010
+README for Tazpkg -  Tiny autonomus packages manager
 ===============================================================================
 
 
-Tazpkg est un gestionnaire de paquets ultra léger (~35 Ko) permettant
-d'installer, lister, télécharger, enlever des paquets sur un système
-GNU/Linux. Tazpkg propose aussi une commande de recherche, pour générer une
-liste et des commandes pour la création de paquets. Il a été créé pour les
-besoins de SliTaz GNU/Linux, mini distribution autonome. Le format des paquets
-utilisent l'extension *.tazpkg, c'est une archive cpio contenant un système de
-fichiers (fs) compressés avec gzip, la recette et une éventuelle description.
-Tazpkg fournit aussi un système de gestion des dépendances basé sur les
-recettes des paquets. La recette contient toutes les informations au sujet du
-paquet, elle peu aussi contenir les fonctions de pre et post installation.
-Cette même recette est par ailleurs utilisée par Tazwok pour compiler les
-sources et créer un paquet tazpkg.
+Tazpkg is a small but powerfull packages manager for SliTaz GNU/Linux and
+other UNIX like operating system. It use tazpkg package generaly build by
+Tazwok with receipt found in the wok. More information can be found in the
+SliTaz Cookbook and the manual.
 
-Tazpkg est écrit en script shell depuis rien (from scratch), compatible
-Bash, et fonctionne avec Ash du projet Busybox. Tazpkg est distribué
-sous license libre GNU gpl v3.
+Tazpkg is entirely built from scratch using SHell script, compatible with
+Bash, it runs under Ash - part of the Busybox project. Tazpkg is distributed
+under the free GNU license GPL V3. 
 
 
-Contenu de l'archive source
----------------------------
+Installation
+------------
+To install all needed files and compile translated messages, make and gettext
+must be installed. Running 'make install' will install everything in /usr, but
+another path and/or destination can be specified via PREFIX and DESTDIR.
+Example:
 
- * tazpkg : c'est le script du gestionnaire de paquet, c'est le seul fichier
-   à installer, mise à part la documentation optionnelle.
- * doc/ : La documentation contenant le manuel au format xHTML.
- * Les fichiers AUTHORS, ChangeLog, COPYING, gpl.txt et ce README.
+	$ make DESTDIR=$PWD/_pkg install
 
+Uninstall
+---------
+Simply type:
+	
+	$ make uninstall	
 
-TESTING
--------
+Translation
+-----------	
+To start a new translation please use msginit from the pot file directory.
+Example for French/France locale (fr_FR):
 
- $ cd into/tazpkg-sources
- Test it :
- $ ./tazpkg usage
+	$ msginit -l fr_FR -o fr.po -i tazpkg.pot
 
+To update all translations from the pot file:
 
-INSTALL
--------
+	$ make msgmerge
 
- # cd into/tazpkg-sources
- # make install
+To compile po files for testing purposes you can use 'make msgfmt' or manually 
+compile your translation. Example for french locale, note that the file must be 
+copied into /usr/share/locale/fr/LC_MESSAGES so gettext can find it:
 
-Uninstall :
- # make uninstall
+	$ msgfmt -o tazpkg.mo fr.po
 
 
 ===============================================================================

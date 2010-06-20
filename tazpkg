@@ -5,7 +5,8 @@
 # SHell script. It works well with Busybox ash shell and bash. Tazpkg lets you
 # list, install, remove, download or get information about a package. You can
 # use 'tazpkg usage' to get a list of commands with short descriptions. Tazpkg
-# also resolves dependencies and can upgrade packages from a mirror.
+# also resolves dependencies and can upgrade packages from a mirror. I18n is
+# done with gettext: `gettext "displayed text"`
 #
 # (C) 2007-2010 SliTaz - GNU General Public License v3.
 #
@@ -15,13 +16,20 @@
 #           Paul Issott <paul@slitaz.org>
 #           Rohit Joshi <jozee@slitaz.org>
 #
-VERSION=3.2.3
+VERSION=4.0
 
 ####################
 # Script variables #
 ####################
 
 . /etc/slitaz/tazpkg.conf
+
+# Include gettext helper script.
+. /usr/bin/gettext.sh
+
+# Export package name for gettext.
+TEXTDOMAIN='tazpkg'
+export TEXTDOMAIN
 
 # Initialize some variables to use words rather than numbers for functions
 # and actions.
