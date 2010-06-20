@@ -1,10 +1,22 @@
 #!/bin/sh
-#
 # The libtazpkgbox - Libraries used by tazpkg GUI box.
+#
 # There is functions to list installed packages in a suitable format for 
-# GTK tree and list mirrored packages using the packages.desc file.
+# GTK tree and list mirrored packages using the packages.desc file. The lib
+# also provide functions to search packages and files and the GUI box for
+# package information.
+#
+# (C) 2010 SliTaz - GNU General Public License v3.
 #
 
+# Include gettext helper script.
+. /usr/bin/gettext.sh
+
+# Export package name for gettext.
+TEXTDOMAIN='libtazpkgbox'
+export TEXTDOMAIN
+
+# Dont hardcore path, use $LIB
 export LIB=/usr/lib/slitaz/libtazpkgbox
 
 usage()
@@ -252,14 +264,14 @@ EOT
 			case "$3" in
 			Web*) browser $WEB_SITE &;;
 			Tip*) browser http://hg.slitaz.org/wok/raw-file/tip/$4/receipt &;;
-			Siz*) xterm -T "$4 depends (q to quit)" -e "$0 sizes $4 | less";;
-			Upg*) xterm -T "$4 upgrade" -e "tazpkg get-install $4 --forced ; sleep 2";;
+			Siz*) xterm -T "$4 `gettext \"depends (q to quit)\"`" -e "$0 sizes $4 | less";;
+			Upg*) xterm -T "$4 `gettext \"upgrade\"`" -e "tazpkg get-install $4 --forced ; sleep 2";;
 			Hand*) browser $HANDBOOK_URL &;;
 			Sug*) $0 package-infos list_packages $SUGGESTED;;
 			Dep*) $0 package-infos list_packages $DEPENDS;;
 			Mod*) $0 package-infos list_packages $(xargs echo < $ROOT/installed/$3/modifiers);;
 			Con*) tazpkgbox list_config $4;;
-			Ver*) xterm -T "$4 receipt (q to quit)" -e "cat $RECEIPT | less";;
+			Ver*) xterm -T "$4 `gettext \"receipt (q to quit)\"`" -e "cat $RECEIPT | less";;
 			esac
 			exit 0
 		fi
@@ -365,7 +377,7 @@ EOT
 		fi
 		
 		export LIST_FILES="
-		<window title=\"$PKG files\" icon-name=\"system-file-manager\">
+		<window title=\"`eval_gettext \"\\$PKG files\"`\" icon-name=\"system-file-manager\">
 		  <vbox>
 			<tree exported_column=\"4\">
 				<variable>FILE</variable>

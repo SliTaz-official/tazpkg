@@ -13,6 +13,8 @@ all:
 
 pot:
 	xgettext -o po/tazpkg/tazpkg.pot -L Shell --package-name=Tazpkg ./tazpkg
+	xgettext -o po/tazpkgbox/tazpkgbox.pot -L Shell --package-name=Tazpkgbox ./tazpkgbox
+	xgettext -o po/libtazpkgbox/libtazpkgbox.pot -L Shell --package-name=LibTazpkgbox ./lib/libtazpkgbox
 	
 msgmerge:
 	@for l in $(LINGUAS); do \
@@ -33,10 +35,10 @@ install: msgfmt
 	# Tazpkg command line interface
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
-	install -m 0777 tazpkgbox $(DESTDIR)$(PREFIX)/bin
 	# Tazpkgbox GUI
+	install -m 0777 tazpkgbox $(DESTDIR)$(PREFIX)/bin
 	install -m 0755 -d $(DESTDIR)$(LIBDIR)
-	cp -a lib/libtazpkgbox $(DESTDIR)$(LIBDIR)
+	install -m 0777 lib/libtazpkgbox $(DESTDIR)$(LIBDIR)
 	# Configuration files
 	install -m 0755 -d $(DESTDIR)$(SYSCONFDIR)
 	install -m 0644 tazpkg.conf $(DESTDIR)$(SYSCONFDIR)
