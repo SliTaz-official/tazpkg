@@ -2,14 +2,14 @@
 #
 # GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Notes:
 # Notebook tab are vbox, tabs are used to indent and functions are
-# split and found in $LIB.
+# split and found in libtazpkgbox.
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2010.
 #
 VERSION=4.0
 
 # Functions path.
-export LIB=/usr/lib/slitaz/tazpkgbox
+export LIB=/usr/lib/slitaz/libtazpkgbox
 
 # Tazpkgbox is only for root.
 if test $(id -u) != 0 ; then
@@ -285,9 +285,9 @@ export TAZPKG_DIALOG='
 			<width>620</width><height>240</height>
 			<variable>PKG</variable>
 			<label>Name|Version|Description</label>
-			<input icon_column="0">$LIB/list all</input>
+			<input icon_column="0">$LIB list-all</input>
 			<action>echo "$PKG" > /tmp/tazpkgbox/pkg</action>
-			<action>$LIB/package_infos</action>
+			<action>$LIB package-infos</action>
 			<action>refresh:PKG</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
@@ -343,8 +343,8 @@ export TAZPKG_DIALOG='
 			<label>Packages Name|Version|Description / File</label>
 			<input icon_column="0">cat /tmp/tazpkgbox/search</input>
 			<action>echo "$RESULT" > /tmp/tazpkgbox/pkg</action>
-			<action>$LIB/package_infos</action>
-			<action>$LIB/search packages</action>
+			<action>$LIB package-infos</action>
+			<action>$LIB search-packages</action>
 			<action>refresh:RESULT</action>
 			<action>refresh:PKG</action>
 			<action>refresh:PKG_STATS</action>
@@ -360,13 +360,13 @@ export TAZPKG_DIALOG='
 			<button>
 				<label>Packages/Description</label>
 				<input file icon="system-search"></input>
-				<action>$LIB/search packages</action>
+				<action>$LIB search-packages</action>
 				<action>refresh:RESULT</action>
 			</button>
 			<button>
 				<label>Files</label>
 				<input file icon="system-search"></input>
-				<action>$LIB/search files</action>
+				<action>$LIB search-files</action>
 				<action>refresh:RESULT</action>
 			</button>
 '
@@ -374,7 +374,7 @@ tmp='
 			<button>
 				<label>Tags</label>
 				<input file icon="system-search"></input>
-				<action>$LIB/search tags</action>
+				<action>$LIB search-tags</action>
 				<action>refresh:RESULT</action>
 			</button>
 '
@@ -388,9 +388,9 @@ tmp='
 			<width>620</width><height>240</height>
 			<variable>DEV</variable>
 			<label>Name|Version|Description</label>
-			<input icon_column="0">$LIB/list undigest</input>
+			<input icon_column="0">$LIB list-undigest</input>
 			<action>echo "$DEV" > /tmp/tazpkgbox/pkg</action>
-			<action>$LIB/package_infos</action>
+			<action>$LIB package-infos</action>
 			<action>refresh:PKG</action>
 			<action>refresh:PKG_STATS</action>
 			<action>refresh:CACHE_STATS</action>
@@ -631,6 +631,6 @@ The cache directory is used to store downloaded or repacked packages.
 '
 TAZPKG_DIALOG="$TAZPKG_DIALOG$tmp"
 
-gtkdialog --center --program=TAZPKG_DIALOG >/dev/null
+gtkdialog --center --program=TAZPKG_DIALOG #>/dev/null
 
 exit 0

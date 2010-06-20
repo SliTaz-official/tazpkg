@@ -1,0 +1,695 @@
+#!/bin/sh
+#
+# The libtazpkgbox - Libraries used by tazpkg GUI box.
+# There is functions to list installed packages in a suitable format for 
+# GTK tree and list mirrored packages using the packages.desc file.
+#
+
+export LIB=/usr/lib/slitaz/libtazpkgbox
+
+usage()
+{
+	echo -e "\nTazpkgbox library\n
+Usage    : $0 [function] [pkg|args]	[pkg]
+Functions:
+  list-all          List all packages
+  list-undigest     List undigest packages
+  list-blocked      List blocked packages
+  list-upgradeable  List all upgradable packages
+  search-packages   Search for packages
+  search-files      Search for files
+  search-tags       Search for TAGS
+  package-infos     Display box with pkg information"
+}
+
+# List functions.
+undigest_list()
+{
+	IFS="|"
+	if [ -n "$1" -a "$1" != "all" ]; then
+		cat undigest/$1/packages.desc
+	else
+		cat undigest/*/packages.desc
+	fi 2> /dev/null | sort | while read PACKAGE VERSION SHORT_DESC; do
+		ICON=tazpkg
+		PACKAGE=${PACKAGE%% *}
+		if [ -d installed/$PACKAGE ]; then
+			[ "$2" == "installable" ] && continue
+			ICON=tazpkg-installed
+			if grep -qs "^$PACKAGE$" blocked-packages.list; then
+				ICON=stop
+			fi
+		else
+			[ "$2" == "installed" ] && continue
+		fi
+		[ "$2" == "blocked" -a "$ICON" != "stop" ] && continue
+		[ "$2" == "upgradeable" ] && 
+		! grep -q ^$PACKAGE$ upgradeable-packages.list && continue
+		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
+	done
+	unset IFS
+}
+
+installable_list()
+{
+	local cache
+	cache=packages.installable_list.$CAT
+	if [ -s $cache -a $cache -nt packages.desc -a $cache -nt installed ]; then
+	     cat $cache
+	     return
+	fi
+	IFS="|"
+	cat packages.desc undigest/*/packages.desc 2> /dev/null | sort | \
+	while read PACKAGE VERSION SHORT_DESC CATEGORY; do
+		# Check first for category for more speed.
+		CATEGORY=${CATEGORY%| *}
+		ICON=tazpkg
+		[ $CAT == all -o $CATEGORY == " $CAT " ] || continue
+		[ -d installed/${PACKAGE%% *} ] && continue
+		grep -qs "^$PACKAGE" undigest/*/packages.desc && ICON=add
+		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
+	done | tee $cache
+	unset IFS
+}
+
+installed_list()
+{
+	for pkg in ${1}installed/*
+	do
+		[ -n "$1" -a -s installed/$(basename $pkg)/receipt ] && continue
+		. $pkg/receipt
+		ICON=tazpkg-installed
+		[ $CAT == all -o $CATEGORY == $CAT ] || continue
+		if [ -n "$1" -o -L $pkg ]; then
+			ICON=media-flash
+		else
+			grep -qs "^$PACKAGE" undigest/*/packages.desc && ICON=add
+		fi
+		grep -qs "^$PACKAGE$" blocked-packages.list && ICON=stop
+		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
+	done
+}
+
+all_list()
+{
+	local cache
+	cache=packages.all_list.$CAT
+	if [ -s $cache -a $cache -nt packages.desc -a $cache -nt installed ]; then
+	     cat $cache
+	     return
+	fi
+	( installable_list ; installed_list ) | sort -t \| -k 2 -u | tee $cache
+}
+
+blocked_list()
+{
+	ICON=tazpkg-installed
+	[ "$1" = "blocked" ] && ICON=stop
+	for pkg in $(cat $1-packages.list 2> /dev/null); do
+		[ -f installed/$pkg/receipt ] || continue
+		. installed/$pkg/receipt
+		[ $CAT == all -o $CATEGORY == $CAT ] || continue
+		AVAILABLE=$(grep -s "^$pkg " packages.desc \
+			undigest/*/packages.desc | awk '{ print $3 }')
+		echo "$ICON|$PACKAGE|$VERSION (Available: $AVAILABLE)|$SHORT_DESC"
+	done
+}
+
+# Search functions
+
+clean_search()
+{
+	# Clean preview results.
+	rm -f /tmp/tazpkgbox/search
+	touch /tmp/tazpkgbox/search
+}
+
+list_files()
+{
+	sed 's/.\[[01]m//g' | awk 'BEGIN { show=0 } {
+		if (/^===/) show=1-show;
+		else if (/^Package/) pkg=$2;
+		else if ($0 != "" && show != 0) printf("%s %s\n",pkg,$0);
+	}' | while read pkg file; do
+		[ "$pkg" = "0" ] && continue
+		version=$(grep -hs "^$pkg " /var/lib/tazpkg/packages.desc \
+		  /var/lib/tazpkg/undigest/*/packages.desc | awk '{ print $3 }')
+		if [ -d /var/lib/tazpkg/installed/$pkg ]; then
+			if [ -x $file ]; then
+				echo "exec|$pkg|$version|$file"
+			elif [ -f $file ]; then
+				echo "txt|$pkg|$version|$file"
+			elif [ -d $file ] ; then
+				echo "folder|$pkg|$version|$file"
+			else
+				# Missing installed file.
+				echo "dialog-warning|$pkg|$version|$file"
+			fi
+		else
+			echo "tazpkg|$pkg|$version|$file"
+		fi
+	done
+}
+
+list_package()
+{
+		if [ -d /var/lib/tazpkg/installed/$1 ]; then
+			. /var/lib/tazpkg/installed/$1/receipt
+			echo "tazpkg-installed|$PACKAGE|$VERSION|$SHORT_DESC"
+		else
+			echo "tazpkg|$PACKAGE|$VERSION|$SHORT_DESC"
+		fi
+}
+
+search_package()
+{
+	IFS="|"
+	cat /var/lib/tazpkg/packages.desc \
+	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
+	while read PACKAGE VERSION SHORT_DESC; do
+	if echo "$PACKAGE $SHORT_DESC" | grep -iq "$SEARCH"; then
+		list_package ${PACKAGE%% *}
+	fi
+	done 
+	unset IFS
+}
+
+case "$1" in
+	list-all)
+		cd /var/lib/tazpkg
+		CAT=`cat /tmp/tazpkgbox/category`
+		STATUS=`cat /tmp/tazpkgbox/status`
+		case $STATUS in
+			blocked|upgradeable)
+				blocked_list $STATUS;;
+			linkable)
+				[ -d fslink ] && installed_list \
+					$(readlink fslink)/var/lib/tazpkg/;;
+			installed)
+				installed_list ;;
+			installable)
+				installable_list ;;
+			*)
+				all_list ;;
+		esac ;;
+	list-undigest)
+		cd /var/lib/tazpkg
+		CAT=`cat /tmp/tazpkgbox/category`
+		set -- `cat /tmp/tazpkgbox/undigest-category`
+		if [ "$1" == "all" -o "$1" == "" ]; then
+			undigest_list $2 $3
+		else
+			undigest_list $2 $3 | grep "$1"
+		fi ;;
+	list-blocked|list-upgradeable)
+		cd /var/lib/tazpkg
+		CAT=`cat /tmp/tazpkgbox/category`
+		blocked_list $1 ;;
+	search-files)
+		# Search for files
+		clean_search
+		tazpkg search-file "$SEARCH" --mirror | list_files > \
+			/tmp/tazpkgbox/search ;;
+	search-packages)
+		clean_search
+		( search_package ;
+		  for i in $(grep ^$SEARCH= /var/lib/tazpkg/packages.equiv | \
+		          cut -d= -f2); do
+		        SEARCH=${i#*:}
+		        search_package
+		  done ) > /tmp/tazpkgbox/search ;;
+	search-tags)
+		clean_search
+		grep -ls TAGS /home/slitaz/wok/*/receipt | while read file; do
+			TAGS=""
+			. $file
+			case "$TAGS" in
+			*$SEARCH*) list_package $PACKAGE ;;
+			esac
+		done > /tmp/tazpkgbox/search ;;
+	package-infos)
+		# Dialog box to provide package info and actions
+		XTERM_OPTS="-geometry 80x16+120+120"	
+		PKG=`cat /tmp/tazpkgbox/pkg | sed s/" "/""/g`
+		ROOT=/var/lib/tazpkg
+		if [ "$(cat /tmp/tazpkgbox/status)" = "linkable" ]; then
+			ROOT=$(readlink /var/lib/tazpkg/fslink)$ROOT
+		fi
+		TMP_DIR=/tmp/tazpkg-$$-$RANDOM
+		if [ "$2" = "sizes" ]; then
+			cat <<EOT
+Dependancies for $3:
+$(tazpkg depends $3)
+
+Reverse dependancies for $3:
+$(tazpkg rdepends $3)
+EOT
+			exit 0
+		fi
+		if [ "$2" = "info" ]; then
+			RECEIPT=$ROOT/installed/$4/receipt
+			. $RECEIPT
+			case "$3" in
+			Web*) browser $WEB_SITE &;;
+			Tip*) browser http://hg.slitaz.org/wok/raw-file/tip/$4/receipt &;;
+			Siz*) xterm -T "$4 depends (q to quit)" -e "$0 sizes $4 | less";;
+			Upg*) xterm -T "$4 upgrade" -e "tazpkg get-install $4 --forced ; sleep 2";;
+			Hand*) browser $HANDBOOK_URL &;;
+			Sug*) $0 package-infos list_packages $SUGGESTED;;
+			Dep*) $0 package-infos list_packages $DEPENDS;;
+			Mod*) $0 package-infos list_packages $(xargs echo < $ROOT/installed/$3/modifiers);;
+			Con*) tazpkgbox list_config $4;;
+			Ver*) xterm -T "$4 receipt (q to quit)" -e "cat $RECEIPT | less";;
+			esac
+			exit 0
+		fi
+		
+		if [ "$2" = "list_files" ]; then
+			CONF_FILES="$(tazpkg list-config $3 | awk "$AWK_FILTER")"
+			if [ -n "$CONF_FILES" ]; then
+				mkdir $TMP_DIR
+				zcat $ROOT/installed/$3/volatile.cpio.gz | \
+					( cd $TMP_DIR ; cpio -id > /dev/null )
+			fi
+			cat $ROOT/installed/$3/files.list | grep ^/ | while read file; do
+				realfile="$file"
+				if [ "$(cat /tmp/tazpkgbox/status)" = "linkable" ]; then
+					realfile="$(readlink /var/lib/tazpkg/fslink)$file"
+				fi
+				echo -n "$(stat -c "%A|%U|%G|%s|$file|" "$realfile" || \
+					   echo "File lost !||||$file|")"
+				if [ -L "$realfile" ]; then
+					echo -n "$(readlink "$realfile")"
+				elif [ -f "$file" ]; then
+					case "$CONF_FILES" in
+					*$file*) 
+						if cmp $file $TMP_DIR$file > /dev/null 2>&1; then
+							echo -n "[configuration]"
+						else
+							echo -n "$(stat -c "[configuration: %.16y]" $file)"
+						fi;;
+					#*	if [ "$(tazpkg check-file $file $2)" = "failure" ]; then
+					#		echo -n "Invalid md5"
+					#	fi;;
+					esac
+				fi
+				echo ""
+			done
+			[ -n "$CONF_FILES" ] && rm -rf $TMP_DIR
+			exit 0
+		fi
+		
+		if [ "$2" = "list_files_mirror" ]; then
+			for i in /var/lib/tazpkg/files.list.lzma \
+				/var/lib/tazpkg/undigest/*/files.list.lzma ; do
+				[ -f $i ] || continue
+				unlzma -c $i
+			done | grep -- "^$3:" | awk '{ print substr($0,index($0,":")+2) }'
+			exit 0
+		fi
+		
+		if [ "$2" = "list_packages" ]; then
+			PKG="$3"
+			if [ -n "$4" ]; then
+				shift
+				export LIST_PKGS='
+		<window title="Packages" icon-name="tazpkg">
+		  <vbox>
+		     <tree>
+			<width>600</width><height>160</height>
+			<label>Package|Version|Size|Description</label>
+			<variable>PKG</variable>
+		'
+				for i in "$@"; do
+					if [ -d $ROOT/installed/$i ]; then
+						. $ROOT/installed/$i/receipt
+						LIST_PKGS="$LIST_PKGS
+			<item icon=\"tazpkg\">$i|$VERSION|Installed|$SHORT_DESC</item>
+		"
+					else
+						RES=`grep -sh "^$i " \
+						/var/lib/tazpkg/packages.desc \
+						/var/lib/tazpkg/undigest/*/packages.desc`
+						PACKAGE=`echo "$RES" | cut -d "|" -f 1`
+						VERSION=`echo "$RES" | cut -d "|" -f 2`
+						SHORT_DESC=`echo "$RES" | cut -d "|" -f 3`
+						SIZE=`grep -sh -A 3 "^$(echo $PACKAGE)$" \
+						/var/lib/tazpkg/packages.txt \
+						/var/lib/tazpkg/undigest/*/packages.txt | \
+						tail -1 | sed 's/.*(\(.*\) .*/\1/'`
+						LIST_PKGS="$LIST_PKGS
+			<item icon=\"tazpkg\">$i|$VERSION|$SIZE|$SHORT_DESC</item>
+		"
+					fi
+				done
+				LIST_PKGS="$LIST_PKGS
+			<action>echo "\$PKG" > /tmp/tazpkgbox/pkg</action>
+			<action>$0 package-infos</action>
+			<action>refresh:PKG</action>
+			<action>refresh:PKG_STATS</action>
+			<action>refresh:CACHE_STATS</action>
+		     </tree>
+		     <hbox>
+			<button ok>
+			</button>
+			<button cancel>
+				<action type=\"closewindow\">LIST_PKGS</action>
+			</button>
+		     </hbox>
+		  </vbox>
+		</window>
+		"
+				eval `gtkdialog --center --program=LIST_PKGS`
+				[ "$EXIT" = "OK" ] || exit 0
+			fi
+		fi
+		
+		export LIST_FILES="
+		<window title=\"$PKG files\" icon-name=\"system-file-manager\">
+		  <vbox>
+			<tree exported_column=\"4\">
+				<variable>FILE</variable>
+				<width>600</width><height>160</height>
+				<label>Access | User | Group | Size | Name | Target</label>
+				<input> $0 package-infos list_files $PKG </input>
+				<action>tazpkg list-config $PKG | grep -q ^\$FILE$ && leafpad \$FILE</action>
+			</tree>
+			<hbox>
+				<button>
+					<input file icon=\"gtk-close\"></input>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>
+			</hbox>
+		  </vbox>
+		</window>
+		"
+		
+		export LIST_FILES_MIRROR="
+		<window title=\"$PKG files\" icon-name=\"system-file-manager\">
+		  <vbox>
+			<tree>
+				<width>300</width><height>160</height>
+				<label>File Name</label>
+				<input> $0 package-infos list_files_mirror $PKG </input>
+			</tree>
+			<hbox>
+				<button>
+					<input file icon=\"gtk-close\"></input>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>
+			</hbox>
+		  </vbox>
+		</window>
+		"
+		
+		# Installed or not installed, that is the question!
+		if [ -d $ROOT/installed/$PKG ]; then
+			PACKED_SIZE=""
+			DEPENDS=""
+			MAINTAINER=""
+			BUGS=""
+			TAGS=""
+			. $ROOT/installed/$PKG/receipt
+			MAINTAINER=$(echo "$MAINTAINER" | sed 's/[<>|]/ /g')
+			upgrade_version="$(cat /var/lib/tazpkg/packages.desc \
+				/var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | \
+				awk "/^$PACKAGE / { print \$3 }" | head -1 )"
+			UPGRADE=""
+			if [ -n "$upgrade_version" ]; then
+				if [ "$upgrade_version" != "$VERSION" ]; then
+					UPGRADE="$upgrade_version"
+				else
+					cur_md5="$(awk "/ $PACKAGE-$VERSION/ { print \$1 }" \
+						$ROOT/installed.md5)"
+					new_md5="$(cat /var/lib/tazpkg/packages.md5 \
+						/var/lib/tazpkg/undigest/*/packages.md5 \
+						2> /dev/null | awk "/ $PACKAGE-$VERSION/ { print \$1 }")"
+					if [ -n "$cur_md5" -a -n "$new_md5" -a \
+						"$cur_md5" != "$new_md5" ]; then
+						UPGRADE="build"
+					fi
+				fi
+			fi
+			PACKAGE_INFOS="
+		<window title=\"Package: $PKG\" icon-name=\"package-x-generic\">
+		<vbox>
+		
+			<tree>
+				<width>460</width><height>200</height>
+				<label>$PKG|$SHORT_DESC</label>
+				<variable>FIELD</variable>		
+				<item icon=\"tazpkg\">Version: | $VERSION</item>
+				<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
+		[ -n "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Upgrade: | $(echo $UPGRADE)</item>"
+		[ -n "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Depends: | $(echo $DEPENDS)</item>"
+		[ -n "$SUGGESTED" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Suggested: | $(echo $SUGGESTED)</item>"
+		[ -n "$PACKED_SIZE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Size: | $PACKED_SIZE ($UNPACKED_SIZE installed)</item>"
+		[ -n "$MAINTAINER" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>"
+		[ -n "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"important\">Bugs: | $BUGS</item>"
+		[ -n "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"ascii\">Handbook: | $HANDBOOK_URL</item>"
+		[ -n "$TAGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Tags: | $TAGS</item>"
+		[ -n "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
+		[ -f $ROOT/installed/$PKG/modifiers ] && 
+		PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Modified by: | $(xargs echo < $ROOT/installed/$PKG/modifiers)</item>"
+		PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"applications-internet\">Website: | $WEB_SITE</item>
+				<item icon=\"help\">Tip: | double-click any item for more information</item>
+				<action> $0 package-infos info \"\$FIELD\" $PKG </action>		
+			</tree>
+		
+			<hbox>"
+		[ -s $ROOT/installed/$PACKAGE/description.txt ] &&
+			PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Description</label>
+					<input file icon=\"help\"></input>
+					<action>xterm -T \"$PKG description (q to quit)\" $XTERM_OPTS \
+					-e \"less $ROOT/installed/$PKG/description.txt\"</action>
+				</button>"
+		if [ ! -d /var/lib/tazpkg/fslink ]; then
+			[ ${PKG%%-*} = get -a ! -d $ROOT/installed/${PKG#get-} ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Install</label>
+					<input file icon=\"go-next\"></input>
+					<action>xterm -T \"Install ${PKG#get-}\" $XTERM_OPTS -e \"\
+					$PKG; sleep 5\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>"
+			[ -n "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Upgrade</label>
+					<input file icon=\"go-next\"></input>
+					<action>xterm -T \"Install $PKG\" $XTERM_OPTS -e \"\
+					tazpkg get-install $PKG --forced ; sleep 5\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>"
+			grep -q post_install $ROOT/installed/$PKG/receipt && PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Reconfigure</label>
+					<input file icon=\"reload\"></input>
+					<action>xterm -T \"Reconfigure $PACKAGE\" $XTERM_OPTS -e \"\
+					tazpkg reconfigure $PACKAGE; sleep 2\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>"
+			if grep -qs ^$PKG$ /var/lib/tazpkg/blocked-packages.list; then
+				PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Unblock</label>
+					<input file icon=\"up\"></input>
+					<action>xterm -T \"Unblock $PACKAGE\" $XTERM_OPTS -e \"\
+					tazpkg unblock $PACKAGE; sleep 2\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>"
+			else
+				PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Block</label>
+					<input file icon=\"down\"></input>
+					<action>xterm -T \"Block $PACKAGE\" $XTERM_OPTS -e \"\
+					tazpkg block $PACKAGE; sleep 2\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>"
+			fi
+		fi
+		if [ "$(cat /tmp/tazpkgbox/status)" = "linkable" ]; then
+			PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Link</label>
+					<input file icon=\"edit-redo\"></input>
+					<action>xterm -T \"Link $PACKAGE\" $XTERM_OPTS -e \"\
+					tazpkg link $PACKAGE $(readlink /var/lib/tazpkg/fslink); sleep 2\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>"
+		elif [ ! -s $ROOT/installed/$PKG/modifiers ]; then
+			[ -L $ROOT/installed/$PKG ] || PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Repack</label>
+					<input file icon=\"edit-redo\"></input>
+					<action>xterm -T \"Repack $PACKAGE\" $XTERM_OPTS -e \"\
+					cd /var/cache/tazpkg; \
+					tazpkg repack $PACKAGE; sleep 2\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>
+		"
+			PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Remove</label>
+					<input file icon=\"edit-delete\"></input>
+					<action>xterm -T \"Remove $PACKAGE\" $XTERM_OPTS -e \"\
+					tazpkg remove $PACKAGE; sleep 2\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>
+		"
+		else
+			PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>Re-install</label>
+					<input file icon=\"edit-redo\"></input>
+					<action>xterm -T \"Re-install $PACKAGE\" $XTERM_OPTS -e \"\
+					tazpkg get-install $PACKAGE --forced; sleep 2\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>
+				<button>
+					<label>Remove</label>
+					<input file icon=\"edit-delete\"></input>
+					<action>xterm -T \"Remove $PACKAGE\" $XTERM_OPTS -e \"\
+					tazpkg remove $PACKAGE; sleep 2\"</action>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>
+		"
+		fi
+		PACKAGE_INFOS="$PACKAGE_INFOS
+				<button>
+					<label>View Files</label>
+					<input file icon=\"tazpkg\"></input>
+					<action type=\"launch\">LIST_FILES</action>
+				</button>
+				<button>
+					<input file icon=\"gtk-close\"></input>
+					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
+				</button>
+			</hbox>
+		
+		</vbox>
+		</window>
+		"
+			export PACKAGE_INFOS
+		else
+			RES=`grep -sh "^$PKG " /var/lib/tazpkg/packages.desc \
+				/var/lib/tazpkg/undigest/*/packages.desc`
+			PACKAGE=`echo "$RES" | cut -d "|" -f 1`
+			VERSION=`echo "$RES" | cut -d "|" -f 2`
+			SHORT_DESC=`echo "$RES" | cut -d "|" -f 3`
+			CATEGORY=`echo "$RES" | cut -d "|" -f 4`
+			WEB_SITE=`echo "$RES" | cut -d "|" -f 5`
+			SIZES=`grep -sh -A 3 "^$(echo $PACKAGE)$" /var/lib/tazpkg/packages.txt \
+				/var/lib/tazpkg/undigest/*/packages.txt | tail -1`
+			DEPENDS=""
+			SUGGESTED=""
+			MAINTAINER=""
+			BUGS=""
+			HANDBOOK_URL=""
+			TAGS=""
+			CONFIG_FILES=""
+			height=160
+			if [ -s /home/slitaz/wok/$PKG/receipt ]; then
+				. /home/slitaz/wok/$PKG/receipt
+				height=200
+			fi
+			PACKAGE_INFOS="
+		<window title=\"Package: $PACKAGE\" icon-name=\"package-x-generic\">
+		<vbox>
+		
+			<tree>
+				<width>460</width><height>$height</height>
+				<label>$PKG|$SHORT_DESC</label>
+				<variable>FIELD2</variable>
+				<item icon=\"tazpkg\">Version: | $VERSION</item>
+				<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
+			[ -n "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Depends: | $(echo $DEPENDS)</item>"
+			[ -n "$SUGGESTED" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Suggested: | $(echo $SUGGESTED)</item>"
+			[ -n "$SIZES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Size: | $SIZES</item>"
+			[ -n "$MAINTAINER" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>"
+			[ -n "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"important\">Bugs: | $BUGS</item>"
+			[ -n "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"ascii\">Handbook: | $HANDBOOK_URL</item>"
+			[ -n "$TAGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Tags: | $TAGS</item>"
+			[ -n "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
+			PACKAGE_INFOS="$PACKAGE_INFOS
+				<item icon=\"applications-internet\">Website: | $WEB_SITE</item>		
+				<item icon=\"text-editor\">Receipt: | double-click to view receipt</item>
+				<action>case \$FIELD2 in Web*) browser $WEB_SITE &;; esac</action>
+				<action>case \$FIELD2 in Rec*) browser http://hg.slitaz.org/wok/raw-file/tip/$PACKAGE/receipt &;; esac</action>
+				
+			</tree>
+		
+			<hbox>"
+			[ ${PACKAGE%%-*} = get ] && PACKAGE_INFOS="$PACKAGE_INFOS
+				<checkbox>
+					<label>Auto exec</label>
+					<variable>AUTO_EXEC</variable>
+					<default>true</default>
+				</checkbox>"
+			PACKAGE_INFOS="$PACKAGE_INFOS
+				<checkbox>
+					<label>Auto install depends</label>
+					<variable>AUTO_DEPENDS</variable>
+					<default>true</default>
+				</checkbox>
+				<button>
+					<label>Install Package</label>
+					<input file icon=\"go-next\"></input>
+					<action>xterm -T \"Install $PACKAGE\" $XTERM_OPTS -e \"\
+					if [ x\$AUTO_DEPENDS != xtrue ]; then script -c \\\"tazpkg get-install $PACKAGE\\\" /var/log/tazpkg-install.log;\
+					else script -c \\\"yes y | tazpkg get-install $PACKAGE\\\" /var/log/tazpkg-install.log; fi; \
+					[ x\${AUTO_EXEC} = xtrue ] && $PACKAGE; \
+					sleep 2\"</action>
+					<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
+				</button>
+				<button>
+					<label>Download</label>
+					<input file icon=\"go-next\"></input>
+					<action>xterm -T \"Get $PACKAGE\" $XTERM_OPTS -e \"\
+					cd /var/cache/tazpkg; tazpkg get $PACKAGE; sleep 2\"</action>
+					<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
+				</button>
+				<button>
+					<label>View Files</label>
+					<input file icon=\"tazpkg\"></input>
+					<action type=\"launch\">LIST_FILES_MIRROR</action>
+				</button>
+				<button>
+					<input file icon=\"gtk-close\"></input>
+					<action type=\"closewindow\">MIRRORED_PACKAGE_ACTIONS</action>
+				</button>
+			</hbox>
+		
+		</vbox>
+		</window>
+		"
+			export PACKAGE_INFOS
+		fi
+		gtkdialog --center --program=PACKAGE_INFOS ;;
+
+	*)
+		usage ;;
+esac
+
+exit 0

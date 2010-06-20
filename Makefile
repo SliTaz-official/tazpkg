@@ -36,7 +36,7 @@ install: msgfmt
 	install -m 0777 tazpkgbox $(DESTDIR)$(PREFIX)/bin
 	# Tazpkgbox GUI
 	install -m 0755 -d $(DESTDIR)$(LIBDIR)
-	cp -a lib/tazpkgbox $(DESTDIR)$(LIBDIR)
+	cp -a lib/libtazpkgbox $(DESTDIR)$(LIBDIR)
 	# Configuration files
 	install -m 0755 -d $(DESTDIR)$(SYSCONFDIR)
 	install -m 0644 tazpkg.conf $(DESTDIR)$(SYSCONFDIR)
@@ -56,6 +56,7 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkg
 	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkgbox
 	rm -rf $(DESTDIR)$(LIBDIR)/tazpkgbox
+	rm -f $(DESTDIR)$(LIBDIR)/libtazpkgbox
 	rm -rf $(DESTDIR)$(DOCDIR)/tazpkg
 	rm -f $(DESTDIR)$(SYSCONFDIR)/tazpkg.conf 
 	rm -rf $(DESTDIR)$(PREFIX)/share/locale/*/LC_MESSAGES/tazpkg*.mo
