@@ -30,24 +30,23 @@ msgfmt:
 # Installation.
 
 install: msgfmt
-	@echo "Installing Tazpkg..."
-	install -g root -o root -m 0755 -d $(DESTDIR)$(PREFIX)/bin
-	install -g root -o root -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
-	install -g root -o root -m 0777 tazpkgbox $(DESTDIR)$(PREFIX)/bin
-	@echo "Installing Tazpkgbox libraries..."
-	install -g root -o root -m 0755 -d $(DESTDIR)$(LIBDIR)
+	# Tazpkg command line interface
+	install -m 0755 -d $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 tazpkgbox $(DESTDIR)$(PREFIX)/bin
+	# Tazpkgbox GUI
+	install -m 0755 -d $(DESTDIR)$(LIBDIR)
 	cp -a lib/tazpkgbox $(DESTDIR)$(LIBDIR)
-	@echo "Installing configuration files..."
-	install -g root -o root -m 0755 -d $(DESTDIR)$(SYSCONFDIR)
-	install -g root -o root -m 0644 tazpkg.conf $(DESTDIR)$(SYSCONFDIR)
-	@echo "Installing documentation files..."
-	install -g root -o root -m 0755 -d $(DESTDIR)$(DOCDIR)/tazpkg
-	install -g root -o root -m 0644 doc/* $(DESTDIR)$(DOCDIR)/tazpkg
-	# i18n
+	# Configuration files
+	install -m 0755 -d $(DESTDIR)$(SYSCONFDIR)
+	install -m 0644 tazpkg.conf $(DESTDIR)$(SYSCONFDIR)
+	# Documentation
+	install -m 0755 -d $(DESTDIR)$(DOCDIR)/tazpkg
+	cp -a doc/* $(DESTDIR)$(DOCDIR)/tazpkg
+	# The i18n files
 	mkdir -p $(DESTDIR)$(PREFIX)/share/locale
 	cp -a po/mo/* $(DESTDIR)$(PREFIX)/share/locale
 	# Desktop integration
-	@echo "Setting up desktop integration..."
 	mkdir -p $(DESTDIR)$(PREFIX)/share
 	cp -a  applications $(DESTDIR)$(PREFIX)/share
 
