@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Package install
+Name[fr]=Installation de paquet
+Comment=Manage software packages
+Exec=subox "tazpkgbox-install ""%f"""
+Icon=tazpkg
+NoDisplay=True
+Type=Application
+Terminal=false
+MimeType=application/x-tazpkg;
+Categories=System;

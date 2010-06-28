@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Notes:
+# Notebook tab are vbox, tabs are used to indent and functions are
+# split and found in $LIB.
+#
+# (C) GNU gpl v3 - SliTaz GNU/Linux 2010.
+#
+VERSION=1.0
+
+export PKG="$@"
+export PKG_SHORT_NAME=$(basename $PKG)
+
+
+# Tazpkgbox is only for root.
+if test $(id -u) != 0 ; then
+	exec subox tazpkgbox-install $PKG
+	exit 0
+fi
+
+
+
+# English/French help dialog.
+export MAIN_DIALOG="
+<window title=\"Tazpkg install\" icon-name=\"tazpkg\">
+<vbox>
+	<text use-markup=\"true\" width-chars=\"54\">
+		<label>\"
+Package <b>$PKG_SHORT_NAME</b> will be installed\"
+		</label>
+	</text>
+	<hbox>
+		<button ok>
+			<action>xterm -T \"Install package \" -geometry 80x16+120+120 -e \"tazpkg install $PKG; sleep 2\"</action>
+			<action type=\"closewindow\">\"\"</action>
+		</button>
+		<button cancel>
+			<action type=\"closewindow\">HELP</action>
+		</button>
+	</hbox>
+</vbox>
+</window>
+"
+
+gtkdialog --center --program=MAIN_DIALOG >/dev/null
+
+exit 0
