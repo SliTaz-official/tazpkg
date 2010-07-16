@@ -404,7 +404,7 @@ tmp='
 				<action type="launch">SETUP_UNDIGEST</action>
 			</button>
 		</hbox>
-		<frame List packages on undigest mirrors>
+		<frame List packages on undigest (unofficial or private) mirrors>
 			<hbox> 
 				<text>
 					<label>"Undigest:"</label>
