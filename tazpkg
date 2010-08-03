@@ -557,6 +557,10 @@ END {
 	if grep -q ^post_install $ROOT$INSTALLED/$PACKAGE/receipt; then
 		post_install $ROOT
 	fi
+ 	# Update-desktop-database if needed.
+	if [ "$(grep .desktop $ROOT$INSTALLED/$PACKAGE/files.list | grep /usr/share/applications/)" ]; then
+		updatedesktopdb=yes
+	fi
 	cd $TOP_DIR
 	echo "================================================================================"
 	eval_gettext "\$PACKAGE (\$VERSION\$EXTRAVERSION) is installed."; echo
@@ -1292,6 +1296,13 @@ DEGIN { show=0 }
 	rm -rf $TMP_DIR
 }
 
+update_desktop_database()
+{
+	if [ -f /usr/bin/update-desktop-database ] && [ -n "$updatedesktopdb" ]; then
+		update-desktop-database
+	fi
+}
+
 ###################
 # Tazpkg commands #
 ###################
@@ -1642,7 +1653,8 @@ Maintainer : $MAINTAINER"
 		if [ "$DO_CHECK" = "yes" ]; then
 			check_for_installed_package $ROOT
 		fi
-		install_package $ROOT ;;
+		install_package $ROOT
+		update_desktop_database ;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
 		#
@@ -2500,7 +2512,8 @@ EOT
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		install_package $ROOT
-		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT ;;
+		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT 
+		update_desktop_database;;
 	clean-cache)
 		# Remove all downloaded packages.
 		#
