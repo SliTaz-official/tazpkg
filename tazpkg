@@ -373,11 +373,12 @@ extract_package()
 {
 	gettext "Extracting $PACKAGE... "
 	cpio -idm < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
-	gettext "Extracting the pseudo fs... "
 	if [ -f fs.cpio.lzma ]; then
+		gettext "Extracting the pseudo fs... "
 		echo -n "(lzma) "
 		unlzma -c fs.cpio.lzma | cpio -idm && rm fs.cpio.lzma
-	else
+	elif [ -f fs.cpio.gz ]; then
+		gettext "Extracting the pseudo fs... "
 		zcat fs.cpio.gz | cpio -idm && rm fs.cpio.gz
 	fi
 }
