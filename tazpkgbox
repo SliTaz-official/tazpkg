@@ -354,10 +354,10 @@ export TAZPKG_DIALOG='
 			<text>
 				<label>" Search: "</label>
 			</text>
-			<entry>
+			<entry activates-default="true">
 				<variable>SEARCH</variable>
 			</entry>
-			<button>
+			<button can-default="true" has-default="true">
 				<label>Packages/Description</label>
 				<input file icon="system-search"></input>
 				<action>$LIB search-packages</action>
