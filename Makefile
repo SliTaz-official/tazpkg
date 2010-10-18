@@ -37,6 +37,7 @@ install: msgfmt
 	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
 	# Tazpkgbox GUI
 	install -m 0777 tazpkgbox $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 tazpkgbox-install $(DESTDIR)$(PREFIX)/bin
 	install -m 0755 -d $(DESTDIR)$(LIBDIR)
 	install -m 0777 lib/libtazpkgbox $(DESTDIR)$(LIBDIR)
 	# Configuration files
