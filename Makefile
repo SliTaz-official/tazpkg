@@ -52,6 +52,8 @@ install: msgfmt
 	# Desktop integration
 	mkdir -p $(DESTDIR)$(PREFIX)/share
 	cp -a  applications $(DESTDIR)$(PREFIX)/share
+	cp -a  mime $(DESTDIR)$(PREFIX)/share
+	cp -a  pixmaps $(DESTDIR)$(PREFIX)/share
 
 # Uninstallation and clean-up commands.
 
