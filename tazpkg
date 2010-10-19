@@ -405,7 +405,7 @@ install_package()
 	(
 		# Create package path early to avoid dependencies loop
 		mkdir -p $TMP_DIR
-		( cd $TMP_DIR ; cpio -i receipt > /dev/null 2>&1) < $PACKAGE_FILE
+		( cd $TMP_DIR ; cpio --quiet -i receipt > /dev/null 2>&1) < $PACKAGE_FILE
 		. $TMP_DIR/receipt
 		if grep -q ^pre_depends $TMP_DIR/receipt; then
 			pre_depends $ROOT
@@ -603,7 +603,7 @@ check_for_deps()
 	local saved;
 	saved=$PACKAGE
 	mkdir -p $TMP_DIR
-	( cd $TMP_DIR ; cpio -i receipt > /dev/null 2>&1) < $PACKAGE_FILE
+	( cd $TMP_DIR ; cpio --quiet -i receipt > /dev/null 2>&1) < $PACKAGE_FILE
 	. $TMP_DIR/receipt
 	PACKAGE=$saved
 	rm -rf $TMP_DIR
@@ -664,7 +664,7 @@ install_deps()
 					mkdir $TMP_DIR
 					for i in $pkg-*.tazpkg; do
 						[ -f $i ] || continue
-						( cd $TMP_DIR ; cpio -i receipt > /dev/null 2>&1) < $i
+						( cd $TMP_DIR ; cpio --quiet -i receipt > /dev/null 2>&1) < $i
 						[ "$(. $TMP_DIR/receipt; echo $PACKAGE)" = "$pkg" ] || continue
 						if grep -q ^$(package_fullname_in_dir $TMP_DIR).tazpkg$ $list
 						then
