@@ -3,7 +3,7 @@
 #
 # These are functions to list installed packages in a suitable format for a
 # GTK tree and list mirrored packages using the packages.desc file. The libs
-# also provide functions to search packages and files; and the GUI box for
+# also provide functions to search packages and files, and the GUI box for
 # package information.
 #
 # (C) 2010 SliTaz - GNU General Public License v3.
