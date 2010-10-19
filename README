@@ -7,7 +7,7 @@ other UNIX-like operating systems. It uses a *.tazpkg package generally built
 by Tazwok with a receipt found in the wok. More information can be found in 
 the SliTaz Cookbook and the manual.
 
-Tazpkg is entirely built from scratch using SHell script, compatible with
+Tazpkg is entirely built from scratch using SHell script; compatible with
 Bash, it runs under Ash - part of the Busybox project. Tazpkg is distributed
 under the free GNU license GPL V3. 
 

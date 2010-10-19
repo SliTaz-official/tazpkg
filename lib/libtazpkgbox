@@ -1,9 +1,9 @@
 #!/bin/sh
 # The libtazpkgbox - Libraries used by tazpkg GUI box.
 #
-# There is functions to list installed packages in a suitable format for 
-# GTK tree and list mirrored packages using the packages.desc file. The lib
-# also provide functions to search packages and files and the GUI box for
+# These are functions to list installed packages in a suitable format for a
+# GTK tree and list mirrored packages using the packages.desc file. The libs
+# also provide functions to search packages and files; and the GUI box for
 # package information.
 #
 # (C) 2010 SliTaz - GNU General Public License v3.
@@ -24,14 +24,14 @@ usage()
 	echo -e "\nTazpkgbox library\n
 Usage    : $0 [function] [pkg|args]	[pkg]
 Functions:
-  list-all          List all packages
-  list-undigest     List undigest packages
-  list-blocked      List blocked packages
-  list-upgradeable  List all upgradable packages
-  search-packages   Search for packages
-  search-files      Search for files
-  search-tags       Search for TAGS
-  package-infos     Display box with pkg information"
+  list-all          List all packages.
+  list-undigest     List undigest packages.
+  list-blocked      List blocked packages.
+  list-upgradeable  List all upgradable packages.
+  search-packages   Search for packages.
+  search-files      Search for files.
+  search-tags       Search for TAGS.
+  package-infos     Display box with pkg information."
 }
 
 # List functions.
@@ -250,10 +250,10 @@ case "$1" in
 		TMP_DIR=/tmp/tazpkg-$$-$RANDOM
 		if [ "$2" = "sizes" ]; then
 			cat <<EOT
-Dependancies for $3:
+Dependencies for $3:
 $(tazpkg depends $3)
 
-Reverse dependancies for $3:
+Reverse dependencies for $3:
 $(tazpkg rdepends $3)
 EOT
 			exit 0
