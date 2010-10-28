@@ -1299,7 +1299,7 @@ DEGIN { show=0 }
 update_desktop_database()
 {
 	if [ -f /usr/bin/update-desktop-database ] && [ -n "$updatedesktopdb" ]; then
-		update-desktop-database
+		update-desktop-database $1/usr/share/applications
 	fi
 }
 
@@ -1654,7 +1654,7 @@ Maintainer : $MAINTAINER"
 			check_for_installed_package $ROOT
 		fi
 		install_package $ROOT
-		update_desktop_database ;;
+		update_desktop_database $ROOT ;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
 		#
@@ -2513,7 +2513,7 @@ EOT
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		install_package $ROOT
 		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT 
-		update_desktop_database;;
+		update_desktop_database $ROOT ;;
 	clean-cache)
 		# Remove all downloaded packages.
 		#
