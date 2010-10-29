@@ -1757,6 +1757,11 @@ $LIST"
 			case "$3" in
 			--root=*)
 				ROOT="${3#--root=}"
+				if [ "$ROOT" ]; then
+					ROOTOPTS="--root=$ROOT"
+				else
+					ROOTOPTS=""
+				fi
 				;;
 			*)	shift 2
 				echo -e "\nUnknown option $*.\n"
@@ -1804,7 +1809,7 @@ $LIST"
 			echo -e "\033[1m`gettext \"Removing:\"`\033[0m $PACKAGE"
 			echo "================================================================================"
 			# Pre remove commands.
-			if grep -q ^pre_remove $ROOT/$INSTALLED/$PACKAGE/receipt; then
+			if grep -q ^pre_remove $ROOT$INSTALLED/$PACKAGE/receipt; then
 				pre_remove
 			fi
 			gettext "Removing all files installed..."
@@ -1814,13 +1819,13 @@ $LIST"
 				for file in `cat $ROOT$INSTALLED/$PACKAGE/files.list`
 				do
 					[ $(grep ^$file$ $ROOT$INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue
-					remove_with_path $file
+					remove_with_path $ROOT$file
 				done
 			    done
 			else
 				for file in `cat $ROOT$INSTALLED/$PACKAGE/files.list`
 				do
-					remove_with_path $file
+					remove_with_path $ROOT$file
 				done
 			fi
 			status
@@ -1841,7 +1846,7 @@ $LIST"
 				if [ "$anser" = "y" ]; then
 					for i in $ALTERED; do
 						if [ -d "$ROOT$INSTALLED/$i" ]; then
-							tazpkg remove $i
+							tazpkg remove $i $ROOTOPTS
 						fi
 					done
 				fi
@@ -1856,7 +1861,7 @@ $LIST"
 							continue
 						fi
 						rm -r $ROOT$INSTALLED/$i
-						tazpkg get-install ${i%/modifiers} --forced
+						tazpkg get-install ${i%/modifiers} $ROOTOPTS --forced
 					done
 				fi
 			fi
