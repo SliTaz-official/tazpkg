@@ -561,6 +561,10 @@ END {
 	if [ "$(grep .desktop $ROOT$INSTALLED/$PACKAGE/files.list | grep /usr/share/applications/)" ]; then
 		updatedesktopdb=yes
 	fi
+	# Update-mime-database if needed.
+	if [ "$(grep /usr/share/mime $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
+		updatemimedb=yes
+	fi
 	cd $TOP_DIR
 	echo "================================================================================"
 	eval_gettext "\$PACKAGE (\$VERSION\$EXTRAVERSION) is installed."; echo
@@ -1303,6 +1307,13 @@ update_desktop_database()
 	fi
 }
 
+update_mime_database()
+{
+	if [ -f /usr/bin/update-desktop-database ] && [ -n "$updatemimedb" ]; then
+		update-mime-database $1/usr/share/mime
+	fi
+}
+
 ###################
 # Tazpkg commands #
 ###################
@@ -1654,7 +1665,8 @@ Maintainer : $MAINTAINER"
 			check_for_installed_package $ROOT
 		fi
 		install_package $ROOT
-		update_desktop_database $ROOT ;;
+		update_desktop_database $ROOT
+		update_mime_database $ROOT ;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
 		#
@@ -2513,7 +2525,8 @@ EOT
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		install_package $ROOT
 		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT 
-		update_desktop_database $ROOT ;;
+		update_desktop_database $ROOT 
+		update_mime_database $ROOT ;;
 	clean-cache)
 		# Remove all downloaded packages.
 		#
