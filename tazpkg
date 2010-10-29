@@ -1752,23 +1752,36 @@ $LIST"
 		#
 		check_root
 		check_for_package_on_cmdline
-		if [ ! -f "$INSTALLED/$PACKAGE/receipt" ]; then
+		ROOT=""
+		while [ -n "$3" ]; do
+			case "$3" in
+			--root=*)
+				ROOT="${3#--root=}"
+				;;
+			*)	shift 2
+				echo -e "\nUnknown option $*.\n"
+				exit 1
+				;;
+			esac
+			shift
+		done
+		if [ ! -f "$ROOT$INSTALLED/$PACKAGE/receipt" ]; then
 			echo ""
 			eval_gettext "\$PACKAGE is not installed."; echo
 			exit 0
 		else
 			ALTERED=""
 			THE_PACKAGE=$PACKAGE	# altered by receipt
-			for i in $(cd $INSTALLED ; ls); do
-				[ -f $INSTALLED/$i/receipt ] || continue
+			for i in $(cd $ROOT$INSTALLED ; ls); do
+				[ -f $ROOT$INSTALLED/$i/receipt ] || continue
 				DEPENDS=""
-				. $INSTALLED/$i/receipt
+				. $ROOT$INSTALLED/$i/receipt
 				case " $(echo $DEPENDS) " in
 				*\ $THE_PACKAGE\ *) ALTERED="$ALTERED $i";;
 				esac
 			done
 			EXTRAVERSION=""
-			. $INSTALLED/$THE_PACKAGE/receipt
+			. $ROOT$INSTALLED/$THE_PACKAGE/receipt
 		fi
 		echo ""
 		if [ -n "$ALTERED" ]; then
@@ -1777,7 +1790,7 @@ $LIST"
 				echo "  $i"
 			done
 		fi
-		REFRESH=$(cd $INSTALLED ; grep -sl ^$PACKAGE$ */modifiers)
+		REFRESH=$(cd $ROOT$INSTALLED ; grep -sl ^$PACKAGE$ */modifiers)
 		if [ -n "$REFRESH" ]; then
 			eval_gettext "The following packages have been modified by \$PACKAGE:"; echo
 			for i in $REFRESH; do
@@ -1791,32 +1804,32 @@ $LIST"
 			echo -e "\033[1m`gettext \"Removing:\"`\033[0m $PACKAGE"
 			echo "================================================================================"
 			# Pre remove commands.
-			if grep -q ^pre_remove $INSTALLED/$PACKAGE/receipt; then
+			if grep -q ^pre_remove $ROOT/$INSTALLED/$PACKAGE/receipt; then
 				pre_remove
 			fi
 			gettext "Removing all files installed..."
-			if [ -f $INSTALLED/$PACKAGE/modifiers ]; then
-			    for mod in `cat $INSTALLED/$PACKAGE/modifiers`
+			if [ -f $ROOT$INSTALLED/$PACKAGE/modifiers ]; then
+			    for mod in `cat $ROOT$INSTALLED/$PACKAGE/modifiers`
 			    do
-				for file in `cat $INSTALLED/$PACKAGE/files.list`
+				for file in `cat $ROOT$INSTALLED/$PACKAGE/files.list`
 				do
-					[ $(grep ^$file$ $INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue
+					[ $(grep ^$file$ $ROOT$INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue
 					remove_with_path $file
 				done
 			    done
 			else
-				for file in `cat $INSTALLED/$PACKAGE/files.list`
+				for file in `cat $ROOT$INSTALLED/$PACKAGE/files.list`
 				do
 					remove_with_path $file
 				done
 			fi
 			status
-			if grep -q ^post_remove $INSTALLED/$PACKAGE/receipt; then
+			if grep -q ^post_remove $ROOT$INSTALLED/$PACKAGE/receipt; then
 				post_remove
 			fi
 			# Remove package receipt.
 			gettext "Removing package receipt..."
-			rm -rf $INSTALLED/$PACKAGE
+			rm -rf $ROOT$INSTALLED/$PACKAGE
 			status
 			sed -i "/ $PACKAGE-$VERSION$EXTRAVERSION$/d" \
 				$LOCALSTATE/installed.md5 2> /dev/null
@@ -1827,7 +1840,7 @@ $LIST"
 				echo -n " (y/N) ? "; read anser
 				if [ "$anser" = "y" ]; then
 					for i in $ALTERED; do
-						if [ -d "$INSTALLED/$i" ]; then
+						if [ -d "$ROOT$INSTALLED/$i" ]; then
 							tazpkg remove $i
 						fi
 					done
@@ -1838,11 +1851,11 @@ $LIST"
 				echo -n " (y/N) ? "; read anser
 				if [ "$anser" = "y" ]; then
 					for i in $REFRESH; do
-						if [ $(wc -l < $INSTALLED/$i) -gt 1 ]; then
+						if [ $(wc -l < $ROOT$INSTALLED/$i) -gt 1 ]; then
 							eval_gettext "Check \$INSTALLED/\$i for reinstallation"; echo
 							continue
 						fi
-						rm -r $INSTALLED/$i
+						rm -r $ROOT$INSTALLED/$i
 						tazpkg get-install ${i%/modifiers} --forced
 					done
 				fi
