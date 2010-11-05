@@ -21,6 +21,7 @@ export LIB=/usr/lib/slitaz/libtazpkgbox
 
 usage()
 {
+	[ -n "$1" ] && echo "??? $0 $@"
 	echo -e "\nTazpkgbox library\n
 Usage    : $0 [function] [pkg|args]	[pkg]
 Functions:
@@ -264,7 +265,7 @@ EOT
 			case "$3" in
 			Web*) browser $WEB_SITE &;;
 			Tip*) browser http://hg.slitaz.org/wok/raw-file/tip/$4/receipt &;;
-			Siz*) xterm -T "$4 `gettext \"depends (q to quit)\"`" -e "$0 sizes $4 | less";;
+			Siz*) xterm -T "$4 `gettext \"depends (q to quit)\"`" -e "$0 package-infos sizes $4 | less";;
 			Upg*) xterm -T "$4 `gettext \"upgrade\"`" -e "tazpkg get-install $4 --forced ; sleep 2";;
 			Hand*) browser $HANDBOOK_URL &;;
 			Sug*) $0 package-infos list_packages $SUGGESTED;;
@@ -701,7 +702,7 @@ EOT
 		gtkdialog --center --program=PACKAGE_INFOS ;;
 
 	*)
-		usage ;;
+		usage $@ ;;
 esac
 
 exit 0
