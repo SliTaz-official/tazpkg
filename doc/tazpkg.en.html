@@ -44,7 +44,7 @@ Tazpkg - Tiny autonomous zone package manager
 Tazpkg is an ultralightweight (~ 35KB) package manager to
 install, list, download, update or remove precompiled packages
 on a GNU/Linux system. Tazpkg offers commands for searching
-and creating packages and was created independently.
+and creating packages and was created independently for the project.
 The format of the packages using the *.tazpkg extension is a
 cpio archive containing a filesystem compressed with gzip,
 a receipt and an optional description. Tazpkg also manages
@@ -56,7 +56,7 @@ package.
 </p>
 <p>
 Tazpkg is entirely built from scratch using SHell script, 
-compatible with Bash, it runs under Ash - part of the Busybox 
+compatible with Bash; it runs under Ash - part of the Busybox 
 project. Tazpkg is distributed under the free GNU license GPL V3. 
 </p>
 
@@ -264,9 +264,9 @@ the configuration files:
 Recharge the list of available packages on the mirror. 
 This command will download the most recent 'packages.list' 
 of installable packages on the mirror and before starting 
-will save the old list. Once the list is updated
+will save the old list. Once the list is updated,
 you can then use the 'list' and 'search' commands. To view
-and list the differences, you can use 'list-mirror --diff', and to view 
+and list the differences, you can use 'list-mirror --diff'; and to view 
 and update packages, you can simply 'upgrade'. To recharge the
 latest list of packages:
 </p>
@@ -419,7 +419,7 @@ Archlinux (.pkg.tar.gz) package into a SliTaz package (.tazpkg):
 <h3><font color="#6c0023">set-release</font></h3>
 <p>
 The 'set-release' command changes the current version and 
-upgrades the packages to the latest release:
+upgrades all of the packages to the latest release:
 </p>
 <pre> # tazpkg set-release cooking
 </pre>
