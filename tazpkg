@@ -2536,7 +2536,7 @@ EOT
 				eval_gettext "Continuing \$PACKAGE download"; echo
 				download $PACKAGE.tazpkg
 			}
-			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(grep $PACKAGE.tazpkg /var/lib/tazpkg/packages.md5)" ]; then
+			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(grep "  $PACKAGE.tazpkg$" /var/lib/tazpkg/packages.md5)" ]; then
 				rm -f $PACKAGE.tazpkg
 				download $PACKAGE.tazpkg
 			fi
