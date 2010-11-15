@@ -394,6 +394,11 @@ remove_with_path()
 	done
 }
 
+grepesc()
+{
+	sed 's/\[/\\[/g'
+}
+
 # This function installs a package in the rootfs.
 install_package()
 {
@@ -458,10 +463,10 @@ install_package()
 	# Get files to remove if upgrading
 	if [ -f $PACKAGE/files.list ]; then
 		while read file; do
-			grep -q "^$file$" $TMP_DIR/files.list && continue
+			grep -q "^$(echo $file | grepesc)$" $TMP_DIR/files.list && continue
 			for i in $(cat $PACKAGE/modifiers 2> /dev/null ;
 			    grep -sl $PACKAGE */modifiers | cut -d/ -f1 ); do
-				grep -qs "^$file$" $i/files.list && continue 2
+				grep -qs "^$(echo $file | grepesc)$" $i/files.list && continue 2
 			done
 			echo $file
 		done < $PACKAGE/files.list > $TMP_DIR/files2remove.list
@@ -1818,7 +1823,7 @@ $LIST"
 			    do
 				for file in `cat $ROOT$INSTALLED/$PACKAGE/files.list`
 				do
-					[ $(grep ^$file$ $ROOT$INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue
+					[ $(grep "^$(echo $file | grepesc)$" $ROOT$INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue
 					remove_with_path $ROOT$file
 				done
 			    done
@@ -2415,11 +2420,11 @@ EOT
 			for file in $(cat */files.list); do
 				[ -d "$file" ] && continue
 				case "$FILES" in *\ $file\ *) continue;; esac
-				[ $(grep "^$file$" */files.list 2> /dev/null | \
+				[ $(grep "^$(echo $file | grepesc)$" */files.list 2> /dev/null | \
 					wc -l) -gt 1 ] || continue
 				FILES="$FILES$file "
 				echo "The following packages provide $file :"
-				grep -l "^$file$" */files.list | while read f
+				grep -l "^$(echo $file | grepesc)$" */files.list | while read f
 				do
 					pkg=${f%/files.list}
 					echo -n "  $pkg"
@@ -2433,7 +2438,7 @@ EOT
 			find /etc /bin /sbin /lib /usr /var/www \
 				-not -type d 2> /dev/null | while read file; do
 				case "$file" in *\[*) continue;; esac
-				grep -q "^$file$" */files.list && continue
+				grep -q "^$(echo $file | grepesc)$" */files.list && continue
 				echo -e "$MSG  $file"
 				MSG=""
 			done
