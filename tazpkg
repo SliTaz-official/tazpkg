@@ -2490,7 +2490,14 @@ EOT
 		check_for_packages_list
 		check_for_package_in_list
 		echo ""
-		download $PACKAGE.tazpkg
+		if [ -f $PACKAGE.tazpkg ]; then
+			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(grep "  $PACKAGE.tazpkg$" /var/lib/tazpkg/packages.md5)" ]; then
+				rm -f $PACKAGE.tazpkg
+				download $PACKAGE.tazpkg
+			fi
+		else
+			download $PACKAGE.tazpkg
+		fi
 		echo "" ;;
 	get-install)
 		# Download and install a package.
