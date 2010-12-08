@@ -376,7 +376,7 @@ download_from()
 	for i in $mirrors; do
 		case "$i" in
 		http://*|ftp://*) wget -c $i$@ && break;;
-		*) ln -s $i/$1 . && break;;
+		*) ln -sf $i/$1 . && break;;
 		esac
 	done
 }
