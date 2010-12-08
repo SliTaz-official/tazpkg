@@ -1307,15 +1307,15 @@ DEGIN { show=0 }
 
 update_desktop_database()
 {
-	if [ -f /usr/bin/update-desktop-database ] && [ -n "$updatedesktopdb" ]; then
-		update-desktop-database $1/usr/share/applications
+	if [ -f $1/usr/bin/update-desktop-database ] && [ -n "$updatedesktopdb" ]; then
+		$1/usr/bin/update-desktop-database $1/usr/share/applications 2>/dev/null
 	fi
 }
 
 update_mime_database()
 {
-	if [ -f /usr/bin/update-desktop-database ] && [ -n "$updatemimedb" ]; then
-		update-mime-database $1/usr/share/mime
+	if [ -f $1/usr/bin/update-desktop-database ] && [ -n "$updatemimedb" ]; then
+		$1/usr/bin/update-desktop-database $1/usr/share/mime
 	fi
 }
 
