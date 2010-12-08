@@ -308,7 +308,11 @@ get_package_filename()
 		pkg=$(grep -A 1 -sh "^$1$" $rep/packages.txt | tail -1 | \
 			sed 's/^ *//')
 		[ "$pkg" ] && pkg=$(grep -sh "^$1-$pkg" \
-			$rep/packages.list | head -1)		
+			$rep/packages.list | head -1)
+		
+		# Allow user to call a package with his version number.
+		[ "$pkg" ] || pkg=$(grep -sh "^$1$" $rep/packages.list | head -1)
+		
 		[ "$pkg" ] || pkg=$(grep -sh "^$1-[0-9]" \
 			$rep/packages.list | head -1)
 		[ "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" \
