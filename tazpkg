@@ -388,6 +388,9 @@ extract_package()
 
 remove_with_path()
 {
+	# Avoid dirname errors by checking for argument.
+	[ "$1" ] || return
+	
 	local dir
 	rm -f $1 2>/dev/null
 	dir="$1"
