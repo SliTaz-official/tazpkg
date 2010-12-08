@@ -372,14 +372,17 @@ download()
 extract_package()
 {
 	gettext "Extracting $PACKAGE... "
-	cpio -idm < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
+	cpio -idm --quiet < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
+	status
 	if [ -f fs.cpio.lzma ]; then
 		gettext "Extracting the pseudo fs... "
 		echo -n "(lzma) "
-		unlzma -c fs.cpio.lzma | cpio -idm && rm fs.cpio.lzma
+		unlzma -c fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
+		status
 	elif [ -f fs.cpio.gz ]; then
 		gettext "Extracting the pseudo fs... "
-		zcat fs.cpio.gz | cpio -idm && rm fs.cpio.gz
+		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
+		status
 	fi
 }
 
@@ -507,7 +510,7 @@ END {
 		grep -qs ^$PACKAGE$ $dir/modifiers && continue
 		if [ -s "$dir/volatile.cpio.gz" ]; then
 			# We can modify backed up files without notice
-			zcat $dir/volatile.cpio.gz | cpio -t 2> /dev/null | \
+			zcat $dir/volatile.cpio.gz | cpio -t --quiet | \
 				grep -q "^${file#/}$" && continue
 		fi
 		echo "$PACKAGE" >> $dir/modifiers
@@ -532,7 +535,7 @@ END {
 		eval_gettext "Saving configuration files for \$PACKAGE... "
 		for i in $CONFIG_FILES; do
 			( cd fs ; find ${i#/} -type f )
-		done | ( cd fs ; cpio -o -H newc | gzip -9 ) > \
+		done | ( cd fs ; cpio -o -H newc --quiet | gzip -9 ) > \
 			$ROOT$INSTALLED/$PACKAGE/volatile.cpio.gz
 		# keep user configuration files
 		for i in $CONFIG_FILES; do
@@ -862,7 +865,7 @@ install_flavor()
 	[ -f $FLAVOR.flavor ] && cp $FLAVOR.flavor $TMP_DIR
 	cd $TMP_DIR
 	if [ -f $FLAVOR.flavor ] || download $FLAVOR.flavor; then
-		zcat $FLAVOR.flavor | cpio -i >/dev/null
+		zcat $FLAVOR.flavor | cpio --quiet -i >/dev/null
 		while read file; do
 			for pkg in $(ls -d $INSTALLED/${file%%-*}*); do
 				[ -f $pkg/receipt ] || continue
@@ -1295,7 +1298,7 @@ DEGIN { show=0 }
 }
 ' > $TMP_DIR/$file/description.txt
 	cd $TMP_DIR/$file/fs/
-	rpm2cpio $PACKAGE_FILE | cpio -idm
+	rpm2cpio $PACKAGE_FILE | cpio -idm --quiet
 	cd ../..
 	echo "DEPENDS=\"$(find_depends)\"" >> $TMP_DIR/$file/receipt
 	show_unresolved_lib $TMP_DIR/$file/receipt
@@ -1914,11 +1917,11 @@ $LIST"
 		cd $TMP_DIR
 		extract_package
 		gettext "Recompressing the fs... "
-		find fs | cpio -o -H newc 2> /dev/null | lzma e fs.cpio.lzma -si
+		find fs | cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
 		rm -rf fs
 		status
 		gettext "Creating new package... "
-		find . -print | cpio -o -H newc > \
+		find . -print | cpio -o -H newc --quiet > \
 			$TOP_DIR/$(basename $PACKAGE_FILE).$$ && mv -f \
 			$TOP_DIR/$(basename $PACKAGE_FILE).$$ \
 			$TOP_DIR/$(basename $PACKAGE_FILE)
@@ -1933,7 +1936,7 @@ $LIST"
 			FILES="$INSTALLED/*/volatile.cpio.gz"
 			[ -n "$3" ] && FILES="$INSTALLED/$3/volatile.cpio.gz"
 			for i in $FILES; do
-				zcat $i | cpio -idm > /dev/null
+				zcat $i | cpio -idm --quiet > /dev/null
 				find * -type f 2>/dev/null | while read file; do
 					if [ ! -e /$file ]; then
 					echo -n "|--|--|--|File lost"
@@ -1955,7 +1958,7 @@ $LIST"
 			for i in $INSTALLED/*/volatile.cpio.gz; do
 				[ -n "$2" -a "$i" != "$INSTALLED/$2/volatile.cpio.gz" ] && continue
 				[ -f "$i" ] || continue
-				zcat $i | cpio -t | grep -v "[0-9]* blocks"
+				zcat $i | cpio -t --quiet
 			done | sed 's|^|/|' | sort
 			echo "================================================================================"
 			echo ""
@@ -1968,11 +1971,11 @@ $LIST"
 		mkdir config-$CONFIG_VERSION
 		cd config-$CONFIG_VERSION
 		for i in $INSTALLED/*/volatile.cpio.gz; do
-			zcat $i | cpio -t | grep -v "[0-9]* blocks"
+			zcat $i | cpio -t --quiet
 		done > files.list
 		mkdir fs
 		cd fs
-		( cd / ; cpio -o -H newc ) < ../files.list | cpio -idm > /dev/null
+		( cd / ; cpio -o -H newc --quiet ) < ../files.list | cpio -idm --quiet > /dev/null
 		mkdir -p etc/tazlito
 		for i in $INSTALLED/*/receipt; do
 			EXTRAVERSION=""
@@ -2036,12 +2039,12 @@ EOT
 		done
 		ln -s / rootfs
 		mkdir tmp
-		sed 's/^/rootfs/' < files.list | cpio -o -H newc 2>/dev/null |\
-		      ( cd tmp ; cpio -idm >/dev/null )
+		sed 's/^/rootfs/' < files.list | cpio -o -H newc --quiet |\
+		      ( cd tmp ; cpio -idm --quiet >/dev/null )
 		mv tmp/rootfs fs
 		if [ -f $INSTALLED/$PACKAGE/volatile.cpio.gz ]; then
 			zcat $INSTALLED/$PACKAGE/volatile.cpio.gz | \
-				( cd fs; cpio -idm )
+				( cd fs; cpio -idm --quiet )
 		fi
 		if grep -q repack_cleanup $INSTALLED/$PACKAGE/receipt; then
 			. $INSTALLED/$PACKAGE/receipt
@@ -2056,8 +2059,8 @@ EOT
 				exit 1
 			}
 		fi
-		find fs | cpio -o -H newc 2> /dev/null | lzma e fs.cpio.lzma -si
-		echo -e "$FILES" | cpio -o -H newc 2> /dev/null > \
+		find fs | cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
+		echo -e "$FILES" | cpio -o -H newc --quiet > \
 			$TOP_DIR/$PACKAGE-$VERSION$EXTRAVERSION.tazpkg
 		cd $TOP_DIR
 		\rm -R $TMP_DIR
@@ -2097,7 +2100,7 @@ EOT
 				'{ sz=$1 } END { print sz }')
 			# Build cpio archives.
 			gettext "Compressing the fs... "
-			find fs | cpio -o -H newc | lzma e fs.cpio.lzma -si
+			find fs | cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
 			rm -rf fs
 			status
 			PACKED_SIZE=$(du -chs fs.cpio.lzma receipt files.list \
@@ -2109,10 +2112,10 @@ EOT
 			sed -i "s/^PACKAGE=/PACKED_SIZE=\"$PACKED_SIZE\"\nUNPACKED_SIZE=\"$UNPACKED_SIZE\"\nPACKAGE=/" receipt
 			status
 			gettext "Creating full cpio archive... "
-			find . -print | cpio -o -H newc > ../$PACKAGE.tazpkg
+			find . -print | cpio -o -H newc --quiet > ../$PACKAGE.tazpkg
 			status
 			gettext "Restoring original package tree... "
-			unlzma -c fs.cpio.lzma | cpio -idm
+			unlzma -c fs.cpio.lzma | cpio -idm --quiet
 			status
 			rm fs.cpio.lzma && cd ..
 			echo "================================================================================"
