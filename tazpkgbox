@@ -6,7 +6,7 @@
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2010.
 #
-VERSION=4.0
+VERSION=4.1.2
 
 # Functions path.
 export LIB=/usr/lib/slitaz/libtazpkgbox
