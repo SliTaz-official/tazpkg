@@ -181,6 +181,28 @@ check_for_receipt()
 	fi
 }
 
+# Get repositories priority using $LOCALSTATE/priority.
+# In this files, undigest are called by their name and main mirror
+# by main. Sort order : priority
+look_for_priority()
+{
+[ -s $LOCALSTATE/priority ] && priority=$(cat $LOCALSTATE/priority)
+for rep in main $(ls $LOCALSTATE/undigest 2>/dev/null); do
+	if [ ! -s $LOCALSTATE/priority ] || \
+		! grep -q ^$rep$ $LOCALSTATE/priority; then
+		priority=$(echo -e "$priority\n$rep")
+	fi
+done
+priority=$(echo "$priority" | sed '/^$/d' | \
+	while read line; do
+	if [ "$line" = main ]; then
+		echo $LOCALSTATE
+	else
+		echo $LOCALSTATE/undigest/$line
+	fi
+done)
+}
+
 # Get package name in a directory
 package_fullname_in_dir()
 {
@@ -259,8 +281,9 @@ equivalent_pkg()
 # get a virtual package from packages.equiv
 virtual_pkg()
 {
-	for i in $(grep -hs "^$1=" $LOCALSTATE/packages.equiv \
-		   $LOCALSTATE/undigest/*/packages.equiv | sed "s/^$1=//"); do
+	for i in $(for rep in $priority; do 
+		grep -hs "^$1=" $rep/packages.equiv
+		done | sed "s/^$1=//"); do
 		if echo $i | grep -q : ; then
 			# format 'alternative:newname'
 			# if alternative is installed then substitute newname
@@ -281,18 +304,17 @@ virtual_pkg()
 get_package_filename()
 {
 	local pkg
-	pkg=$(grep -A 1 -sh "^$1$" $LOCALSTATE/packages.txt \
-		$LOCALSTATE/undigest/*/packages.txt | tail -1)
-	pkg=$(echo $pkg)
-	[ -n "$pkg" ] && pkg=$(grep -sh "^$1-$pkg" \
-		$LOCALSTATE/packages.list \
-		$LOCALSTATE/undigest/*/packages.list | head -1)
-	[ -n "$pkg" ] || pkg=$(grep -sh "^$1-[0-9]" \
-		$LOCALSTATE/packages.list \
-		$LOCALSTATE/undigest/*/packages.list | head -1)
-	[ -n "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" \
-		$LOCALSTATE/packages.list \
-		$LOCALSTATE/undigest/*/packages.list | head -1)
+	for rep in $priority; do
+		pkg=$(grep -A 1 -sh "^$1$" $rep/packages.txt | tail -1 | \
+			sed 's/^ *//')
+		[ "$pkg" ] && pkg=$(grep -sh "^$1-$pkg" \
+			$rep/packages.list | head -1)		
+		[ "$pkg" ] || pkg=$(grep -sh "^$1-[0-9]" \
+			$rep/packages.list | head -1)
+		[ "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" \
+		$rep/packages.list | head -1)
+		[ "$pkg" ] && break
+	done
 	if [ -z "$pkg" ]; then
 		# Check for vitual package
 		local equiv
@@ -358,12 +380,13 @@ download()
 	local i
 	case "$1" in
 	*.tazpkg)
-		for i in $LOCALSTATE $LOCALSTATE/undigest/* ; do
-			grep "^${1%.tazpkg}$" $i/packages.list || continue
+		for i in $priority ; do
+			grep -q "^${1%.tazpkg}$" $i/packages.list 2>/dev/null || continue
 			download_from "$(cat $i/mirror)" "$@" && return
 		done
 	esac
-	for i in $(cat $MIRROR $LOCALSTATE/undigest/*/mirror 2> /dev/null); do
+	for i in $(cat `for rep in $priority; do echo $rep/mirror; done` \
+		2> /dev/null); do
 		download_from "$i" "$@" && break
 	done
 }
@@ -862,6 +885,10 @@ please run 'tazpkg recharge' once as root before searching."; echo
 install_flavor()
 {
 	check_root
+	
+	# Get repositories priority list.
+	look_for_priority
+	
 	FLAVOR=$1
 	ARG=$2
 	mkdir -p $TMP_DIR
@@ -1651,6 +1678,10 @@ Maintainer : $MAINTAINER"
 		check_root
 		check_for_package_on_cmdline
 		check_for_package_file
+		
+		# Get repositories priority list.
+		look_for_priority
+		
 		# Check if forced install.
 		DO_CHECK="yes"
 		ROOT=""
@@ -2130,6 +2161,7 @@ EOT
 		# Recharge packages.list from a mirror.
 		#
 		check_root
+		
 		for path in $LOCALSTATE $LOCALSTATE/undigest/*; do
 			[ -f $path/mirror ] || continue
 			echo ""
@@ -2206,6 +2238,10 @@ packages."
 		#
 		check_root
 		check_for_packages_list
+		
+		# Get repositories priority list.
+		look_for_priority
+		
 		cd $LOCALSTATE
 		# Touch the blocked pkgs list to avoid errors and remove any old
 		# upgrade list.
@@ -2368,6 +2404,10 @@ EOT
 		# Check installed packages set.
 		#
 		check_root
+		
+		# Get repositories priority list.
+		look_for_priority
+		
 		cd $INSTALLED
 		for PACKAGE in `ls`; do
 			if [ ! -f $PACKAGE/receipt ]; then
@@ -2494,6 +2534,10 @@ EOT
 		#
 		check_for_package_on_cmdline
 		check_for_packages_list
+		
+		# Get repositories priority list.
+		look_for_priority
+		
 		check_for_package_in_list
 		echo ""
 		if [ -f $PACKAGE.tazpkg ]; then
@@ -2511,6 +2555,10 @@ EOT
 		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
+		
+		# Get repositories priority list.
+		look_for_priority
+		
 		DO_CHECK=""
 		while [ -n "$3" ]; do
 			case "$3" in
