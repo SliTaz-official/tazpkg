@@ -687,7 +687,7 @@ install_deps()
 	root=""
 	[ -n "$1" ] && root="--root=$1"
 	if [ "$AUTO_INSTALL_DEPS" == "yes" ]; then
-		answer="y"
+		answer=`translate_querry y`
 	else
 		echo ""
 		gettext "Install all missing dependencies"
