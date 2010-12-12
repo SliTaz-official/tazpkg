@@ -72,7 +72,7 @@ export HELP='
 			<label>"
 Tazpkgbox is a simple and easy to use interface to the SliTaz
 package manager - aka Tazpkg. You can install, remove, repack or 
-get packages by double-clicking on the package item. A search 
+get packages by double-clicking on the package item. A Search 
 engine allows you to find and install new applications in a few 
 mouse clicks."
 			</label>
@@ -115,8 +115,8 @@ export SETUP_DVD="
 		<text wrap=\"false\">
 			<label>\"
 An ISO image with all $(cat /etc/slitaz-release) packages is available on Slitaz mirrors.
-You can burn it onto a DVD or install it on an USB key and every
-package can be installed without an Internet connection.\"
+You can burn it onto a DVD or install it on an USB key and each
+package becomes installable without an Internet connection.\"
 			</label>
 		</text>
 	</frame>
