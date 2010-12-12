@@ -1932,13 +1932,13 @@ $LIST"
 			fi
 			gettext "Removing all files installed..."
 			if [ -f $ROOT$INSTALLED/$PACKAGE/modifiers ]; then
-			    for mod in `cat $ROOT$INSTALLED/$PACKAGE/modifiers`
+			    for file in `cat $ROOT$INSTALLED/$PACKAGE/files.list`
 			    do
-				for file in `cat $ROOT$INSTALLED/$PACKAGE/files.list`
+				for mod in `cat $ROOT$INSTALLED/$PACKAGE/modifiers`
 				do
-					[ $(grep "^$(echo $file | grepesc)$" $ROOT$INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue
-					remove_with_path $ROOT$file
+					[ $(grep "^$(echo $file | grepesc)$" $ROOT$INSTALLED/$mod/files.list | wc -l) -gt 1 ] && continue 2
 				done
+				remove_with_path $ROOT$file
 			    done
 			else
 				for file in `cat $ROOT$INSTALLED/$PACKAGE/files.list`
