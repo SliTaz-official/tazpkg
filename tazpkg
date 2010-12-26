@@ -1159,7 +1159,7 @@ EOT
 	rm -rf $TMP_DIR
 }
 
-# convert a .pkg.tar.gz package to .tazpkg
+# convert a .pkg.tar.gz/.apk package to .tazpkg
 convert_arch()
 {
 	mkdir -p $TMP_DIR/fs
@@ -1190,7 +1190,7 @@ EOT
 		tazpkg pack $file
 		mv $file.tazpkg $TOP_DIR
 	else
-		eval_gettext "\$PACKAGE_FILE does not look like a Archlinux package !"; echo
+		eval_gettext "\$PACKAGE_FILE does not look like a Archlinux/Alpine package !"; echo
 	fi
 	cd $TOP_DIR
 	rm -rf $TMP_DIR
@@ -2861,7 +2861,7 @@ EOT
 			convert_rpm;;
 		*.tgz)
 			convert_tgz;;
-		*.pkg.tar.gz)
+		*.apk|*.pkg.tar.gz)
 			convert_arch;;
 		*.ipk|*.opk)
 			convert_ipk;;
