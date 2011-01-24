@@ -62,13 +62,17 @@ DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
 
 # Check if the directories and files used by Tazpkg
 # exist. If not and user is root we create them.
-if test $(id -u) = 0 ; then
-	check_dir $CACHE_DIR
-	check_dir $INSTALLED
-	if [ ! -f "$LOCALSTATE/mirror" ]; then
-		echo "$DEFAULT_MIRROR" > $LOCALSTATE/mirror
+check_base_dir()
+{
+	if test $(id -u) = 0 ; then
+		check_dir $1$CACHE_DIR
+		check_dir $1$INSTALLED
+		if [ ! -f "$1$LOCALSTATE/mirror" ]; then
+			echo "$DEFAULT_MIRROR" > $1$LOCALSTATE/mirror
+		fi
 	fi
-fi
+}
+check_base_dir
 
 ####################
 # Script functions #
@@ -182,9 +186,9 @@ done)
 # Get package name in a directory
 package_fullname_in_dir()
 {
-	[ -f $2$1/receipt ] || return
+	[ -f $1/receipt ] || return
 	EXTRAVERSION=""
-	. $2$1/receipt
+	. $1/receipt
 	echo $PACKAGE-$VERSION$EXTRAVERSION
 }
 
@@ -193,7 +197,7 @@ get_installed_package_pathname()
 {
 	for i in $2$INSTALLED/${1%%-*}*; do
 		[ -d $i ] || continue
-		if [ "$1" = "$(package_fullname_in_dir $i $2)" ]; then
+		if [ "$1" = "$(package_fullname_in_dir $i)" ]; then
 			echo $i
 			return
 		fi
@@ -1735,7 +1739,7 @@ case "$COMMAND" in
 		# Check if forced install.
 		DO_CHECK="yes"
 		[ "$forced" ] && DO_CHECK=no
-		[ "$root" ] && ROOT="$root"
+		[ "$root" ] && ROOT="$root" && check_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
 		if [ "$DO_CHECK" = "yes" ]; then
 			check_for_installed_package $ROOT
@@ -2602,7 +2606,7 @@ EOT
 		
 		DO_CHECK=""
 		[ "$forced" ] && DO_CHECK=no
-		[ "$root" ] && ROOT="$root"
+		[ "$root" ] && ROOT="$root" && check_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
 		AUTOEXEC="no"
 		if ! check_for_package_in_list check; then
