@@ -21,7 +21,7 @@ export LIB=/usr/lib/slitaz/libtazpkgbox
 
 usage()
 {
-	[ -n "$1" ] && echo "??? $0 $@"
+	[ "$1" ] && echo "??? $0 $@"
 	echo -e "\nTazpkgbox library\n
 Usage    : $0 [function] [pkg|args]	[pkg]
 Functions:
@@ -39,24 +39,25 @@ Functions:
 undigest_list()
 {
 	IFS="|"
-	if [ -n "$1" -a "$1" != "all" ]; then
-		cat undigest/$1/packages.desc
+	if [ "$1" -a "$1" != "all" ]; then
+		cut -f 1,2,3,4 -d "|" undigest/$1/packages.desc
 	else
-		cat undigest/*/packages.desc
-	fi 2> /dev/null | sort | while read PACKAGE VERSION SHORT_DESC; do
+		cut -f 1,2,3,4 -d "|" undigest/*/packages.desc | sort
+	fi 2> /dev/null | while read PACKAGE VERSION SHORT_DESC CATEGORY; do
+		[ $CAT = all -o $CATEGORY = " $CAT " ] || continue
 		ICON=tazpkg
 		PACKAGE=${PACKAGE%% *}
 		if [ -d installed/$PACKAGE ]; then
-			[ "$2" == "installable" ] && continue
+			[ "$2" = "installable" ] && continue
 			ICON=tazpkg-installed
 			if grep -qs "^$PACKAGE$" blocked-packages.list; then
 				ICON=stop
 			fi
 		else
-			[ "$2" == "installed" ] && continue
+			[ "$2" = "installed" ] && continue
 		fi
-		[ "$2" == "blocked" -a "$ICON" != "stop" ] && continue
-		[ "$2" == "upgradeable" ] && 
+		[ "$2" = "blocked" -a "$ICON" != "stop" ] && continue
+		[ "$2" = "upgradeable" ] && 
 		! grep -q ^$PACKAGE$ upgradeable-packages.list && continue
 		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done
@@ -72,13 +73,12 @@ installable_list()
 	     return
 	fi
 	IFS="|"
-	cat packages.desc undigest/*/packages.desc 2> /dev/null | sort | \
+	cut -f 1,2,3,4 -d "|" packages.desc undigest/*/packages.desc 2> /dev/null | sort | \
 	while read PACKAGE VERSION SHORT_DESC CATEGORY; do
 		# Check first for category for more speed.
-		CATEGORY=${CATEGORY%| *}
+		[ $CAT = all -o $CATEGORY = " $CAT " ] || continue
+		[ -d installed/${PACKAGE% } ] && continue
 		ICON=tazpkg
-		[ $CAT == all -o $CATEGORY == " $CAT " ] || continue
-		[ -d installed/${PACKAGE%% *} ] && continue
 		grep -qs "^$PACKAGE" undigest/*/packages.desc && ICON=add
 		echo "$ICON|$PACKAGE|$VERSION|$SHORT_DESC"
 	done | tee $cache
@@ -89,11 +89,11 @@ installed_list()
 {
 	for pkg in ${1}installed/*
 	do
-		[ -n "$1" -a -s installed/$(basename $pkg)/receipt ] && continue
+		[ "$1" -a -s installed/$(basename $pkg)/receipt ] && continue
 		. $pkg/receipt
 		ICON=tazpkg-installed
-		[ $CAT == all -o $CATEGORY == $CAT ] || continue
-		if [ -n "$1" -o -L $pkg ]; then
+		[ $CAT = all -o $CATEGORY = $CAT ] || continue
+		if [ "$1" -o -L $pkg ]; then
 			ICON=media-flash
 		else
 			grep -qs "^$PACKAGE" undigest/*/packages.desc && ICON=add
@@ -111,7 +111,7 @@ all_list()
 	     cat $cache
 	     return
 	fi
-	( installable_list ; installed_list ) | sort -t \| -k 2 -u | tee $cache
+	{ installable_list ; installed_list; } | sort -t \| -k 2 -u | tee $cache
 }
 
 blocked_list()
@@ -121,7 +121,7 @@ blocked_list()
 	for pkg in $(cat $1-packages.list 2> /dev/null); do
 		[ -f installed/$pkg/receipt ] || continue
 		. installed/$pkg/receipt
-		[ $CAT == all -o $CATEGORY == $CAT ] || continue
+		[ $CAT = all -o $CATEGORY = $CAT ] || continue
 		AVAILABLE=$(grep -s "^$pkg " packages.desc \
 			undigest/*/packages.desc | awk '{ print $3 }')
 		echo "$ICON|$PACKAGE|$VERSION (Available: $AVAILABLE)|$SHORT_DESC"
@@ -139,27 +139,31 @@ clean_search()
 
 list_files()
 {
-	sed 's/.\[[01]m//g' | awk 'BEGIN { show=0 } {
-		if (/^===/) show=1-show;
-		else if (/^Package/) pkg=$2;
-		else if ($0 != "" && show != 0) printf("%s %s\n",pkg,$0);
-	}' | while read pkg file; do
-		[ "$pkg" = "0" ] && continue
-		version=$(grep -hs "^$pkg " /var/lib/tazpkg/packages.desc \
-		  /var/lib/tazpkg/undigest/*/packages.desc | awk '{ print $3 }')
-		if [ -d /var/lib/tazpkg/installed/$pkg ]; then
-			if [ -x $file ]; then
-				echo "exec|$pkg|$version|$file"
-			elif [ -f $file ]; then
-				echo "txt|$pkg|$version|$file"
-			elif [ -d $file ] ; then
-				echo "folder|$pkg|$version|$file"
+	sed -e "/^$/d" -e "1,/^=*$/d" -e "/^=*$/,/EOT/d" | while read input; do
+		if [ "$input" = "${input/ :/}" ]; then
+			# Input is a file.
+			if [ "$ICON" = tazpkg ]; then
+				echo "add|$PACKAGE| |$input"
 			else
-				# Missing installed file.
-				echo "dialog-warning|$pkg|$version|$file"
-			fi
+				if [ -d $input ] ; then
+					echo "folder|$PACKAGE| |$input"
+				elif [ -x $input ]; then
+					echo "exec|$PACKAGE| |$input"
+				elif [ -f $input ]; then
+					echo "txt|$PACKAGE| |$input"
+				else
+					# Missing installed file.
+					echo "dialog-warning|$PACKAGE| |$input"
+				fi
+			fi	
 		else
-			echo "tazpkg|$pkg|$version|$file"
+			# Input contain package name, don't refer to Package word as
+			# tazpkg can use other languages.
+			PACKAGE=$(echo $input | sed 's/^.* \(.*\) :.*$/\1/')
+			ICON=tazpkg
+			[ -d /var/lib/tazpkg/installed/$PACKAGE ] && ICON=tazpkg-installed
+			echo "$ICON|$PACKAGE |$(grep -hs "^$PACKAGE " /var/lib/tazpkg/packages.desc \
+				/var/lib/tazpkg/undigest/*/packages.desc | cut -f2,3 -d '|' | head -1)"
 		fi
 	done
 }
@@ -177,13 +181,13 @@ list_package()
 search_package()
 {
 	IFS="|"
-	cat /var/lib/tazpkg/packages.desc \
+	cut -f1,2,3 -d '|' /var/lib/tazpkg/packages.desc \
 	    /var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | sort | \
 	while read PACKAGE VERSION SHORT_DESC; do
-	if echo "$PACKAGE $SHORT_DESC" | grep -iq "$SEARCH"; then
-		list_package ${PACKAGE%% *}
-	fi
-	done 
+		[ "$PACKAGE" = "${PACKAGE/$SEARCH/}" -a "$SHORT_DESC" = "${SHORT_DESC/$SEARCH/}" ] \
+			&& continue
+		list_package ${PACKAGE% }
+	done
 	unset IFS
 }
 
@@ -207,13 +211,9 @@ case "$1" in
 		esac ;;
 	list-undigest)
 		cd /var/lib/tazpkg
-		CAT=`cat /tmp/tazpkgbox/category`
 		set -- `cat /tmp/tazpkgbox/undigest-category`
-		if [ "$1" == "all" -o "$1" == "" ]; then
-			undigest_list $2 $3
-		else
-			undigest_list $2 $3 | grep "$1"
-		fi ;;
+		CAT="${1:-all}"
+		undigest_list $2 $3 ;;
 	list-blocked|list-upgradeable)
 		cd /var/lib/tazpkg
 		CAT=`cat /tmp/tazpkgbox/category`
@@ -225,15 +225,15 @@ case "$1" in
 			/tmp/tazpkgbox/search ;;
 	search-packages)
 		clean_search
-		( search_package ;
+		{ search_package ;
 		  for i in $(grep ^$SEARCH= /var/lib/tazpkg/packages.equiv | \
 		          cut -d= -f2); do
 		        SEARCH=${i#*:}
 		        search_package
-		  done ) > /tmp/tazpkgbox/search ;;
+		  done; } > /tmp/tazpkgbox/search ;;
 	search-tags)
 		clean_search
-		grep -ls TAGS /home/slitaz/wok/*/receipt | while read file; do
+		fgrep -ls TAGS /home/slitaz/wok/*/receipt | while read file; do
 			TAGS=""
 			. $file
 			case "$TAGS" in
@@ -279,7 +279,7 @@ EOT
 		
 		if [ "$2" = "list_files" ]; then
 			CONF_FILES="$(tazpkg list-config $3 | awk "$AWK_FILTER")"
-			if [ -n "$CONF_FILES" ]; then
+			if [ "$CONF_FILES" ]; then
 				mkdir $TMP_DIR
 				zcat $ROOT/installed/$3/volatile.cpio.gz | \
 					( cd $TMP_DIR ; cpio -id > /dev/null )
@@ -308,7 +308,7 @@ EOT
 				fi
 				echo ""
 			done
-			[ -n "$CONF_FILES" ] && rm -rf $TMP_DIR
+			[ "$CONF_FILES" ] && rm -rf $TMP_DIR
 			exit 0
 		fi
 		
@@ -323,7 +323,7 @@ EOT
 		
 		if [ "$2" = "list_packages" ]; then
 			PKG="$3"
-			if [ -n "$4" ]; then
+			if [ "$4" ]; then
 				shift
 				export LIST_PKGS='
 		<window title="Packages" icon-name="tazpkg">
@@ -428,7 +428,7 @@ EOT
 				/var/lib/tazpkg/undigest/*/packages.desc 2> /dev/null | \
 				awk "/^$PACKAGE / { print \$3 }" | head -1 )"
 			UPGRADE=""
-			if [ -n "$upgrade_version" ]; then
+			if [ "$upgrade_version" ]; then
 				if [ "$upgrade_version" != "$VERSION" ]; then
 					UPGRADE="$upgrade_version"
 				else
@@ -437,7 +437,7 @@ EOT
 					new_md5="$(cat /var/lib/tazpkg/packages.md5 \
 						/var/lib/tazpkg/undigest/*/packages.md5 \
 						2> /dev/null | awk "/ $PACKAGE-$VERSION/ { print \$1 }")"
-					if [ -n "$cur_md5" -a -n "$new_md5" -a \
+					if [ "$cur_md5" -a "$new_md5" -a \
 						"$cur_md5" != "$new_md5" ]; then
 						UPGRADE="build"
 					fi
@@ -453,23 +453,23 @@ EOT
 				<variable>FIELD</variable>		
 				<item icon=\"tazpkg\">Version: | $VERSION</item>
 				<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
-		[ -n "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Upgrade: | $(echo $UPGRADE)</item>"
-		[ -n "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Depends: | $(echo $DEPENDS)</item>"
-		[ -n "$SUGGESTED" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$SUGGESTED" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Suggested: | $(echo $SUGGESTED)</item>"
-		[ -n "$PACKED_SIZE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$PACKED_SIZE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Size: | $PACKED_SIZE ($UNPACKED_SIZE installed)</item>"
-		[ -n "$MAINTAINER" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$MAINTAINER" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>"
-		[ -n "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"important\">Bugs: | $BUGS</item>"
-		[ -n "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"ascii\">Handbook: | $HANDBOOK_URL</item>"
-		[ -n "$TAGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$TAGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Tags: | $TAGS</item>"
-		[ -n "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+		[ "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
 		[ -f $ROOT/installed/$PKG/modifiers ] && 
 		PACKAGE_INFOS="$PACKAGE_INFOS
@@ -498,7 +498,7 @@ EOT
 					$PKG; sleep 5\"</action>
 					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 				</button>"
-			[ -n "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$UPGRADE" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<button>
 					<label>Upgrade</label>
 					<input file icon=\"go-next\"></input>
@@ -506,7 +506,7 @@ EOT
 					tazpkg get-install $PKG --forced ; sleep 5\"</action>
 					<action type=\"closewindow\">INSTALLED_PACKAGE_ACTIONS</action>
 				</button>"
-			grep -q post_install $ROOT/installed/$PKG/receipt && PACKAGE_INFOS="$PACKAGE_INFOS
+			fgrep -q post_install $ROOT/installed/$PKG/receipt && PACKAGE_INFOS="$PACKAGE_INFOS
 				<button>
 					<label>Reconfigure</label>
 					<input file icon=\"reload\"></input>
@@ -629,21 +629,21 @@ EOT
 				<variable>FIELD2</variable>
 				<item icon=\"tazpkg\">Version: | $VERSION</item>
 				<item icon=\"tazpkg\">Category: | $CATEGORY</item>"
-			[ -n "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$DEPENDS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Depends: | $(echo $DEPENDS)</item>"
-			[ -n "$SUGGESTED" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$SUGGESTED" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Suggested: | $(echo $SUGGESTED)</item>"
-			[ -n "$SIZES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$SIZES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Size: | $SIZES</item>"
-			[ -n "$MAINTAINER" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$MAINTAINER" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"system-users\">Maintainer: | $MAINTAINER</item>"
-			[ -n "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$BUGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"important\">Bugs: | $BUGS</item>"
-			[ -n "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$HANDBOOK_URL" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"ascii\">Handbook: | $HANDBOOK_URL</item>"
-			[ -n "$TAGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$TAGS" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Tags: | $TAGS</item>"
-			[ -n "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
+			[ "$CONFIG_FILES" ] && PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"tazpkg\">Config files: | $CONFIG_FILES</item>"
 			PACKAGE_INFOS="$PACKAGE_INFOS
 				<item icon=\"applications-internet\">Website: | $WEB_SITE</item>		
