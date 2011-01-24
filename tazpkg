@@ -27,6 +27,8 @@ VERSION=4.1.3
 # Script variables #
 ####################
 
+source /usr/lib/slitaz/libtaz
+source_lib commons
 . /etc/slitaz/tazpkg.conf
 
 # Include gettext helper script.
@@ -49,6 +51,7 @@ fi
 PACKAGE_FILE=$2
 TARGET_DIR=$3
 TOP_DIR=`pwd`
+TMP_DIR=$tmp/$RANDOM
 INSTALL_LIST=""
 
 # Path to tazpkg used dir and configuration files
@@ -60,12 +63,8 @@ DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
 # Check if the directories and files used by Tazpkg
 # exist. If not and user is root we create them.
 if test $(id -u) = 0 ; then
-	if [ ! -d "$CACHE_DIR" ]; then
-		mkdir -p $CACHE_DIR
-	fi
-	if [ ! -d "$INSTALLED" ]; then
-		mkdir -p $INSTALLED
-	fi
+	check_dir $CACHE_DIR
+	check_dir $INSTALLED
 	if [ ! -f "$LOCALSTATE/mirror" ]; then
 		echo "$DEFAULT_MIRROR" > $LOCALSTATE/mirror
 	fi
@@ -124,32 +123,6 @@ usage ()
   add-undigest     `gettext \"Add an undigest mirror.\"`
   setup-undigest   `gettext \"Update an undigest mirror.\"`
   reconfigure      `gettext \"Replay post install script from package.\"`"
-}
-
-# Status function with color (supported by Ash).
-status()
-{
-	local CHECK=$?
-	echo -en "\\033[70G[ "
-	if [ $CHECK = 0 ]; then
-		echo -en "\\033[1;33m`gettext \"OK\"`"
-	else
-		echo -en "\\033[1;31m`gettext \"Failed\"`"
-	fi
-	echo -e "\\033[0;39m ]"
-	return $CHECK
-}
-
-# Check if user is root to install, or remove packages.
-check_root()
-{
-	if test $(id -u) != 0 ; then
-		echo
-		gettext \
-"You must be root to run tazpkg with this option. Please use the command:
-su followed by the root password to become super-user."; echo
-		echo "" && exit 0
-	fi
 }
 
 # Check for a package name on cmdline.
@@ -1756,28 +1729,14 @@ case "$COMMAND" in
 		
 		# Get repositories priority list.
 		look_for_priority
+		get_options_list="root forced list"
+		get_options
 		
 		# Check if forced install.
 		DO_CHECK="yes"
-		ROOT=""
-		while [ -n "$3" ]; do
-			case "$3" in
-			--forced)
-				DO_CHECK="no"
-				;;
-			--root=*)
-				ROOT="${3#--root=}"
-				;;
-			--list=*)
-				INSTALL_LIST="${3#--list=}"
-				;;
-			*)	shift 2
-				echo -e "\n`gettext \"Unknow option\"` $*.\n" >&2
-				exit 1
-				;;
-			esac
-			shift
-		done
+		[ "$forced" ] && DO_CHECK=no
+		[ "$root" ] && ROOT="$root"
+		[ "$list" ] && INSTALL_LIST="$list"
 		if [ "$DO_CHECK" = "yes" ]; then
 			check_for_installed_package $ROOT
 		fi
@@ -2638,26 +2597,13 @@ EOT
 		
 		# Get repositories priority list.
 		look_for_priority
+		get_options_list="root forced list"
+		get_options
 		
 		DO_CHECK=""
-		while [ -n "$3" ]; do
-			case "$3" in
-			--forced)
-				DO_CHECK="no"
-				;;
-			--root=*)
-				ROOT="${3#--root=}"
-				;;
-			--list=*)
-				INSTALL_LIST="${3#--list=}"
-				;;
-			*)	shift 2
-				echo -e "\n`gettext \"Unknow option\"` $*.\n" >&2
-				exit 1
-				;;
-			esac
-			shift
-		done
+		[ "$forced" ] && DO_CHECK=no
+		[ "$root" ] && ROOT="$root"
+		[ "$list" ] && INSTALL_LIST="$list"
 		AUTOEXEC="no"
 		if ! check_for_package_in_list check; then
 			PACKAGE=get-$PACKAGE
