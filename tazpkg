@@ -21,7 +21,7 @@
 #           Antoine Bodin <gokhlayeh@mailoo.org>
 #           Christopher Rogers <slaxemulator@gmail.com>
 #
-VERSION=4.2.1
+VERSION=4.2.2
 
 ####################
 # Script variables #
@@ -379,7 +379,7 @@ download()
 extract_package()
 {
 	eval_gettext "Extracting \$PACKAGE... "
-	cpio -idm --quiet < $PACKAGE.tazpkg && rm -f $PACKAGE.tazpkg
+	cpio -idm --quiet < ${PACKAGE_FILE##*/} && rm -f ${PACKAGE_FILE##*/}
 	status
 	if [ -f fs.cpio.lzma ]; then
 		gettext "Extracting the pseudo fs... "
@@ -496,7 +496,7 @@ install_package()
 	  	[ "$i" == "$PACKAGE" ] && continue
 	  	[ -s $i/files.list ] || continue
 	  	awk "{ printf \"$i %s\\n\",\$1 }" < $i/files.list
-	  done } | awk '
+	  done; } | awk '
 {
 	if ($1 == "-" || file[$2] != "") {
 		file[$2] = file[$2] " " $1
