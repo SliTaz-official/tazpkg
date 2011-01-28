@@ -21,7 +21,7 @@
 #           Antoine Bodin <gokhlayeh@mailoo.org>
 #           Christopher Rogers <slaxemulator@gmail.com>
 #
-VERSION=4.2.2
+VERSION=4.2.3
 
 ####################
 # Script variables #
@@ -48,7 +48,7 @@ else
 	# Pkg name for remove, search and all other cmds
 	PACKAGE=${2%.tazpkg}
 fi
-PACKAGE_FILE=$2
+PACKAGE_FILE="$PWD/$2"
 TARGET_DIR=$3
 TOP_DIR=`pwd`
 TMP_DIR=$tmp/$RANDOM
@@ -544,12 +544,12 @@ END {
 		# save 'official' configuration files
 		eval_gettext "Saving configuration files for \$PACKAGE... "
 		for i in $CONFIG_FILES; do
-			{ cd fs ; find ${i#/} -type f; }
-		done | { cd fs ; cpio -o -H newc --quiet | gzip -9; } > \
+			{ cd fs ; find ${i#/} -type f; cd ..; }
+		done | { cd fs ; cpio -o -H newc --quiet | gzip -9; cd ..; } > \
 			$ROOT$INSTALLED/$PACKAGE/volatile.cpio.gz
 		# keep user configuration files
 		for i in $CONFIG_FILES; do
-			{ cd fs ; find ${i#/} -type f; }
+			{ cd fs ; find ${i#/} -type f; cd ..; }
 		done | while read i; do
 			[ -e $ROOT/$i ] || continue
 			cp -a $ROOT/$i fs/$i
@@ -2050,7 +2050,7 @@ $LIST"
 		done > files.list
 		mkdir fs
 		cd fs
-		{ cd / ; cpio -o -H newc --quiet; } < ../files.list | cpio -idm --quiet > /dev/null
+		( cd / ; cpio -o -H newc --quiet ) < ../files.list | cpio -idm --quiet > /dev/null
 		mkdir -p etc/tazlito
 		for i in $INSTALLED/*/receipt; do
 			EXTRAVERSION=""
@@ -2115,11 +2115,11 @@ EOT
 		ln -s / rootfs
 		mkdir tmp
 		sed 's/^/rootfs/' < files.list | cpio -o -H newc --quiet |\
-		      { cd tmp ; cpio -idm --quiet >/dev/null; }
+		      { cd tmp ; cpio -idm --quiet >/dev/null; cd ..; }
 		mv tmp/rootfs fs
 		if [ -f $INSTALLED/$PACKAGE/volatile.cpio.gz ]; then
 			zcat $INSTALLED/$PACKAGE/volatile.cpio.gz | \
-				{ cd fs; cpio -idm --quiet; }
+				{ cd fs; cpio -idm --quiet; cd ..; }
 		fi
 		if fgrep -q repack_cleanup $INSTALLED/$PACKAGE/receipt; then
 			. $INSTALLED/$PACKAGE/receipt
