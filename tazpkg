@@ -1021,9 +1021,9 @@ find_depends()
 {
 	DEFAULT_DEPENDS="glibc-base gcc-lib-base"
 
-	[ -f /var/lib/tazpkg/files.list.lzma ] || tazpkg recharge > /dev/null
-	for i in /var/lib/tazpkg/files.list.lzma \
- 		/var/lib/tazpkg/undigest/*/files.list.lzma ; do
+	[ -f $LOCALSTATE/files.list.lzma ] || tazpkg recharge > /dev/null
+	for i in $LOCALSTATE/files.list.lzma \
+ 		$LOCALSTATE/undigest/*/files.list.lzma ; do
  		[ -f $i ] && lzma d $i -so >> $TMP_DIR/files.list
 	done
 	find $TMP_DIR/$file/fs -type f | while read chkfile ; do
@@ -1814,7 +1814,7 @@ $LIST"
 			echo ""
 			exit 0
 		fi
-		rm /var/lib/tazpkg/mirror
+		rm $LOCALSTATE/mirror
 		echo "$RELEASE" > /etc/slitaz-release
 		tazpkg recharge && tazpkg upgrade
 
@@ -2584,7 +2584,7 @@ EOT
 		check_for_package_in_list
 		echo ""
 		if [ -f $PACKAGE.tazpkg ]; then
-			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" /var/lib/tazpkg/packages.md5)" ]; then
+			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $LOCALSTATE/$undigest/packages.md5)" ]; then
 				rm -f $PACKAGE.tazpkg
 				download $PACKAGE.tazpkg
 			fi
@@ -2632,7 +2632,16 @@ EOT
 				eval_gettext "Continuing \$PACKAGE download"; echo
 				download $PACKAGE.tazpkg
 			}
-			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" /var/lib/tazpkg/packages.md5)" ]; then
+			if [ -f $LOCALSTATE/priority ]; then
+				for i in $(cat $LOCALSTATE/priority); do
+					if [ -f $LOCALSTATE/undigest/$i/packages.md5 ]; then
+						if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $LOCALSTATE/undigest/$i/packages.md5)" ]; then
+							rm -f $PACKAGE.tazpkg
+							download $PACKAGE.tazpkg
+						fi
+					fi
+				done
+			elif [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $LOCALSTATE/packages.md5)" ]; then
 				rm -f $PACKAGE.tazpkg
 				download $PACKAGE.tazpkg
 			fi
