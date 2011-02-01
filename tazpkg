@@ -236,7 +236,7 @@ packages available on the mirror."; echo
 get_cache_dir()
 {
 	echo $rep > $tmp/rep
-	if [ "$rep"	= /var/lib/tazpkg ]; then
+	if [ "$rep" = "$LOCALSTATE" ]; then
 		CACHE_DIR="$SAVE_CACHE_DIR/$SLITAZ_VERSION/packages"
 	elif [ "${rep%-incoming}" = "$rep" ]; then
 		CACHE_DIR="$SAVE_CACHE_DIR/${rep##*/}/packages"
