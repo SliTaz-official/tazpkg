@@ -53,6 +53,7 @@ TARGET_DIR=$3
 TOP_DIR=`pwd`
 TMP_DIR=$tmp/$RANDOM
 INSTALL_LIST=""
+SAVE_CACHE_DIR="$CACHE_DIR"
 
 # Path to tazpkg used dir and configuration files
 INSTALLED=$LOCALSTATE/installed
@@ -232,6 +233,21 @@ packages available on the mirror."; echo
 	fi
 }
 
+get_cache_dir()
+{
+	echo $rep > $tmp/rep
+	if [ "$rep"	= /var/lib/tazpkg ]; then
+		CACHE_DIR="$SAVE_CACHE_DIR/$SLITAZ_VERSION/packages"
+	elif [ "${rep%-incoming}" = "$rep" ]; then
+		CACHE_DIR="$SAVE_CACHE_DIR/${rep##*/}/packages"
+	else
+		rep="${rep%-incoming}"
+		CACHE_DIR="$SAVE_CACHE_DIR/${rep##*/}/packages-incoming"
+	fi
+	[ -d "$CACHE_DIR" ] || mkdir -p $CACHE_DIR
+	echo $CACHE_DIR > $tmp/cachedir
+}
+
 # get an already installed package from packages.equiv
 equivalent_pkg()
 {
@@ -297,7 +313,7 @@ get_package_filename()
 			$rep/packages.list | head -1)
 		[ "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" \
 		$rep/packages.list | head -1)
-		[ "$pkg" ] && break
+		[ "$pkg" ] && get_cache_dir && break
 	done
 	if [ -z "$pkg" ]; then
 		# Check for vitual package
@@ -320,8 +336,11 @@ check_for_package_in_list()
 	local check_only
 	check_only="$1"
 	filename=$(get_package_filename $PACKAGE)
-	if [ -n "$filename" ]; then
+	if [ "$filename" ]; then
 		PACKAGE=$filename
+		CACHE_DIR=$(cat $tmp/cachedir)
+		rep=$(cat $tmp/rep)
+		rm -f $tmp/rep $tmp/cachedir
 	else
 		echo ""
 		eval_gettext "Unable to find: \$PACKAGE in the mirrored packages list."; echo
@@ -2584,7 +2603,7 @@ EOT
 		check_for_package_in_list
 		echo ""
 		if [ -f $PACKAGE.tazpkg ]; then
-			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $LOCALSTATE/$undigest/packages.md5)" ]; then
+			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.md5)" ]; then
 				rm -f $PACKAGE.tazpkg
 				download $PACKAGE.tazpkg
 			fi
@@ -2614,14 +2633,14 @@ EOT
 			AUTOEXEC=$PACKAGE
 			check_for_package_in_list
 			if [ -n "$(get_installed_package_pathname $PACKAGE $ROOT)" ]; then
+				CACHE_DIR="${CACHE_DIR%/*}/get"
+				[ -d "$CACHE_DIR" ] || mkdir -p $CACHE_DIR
 				$AUTOEXEC $ROOT
 				exit 0
 			fi
 		fi
 		# Check if forced install.
-		if [ "$DO_CHECK" = "no" ]; then
-			rm -f $CACHE_DIR/$PACKAGE.tazpkg
-		else
+		if ! [ "$DO_CHECK" = "no" ]; then
 			check_for_installed_package $ROOT
 		fi
 		cd $CACHE_DIR
@@ -2632,16 +2651,7 @@ EOT
 				eval_gettext "Continuing \$PACKAGE download"; echo
 				download $PACKAGE.tazpkg
 			}
-			if [ -f $LOCALSTATE/priority ]; then
-				for i in $(cat $LOCALSTATE/priority); do
-					if [ -f $LOCALSTATE/undigest/$i/packages.md5 ]; then
-						if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $LOCALSTATE/undigest/$i/packages.md5)" ]; then
-							rm -f $PACKAGE.tazpkg
-							download $PACKAGE.tazpkg
-						fi
-					fi
-				done
-			elif [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $LOCALSTATE/packages.md5)" ]; then
+			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.md5)" ]; then
 				rm -f $PACKAGE.tazpkg
 				download $PACKAGE.tazpkg
 			fi
