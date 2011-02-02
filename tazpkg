@@ -1756,11 +1756,9 @@ case "$COMMAND" in
 		get_options
 		
 		# Check if forced install.
-		DO_CHECK="yes"
-		[ "$forced" ] && DO_CHECK=no
 		[ "$root" ] && ROOT="$root" && check_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
-		if [ "$DO_CHECK" = "yes" ]; then
+		if ! [ "$forced" ]; then
 			check_for_installed_package $ROOT
 		fi
 		install_package $ROOT
@@ -1851,24 +1849,9 @@ $LIST"
 		#
 		check_root
 		check_for_package_on_cmdline
-		ROOT=""
-		while [ -n "$3" ]; do
-			case "$3" in
-			--root=*)
-				ROOT="${3#--root=}"
-				if [ "$ROOT" ]; then
-					ROOTOPTS="--root=$ROOT"
-				else
-					ROOTOPTS=""
-				fi
-				;;
-			*)	shift 2
-				echo -e "\n`gettext \"Unknow option\"` $*.\n" >&2
-				exit 1
-				;;
-			esac
-			shift
-		done
+		get_options_list="root auto"
+		get_options
+		[ "$root" ] && ROOT="$root" 
 		if [ ! -f "$ROOT$INSTALLED/$PACKAGE/receipt" ]; then
 			echo ""
 			eval_gettext "\$PACKAGE is not installed."; echo
@@ -1901,9 +1884,13 @@ $LIST"
 				echo "  ${i%/modifiers}"
 			done
 		fi
-		eval_gettext "Remove \$PACKAGE (\$VERSION\$EXTRAVERSION) ?"; echo
-		gettext "Please confirm uninstallation"
-		echo -n " (`translate_querry y`/`translate_querry N`) : "; read answer
+		if [ "$auto" ]; then
+			answer=`translate_querry y`
+		else
+			eval_gettext "Remove \$PACKAGE (\$VERSION\$EXTRAVERSION) ?"; echo
+			gettext "Please confirm uninstallation"
+			echo -n " (`translate_querry y`/`translate_querry N`) : "; read answer
+		fi
 		if [ "$answer" = "$(translate_querry y)" ]; then
 			echo ""
 			echo -e "\033[1m`gettext \"Removing:\"`\033[0m $PACKAGE"
@@ -1940,10 +1927,14 @@ $LIST"
 				$LOCALSTATE/installed.md5 2> /dev/null
 			# Log this activity
 			log Removed
-			if [ -n "$ALTERED" ]; then
+			if [ "$ALTERED" ]; then
+				if [ "$auto" ]; then
+					answer=`translate_querry y`
+				else
 				eval_gettext "Remove packages depending on \$PACKAGE"
 				echo -n " (`translate_querry y`/`translate_querry N`) ? "
 				read answer
+				fi
 				if [ "$answer" = "$(translate_querry y)" ]; then
 					for i in $ALTERED; do
 						if [ -d "$ROOT$INSTALLED/$i" ]; then
@@ -1952,10 +1943,14 @@ $LIST"
 					done
 				fi
 			fi
-			if [ -n "$REFRESH" ]; then
+			if [ "$REFRESH" ]; then
+				if [ "$auto" ]; then
+					answer=`translate_querry y`
+				else
 				eval_gettext "Reinstall packages modified by \$PACKAGE"
 				echo -n " (`translate_querry y`/`translate_querry N`) ? "
 				read answer
+				fi
 				if [ "$answer" = "$(translate_querry y)" ]; then
 					for i in $REFRESH; do
 						if [ $(wc -l < $ROOT$INSTALLED/$i) -gt 1 ]; then
@@ -2640,7 +2635,7 @@ EOT
 			fi
 		fi
 		# Check if forced install.
-		if ! [ "$DO_CHECK" = "no" ]; then
+		if ! [ "$forced" ]; then
 			check_for_installed_package $ROOT
 		fi
 		cd $CACHE_DIR
