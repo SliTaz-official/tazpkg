@@ -1752,12 +1752,22 @@ case "$COMMAND" in
 		
 		# Get repositories priority list.
 		look_for_priority
-		get_options_list="root forced list"
+		get_options_list="root forced list root-config"
 		get_options
 		
-		# Check if forced install.
-		[ "$root" ] && ROOT="$root" && check_dir "$root"
+		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
+		if [ "$root-config" ]; then
+			if [ "$root" ]; then
+				CACHE_DIR=$root/$CACHE_DIR
+				LOCALSTATE=$root/$LOCALSTATE
+				INSTALLED=$root/$INSTALLED
+			else
+				echo "root-config needs --root= option used." >&2
+				exit 1
+			fi
+		fi	
+		# Check if forced install.
 		if ! [ "$forced" ]; then
 			check_for_installed_package $ROOT
 		fi
@@ -2615,13 +2625,23 @@ EOT
 		
 		# Get repositories priority list.
 		look_for_priority
-		get_options_list="root forced list"
+		get_options_list="root forced list root-config"
 		get_options
 		
 		DO_CHECK=""
 		[ "$forced" ] && DO_CHECK=no
-		[ "$root" ] && ROOT="$root" && check_dir "$root"
+		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
+		if [ "$root-config" ]; then
+			if [ "$root" ]; then
+				CACHE_DIR=$root/$CACHE_DIR
+				LOCALSTATE=$root/$LOCALSTATE
+				INSTALLED=$root/$INSTALLED
+			else
+				echo "root-config needs --root= option used." >&2
+				exit 1
+			fi
+		fi
 		AUTOEXEC="no"
 		if ! check_for_package_in_list check; then
 			PACKAGE=get-$PACKAGE
