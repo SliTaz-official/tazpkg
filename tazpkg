@@ -2226,14 +2226,42 @@ EOT
 		# Recharge packages.list from a mirror.
 		#
 		check_root
-		
-		for path in $LOCALSTATE $LOCALSTATE/undigest/*; do
+		if [ "$2" = main ]; then
+			repository_to_recharge=$LOCALSTATE
+		elif [ "$2" ]; then
+			if [ -d "$LOCALSTATE/undigest/$2" ]; then
+				repository_to_recharge=$LOCALSTATE/undigest/$2
+			else
+				echo "\$LOCALSTATE/undigest/$2 `gettext \"doesn't exists.\"`" >&2
+				exit 1
+			fi
+		else
+			repository_to_recharge="$LOCALSTATE $LOCALSTATE/undigest/*"
+		fi	
+		for path in $repository_to_recharge; do
 			[ -f $path/mirror ] || continue
+			cd $path
+
+			# Quietly check if recharging is needed.
+			[ -f ID ] && mv ID ID.bak
+			download_from "$(cat mirror)" ID >/dev/null 2>&1
+			if [ -f ID ] && fgrep -q `cat ID.bak` ID; then
+				if [ "$path" = "$LOCALSTATE" ]; then
+					repository_name=Main
+				else
+					repository_name="`gettext \"Undigest\"` $(basename $path)"
+				fi
+				echo "$repository_name `gettext \"is up to date.\"`"
+				rm ID.bak
+				continue
+			fi
+			[ -f ID ] && rm -f ID.bak
+
 			echo ""
 			if [ "$path" != "$LOCALSTATE" ]; then
 				echo -e "`gettext \"Recharging undigest\"` $(basename $path):"
 			fi
-			cd $path
+
 			if [ -f "packages.list" ]; then
 				gettext "Creating backup of the last packages list..."
 				mv -f packages.desc packages.desc.bak 2>/dev/null
