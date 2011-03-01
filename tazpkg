@@ -41,14 +41,15 @@ export TEXTDOMAIN
 # Initialize some variables to use words rather than numbers for functions
 # and actions.
 COMMAND=$1
-if [ -f "$2" ]; then
+PACKAGE=${2%/}
+PACKAGE_FILE="$PWD/$PACKAGE"
+if [ -f "$PACKAGE" ]; then
 	# Set pkg basename for install, extract
-	PACKAGE=$(basename ${2%.tazpkg} 2>/dev/null)
+	PACKAGE=$(basename ${PACKAGE%.tazpkg} 2>/dev/null)
 else
 	# Pkg name for remove, search and all other cmds
-	PACKAGE=${2%.tazpkg}
+	PACKAGE=${PACKAGE%.tazpkg}
 fi
-PACKAGE_FILE="$PWD/$2"
 TARGET_DIR=$3
 TOP_DIR=`pwd`
 TMP_DIR=$tmp/$RANDOM
