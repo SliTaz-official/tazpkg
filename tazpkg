@@ -2818,6 +2818,10 @@ EOT
 	convert)
 		# convert misc package format to .tazpkg
 		check_for_package_file
+		if [ "$(dd if=$PACKAGE_FILE bs=8 count=1 skip=1 2> /dev/null)" \
+		      == "debian-b" ]; then
+			convert_deb
+		else
 		case "$PACKAGE_FILE" in
 		*.deb|*.udeb)
 			convert_deb;;
@@ -2831,7 +2835,8 @@ EOT
 			convert_ipk;;
 		*)
 			gettext "Unsupported format"; echo ;;
-		esac ;;
+		esac
+		fi ;;
 	link)
 		# link a package from another slitaz installation
 		PACKAGE=$2
