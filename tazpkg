@@ -2244,7 +2244,7 @@ EOT
 
 			# Quietly check if recharging is needed.
 			[ -f ID ] && mv ID ID.bak
-			download_from "$(cat mirror)" ID >/dev/null 2>&1
+			download_from "$(cat mirror)" ID >/dev/null
 			if [ -f ID ] && fgrep -q `cat ID.bak` ID; then
 				if [ "$path" = "$LOCALSTATE" ]; then
 					repository_name=Main
@@ -2255,7 +2255,13 @@ EOT
 				rm ID.bak
 				continue
 			fi
-			[ -f ID ] && rm -f ID.bak
+
+			# Don't let ID be a symlink when using local repository.
+			if [ -f ID ]; then
+				mv -f ID ID.bak
+				cat ID.bak > ID
+				rm ID.bak
+			fi
 
 			echo ""
 			if [ "$path" != "$LOCALSTATE" ]; then
