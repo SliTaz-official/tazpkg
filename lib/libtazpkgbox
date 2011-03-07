@@ -157,7 +157,7 @@ list_files()
 				fi
 			fi	
 		else
-			# Input contain package name, don't refer to Package word as
+			# Input contains package name, don't refer to Package word as
 			# tazpkg can use other languages.
 			PACKAGE=$(echo $input | sed 's/^.* \(.*\) :.*$/\1/')
 			ICON=tazpkg
