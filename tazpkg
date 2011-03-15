@@ -1,4 +1,4 @@
-#!/bin/sh
+s#!/bin/sh
 # Tazpkg - Tiny autonomous zone packages manager.
 #
 # This is a lightwight packages manager for *.tazpkg files, all written in
@@ -2273,22 +2273,26 @@ EOT
 
 			if [ -f "packages.list" ]; then
 				gettext "Creating backup of the last packages list..."
-				mv -f packages.desc packages.desc.bak 2>/dev/null
-				mv -f packages.md5 packages.md5.txt 2>/dev/null
-				mv -f packages.txt packages.txt.bak 2>/dev/null
-				mv -f packages.list packages.list.bak 2>/dev/null
-				mv -f packages.equiv packages.equiv.bak 2>/dev/null
-				mv -f files.list.lzma files.list.lzma.bak 2> /dev/null
-				mv -f mirrors mirrors.bak 2> /dev/null
+				for i in packages.desc packages.md5 packages.txt \
+				packages.list packages.equiv files.list.lzma \
+				mirrors wanted.txt depends.txt libraries.txt; do
+					mv -f $i $i.bak 2>/dev/null
+				done
 				status
 			fi
-			download_from "$(cat mirror)" packages.desc
-			download_from "$(cat mirror)" packages.md5
-			download_from "$(cat mirror)" packages.txt
-			download_from "$(cat mirror)" packages.list
-			download_from "$(cat mirror)" packages.equiv
+			for i in desc md5 txt list; do
+				download_from "$(cat mirror)" packages.$i
+			done
 			download_from "$(cat mirror)" files.list.lzma
-			download_from "$(sed 's|packages/.*||' < mirror)" mirrors
+			
+			# ID file & wanted/depends/libraries files were implemented
+			# at the same time. Not all repositories have them.
+			if [ -f ID ]; then
+				for i in wanted depends library; do
+					wget -s "$(cat mirror)" $i.txt
+				done
+			fi
+
 			[ -f mirrors ] || mv mirrors.bak mirrors 2> /dev/null
 			suffix=$(head -1 mirror)
 			suffix=packages${suffix#*/packages}
