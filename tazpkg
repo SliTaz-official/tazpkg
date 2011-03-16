@@ -1,4 +1,4 @@
-s#!/bin/sh
+#!/bin/sh
 # Tazpkg - Tiny autonomous zone packages manager.
 #
 # This is a lightwight packages manager for *.tazpkg files, all written in
