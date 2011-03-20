@@ -1072,7 +1072,7 @@ find_depends()
 		done
 	done
 	spc=""
-	cat $TMP_DIR/depends | sort | uniq | while read file; do
+	cat $TMP_DIR/depends 2> /dev/null | sort | uniq | while read file; do
 		echo -n "$spc$file"
 		spc=" "
 	done
@@ -1249,11 +1249,11 @@ convert_deb()
 {
 	mkdir -p $TMP_DIR
 	dpkg-deb -e $PACKAGE_FILE $TMP_DIR
-	package=$(grep '^ *Package' $TMP_DIR/control)
+	package=$(grep '^ *Package:' $TMP_DIR/control)
 	package=$(echo ${package##*:})
-	version=$(grep '^ *Version' $TMP_DIR/control)
+	version=$(grep '^ *Version:' $TMP_DIR/control)
 	version=$(echo ${version##*:})
-	descrip=$(grep '^ *Description' $TMP_DIR/control)
+	descrip=$(grep '^ *Description:' $TMP_DIR/control)
 	descrip=$(echo ${descrip##*:})
 	target="$(grep ^Architecture $TMP_DIR/control | sed 's/.*: //')"
 	case "$target" in
