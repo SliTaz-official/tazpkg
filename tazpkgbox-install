@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Notes:
-# Notebook tab are vbox, tabs are used to indent and functions are
+# GTKdialog interface to SliTaz Packages Manager aka Tazpkg. Note:
+# Notebook tabs are vbox, tabs are used to indent and functions are
 # split and found in $LIB.
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2010.
