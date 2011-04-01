@@ -2229,13 +2229,20 @@ EOT
 		# Recharge packages.list from a mirror.
 		#
 		check_root
-		if [ "$2" = main ]; then
+		get_options_list="root forced list rootconfig"
+		get_options
+		ARG=$2
+		if [ "$root" ]; then
+			LOCALSTATE=$root$LOCALSTATE
+			[ "${2#--}" != "$2" ] && ARG=$3
+		fi
+		if [ "$ARG" = main ]; then
 			repository_to_recharge=$LOCALSTATE
-		elif [ "$2" ]; then
-			if [ -d "$LOCALSTATE/undigest/$2" ]; then
-				repository_to_recharge=$LOCALSTATE/undigest/$2
+		elif [ "$ARG" ]; then
+			if [ -d "$LOCALSTATE/undigest/$ARG" ]; then
+				repository_to_recharge=$LOCALSTATE/undigest/$ARG
 			else
-				echo "\$LOCALSTATE/undigest/$2 `gettext \"doesn't exists.\"`" >&2
+				echo "\$LOCALSTATE/undigest/$ARG `gettext \"doesn't exists.\"`" >&2
 				exit 1
 			fi
 		else
@@ -2718,6 +2725,7 @@ EOT
 			download $PACKAGE.tazpkg
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
+		[ "$rootconfig" ] && LOCALSTATE=${LOCALSTATE#$root}
 		install_package $ROOT
 		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT 
 		update_desktop_database $ROOT 
