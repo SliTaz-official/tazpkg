@@ -2288,7 +2288,8 @@ packages."
 				echo $file
 				break
 			done
-		done < installed.md5 > upgradeable-packages.list ;;
+		done < installed.md5 > upgradeable-packages.list.tmp
+		uniq upgradeable-packages.list.tmp upgradeable-packages.list ;;
 	upgrade)
 		# Upgrade all installed packages with the new version from the mirror.
 		#
