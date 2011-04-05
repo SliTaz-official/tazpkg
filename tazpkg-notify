@@ -1,0 +1,197 @@
+#!/bin/sh
+#
+# TazPKG Notify - Notification icon for Tazpkg packages. Recharging pkgs
+# list can be done automatically at boot, so notify user if some
+# update are available. Also notify user if the packages list is too
+# old and out-of-date or if no packages list found. This script should
+# be run ny the WM autostart script or ~/.xsession and need a systray to
+# site in like in LXpanel or Tint2.
+#
+# Copyright (C) 2011 SliTaz GNU/Linux - GNU gpl v2
+#
+# Authors : Christophe Lincoln <pankso@slitaz.org>
+#
+
+. /etc/slitaz/tazpkg.conf
+LOCALSTATE="/var/lib/tazpkg"
+
+# Include gettext helper script.
+. /usr/bin/gettext.sh
+
+# Export package name for gettext.
+TEXTDOMAIN='tazpkg-notify'
+export TEXTDOMAIN
+
+up=`cat $LOCALSTATE/upgradeable-packages.list | wc -l`
+rel=`cat /etc/slitaz-release`
+
+# Kill the notification icon after user pressed on it.
+kill_notification() {
+	for p in `ps | grep "yad --notification" | awk '{print $1}'`
+	do
+		kill -9 $p 2>/dev/null
+	done
+}
+
+# Message for upgradeable
+upgradeable_msg() {
+	eval_gettext "<b>There is \$up upgradeable packages for your SliTaz \$ver</b>
+You should upgrade your system to get all latest fixes
+and improvments from SliTaz contributors"
+}
+
+# Message for list older than 10 days
+old_list_msg() {
+	eval_gettext "<b>Your SliTaz \$ver packages list is older than 10 days.</b>
+You should recharge the list to check for updates"
+}
+
+# Message if packages.list is missing
+no_list_msg() {
+	eval_gettext "<b>No packages list found on your SliTaz \$rel system.</b>
+You will need to recharge the list of mirrored packages
+if you want to install packages or upgrade your system"
+}
+
+#
+# Main GUI box for upgradeable packages
+#
+upgradeable_main() {
+	yad --text --width=400 \
+		--geometry="$NOTIFY_GEOM" \
+		--undecorated \
+		--title="TazPKG Notification" \
+		--image="tazpkg" \
+		--image-on-top \
+		--on-top \
+		--text="`upgradeable_msg`" \
+		--button="`gettext \"Upgrade:2\"`" \
+		--button="gtk-close:1"
+}
+
+# Notification icon for upgradeable packages
+upgradeable_notify() {
+	yad --notification \
+		--image=tazpkg \
+		--text="`upgradeable_msg`" \
+		--command="tazpkg-notify upgrade"
+}
+
+# Main upgradeable function
+upgradeable() {
+	# Store box results
+	main=`upgradeable_main`
+	ret=$?
+	kill_notification
+	# Deal with --button values
+	case $ret in
+		1) exit 0 ;;
+		#tazweb http://tazpanel:8090/pkgs.cgi?upgradeable &
+		2) subox tazpkgbox & ;;
+		*) continue ;;
+	esac
+}
+
+#
+# Main GUI box for missing packages.list
+#
+old_list_main() {
+	yad --text --width=400 \
+		--geometry="$NOTIFY_GEOM" \
+		--undecorated \
+		--title "TazPKG Notification" \
+		--image="tazpkg" \
+		--image-on-top \
+		--on-top \
+		--text "`old_list_msg`" \
+		--button="`gettext \"Recharge now:2\"`" \
+		--button="gtk-close:1"
+}
+
+# Notification icon if no packages.list
+old_list_notify() {
+	yad --notification \
+		--image=tazpkg \
+		--text="`old_list_msg`" \
+		--command="tazpkg-notify no-list"
+}
+
+# Main missing packages.list function
+old_list() {
+	# Store box results
+	main=`old_list_main`
+	ret=$?
+	kill_notification
+	# Deal with --button values
+	case $ret in
+		1) exit 0 ;;
+		# tazweb http://tazpanel:8090/pkgs.cgi?recharge &
+		2) subox tazpkgbox & ;;
+		*) continue ;;
+	esac
+}
+
+#
+# Main GUI box for missing packages.list
+#
+no_list_main() {
+	yad --text --width=400 \
+		--geometry="$NOTIFY_GEOM" \
+		--undecorated \
+		--show-uri \
+		--title="TazPKG Notification" \
+		--image="tazpkg" \
+		--image-on-top \
+		--on-top \
+		--text "`no_list_msg`" \
+		--button="`gettext \"Recharge now:2\"`" \
+		--button="gtk-close:1"
+}
+
+# Notification icon if no packages.list
+no_list_notify() {
+	yad --notification \
+		--image=tazpkg \
+		--text="`no_list_msg`" \
+		--command="tazpkg-notify no-list"
+}
+
+# Main missing packages.list function
+no_list() {
+	# Store box results
+	main=`no_list_main`
+	ret=$?
+	kill_notification
+	# Deal with --button values
+	case $ret in
+		1) exit 0 ;;
+		# tazweb http://tazpanel:8090/pkgs.cgi?recharge &
+		2) subox tazpkgbox & ;;
+		*) continue ;;
+	esac
+}
+
+#
+# Script commands
+#
+
+case $1 in
+	upgrade)
+		upgradeable ;;
+	old-list)
+		old_list ;;
+	no-list)
+		no_list ;;
+	*)
+		# Sleep first to let tazpkg upgrade on boot finish. Check if
+		# any upgrade, then for an old list and then if any list at all
+		# (live or first boot)
+		#sleep 15
+		[ "$up" -gt 0 ] && upgradeable_notify && exit 0
+		mtime=`find /var/lib/tazpkg/packages.list -mtime +10;`
+		[ "$mtime" ] && old_list_notify && exit 0
+		[ ! -f $LOCALSTATE/packages.list ] && no_list_notify \
+			&& exit 0 ;;
+esac
+
+exit 0		

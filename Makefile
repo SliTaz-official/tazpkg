@@ -12,9 +12,10 @@ all:
 # i18n.
 
 pot:
-	xgettext -o po/tazpkg/tazpkg.pot -L Shell --package-name=Tazpkg ./tazpkg
-	xgettext -o po/tazpkgbox/tazpkgbox.pot -L Shell --package-name=Tazpkgbox ./tazpkgbox
-	xgettext -o po/libtazpkgbox/libtazpkgbox.pot -L Shell --package-name=LibTazpkgbox ./lib/libtazpkgbox
+	xgettext -o po/tazpkg/tazpkg.pot -L Shell \
+		--package-name=Tazpkg ./tazpkg
+	xgettext -o po/tazpkg-notify/tazpkg-notify.pot -L Shell \
+		--package-name="Tazpkg Notification" ./tazpkg-notify
 	
 msgmerge:
 	@for l in $(LINGUAS); do \
@@ -69,4 +70,5 @@ uninstall:
 clean:
 	rm -rf _pkg
 	rm -rf po/mo
+	rm -f po/*/*~
 	
