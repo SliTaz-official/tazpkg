@@ -7,7 +7,7 @@ SYSCONFDIR?=/etc/slitaz
 DESTDIR?=
 LINGUAS?=fr
 
-VERSION:=$(shell grep ^VERSION tazpkg | cut -d '=' -f 2)
+VERSION:=$(shell grep ^VERSION=[0-9] tazpkg | cut -d '=' -f 2)
 
 all:
 	
