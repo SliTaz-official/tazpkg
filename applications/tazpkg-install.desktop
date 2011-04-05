@@ -9,4 +9,3 @@ NoDisplay=True
 Type=Application
 Terminal=false
 MimeType=application/x-tazpkg;
-Categories=System;
