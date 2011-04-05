@@ -6,7 +6,6 @@
 #
 # (C) GNU gpl v3 - SliTaz GNU/Linux 2010.
 #
-VERSION=1.0
 
 export PKG="$@"
 export PKG_SHORT_NAME=$(basename $PKG)

@@ -7,15 +7,19 @@ SYSCONFDIR?=/etc/slitaz
 DESTDIR?=
 LINGUAS?=fr
 
+VERSION:=$(shell grep ^VERSION tazpkg | cut -d '=' -f 2)
+
 all:
 	
 # i18n.
 
 pot:
 	xgettext -o po/tazpkg/tazpkg.pot -L Shell \
-		--package-name=Tazpkg ./tazpkg
+		--package-name=Tazpkg \
+		--package-version="$(VERSION)" ./tazpkg
 	xgettext -o po/tazpkg-notify/tazpkg-notify.pot -L Shell \
-		--package-name="Tazpkg Notification" ./tazpkg-notify
+		--package-name="Tazpkg Notification" \
+		--package-version="$(VERSION)" ./tazpkg-notify
 	
 msgmerge:
 	@for l in $(LINGUAS); do \

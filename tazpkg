@@ -11,7 +11,7 @@
 # 	eval_gettext "display \$VARIABLE"; echo
 # 	echo -e "BOLD `gettext \"i18n message\"`"
 #
-# (C) 2007-2010 SliTaz - GNU General Public License v3.
+# (C) 2007-2011 SliTaz - GNU General Public License v3.
 #
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #           Pascal Bellard <pascal.bellard@slitaz.org>
@@ -21,7 +21,7 @@
 #           Antoine Bodin <gokhlayeh@mailoo.org>
 #           Christopher Rogers <slaxemulator@gmail.com>
 #
-VERSION=4.2.6
+VERSION=4.3
 
 ####################
 # Script variables #
