@@ -2244,7 +2244,7 @@ EOT
 
 			# Quietly check if recharging is needed.
 			[ -f ID ] && mv ID ID.bak
-			download_from "$(cat mirror)" ID >/dev/null
+			download_from "$(cat mirror)" ID >/dev/null 2>/dev/null
 			if [ -f ID ] && fgrep -q `cat ID.bak 2>/dev/null || echo "null"` ID; then
 				if [ "$path" = "$LOCALSTATE" ]; then
 					repository_name=Main
@@ -2270,16 +2270,18 @@ EOT
 
 			if [ -f "packages.list" ]; then
 				gettext "Creating backup of the last packages list..."
-				for i in packages.desc packages.md5 packages.txt \
+				for i in  wanted.txt depends.txt libraries.txt \
+				packages.desc packages.md5 packages.txt \
 				packages.list packages.equiv files.list.lzma \
-				mirrors wanted.txt depends.txt libraries.txt; do
+				mirrors; do
 					mv -f $i $i.bak 2>/dev/null
 				done
 				status
 			fi
-			for i in desc md5 txt list; do
+			for i in desc md5 txt list equiv; do
 				download_from "$(cat mirror)" packages.$i
 			done
+			
 			download_from "$(cat mirror)" files.list.lzma
 			
 			# ID file & wanted/depends/libraries files were implemented
@@ -2290,6 +2292,7 @@ EOT
 				done
 			fi
 
+			download_from "$(sed 's|packages/.*||' < mirror)" mirrors
 			[ -f mirrors ] || mv mirrors.bak mirrors 2> /dev/null
 			suffix=$(head -1 mirror)
 			suffix=packages${suffix#*/packages}
