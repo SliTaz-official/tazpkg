@@ -1751,21 +1751,11 @@ case "$COMMAND" in
 		check_for_package_on_cmdline
 		check_for_package_file
 		
-		get_options_list="root forced list rootconfig"
+		get_options_list="root forced list"
 		get_options
 		
 		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
-		if [ "$rootconfig" ]; then
-			if [ "$root" ]; then
-				CACHE_DIR=$root/$CACHE_DIR
-				SAVE_CACHE_DIR=$CACHE_DIR	
-				LOCALSTATE=$root/$LOCALSTATE
-			else
-				echo "rootconfig needs --root= option used." >&2
-				exit 1
-			fi
-		fi	
 
 		# Get repositories priority list.
 		look_for_priority
