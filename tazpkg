@@ -1751,14 +1751,16 @@ case "$COMMAND" in
 		check_for_package_on_cmdline
 		check_for_package_file
 		
-		# Get repositories priority list.
-		look_for_priority
 		get_options_list="root forced list"
 		get_options
 		
-		# Check if forced install.
-		[ "$root" ] && ROOT="$root" && check_dir "$root"
+		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
+
+		# Get repositories priority list.
+		look_for_priority
+
+		# Check if forced install.
 		if ! [ "$forced" ]; then
 			check_for_installed_package $ROOT
 		fi
@@ -2217,31 +2219,79 @@ EOT
 		# Recharge packages.list from a mirror.
 		#
 		check_root
-		
-		for path in $LOCALSTATE $LOCALSTATE/undigest/*; do
+		get_options_list="root forced list rootconfig"
+		get_options
+		ARG=$2
+		if [ "$root" ]; then
+			LOCALSTATE=$root$LOCALSTATE
+			[ "${2#--}" != "$2" ] && ARG=$3
+		fi
+		if [ "$ARG" = main ]; then
+			repository_to_recharge=$LOCALSTATE
+		elif [ "$ARG" ]; then
+			if [ -d "$LOCALSTATE/undigest/$ARG" ]; then
+				repository_to_recharge=$LOCALSTATE/undigest/$ARG
+			else
+				echo "\$LOCALSTATE/undigest/$ARG `gettext \"doesn't exists.\"`" >&2
+				exit 1
+			fi
+		else
+			repository_to_recharge="$LOCALSTATE $LOCALSTATE/undigest/*"
+		fi	
+		for path in $repository_to_recharge; do
 			[ -f $path/mirror ] || continue
+			cd $path
+
+			# Quietly check if recharging is needed.
+			[ -f ID ] && mv ID ID.bak
+			download_from "$(cat mirror)" ID >/dev/null 2>/dev/null
+			if [ -f ID ] && fgrep -q `cat ID.bak 2>/dev/null || echo "null"` ID; then
+				if [ "$path" = "$LOCALSTATE" ]; then
+					repository_name=Main
+				else
+					repository_name="`gettext \"Undigest\"` $(basename $path)"
+				fi
+				echo "$repository_name `gettext \"is up to date.\"`"
+				rm ID.bak
+				continue
+			fi
+
+			# Don't let ID be a symlink when using local repository.
+			if [ -f ID ]; then
+				mv -f ID ID.bak
+				cat ID.bak > ID
+				rm ID.bak
+			fi
+
 			echo ""
 			if [ "$path" != "$LOCALSTATE" ]; then
 				echo -e "`gettext \"Recharging undigest\"` $(basename $path):"
 			fi
-			cd $path
+
 			if [ -f "packages.list" ]; then
 				gettext "Creating backup of the last packages list..."
-				mv -f packages.desc packages.desc.bak 2>/dev/null
-				mv -f packages.md5 packages.md5.txt 2>/dev/null
-				mv -f packages.txt packages.txt.bak 2>/dev/null
-				mv -f packages.list packages.list.bak 2>/dev/null
-				mv -f packages.equiv packages.equiv.bak 2>/dev/null
-				mv -f files.list.lzma files.list.lzma.bak 2> /dev/null
-				mv -f mirrors mirrors.bak 2> /dev/null
+				for i in  wanted.txt depends.txt libraries.txt \
+				packages.desc packages.md5 packages.txt \
+				packages.list packages.equiv files.list.lzma \
+				mirrors; do
+					mv -f $i $i.bak 2>/dev/null
+				done
 				status
 			fi
-			download_from "$(cat mirror)" packages.desc
-			download_from "$(cat mirror)" packages.md5
-			download_from "$(cat mirror)" packages.txt
-			download_from "$(cat mirror)" packages.list
-			download_from "$(cat mirror)" packages.equiv
+			for i in desc md5 txt list equiv; do
+				download_from "$(cat mirror)" packages.$i
+			done
+			
 			download_from "$(cat mirror)" files.list.lzma
+			
+			# ID file & wanted/depends/libraries files were implemented
+			# at the same time. Not all repositories have them.
+			if [ -f ID ]; then
+				for i in wanted depends library; do
+					download_from "$(cat mirror)" $i.txt
+				done
+			fi
+
 			download_from "$(sed 's|packages/.*||' < mirror)" mirrors
 			[ -f mirrors ] || mv mirrors.bak mirrors 2> /dev/null
 			suffix=$(head -1 mirror)
@@ -2614,16 +2664,28 @@ EOT
 		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
-		
-		# Get repositories priority list.
-		look_for_priority
-		get_options_list="root forced list"
+
+		get_options_list="root forced list rootconfig"
 		get_options
 		
 		DO_CHECK=""
 		[ "$forced" ] && DO_CHECK=no
-		[ "$root" ] && ROOT="$root" && check_dir "$root"
+		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
+		if [ "$rootconfig" ]; then
+			if [ "$root" ]; then
+				CACHE_DIR=$root/$CACHE_DIR
+				SAVE_CACHE_DIR=$CACHE_DIR
+				LOCALSTATE=$root/$LOCALSTATE
+			else
+				echo "rootconfig needs --root= option used." >&2
+				exit 1
+			fi
+		fi
+
+		# Get repositories priority list.
+		look_for_priority
+
 		AUTOEXEC="no"
 		if ! check_for_package_in_list check; then
 			PACKAGE=get-$PACKAGE
@@ -2657,6 +2719,7 @@ EOT
 			download $PACKAGE.tazpkg
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
+		[ "$rootconfig" ] && LOCALSTATE=${LOCALSTATE#$root}
 		install_package $ROOT
 		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT 
 		update_desktop_database $ROOT 
