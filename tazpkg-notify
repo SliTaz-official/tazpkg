@@ -1,11 +1,11 @@
 #!/bin/sh
 #
 # TazPKG Notify - Notification icon for Tazpkg packages. Recharging pkgs
-# list can be done automatically at boot, so notify user if some
-# update are available. Also notify user if the packages list is too
+# list can be done automatically at boot, so notifies users if some
+# updates are available. Also notifies users if the packages list is too
 # old and out-of-date or if no packages list found. This script should
-# be run ny the WM autostart script or ~/.xsession and need a systray to
-# site in like in LXpanel or Tint2.
+# be run by the WM autostart script or ~/.xsession and needs a systray to
+# sit in like in LXpanel or Tint2.
 #
 # Copyright (C) 2011 SliTaz GNU/Linux - GNU gpl v2
 #
@@ -36,8 +36,8 @@ kill_notification() {
 # Message for up
 up_msg() {
 	eval_gettext "<b>There is \$up upgradeable packages for your SliTaz \$rel</b>
-You should upgrade your system to get all latest fixes
-and improvments from SliTaz contributors"
+You should upgrade your system to get all the latest fixes
+and improvements from the SliTaz contributors"
 }
 
 # Message for list older than 10 days
@@ -184,7 +184,7 @@ case $1 in
 		no_list ;;
 	*)
 		# Sleep first to let tazpkg upgrade on boot finish. Check if
-		# any upgrade, then for an old list and then if any list at all
+		# any upgrades, then for an old list and then if any lists at all
 		# (live or first boot)
 		sleep 10
 		[ "$up" -gt 0 ] && up_notify && exit 0
