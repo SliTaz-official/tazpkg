@@ -53,12 +53,12 @@ msgfmt:
 
 # Installation.
 
-install: msgfmt
+install:
 	# Tazpkg command line interface
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
 	# Tazpkgbox GUI
-	install -m 0777 tazpk-notify $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 tazpkg-notify $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkgbox $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkgbox-install $(DESTDIR)$(PREFIX)/bin
 	install -m 0755 -d $(DESTDIR)$(LIBDIR)
@@ -70,8 +70,8 @@ install: msgfmt
 	install -m 0755 -d $(DESTDIR)$(DOCDIR)/tazpkg
 	cp -a doc/* $(DESTDIR)$(DOCDIR)/tazpkg
 	# The i18n files
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale
-	cp -a po/mo/* $(DESTDIR)$(PREFIX)/share/locale
+	#cp -a po/mo/* $(DESTDIR)$(PREFIX)/share/locale
+
 	# Desktop integration
 	mkdir -p $(DESTDIR)$(PREFIX)/share
 	cp -a  applications $(DESTDIR)$(PREFIX)/share
