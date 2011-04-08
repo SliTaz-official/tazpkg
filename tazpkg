@@ -105,11 +105,12 @@ usage ()
   extract          `gettext \"Extract a (*.tazpkg) package into a directory.\"`
   pack             `gettext \"Pack an unpacked or prepared package tree.\"`
   recharge         `gettext \"Recharge your packages.list from the mirror.\"`
+  up|--help-up     `gettext \"Check packges md5sum to list and install latest upgrade.\"`
   repack           `gettext \"Create a package archive from an installed package.\"`
   repack-config    `gettext \"Create a package archive with configuration files.\"`
   recompress       `gettext \"Rebuild a package with a better compression ratio.\"`
-  upgrade          `gettext \"Upgrade one or all installed/listed package(s) on the mirror.\"`
-  upgradeable      `gettext \"Build upgradeable packages list quickly.\"`
+  upgrade          `gettext \"Upgrade one or all installed package(s) (obsolete).\"`
+  upgradeable      `gettext \"Build upgradeable packages list quickly. (buggy)\"`
   block|unblock    `gettext \"Block an installed package version or unblock it for upgrade.\"`
   get              `gettext \"Download a package into the current directory.\"`
   get-install      `gettext \"Download and install a package from the mirror.\"`
@@ -129,6 +130,22 @@ usage ()
   add-undigest     `gettext \"Add an undigest mirror.\"`
   setup-undigest   `gettext \"Update an undigest mirror.\"`
   reconfigure      `gettext \"Replay post install script from package.\"`"
+}
+
+usage_up() {
+	echo -e "`gettext ""`
+\033[1m`gettext \"Tazpkg usage for command up\"`:\033[0m `gettext \"tazpkg up [--option]`\n
+* `gettext \"Without options run in interactive mode and ask before install\"`
+
+\033[1m`gettext \"Where options are\"`: \033[0m
+  --check    |-c   `gettext \"Check only for avalaible upgrade\"`
+  --recharge |-r   `gettext \"Force recharge of packages list and check\"`
+  --install  |-i   `gettext \"Check for upgrade and install them all\"`
+
+\033[1m`gettext \"Example\"`: \033[0m
+  tazpkg up --recharge --install
+  tazpkg up -c -r
+"
 }
 
 # Check for a package name on cmdline.
