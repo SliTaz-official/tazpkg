@@ -494,7 +494,7 @@ install_package()
 	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $INSTALL_LIST-processed
 	echo ""
 	echo -e "\033[1m`gettext \"Installation of :\"`\033[0m $PACKAGE"
-	echo "================================================================================"
+	separator
 	eval_gettext "Copying \$PACKAGE... "
 	cp $PACKAGE_FILE $TMP_DIR
 	status
@@ -626,7 +626,7 @@ END {
 		updatemimedb=yes
 	fi
 	cd $TOP_DIR
-	echo "================================================================================"
+	separator
 	eval_gettext "\$PACKAGE (\$VERSION\$EXTRAVERSION) is installed."; echo
 	echo ""
 	# Log this activity
@@ -683,7 +683,7 @@ check_for_deps()
 	done
 	if [ ! "$MISSING_PACKAGE" = "" ]; then
 		echo -e "\033[1m`gettext \"Tracking dependencies for :\"`\033[0m $PACKAGE"
-		echo "================================================================================"
+		separator
 		for pkgorg in $DEPENDS
 		do
 			i=$(equivalent_pkg $pkgorg $1)
@@ -692,7 +692,7 @@ check_for_deps()
 				eval_gettext "Missing: \$MISSING_PACKAGE"; echo
 			fi
 		done
-		echo "================================================================================"
+		separator
 		eval_gettext "\$deps missing package(s) to install."; echo
 	fi
 }
@@ -830,7 +830,7 @@ _EOT_
 search_in_installed_packages()
 {
 	gettext "Installed packages"; echo
-	echo "================================================================================"
+	separator
 	list=`ls -1 $INSTALLED | grep -i "$PATTERN"`
 	for pkg in $list
 	do
@@ -847,7 +847,7 @@ search_in_installed_packages()
 		eval_gettext "0 installed packages found for : \$PATTERN"; echo
 		echo ""
 	else
-		echo "================================================================================"
+		separator
 		eval_gettext "\$packages installed package(s) found for : \$PATTERN"; echo
 		echo ""
 	fi
@@ -857,7 +857,7 @@ search_in_installed_packages()
 search_in_packages_list()
 {
 	gettext "Available packages name-version"; echo
-	echo "================================================================================"
+	separator
 	packages=0
 	for i in $LOCALSTATE/packages.list $LOCALSTATE/undigest/*/packages.list; do
 		grep -is "$PATTERN" $i
@@ -874,7 +874,7 @@ please run 'tazpkg recharge' once as root before searching."; echo
 		eval_gettext "0 available packages found for : \$PATTERN"; echo
 		echo ""
 	else
-		echo "================================================================================"
+		separator
 		eval_gettext "\$packages available package(s) found for : \$PATTERN"; echo
 		echo ""
 	fi
@@ -885,7 +885,7 @@ please run 'tazpkg recharge' once as root before searching."; echo
 search_in_packages_txt()
 {
 	gettext "Matching packages name with version and desc"; echo
-	echo "================================================================================"
+	separator
 	packages=0
 	for i in $LOCALSTATE/packages.txt $LOCALSTATE/undigest/*/packages.txt; do
 		grep -is -A 2 "^$PATTERN" $i
@@ -902,7 +902,7 @@ please run 'tazpkg recharge' once as root before searching."; echo
 		eval_gettext "0 available packages found for : \$PATTERN"; echo
 		echo ""
 	else
-		echo "================================================================================"
+		separator
 		eval_gettext "\$packages available package(s) found for : \$PATTERN"; echo
 		echo ""
 	fi
@@ -965,7 +965,7 @@ setup_mirror()
 	fi
 	echo ""
 	echo -e "\033[1m`gettext \"Current mirror(s)\"`\033[0m"
-	echo "================================================================================"
+	separator
 	echo "  `cat $1/mirror 2> /dev/null`"
 	gettext \
 "Please enter URL of the new mirror (http, ftp or local path). You must specify
@@ -1455,7 +1455,7 @@ case "$COMMAND" in
 		if [ "$2" = "blocked" ]; then
 			echo ""
 			echo -e "\033[1m`gettext \"Blocked packages\"`\033[0m"
-			echo "================================================================================"
+			separator
 			if [ -s "$BLOCKED" ];then
 				cat $BLOCKED
 			else
@@ -1467,13 +1467,13 @@ case "$COMMAND" in
 		if [ "$2" = "cat" -o "$2" = "categories" ]; then
 			echo ""
 			echo -e "\033[1m`gettext \"Packages categories\"`\033[0m"
-			echo "================================================================================"
+			separator
 			for i in $CATEGORIES
 			do
 				translate_category $i; echo
 				categories=$(($categories+1))
 			done
-			echo "================================================================================"
+			separator
 			eval_gettext "\$categories categories"; echo
 			echo ""
 			exit 0
@@ -1484,7 +1484,7 @@ case "$COMMAND" in
 			ASKED_CATEGORY=$(reverse_translate_category $2)
 			echo ""
 			echo -e "\033[1m`gettext \"Installed packages of category:\"`\033[0m $ASKED_CATEGORY_I18N"
-			echo "================================================================================"
+			separator
 			for pkg in $INSTALLED/*
 			do
 				[ -f $pkg/receipt ] || continue
@@ -1496,14 +1496,14 @@ case "$COMMAND" in
 					packages=$(($packages+1))
 				fi
 			done
-			echo "================================================================================"
+			separator
 			eval_gettext "\$packages packages installed of category \$ASKED_CATEGORY_I18N."; echo
 			echo ""
 		else
 			# By default list all packages and versions.
 			echo ""
 			echo -e "\033[1m`gettext \"List of all installed packages\"`\033[0m"
-			echo "================================================================================"
+			separator
 			for pkg in $INSTALLED/*
 			do
 				[ -f $pkg/receipt ] || continue
@@ -1514,7 +1514,7 @@ case "$COMMAND" in
 				echo -e "\033[42G `translate_category $CATEGORY`"
 				packages=$(($packages+1))
 			done
-			echo "================================================================================"
+			separator
 			eval_gettext "\$packages packages installed."; echo
 			echo ""
 		fi ;;
@@ -1528,7 +1528,7 @@ case "$COMMAND" in
 		fi
 		echo ""
 		echo -e "\033[1m`gettext \"Creating xHTML list of installed packages\"`\033[0m"
-		echo "================================================================================"
+		separator
 		gettext "Generating xHTML header..."
 		xhtml_header
 		status
@@ -1548,7 +1548,7 @@ case "$COMMAND" in
 		status
 		# sed pkgs nb in header.
 		sed -i s/'_packages_'/"$packages"/ $XHTML_LIST
-		echo "================================================================================"
+		separator
 		eval_gettext "\$XHTML_LIST created - $packages packages."; echo
 		echo "" ;;
 	list-mirror)
@@ -1560,9 +1560,9 @@ case "$COMMAND" in
 				if [ -f "$LOCALSTATE/packages.diff" ]; then
 					echo ""
 					echo -e "\033[1m`gettext \"Mirrored packages diff\"`\033[0m"
-					echo "================================================================================"
+					separator
 					cat $LOCALSTATE/packages.diff
-					echo "================================================================================"
+					separator
 					pkgs=`cat $LOCALSTATE/packages.diff | wc -l`
 					eval_gettext "\$pkgs new packages listed on the mirror."; echo
 					echo ""
@@ -1575,15 +1575,15 @@ case "$COMMAND" in
 			--text|--txt)
 				echo ""
 				echo -e "\033[1m`gettext \"List of available packages on the mirror\"`\033[0m"
-				echo "================================================================================"
+				separator
 				cat $LOCALSTATE/packages.txt ;;
 			--raw|*)
 				echo ""
 				echo -e "\033[1m`gettext \"List of available packages on the mirror\"`\033[0m"
-				echo "================================================================================"
+				separator
 				cat $LOCALSTATE/packages.list ;;
 		esac
-		echo "================================================================================"
+		separator
 		pkgs=`cat $LOCALSTATE/packages.list | wc -l`
 		eval_gettext "\$pkgs packages in the last recharged list."; echo
 		echo "" ;;
@@ -1594,9 +1594,9 @@ case "$COMMAND" in
 		check_for_receipt
 		echo ""
 		echo -e "\033[1m`gettext \"Installed files with:\"`\033[0m $PACKAGE"
-		echo "================================================================================"
+		separator
 		cat $INSTALLED/$PACKAGE/files.list | sort
-		echo "================================================================================"
+		separator
 		files=`cat $INSTALLED/$PACKAGE/files.list | wc -l`
 		eval_gettext "\$files files installed with \$PACKAGE."; echo
 		echo "" ;;
@@ -1630,16 +1630,16 @@ case "$COMMAND" in
 		if [ "$WEB_SITE" ]; then
 			echo -e "`gettext \"Web site   :\"` $WEB_SITE"
 		fi
-		echo "================================================================================"
+		separator
 		echo "" ;;
 	desc)
 		# Display package description.txt if available.
 		if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
 			echo ""
 			echo -e "\033[1m`gettext \"Description of:\"`\033[0m $PACKAGE"
-			echo "================================================================================"
+			separator
 			cat $INSTALLED/$PACKAGE/description.txt
-			echo "================================================================================"
+			separator
 			echo ""
 		else
 			echo ""
@@ -1684,8 +1684,8 @@ case "$COMMAND" in
 		fi
 		echo ""
 		echo -e "\033[1m`gettext \"Search result for file\"`\033[0m $2"
-		echo "================================================================================"
-
+		separator
+		
 		if [ "$3" == "--mirror" ]; then
 
 			match=0
@@ -1729,7 +1729,7 @@ case "$COMMAND" in
 			echo ""
 		else
 			echo ""
-			echo "================================================================================"
+			separator
 			eval_gettext "\$match file(s) found for: \$pkg"; echo
 			echo ""
 		fi ;;
@@ -1744,8 +1744,8 @@ case "$COMMAND" in
 		fi
 		echo ""
 		echo -e "\033[1m`gettext \"Search result for file\"`\033[0m $2"
-		echo "================================================================================"
-       
+		separator
+		
 	 # Search for a file on mirror and output only the package name
 		match=0
 		for i in $LOCALSTATE/files.list.lzma \
@@ -1760,7 +1760,7 @@ case "$COMMAND" in
 			echo ""
 		else
 			echo ""
-			echo "================================================================================"
+			separator
 			eval_gettext "$match pkg(s) found with file: \$file"; echo
 			echo ""
 		fi
@@ -1918,7 +1918,7 @@ $LIST"
 		if [ "$answer" = "$(translate_querry y)" ]; then
 			echo ""
 			echo -e "\033[1m`gettext \"Removing:\"`\033[0m $PACKAGE"
-			echo "================================================================================"
+			separator
 			# Pre remove commands.
 			if grep -q ^pre_remove $ROOT$INSTALLED/$PACKAGE/receipt; then
 				pre_remove
@@ -1998,7 +1998,7 @@ $LIST"
 		check_for_package_file
 		echo ""
 		echo -e "\033[1m`gettext \"Extracting:\"`\033[0m $PACKAGE"
-		echo "================================================================================"
+		separator
 		# If no directory destination is found on the cmdline
 		# we create one in the current dir using the package name.
 		if [ -n "$TARGET_DIR" ]; then
@@ -2012,7 +2012,7 @@ $LIST"
 		status
 		cd $DESTDIR
 		extract_package
-		echo "================================================================================"
+		separator
 		eval_gettext "\$PACKAGE is extracted to: \$DESTDIR"; echo
 		echo "" ;;
 	recompress)
@@ -2022,7 +2022,7 @@ $LIST"
 		check_for_package_file
 		echo ""
 		echo -e "\033[1m`gettext \"Recompressing:\"`\033[0m $PACKAGE"
-		echo "================================================================================"
+		separator
 		mkdir -p $TMP_DIR
 		gettext "Copying original package..."
 		cp $PACKAGE_FILE $TMP_DIR
@@ -2067,13 +2067,13 @@ $LIST"
 		else
 			echo ""
 			echo -e "\033[1m`gettext \"Configuration files\"`\033[0m"
-			echo "================================================================================"
+			separator
 			for i in $INSTALLED/*/volatile.cpio.gz; do
 				[ -n "$2" -a "$i" != "$INSTALLED/$2/volatile.cpio.gz" ] && continue
 				[ -f "$i" ] || continue
 				zcat $i | cpio -t --quiet
 			done | sed 's|^|/|' | sort
-			echo "================================================================================"
+			separator
 			echo ""
 		fi ;;
 	repack-config)
@@ -2121,7 +2121,7 @@ EOT
 		. $INSTALLED/$PACKAGE/receipt
 		echo ""
 		echo -e "\033[1mRepacking :\033[0m $PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
-		echo "================================================================================"
+		separator
 		if grep -qs ^NO_REPACK= $INSTALLED/$PACKAGE/receipt; then
 			eval_gettext "Can't repack \$PACKAGE"; echo
 			exit 1
@@ -2191,7 +2191,7 @@ EOT
 		else
 			echo ""
 			echo -e "\033[1mPacking :\033[0m $PACKAGE"
-			echo "================================================================================"
+			separator
 			# Create files.list with redirecting find outpout.
 			gettext "Creating the list of files..." && cd fs
 			find . -type f -print > ../files.list
@@ -2231,7 +2231,7 @@ EOT
 			unlzma -c fs.cpio.lzma | cpio -idm --quiet
 			status
 			rm fs.cpio.lzma && cd ..
-			echo "================================================================================"
+			separator
 			eval_gettext "Package \$PACKAGE compressed successfully."; echo
 			echo "`gettext \"Size\"` : `du -sh $PACKAGE.tazpkg`"
 			echo ""
@@ -2325,11 +2325,11 @@ EOT
 				sed -i s/+// packages.diff
 				echo ""
 				echo -e "\033[1m`gettext \"Mirrored packages diff\"`\033[0m"
-				echo "================================================================================"
+				separator
 				cat packages.diff
 				new_pkgs=`cat packages.diff | wc -l`
 				if [ "$new_pkgs" != 0 ]; then
-					echo "================================================================================"
+					separator
 					eval_gettext "\$new_pkgs new packages on the mirror."; echo
 					echo ""
 				else
@@ -2458,7 +2458,7 @@ packages."
 		rm -f upgradeable-packages.list
 		echo ""
 		echo -e "\033[1m`gettext \"Available upgrades\"`\033[0m"
-		echo "================================================================================"
+		separator
 		echo ""
 		# Some packages must be installed first
 		FIRST_CLASS_PACKAGE=" glibc-base slitaz-base-files slitaz-boot-scripts "
@@ -2554,13 +2554,13 @@ packages."
 		# Clean last checked package and display summary.
 		if [ ! "$up" = "" ]; then
 			echo -e "\\033[0G                                         "
-			echo "================================================================================"
+			separator
 			eval_gettext "\$packages installed and listed packages to consider, \$up to upgrade, \$blocked blocked."; echo
 			echo ""
 		else
 			echo -e "\\033[0G`gettext \"System is up-to-date.\"`                    "
 			echo ""
-			echo "================================================================================"
+			separator
 			eval_gettext "\$packages installed and listed packages to consider, 0 to upgrade, \$blocked blocked."; echo
 			echo ""
 			exit 0
@@ -2833,11 +2833,11 @@ EOT
 		files=`ls -1 $CACHE_DIR | wc -l`
 		echo ""
 		echo -e "\033[1m`gettext \"Clean cache:\"`\033[0m $CACHE_DIR"
-		echo "================================================================================"
+		separator
 		gettext "Cleaning cache directory..."; echo
 		rm -rf $CACHE_DIR/*
 		status
-		echo "================================================================================"
+		separator
 		eval_gettext "\$files file(s) removed from cache."; echo
 		echo "" ;;
 	list-undigest)
@@ -2851,7 +2851,7 @@ EOT
 		else
 			echo ""
 			echo -e "\033[1m`gettext \"Current undigest(s)\"`\033[0m"
-			echo "================================================================================"
+			separator
 			for i in $LOCALSTATE/undigest/*/mirror; do
 				if [ ! -f $i ]; then
 					gettext "No undigest mirror found."; echo
@@ -2948,7 +2948,7 @@ EOT
 			clear
 			echo ""
 			echo -e "\033[1m`gettext \"Tazpkg SHell\"`.\033[0m"
-			echo "================================================================================"
+			separator
 			gettext "Type 'usage' to list all available commands or 'quit' or 'q' to exit."; echo
 			echo ""
 		fi
