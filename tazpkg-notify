@@ -22,7 +22,7 @@ LOCALSTATE="/var/lib/tazpkg"
 TEXTDOMAIN='tazpkg-notify'
 export TEXTDOMAIN
 
-up=`cat $LOCALSTATE/upgradeable-packages.list | wc -l`
+up=`cat $LOCALSTATE/packages.up | wc -l`
 rel=`cat /etc/slitaz-release`
 
 # Kill the notification icon after user pressed on it.
@@ -33,16 +33,16 @@ kill_notification() {
 	done
 }
 
-# Message for upgradeable
-upgradeable_msg() {
-	eval_gettext "<b>There is \$up upgradeable packages for your SliTaz \$ver</b>
+# Message for up
+up_msg() {
+	eval_gettext "<b>There is \$up upgradeable packages for your SliTaz \$rel</b>
 You should upgrade your system to get all latest fixes
 and improvments from SliTaz contributors"
 }
 
 # Message for list older than 10 days
 old_list_msg() {
-	eval_gettext "<b>Your SliTaz \$ver packages list is older than 10 days.</b>
+	eval_gettext "<b>Your SliTaz \$rel packages list is older than 10 days.</b>
 You should recharge the list to check for updates"
 }
 
@@ -54,9 +54,9 @@ if you want to install packages or upgrade your system"
 }
 
 #
-# Main GUI box for upgradeable packages
+# Main GUI box for up packages
 #
-upgradeable_main() {
+up_main() {
 	yad --text --width=400 \
 		--geometry="$NOTIFY_GEOM" \
 		--undecorated \
@@ -64,29 +64,29 @@ upgradeable_main() {
 		--image="tazpkg" \
 		--image-on-top \
 		--on-top \
-		--text="`upgradeable_msg`" \
+		--text="`up_msg`" \
 		--button="`gettext \"Upgrade:2\"`" \
 		--button="gtk-close:1"
 }
 
-# Notification icon for upgradeable packages
-upgradeable_notify() {
+# Notification icon for up packages
+up_notify() {
 	yad --notification \
 		--image=tazpkg \
-		--text="`upgradeable_msg`" \
+		--text="`up_msg`" \
 		--command="tazpkg-notify upgrade"
 }
 
-# Main upgradeable function
-upgradeable() {
+# Main up function
+up() {
 	# Store box results
-	main=`upgradeable_main`
+	main=`up_main`
 	ret=$?
 	kill_notification
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		#tazweb http://tazpanel:8090/pkgs.cgi?upgradeable &
+		#tazweb http://tazpanel:8090/pkgs.cgi?up &
 		2) subox tazpkgbox & ;;
 		*) continue ;;
 	esac
@@ -177,7 +177,7 @@ no_list() {
 
 case $1 in
 	upgrade)
-		upgradeable ;;
+		up ;;
 	old-list)
 		old_list ;;
 	no-list)
@@ -186,8 +186,8 @@ case $1 in
 		# Sleep first to let tazpkg upgrade on boot finish. Check if
 		# any upgrade, then for an old list and then if any list at all
 		# (live or first boot)
-		#sleep 15
-		[ "$up" -gt 0 ] && upgradeable_notify && exit 0
+		sleep 10
+		[ "$up" -gt 0 ] && up_notify && exit 0
 		mtime=`find /var/lib/tazpkg/packages.list -mtime +10;`
 		[ "$mtime" ] && old_list_notify && exit 0
 		[ ! -f $LOCALSTATE/packages.list ] && no_list_notify \
