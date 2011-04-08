@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the TazPKG package.
 # Claudinei Pereira <claudinei@slitaz.org>, 2011.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Tazpkg-notify\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-04-07 05:36+0000\n"
-"PO-Revision-Date: 2011-04-07 06:00+0000\n"
+"PO-Revision-Date: 2011-04-08 18:07+0100\n"
 "Last-Translator: Claudinei Pereira <claudinei@slitaz.org>\n"
 "Language-Team: Portuguese <i18n@slitaz.org>\n"
 "Language: pt\n"
@@ -49,11 +48,12 @@ msgstr ""
 "Você deverá recarregar a lista de pacotes no mirror\n"
 "se quiser instalar pacotes ou atualizar o sistema"
 
-
 #: tazpkg-notify:68
 msgid "Upgrade:2"
 msgstr "Atualizar:2"
 
-#: tazpkg-notify:107 tazpkg-notify:147
+#: tazpkg-notify:107
+#: tazpkg-notify:147
 msgid "Recharge now:2"
 msgstr "Recarregar agora:2"
+

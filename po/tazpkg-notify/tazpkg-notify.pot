@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Tazpkg Notification 4.3\n"
+"Project-Id-Version: Tazpkg Notification 4.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-06 01:31+0200\n"
+"POT-Creation-Date: 2011-04-08 18:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: tazpkg-notify:38
 #, sh-format
 msgid ""
-"<b>There is $up upgradeable packages for your SliTaz $ver</b>\n"
+"<b>There is $up upgradeable packages for your SliTaz $rel</b>\n"
 "You should upgrade your system to get all latest fixes\n"
 "and improvments from SliTaz contributors"
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 #: tazpkg-notify:45
 #, sh-format
 msgid ""
-"<b>Your SliTaz $ver packages list is older than 10 days.</b>\n"
+"<b>Your SliTaz $rel packages list is older than 10 days.</b>\n"
 "You should recharge the list to check for updates"
 msgstr ""
 

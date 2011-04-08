@@ -134,7 +134,7 @@ usage ()
 }
 
 usage_up() {
-	echo -e "`gettext ""`
+	echo -e "
 \033[1m`gettext \"Tazpkg usage for command up\"`:\033[0m `gettext \"tazpkg up [--option]`\n
 * `gettext \"Without options run in interactive mode and ask before install\"`
 

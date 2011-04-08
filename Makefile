@@ -23,10 +23,12 @@ pot:
 	
 msgmerge:
 	@for l in $(LINGUAS); do \
-		echo -n "Updating $$l po file."; \
-		msgmerge -U po/tazpkg/$$l.po po/tazpkg/tazpkg.pot ; \
-		echo -n "Updating $$l po file."; \
+		if [ -f "po/tazpkg/$$l.po" ]; then; \
+			echo -n "Updating $$l po file."; \
+			msgmerge -U po/tazpkg/$$l.po po/tazpkg/tazpkg.pot ; \
+		fi; \
 		if [ -f "po/tazpkg-notify/$$l.po" ]; then; \
+			echo -n "Updating $$l po file."; \
 			msgmerge -U po/tazpkg-notify/$$l.po \
 				po/tazpkg-notify/tazpkg-notify.pot; \
 		fi; \
@@ -34,9 +36,19 @@ msgmerge:
 
 msgfmt:
 	@for l in $(LINGUAS); do \
-		echo "Compiling $$l mo file..."; \
-		mkdir -p po/mo/$$l/LC_MESSAGES; \
-		msgfmt -o po/mo/$$l/LC_MESSAGES/tazpkg.mo po/tazpkg/$$l.po ; \
+		if [ -f "po/tazpkg/$$l.po" ]; then; \
+			echo "Compiling $$l mo file..."; \
+			mkdir -p po/mo/$$l/LC_MESSAGES; \
+			msgfmt -o po/mo/$$l/LC_MESSAGES/tazpkg.mo \
+				po/tazpkg/$$l.po ; \
+		fi; \
+		if [ -f "po/tazpkg-notify/$$l.po" ]; then; \
+			echo "Compiling $$l mo file..."; \
+			mkdir -p po/mo/$$l/LC_MESSAGES; \
+			msgfmt -o po/mo/$$l/LC_MESSAGES/tazpkg-notify.mo \
+				po/tazpkg-notify/$$l.po ; \
+		fi; \
+		
 	done;
 
 # Installation.
@@ -46,6 +58,7 @@ install: msgfmt
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
 	# Tazpkgbox GUI
+	install -m 0777 tazpk-notify $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkgbox $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkgbox-install $(DESTDIR)$(PREFIX)/bin
 	install -m 0755 -d $(DESTDIR)$(LIBDIR)
@@ -80,4 +93,5 @@ clean:
 	rm -rf _pkg
 	rm -rf po/mo
 	rm -f po/*/*~
+	rm -f po/*/*.mo
 	
