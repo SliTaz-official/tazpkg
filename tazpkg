@@ -148,6 +148,10 @@ usage_up() {
 "
 }
 
+separator() {
+	echo "================================================================================"
+}
+
 # Check for a package name on cmdline.
 check_for_package_on_cmdline()
 {
