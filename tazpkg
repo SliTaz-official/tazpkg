@@ -60,6 +60,7 @@ SAVE_CACHE_DIR="$CACHE_DIR"
 INSTALLED=$LOCALSTATE/installed
 MIRROR=$LOCALSTATE/mirror
 BLOCKED=$LOCALSTATE/blocked-packages.list
+UP_LIST=$LOCALSTATE/packages.up
 DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
 
 # Check if the directories and files used by Tazpkg
@@ -2346,6 +2347,87 @@ packages."
 			echo ""
 			fi
 		done ;;
+	up)
+		#
+		# This is tne new way to upgrade packages making 'upgrade' and
+		# upgradeable out-of-date. This new way is much, much more faster!
+		# Look into installed packages and get data from receipt it's fast
+		# and esay to handle vars after use only md5sum to compare packages
+		# 
+		# Options avalaible for the command: up
+		for opt in $@
+		do
+			case "$opt" in
+				--recharge|-r)
+					tazpkg recharge ;;
+				--install|-i)
+					install="y" ;;
+				--check|-c)
+					install="n" ;;
+			esac
+		done
+		mtime=`find /var/lib/tazpkg/packages.list -mtime +7`
+		if [ "$mtime" ]; then
+			gettext "Your packages list is older than one week... recharging"
+			tazpkg recharge
+		fi
+		echo -en "\n\033[1m"
+		gettext "Package"
+		echo -en "\033[26G " && gettext "Update type"
+		echo -e "\033[0m"
+		separator
+		cd $LOCALSTATE/installed
+		echo "" > $UP_LIST
+		for pkg in *
+		do
+			VERSION=""
+			EXTRAVERSION=""
+			. $pkg/receipt
+			md5=`fgrep "  $PACKAGE-${VERSION}$EXTRAVERSION.tazpkg" \
+				../installed.md5 | awk '{print $1}'`
+			if ! fgrep -q "$md5  $PACKAGE-" ../packages.md5; then
+				# Skip when not found on mirror (local package)
+				grep -q ^$PACKAGE- ../packages.list || continue
+				new=`fgrep "$PACKAGE |" ../packages.desc | awk '{print $3}'`
+				if [ "$VERSION" == "$new" ]; then
+					echo -n "$PACKAGE"
+					echo -e "\033[26G `gettext \"New build   :\"` $md5"
+				else
+					echo -n "$PACKAGE"
+					echo -e "\033[26G `gettext \"New version :\"` $new"
+				fi
+				echo "$PACKAGE" >> $UP_LIST
+			fi
+		done
+		sed -i /^$/d $UP_LIST
+		upnb=`cat $UP_LIST | wc -l`
+		pkgs=`ls | wc -l`
+		[ "$upnb" = 0 ] && install="n" && gettext -e "System is up-to-date...\n"
+		separator
+		echo -en "\033[1m"
+		eval_gettext "You have \$upnb avalaible uppgrade on \$pkgs installed packages"
+		echo -e "\033[0m\n"
+		# Pkgs to upgrade ? Skip, let install them all or ask user
+		[ "$install" == "n" ] && exit 0
+		if [ "$upnb" = 0 ]; then
+			if [ "$install" == "y" ]; then
+				continue
+			else
+				gettext "Do you wish to install them now: y=yes n=no ? "
+				read install
+			fi
+			case "$install" in
+				y|Y|yes|YES|Yes)
+					for pkg in `cat $UP_LIST`
+					do
+						echo 'y' | tazpkg get-install $pkg --forced
+					done ;;
+				*)
+					gettext -e "Leaving without any upgrade installed.\n\n"
+					exit 0 ;;
+			esac
+		fi
+		echo "" ;;
 	upgradeable)
 		# Build upgradeable-packages.list quickly.
 		#
