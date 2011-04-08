@@ -106,7 +106,7 @@ usage ()
   extract          `gettext \"Extract a (*.tazpkg) package into a directory.\"`
   pack             `gettext \"Pack an unpacked or prepared package tree.\"`
   recharge         `gettext \"Recharge your packages.list from the mirror.\"`
-  up|--help-up     `gettext \"Check packges md5sum to list and install latest upgrade.\"`
+  up|--help-up     `gettext \"Check packages md5sum to list and install latest upgrades.\"`
   repack           `gettext \"Create a package archive from an installed package.\"`
   repack-config    `gettext \"Create a package archive with configuration files.\"`
   recompress       `gettext \"Rebuild a package with a better compression ratio.\"`
@@ -139,9 +139,9 @@ usage_up() {
 * `gettext \"Without options run in interactive mode and ask before install\"`
 
 \033[1m`gettext \"Where options are\"`: \033[0m
-  --check    |-c   `gettext \"Check only for avalaible upgrade\"`
+  --check    |-c   `gettext \"Check only for available upgrades\"`
   --recharge |-r   `gettext \"Force recharge of packages list and check\"`
-  --install  |-i   `gettext \"Check for upgrade and install them all\"`
+  --install  |-i   `gettext \"Check for upgrades and install them all\"`
 
 \033[1m`gettext \"Example\"`: \033[0m
   tazpkg up --recharge --install
@@ -2348,12 +2348,12 @@ packages."
 		done ;;
 	up)
 		#
-		# This is tne new way to upgrade packages making 'upgrade' and
+		# This is the new way to upgrade packages making 'upgrade' and
 		# upgradeable out-of-date. This new way is much, much more faster!
-		# Look into installed packages and get data from receipt it's fast
-		# and esay to handle vars after use only md5sum to compare packages
+		# Look into installed packages and get data from receipt, it is fast
+		# and easy to handle vars after using only md5sum to compare packages
 		# 
-		# Options avalaible for the command: up
+		# Options available for the command: up
 		for opt in $@
 		do
 			case "$opt" in
@@ -2404,7 +2404,7 @@ packages."
 		[ "$upnb" = 0 ] && install="n" && gettext -e "System is up-to-date...\n"
 		separator
 		echo -en "\033[1m"
-		eval_gettext "You have \$upnb avalaible uppgrade on \$pkgs installed packages"
+		eval_gettext "You have \$upnb available upgrades on \$pkgs installed packages"
 		echo -e "\033[0m\n"
 		# Pkgs to upgrade ? Skip, let install them all or ask user
 		[ "$install" == "n" ] && exit 0
@@ -2422,7 +2422,7 @@ packages."
 						echo 'y' | tazpkg get-install $pkg --forced
 					done ;;
 				*)
-					gettext -e "Leaving without any upgrade installed.\n\n"
+					gettext -e "Leaving without any upgrades installed.\n\n"
 					exit 0 ;;
 			esac
 		fi
@@ -2568,7 +2568,7 @@ packages."
 		# What to do if major or minor version is smaller.
 		if [ "$FIXE" == "yes" ]; then
 			gettext \
-"WARNING ---> Installed package(s) seem(s) more recent than the mirrored
+"WARNING ---> Installed package seems more recent than the mirrored
 one. You can block packages using the command : 'tazpkg block package'.
 Or upgrade packages at your own risk."
 			echo ""
