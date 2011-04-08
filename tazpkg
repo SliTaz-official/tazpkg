@@ -21,7 +21,7 @@
 #           Antoine Bodin <gokhlayeh@mailoo.org>
 #           Christopher Rogers <slaxemulator@gmail.com>
 #
-VERSION=4.5
+VERSION=4.6
 
 ####################
 # Script variables #
