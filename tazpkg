@@ -2743,15 +2743,38 @@ EOT
 	get)
 		# Downlowd a package with wget.
 		#
+		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
+		
+		get_options_list="root rootconfig"
+		get_options
+		
+		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
+		if [ "$rootconfig" ]; then
+			if [ "$root" ]; then
+				CACHE_DIR=$root/$CACHE_DIR
+				SAVE_CACHE_DIR=$CACHE_DIR
+				LOCALSTATE=$root/$LOCALSTATE
+			else
+				echo "rootconfig needs --root= option used." >&2
+				exit 1
+			fi
+		fi
 		
 		# Get repositories priority list.
 		look_for_priority
 		
+		CURRENT_DIR=$PWD
 		check_for_package_in_list
-		echo ""
-		if [ -f $PACKAGE.tazpkg ]; then
+		cd $CACHE_DIR
+		if [ -f "$PACKAGE.tazpkg" ]; then
+			eval_gettext "\$PACKAGE already in the cache : \$CACHE_DIR"; echo
+			# Check package download was finished
+			tail -c 2k $PACKAGE.tazpkg | fgrep -q 00000000TRAILER || {
+				eval_gettext "Continuing \$PACKAGE download"; echo
+				download $PACKAGE.tazpkg
+			}
 			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.md5)" ]; then
 				rm -f $PACKAGE.tazpkg
 				download $PACKAGE.tazpkg
@@ -2759,7 +2782,9 @@ EOT
 		else
 			download $PACKAGE.tazpkg
 		fi
-		echo "" ;;
+		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
+		cp -a $PACKAGE_FILE $CURRENT_DIR
+		;;
 	get-install)
 		# Download and install a package.
 		#
