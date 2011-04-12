@@ -61,7 +61,7 @@ up_main() {
 		--geometry="$NOTIFY_GEOM" \
 		--undecorated \
 		--title="TazPKG Notification" \
-		--image="tazpkg" \
+		--image="tazpkg-up" \
 		--image-on-top \
 		--on-top \
 		--text="`up_msg`" \
@@ -100,7 +100,7 @@ old_list_main() {
 		--geometry="$NOTIFY_GEOM" \
 		--undecorated \
 		--title "TazPKG Notification" \
-		--image="tazpkg" \
+		--image="tazpkg-up" \
 		--image-on-top \
 		--on-top \
 		--text "`old_list_msg`" \
@@ -140,7 +140,7 @@ no_list_main() {
 		--undecorated \
 		--show-uri \
 		--title="TazPKG Notification" \
-		--image="tazpkg" \
+		--image="tazpkg-up" \
 		--image-on-top \
 		--on-top \
 		--text "`no_list_msg`" \
