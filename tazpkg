@@ -2401,14 +2401,18 @@ packages."
 		sed -i /^$/d $UP_LIST
 		upnb=`cat $UP_LIST | wc -l`
 		pkgs=`ls | wc -l`
-		[ "$upnb" = 0 ] && install="n" && gettext -e "System is up-to-date...\n"
-		separator
-		echo -en "\033[1m"
-		eval_gettext "You have \$upnb available upgrades on \$pkgs installed packages"
-		echo -e "\033[0m\n"
+		if [ "$upnb" = 0 ]; then
+			install="n"
+			gettext -e "System is up-to-date...\n"
+		else
+			separator
+			echo -en "\033[1m"
+			eval_gettext "You have \$upnb available upgrades on \$pkgs installed packages"
+			echo -e "\033[0m\n"
+		fi
 		# Pkgs to upgrade ? Skip, let install them all or ask user
 		[ "$install" == "n" ] && exit 0
-		if [ "$upnb" = 0 ]; then
+		if [ "$upnb" -gt 0 ]; then
 			if [ "$install" == "y" ]; then
 				continue
 			else
