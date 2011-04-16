@@ -42,7 +42,7 @@ export TEXTDOMAIN
 # and actions.
 COMMAND=$1
 PACKAGE=${2%/}
-PACKAGE_FILE="$PWD/$PACKAGE"
+PACKAGE_FILE="$PACKAGE"
 if [ -f "$PACKAGE" ]; then
 	# Set pkg basename for install, extract
 	PACKAGE=$(basename ${PACKAGE%.tazpkg} 2>/dev/null)
