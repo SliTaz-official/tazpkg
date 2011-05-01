@@ -2377,6 +2377,7 @@ packages."
 		separator
 		cd $LOCALSTATE/installed
 		echo "" > $UP_LIST
+		blocked_count=0
 		for pkg in *
 		do
 			VERSION=""
@@ -2388,14 +2389,19 @@ packages."
 				# Skip when not found on mirror (local package)
 				grep -q ^$PACKAGE- ../packages.list || continue
 				new=`fgrep "$PACKAGE |" ../packages.desc | awk '{print $3}'`
-				if [ "$VERSION" == "$new" ]; then
-					echo -n "$PACKAGE"
-					echo -e "\033[26G `gettext \"New build   :\"` $md5"
+				if `grep -qs "^$PACKAGE" $BLOCKED`; then
+					# Skip pkgs listed in $LOCALSTATE/blocked-packages.list
+					blocked_count=$(($blocked_count+1))
 				else
-					echo -n "$PACKAGE"
-					echo -e "\033[26G `gettext \"New version :\"` $new"
+					if [ "$VERSION" == "$new" ]; then
+						echo -n "$PACKAGE"
+						echo -e "\033[26G `gettext \"New build   :\"` $md5"
+					else
+						echo -n "$PACKAGE"
+						echo -e "\033[26G `gettext \"New version :\"` $new"
+					fi
+					echo "$PACKAGE" >> $UP_LIST
 				fi
-				echo "$PACKAGE" >> $UP_LIST
 			fi
 		done
 		sed -i /^$/d $UP_LIST
@@ -2407,7 +2413,10 @@ packages."
 		else
 			separator
 			echo -en "\033[1m"
-			eval_gettext "You have \$upnb available upgrades on \$pkgs installed packages"
+			if [ "$blocked_count" -gt 0 ]; then
+				blocks=`eval_gettext " (\$blocked_count blocked)"`
+			fi
+			eval_gettext "You have \$upnb available upgrades\$blocks on \$pkgs installed packages"
 			echo -e "\033[0m\n"
 		fi
 		# Pkgs to upgrade ? Skip, let install them all or ask user
