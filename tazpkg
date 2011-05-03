@@ -2380,25 +2380,24 @@ packages."
 		blocked_count=0
 		for pkg in *
 		do
-			VERSION=""
-			EXTRAVERSION=""
+			unset VERSION EXTRAVERSION
 			. $pkg/receipt
-			md5=`fgrep "  $PACKAGE-${VERSION}$EXTRAVERSION.tazpkg" \
-				../installed.md5 | awk '{print $1}'`
+			md5=$(fgrep "  $PACKAGE-${VERSION}$EXTRAVERSION.tazpkg" \
+				../installed.md5 | awk '{print $1}')
 			if ! fgrep -q "$md5  $PACKAGE-" ../packages.md5; then
 				# Skip when not found on mirror (local package)
 				grep -q ^$PACKAGE- ../packages.list || continue
-				new=`fgrep "$PACKAGE |" ../packages.desc | awk '{print $3}'`
-				if `grep -qs "^$PACKAGE" $BLOCKED`; then
+				new=$(grep "^$PACKAGE |" ../packages.desc | awk '{print $3}')
+				if $(grep -qs "^$PACKAGE" $BLOCKED); then
 					# Skip pkgs listed in $LOCALSTATE/blocked-packages.list
 					blocked_count=$(($blocked_count+1))
 				else
 					if [ "$VERSION" == "$new" ]; then
-						echo -n "$PACKAGE"
-						echo -e "\033[26G `gettext \"New build   :\"` $md5"
+						echo -n "$PACKAGE:"
+						echo -e "\\033[26G `gettext \"New build   :\"` $md5"
 					else
-						echo -n "$PACKAGE"
-						echo -e "\033[26G `gettext \"New version :\"` $new"
+						echo -n "$PACKAGE:"
+						echo -e "\\033[26G `gettext \"New version :\"` $new"
 					fi
 					echo "$PACKAGE" >> $UP_LIST
 				fi
@@ -2425,7 +2424,7 @@ packages."
 			if [ "$install" == "y" ]; then
 				continue
 			else
-				gettext "Do you wish to install them now: y=yes n=no ? "
+				gettext "Do you wish to install them now: y/n ? "
 				read install
 			fi
 			case "$install" in
