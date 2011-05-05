@@ -1777,7 +1777,7 @@ case "$COMMAND" in
 		
 		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
-		if [ "$rootconifg" ]; then
+		if [ "$rootconfig" ]; then
 			if [ "$root" ]; then
 				CACHE_DIR=$root/$CACHE_DIR
 				SAVE_CACHE_DIR=$CACHE_DIR
