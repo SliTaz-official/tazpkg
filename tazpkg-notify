@@ -35,20 +35,20 @@ kill_notification() {
 
 # Message for up
 up_msg() {
-	eval_gettext "<b>There is \$up upgradeable packages for your SliTaz \$rel</b>
+	eval_gettext "<b>There are \$up upgradeable packages for your SliTaz \$rel</b>
 You should upgrade your system to get all the latest fixes
 and improvements from the SliTaz contributors"
 }
 
 # Message for list older than 10 days
 old_list_msg() {
-	eval_gettext "<b>Your SliTaz \$rel packages list is older than 10 days.</b>
+	eval_gettext "<b>Your SliTaz \$rel packages list is older than 10 days</b>
 You should recharge the list to check for updates"
 }
 
 # Message if packages.list is missing
 no_list_msg() {
-	eval_gettext "<b>No packages list found on your SliTaz \$rel system.</b>
+	eval_gettext "<b>No packages list found on your SliTaz \$rel system</b>
 You will need to recharge the list of mirrored packages
 if you want to install packages or upgrade your system"
 }

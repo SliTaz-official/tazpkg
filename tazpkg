@@ -1208,7 +1208,7 @@ EOT
 		tazpkg pack $file
 		mv $file.tazpkg $TOP_DIR
 	else
-		eval_gettext "\$PACKAGE_FILE does not look like a Archlinux/Alpine package !"; echo
+		eval_gettext "\$PACKAGE_FILE does not look like an Archlinux/Alpine package !"; echo
 	fi
 	cd $TOP_DIR
 	rm -rf $TMP_DIR
@@ -2263,7 +2263,7 @@ EOT
 			if [ -d "$LOCALSTATE/undigest/$ARG" ]; then
 				repository_to_recharge=$LOCALSTATE/undigest/$ARG
 			else
-				echo "\$LOCALSTATE/undigest/$ARG `gettext \"doesn't exists.\"`" >&2
+				echo "\$LOCALSTATE/undigest/$ARG `gettext \"doesn't exist.\"`" >&2
 				exit 1
 			fi
 		else
@@ -3088,7 +3088,7 @@ EOT
 			else
 				echo ""
 				eval_gettext "Leaving dependencies for \$PACKAGE unresolved."; echo
-				gettext "The package is installed but will probably not work."; echo
+				gettext "The package is installed but probably will not work."; echo
 				echo ""
 			fi
 		fi
