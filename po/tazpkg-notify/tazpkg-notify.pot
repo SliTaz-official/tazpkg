@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Tazpkg Notification 4.6\n"
+"Project-Id-Version: Tazpkg Notification 4.6.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-08 18:25+0200\n"
+"POT-Creation-Date: 2011-05-16 19:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,22 +20,22 @@ msgstr ""
 #: tazpkg-notify:38
 #, sh-format
 msgid ""
-"<b>There is $up upgradeable packages for your SliTaz $rel</b>\n"
-"You should upgrade your system to get all latest fixes\n"
-"and improvments from SliTaz contributors"
+"<b>There are $up upgradeable packages for your SliTaz $rel</b>\n"
+"You should upgrade your system to get all the latest fixes\n"
+"and improvements from the SliTaz contributors"
 msgstr ""
 
 #: tazpkg-notify:45
 #, sh-format
 msgid ""
-"<b>Your SliTaz $rel packages list is older than 10 days.</b>\n"
+"<b>Your SliTaz $rel packages list is older than 10 days</b>\n"
 "You should recharge the list to check for updates"
 msgstr ""
 
 #: tazpkg-notify:51
 #, sh-format
 msgid ""
-"<b>No packages list found on your SliTaz $rel system.</b>\n"
+"<b>No packages list found on your SliTaz $rel system</b>\n"
 "You will need to recharge the list of mirrored packages\n"
 "if you want to install packages or upgrade your system"
 msgstr ""
