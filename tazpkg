@@ -42,6 +42,7 @@ export TEXTDOMAIN
 # and actions.
 COMMAND=$1
 PACKAGE=${2%/}
+[ -n "$PACKAGE" ] && 
 PACKAGE_FILE="$(cd $(dirname $PACKAGE) ; pwd)/$(basename $PACKAGE)"
 if [ -f "$PACKAGE" ]; then
 	# Set pkg basename for install, extract
