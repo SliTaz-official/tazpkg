@@ -2415,11 +2415,11 @@ packages."
 			fi
 		done
 		sed -i /^$/d $UP_LIST
-		upnb=`cat $UP_LIST | wc -l`
-		pkgs=`ls | wc -l`
+		upnb=$(cat $UP_LIST | wc -l)
+		pkgs=$(ls | wc -l)
 		if [ "$upnb" = 0 ]; then
 			install="n"
-			gettext -e "System is up-to-date...\n"
+			gettext -e "System is up-to-date...\n\n"
 		else
 			separator
 			echo -en "\033[1m"
@@ -2610,8 +2610,7 @@ Or upgrade packages at your own risk."
 		cat upgradeable-packages.list >> upgradeable-packages.list$$
 		mv -f upgradeable-packages.list$$ upgradeable-packages.list
 		yes y | tazpkg get-install-list upgradeable-packages.list --forced
-		rm -f upgradeable-packages.list
-		;;
+		rm -f upgradeable-packages.list ;;
 	bugs)
 		# Show known bugs in package(s)
 		#
