@@ -66,6 +66,7 @@ install:
 	install -m 0755 -d $(DESTDIR)$(DOCDIR)/tazpkg
 	cp -a doc/* $(DESTDIR)$(DOCDIR)/tazpkg
 	# The i18n files
+	install -m 0755 -d $(DESTDIR)$(PREFIX)/share/locale
 	cp -a po/mo/* $(DESTDIR)$(PREFIX)/share/locale
 	# Desktop integration
 	mkdir -p $(DESTDIR)$(PREFIX)/share
