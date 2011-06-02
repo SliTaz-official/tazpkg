@@ -50,7 +50,7 @@ Compatível com o Bash, roda sobre o Ash - parte do projeto Busybox. O Tazpkg
 <h2>COMANDOS</h2>
 
 <a name="list"></a>
-<h3><font color="#6c0023">list</font></h3>
+<h3>list</h3>
 <p>
 Lista pacotes instalados no sistema. Este comando mostra uma lista em formato
 de coluna com todos os pacotes instalados, e também permite listar categorias,
@@ -65,7 +65,7 @@ um nome de pacote:
 </pre>
 
 <a name="xhtml-list"></a>
-<h3><font color="#6c0023">xhtml-list</font></h3>
+<h3>xhtml-list</h3>
 <p>
 O comando "xhtml-list" cria uma lista em formato xHTML de todos os pacotes
 instalados no sistema que pode ser lida com o seu navegador web favorito. Pode
@@ -79,7 +79,7 @@ lista gerada por meio da linha de comando:
 </pre>
 
 <a name="list-mirror"></a>
-<h3><font color="#6c0023">list-mirror</font></h3>
+<h3>list-mirror</h3>
 <p>
 Lista pacotes disponíveis no mirror. Este comando mostra o arquivo "packages-list"
 recarregado a partir do mirror. Se este arquivo não existir, será pedido a 
@@ -93,7 +93,7 @@ a última e a atual lista de pacotes:
 </pre>
 
 <a name="info"></a>
-<h3><font color="#6c0023">info</font></h3>
+<h3>info</h3>
 <p>
 Mostra qualquer informação disponível na receita para o pacote em questão - sua
 versão, categoria, mantenedor, website e quaisquer dependências (veja também 
@@ -104,7 +104,7 @@ Tazwok para mais informações sobre receitas):
 </pre>
 
 <a name="desc"></a>
-<h3><font color="#6c0023">desc</font></h3>
+<h3>desc</h3>
 <p>
 Descrição do pacote (se existir). Este comando mostra o arquivo "description.txt"
 de cada pacote (um arquivo de texto simples, justificado em 80 caracteres para
@@ -115,7 +115,7 @@ caber num terminal padrão):
 </pre>
 
 <a name="list-config"></a>
-<h3><font color="#6c0023">list-config</font></h3>
+<h3>list-config</h3>
 <p>
 Lista os arquivos de configuração do sistema. A opção --box mostra estas
 informações em formato de tabela
@@ -125,7 +125,7 @@ informações em formato de tabela
 </pre>
 
 <a name="list-files"></a>
-<h3><font color="#6c0023">list-files</font></h3>
+<h3>list-files</h3>
 <p>
 Lista todos os arquivos instalados pelo pacote. Este comando lê e mostra o
 conteúdo do arquivo "files.list" de cada pacote, o qual é automaticamente gerado
@@ -137,7 +137,7 @@ desinstala um pacote. Para listar os arquivos instalados pelo pacote bc:
 </pre>
 
 <a name="search"></a>
-<h3><font color="#6c0023">search</font></h3>
+<h3>search</h3>
 <p>
 Busca por pacotes por proprietário ou nome do pacote. Este comando busca pelo
 termo informado nos pacotes instalados e na lista de pacotes disponíveis no
@@ -149,7 +149,7 @@ recharge" antes de iniciar uma busca:
 </pre>
 
 <a name="search-file"></a>
-<h3><font color="#6c0023">search-file</font></h3>
+<h3>search-file</h3>
 <p>
 O comando "search-file" permite a busca por um arquivo entre os instalados pelos
 pacotes. Este comando é muito útil para achar o caminho completo para um 
@@ -160,22 +160,22 @@ arquivo e determinar se um arquivo está presente no sistema. Exemplo:
 </pre>
 
 <a name="install"></a>
-<h3><font color="#6c0023">install</font></h3>
+<h3>install</h3>
 <p>
 Este comando instala um pacote disponível localmente que possui a extensão
 .tazpkg. Veja "get-install" para instalar pacotes disponíves na internet. Note
 que você pode forçar a instalação com a opção --force. Você também dispõe de 
 opções para desinstalação e reinstalação ou para especificar o sistema root 
-no qual você deseja instalar o pacote com a opção -root= opção:
+no qual você deseja instalar o pacote com a opção -root= :
 </p>
 <pre>
  # tazpkg install package-1.0.tazpkg
- Ou :
  # tazpkg install path/to/package-1.0.tazpkg --forced
- Ou :
  # tazpkg install path/to/package-1.0.tazpkg --root=/mnt/rootfs
 </pre>
-<h3><font color="#6c0023">install-list ou get-install-list</font></h3>
+
+<a name="install-list"></a>
+<h3>install-list ou get-install-list</h3>
 <p>
 Instala uma seleção de pacotes listados em um arquivo. Este comando permite a
 você instalar vários pacotes com um único comando, e também oferece a opção 
@@ -187,7 +187,7 @@ você instalar vários pacotes com um único comando, e também oferece a opção
 </pre>
 
 <a name="link"></a>
-<h3><font color="#6c0023">link</font></h3>
+<h3>link</h3>
 <p>
 Permite a instalação de um pacote a partir de uma mídia qualquer. 
 A configuração é feita criando links simbólicos e consome pouca memória.
@@ -199,7 +199,7 @@ numa mídia USB:
 </pre>
 
 <a name="remove"></a>
-<h3><font color="#6c0023">remove</font></h3>
+<h3>remove</h3>
 <p>
 Remove um pacote. Será pedido que você confirme a ação (y/N). Este comando
 deleta todos os arquivos instalados pelo pacote. Para ver a lista de arquivos,
@@ -210,7 +210,7 @@ use o comando "list-files" seguido do nome do pacote. Exemplo com o pacote bc:
 </pre>
 
 <a name="extract"></a>
-<h3><font color="#6c0023">extract</font></h3>
+<h3>extract</h3>
 <p>
 Extrai um pacote em um diretório. Se você não especificar o diretório de destino,
 o pacote será extraido no diretório atual usando o formato nome do pacote-versão:
@@ -221,7 +221,7 @@ o pacote será extraido no diretório atual usando o formato nome do pacote-versão
 </pre>
 
 <a name="pack"></a>
-<h3><font color="#6c0023">pack</font></h3>
+<h3>pack</h3>
 <p>
 O comando "pack" cria um pacote a partir de um diretório preparado previamente
 ou a partir de um pacote extraido localmente. Pode também criar manualmente um
@@ -233,7 +233,7 @@ pacotes). Para "empacotar" (pack) um pacote:
 </pre>
 
 <a name="repack"></a>
-<h3><font color="#6c0023">repack</font></h3>
+<h3>repack</h3>
 <p>
 O comando "repack" permite a recriação de um pacote a partir dos arquivos
 instalados no sistema em que este pacote foi instalado. Para "re-empacotar"
@@ -244,7 +244,7 @@ instalados no sistema em que este pacote foi instalado. Para "re-empacotar"
 </pre>
 
 <a name="repack-config"></a>
-<h3><font color="#6c0023">repack-config</font></h3>
+<h3>repack-config</h3>
 <p>
 O comando 'repack-config' recria um pacote a partir dos arquivos de 
 configuração do sistema (veja list-config). É suficiente para instalar
@@ -255,7 +255,7 @@ arquivos de configuração:
 </pre>
 
 <a name="recharge"></a>
-<h3><font color="#6c0023">recharge</font></h3>
+<h3>recharge</h3>
 <p>
 Recarrega a lista de pacotes disponíves no mirror. Este comando baixa o arquivo
 "packages.list" (lista de pacotes instaláveis) mais recente e salva a antiga. 
@@ -269,22 +269,26 @@ use o comando "upgrade". Para recarregar a lista de pacotes:
 </pre>
 
 <a name="upgrade"></a>
-<h3><font color="#6c0023">upgrade</font></h3>
+<h3>up ou upgrade</h3>
 <p>
-Este comando permite a atualização de todos os pacotes disponíveis no mirror.
+O comando upgrade permite a atualização de todos os pacotes disponíveis no mirror.
 Atualizar pacotes é uma parte importante da manutenção da segurança do sistema,
 permitindo o acesso às últimas atualizações e correções. O projeto SliTaz,
 embora leve, fornece atualizações de segurança regulares e geralmente oferece
 as últimas versões dos programas. Note que esta função é direcionada àquelas
 pessoas que possuem o SliTaz instalado no seu disco rígido. Pacotes atualizados
-a partir do LiveCD serão perdidos no desligamento do sistema. Para atualizar:
+a partir do LiveCD serão perdidos no desligamento do sistema. Para atualizar
+ou mostrar as opções para o comando:
 </p>
 <pre>
- # tazpkg upgrade
+# tazpkg up
+# tazpkg --help-up
+# tazpkg up --recharge --install
+# tazpkg up -r -i
 </pre>
 
 <a name="check"></a>
-<h3><font color="#6c0023">check</font></h3>
+<h3>check</h3>
 <p>
 O comando "check" checa por dependências em pacotes instalados e determina
 se todos os arquivos necessários para o re-empacotamento de um pacote estão
@@ -295,7 +299,7 @@ presentes:
 </pre>
 
 <a name="block"></a>
-<h3><font color="#6c0023">block ou unblock</font></h3>
+<h3>block ou unblock</h3>
 <p>
 Os comandos "block" e "unblock" permitem o bloqueio de pacotes instalados para
 que estes não possam ser atualizados com o comando "upgrade". A lista de pacotes
@@ -310,7 +314,7 @@ como o Grub, por exemplo:
 </pre>
 
 <a name="get"></a>
-<h3><font color="#6c0023">get</font></h3>
+<h3>get</h3>
 <p>
 Baixa um pacote do mirror (se existir). O arquivo baixado é arquivado no
 diretório atual. Para descobrir qual o diretório atual utilize o comando "pwd".
@@ -321,7 +325,7 @@ Para baixar o pacote Grub:
 </pre>
 
 <a name="get-install"></a>
-<h3><font color="#6c0023">get-install</font></h3>
+<h3>get-install</h3>
 <p>
 Baixa e instala um pacote de um mirror na internet. O comando "get-install" 
 inicia checando se o pacote requerido existe no mirror e se já foi baixado.
@@ -333,7 +337,7 @@ baixar e instalar o pacote Grub:
 </pre>
 
 <a name="clean-cache"></a>
-<h3><font color="#6c0023">clean-cache</font></h3>
+<h3>clean-cache</h3>
 <p>
 Remove pacotes *.tazpkg baixados que se encontram no cache. Durante a instalação,
 o Tazpkg mantém uma cópia dos pacotes baixados da internet. Isto é feito para
@@ -345,7 +349,7 @@ ter mais espaço no disco rígido ou baixar os pacotes novamente:
 </pre>
 
 <a name="setup-mirror"></a>
-<h3><font color="#6c0023">setup-mirror</font></h3>
+<h3>setup-mirror</h3>
 <p>
 Configura a URL do mirror. O comando "setup-mirror" pedirá a URL do novo mirror.
 Você pode especificar várias URLs separadas por espaços. Note que você também
@@ -357,7 +361,7 @@ para um diretório contendo um arquivo "packages.list" e os pacotes:
 </pre>
 
 <a name="reconfigure"></a>
-<h3><font color="#6c0023">reconfigure</font></h3>
+<h3>reconfigure</h3>
 <p>
 Executa novamente o script de pós instalação de um pacote. Exemplo
 usando o gcc:
@@ -366,17 +370,18 @@ usando o gcc:
 </pre>
 
 <a name="depends"></a>
-<h3><font color="#6c0023">depends ou rdepends</font></h3>
+<h3>depends ou rdepends</h3>
 <p>
 Mostra a árvore de dependências (direta ou inversamente) para um pacote.
 Exemplo utilizando o mpd:
 </p>
-<pre> # tazpkg depends mpd
+<pre> 
+ # tazpkg depends mpd
  # tazpkg rdepends mpd
 </pre>
 
 <a name="add-undigest"></a>
-<h3><font color="#6c0023">add-undigest ou setup-undigest</font></h3>
+<h3>add-undigest ou setup-undigest</h3>
 <p>
 Define a URL de um mirror não oficial para testar ou usar pacotes que
 não estão disponíveis no mirror oficial (chamados 'undigest'). Note que 
@@ -390,7 +395,7 @@ diretório na web que contenha um arquivo 'packages.list':
 </pre>
 
 <a name="remove-undigest"></a>
-<h3><font color="#6c0023">remove-undigest</font></h3>
+<h3>remove-undigest</h3>
 <p>
 Remove a URL de um mirror undigest:
 </p>
@@ -399,7 +404,7 @@ Remove a URL de um mirror undigest:
 </pre>
 
 <a name="list-undigest"></a>
-<h3><font color="#6c0023">list-undigest</font></h3>
+<h3>list-undigest</h3>
 <p>
 Lista os mirrors undigest adicionados:
 </p>
@@ -408,7 +413,7 @@ Lista os mirrors undigest adicionados:
 </pre>
 
 <a name="convert"></a>
-<h3><font color="#6c0023">convert</font></h3>
+<h3>convert</h3>
 <p>
 Converte pacotes .deb (debian), .rpm (RedHat), .tgz (Slackware) ou
 .pgk.tar.gz (Archlinux) em pacotes .tazpkg (SliTaz):
@@ -418,7 +423,7 @@ Converte pacotes .deb (debian), .rpm (RedHat), .tgz (Slackware) ou
 </pre>
 
 <a name="set-release"></a>
-<h3><font color="#6c0023">set-release</font></h3>
+<h3>set-release</h3>
 <p>
 Este comando muda a versão atual e faz a atualização de pacotes para
 o lançamento mais recente:
@@ -427,7 +432,7 @@ o lançamento mais recente:
 </pre>
 
 <a name="bugs"></a>
-<h3><font color="#6c0023">bugs</font></h3>
+<h3>bugs</h3>
 <p>
 Mostra uma lista de bugs conhecidos dos pacotes:
 </p>
