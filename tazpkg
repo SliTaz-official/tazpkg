@@ -91,19 +91,19 @@ usage ()
 \033[1m`gettext \"Commands\"`: \033[0m
   usage            `gettext \"Print this short usage.\"`
   bugs             `gettext \"Show known bugs in packages.\"`
-  list             `gettext \"List installed packages on the system by category or all.\"`
+  list|-           `gettext \"List installed packages on the system by category or all.\"`
   xhtml-list       `gettext \"Create a xHTML list of installed packages.\"`
   list-mirror      `gettext \"List all available packages on the mirror (--diff for new).\"`
   info             `gettext \"Print information about a package.\"`
   desc             `gettext \"Print description of a package (if it exists).\"`
   list-files       `gettext \"List the files installed with a package.\"`
   list-config      `gettext \"List the configuration files.\"`
-  search           `gettext \"Search for a package by pattern or name (options: -i|-l|-m).\"`
+  search|-s        `gettext \"Search for a package by pattern or name (options: -i|-l|-m).\"`
   search-pkgname   `gettext \"Search on mirror for package having a particular file.\"`
   search-file	   `gettext \"Search for file(s) in all installed packages files.\"`
-  install          `gettext \"Install a local (*.tazpkg) package (--forced to force).\"`
+  install|-i       `gettext \"Install a local (*.tazpkg) package (--forced to force).\"`
   install-list     `gettext \"Install all packages from a list of packages.\"`
-  remove           `gettext \"Remove the specified package and all installed files.\"`
+  remove|-r        `gettext \"Remove the specified package and all installed files.\"`
   extract          `gettext \"Extract a (*.tazpkg) package into a directory.\"`
   pack             `gettext \"Pack an unpacked or prepared package tree.\"`
   recharge         `gettext \"Recharge your packages.list from the mirror.\"`
@@ -113,13 +113,13 @@ usage ()
   recompress       `gettext \"Rebuild a package with a better compression ratio.\"`
   block|unblock    `gettext \"Block an installed package version or unblock it for upgrade.\"`
   get              `gettext \"Download a package into the current directory.\"`
-  get-install      `gettext \"Download and install a package from the mirror.\"`
+  get-install|-gi  `gettext \"Download and install a package from the mirror.\"`
   get-install-list `gettext \"Download and install a list of packages from the mirror.\"`
   check            `gettext \"Verify consistency of installed packages.\"`
   add-flavor       `gettext \"Install the flavor list of packages.\"`
   install-flavor   `gettext \"Install the flavor list of packages and remove other ones.\"`
   set-release      `gettext \"Change release and update packages.\"`
-  clean-cache      `gettext \"Clean all packages downloaded in cache directory.\"`
+  clean-cache|-cc  `gettext \"Clean all packages downloaded in cache directory.\"`
   depends          `gettext \"Display dependencies tree.\"`
   rdepends         `gettext \"Display reverse dependencies tree.\"`
   convert          `gettext \"Convert a deb/rpm/tgz/arch package to a slitaz (.tazpkg).\"`
@@ -1445,7 +1445,7 @@ translate_querry()
 ###################
 
 case "$COMMAND" in
-	list)
+	list|-l)
 		# List all installed packages or a specific category.
 		if [ "$2" = "blocked" ]; then
 			echo ""
@@ -1639,7 +1639,7 @@ case "$COMMAND" in
 			gettext "Sorry, no description available for this package."; echo
 			echo ""
 		fi ;;
-	search)
+	search|-s)
 		# Search for a package by pattern or name.
 		PATTERN="$2"
 		if [ -z "$PATTERN" ]; then
@@ -1756,7 +1756,7 @@ case "$COMMAND" in
 			echo ""
 		fi
 		;;
-	install)
+	install|-i)
 		# Install .tazpkg packages.
 		check_root
 		check_for_package_on_cmdline
@@ -1864,7 +1864,7 @@ $LIST"
 				[ -d $j ] || tazpkg get-install $j
 			done
 		done ;;
-	remove)
+	remove|-r)
 		# Remove packages.
 		check_root
 		check_for_package_on_cmdline
@@ -2621,7 +2621,7 @@ EOT
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		cp -a $PACKAGE_FILE $CURRENT_DIR
 		;;
-	get-install)
+	get-install|-gi)
 		# Download and install a package.
 		check_root
 		check_for_package_on_cmdline
@@ -2686,7 +2686,7 @@ EOT
 		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT 
 		update_desktop_database $ROOT 
 		update_mime_database $ROOT ;;
-	clean-cache)
+	clean-cache|-cc)
 		# Remove all downloaded packages.
 		check_root
 		files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
@@ -2833,7 +2833,7 @@ EOT
 		if [ -f $2/receipt ]; then
 			rdep_scan $2
 		fi ;;
-	convert)
+	convert|-c)
 		# convert misc package format to .tazpkg
 		check_for_package_file
 		if [ "$(dd if=$PACKAGE_FILE bs=8 count=1 skip=1 2> /dev/null)" \
