@@ -28,10 +28,9 @@ msgmerge:
 		fi; \
 		if [ -f "po/tazpkg-notify/$$l.po" ]; then; \
 			echo -n "Updating $$l po file."; \
-			msgmerge -U po/tazpkg-notify/$$l.po \
-				po/tazpkg-notify/tazpkg-notify.pot; \
+			msgmerge -U po/tazpkg-notify/$$l.po po/tazpkg-notify/tazpkg-notify.pot; \
 		fi; \
-	done;
+	done
 
 msgfmt:
 	@for l in $(LINGUAS); do \

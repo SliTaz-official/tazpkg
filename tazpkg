@@ -2877,16 +2877,14 @@ EOT
 		# Remove all downloaded packages.
 		#
 		check_root
-		files=`ls -1 $CACHE_DIR | wc -l`
+		files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
 		echo ""
 		echo -e "\033[1m`gettext \"Clean cache:\"`\033[0m $CACHE_DIR"
 		separator
-		gettext "Cleaning cache directory..."; echo
+		gettext "Cleaning cache directory..."
 		rm -rf $CACHE_DIR/*
-		status
-		separator
-		eval_gettext "\$files file(s) removed from cache."; echo
-		echo "" ;;
+		status && separator
+		eval_gettext "\$files file(s) removed from cache."; echo -e "\n" ;;
 	list-undigest)
 		# list undigest URLs.
 		#
