@@ -8,7 +8,7 @@ LINGUAS?=fr pt
 
 VERSION:=$(shell grep ^VERSION=[0-9] tazpkg | cut -d '=' -f 2)
 
-all:
+all: msgfmt
 	
 # i18n.
 
@@ -22,11 +22,11 @@ pot:
 	
 msgmerge:
 	@for l in $(LINGUAS); do \
-		if [ -f "po/tazpkg/$$l.po" ]; then; \
+		if [ -f "po/tazpkg/$$l.po" ]; then \
 			echo -n "Updating $$l po file."; \
 			msgmerge -U po/tazpkg/$$l.po po/tazpkg/tazpkg.pot ; \
 		fi; \
-		if [ -f "po/tazpkg-notify/$$l.po" ]; then; \
+		if [ -f "po/tazpkg-notify/$$l.po" ]; then \
 			echo -n "Updating $$l po file."; \
 			msgmerge -U po/tazpkg-notify/$$l.po po/tazpkg-notify/tazpkg-notify.pot; \
 		fi; \
@@ -34,19 +34,20 @@ msgmerge:
 
 msgfmt:
 	@for l in $(LINGUAS); do \
-		if [ -f "po/tazpkg/$$l.po" ]; then; \
-			echo "Compiling $$l mo file..."; \
+		if [ -f "po/tazpkg/$$l.po" ]; then \
+			echo -n "Compiling tazpkg $$l mo file... "; \
 			mkdir -p po/mo/$$l/LC_MESSAGES; \
 			msgfmt -o po/mo/$$l/LC_MESSAGES/tazpkg.mo \
 				po/tazpkg/$$l.po ; \
+			echo "done"; \
 		fi; \
-		if [ -f "po/tazpkg-notify/$$l.po" ]; then; \
-			echo "Compiling $$l mo file..."; \
+		if [ -f "po/tazpkg-notify/$$l.po" ]; then \
+			echo -n "Compiling tazpkg-notify $$l mo file... "; \
 			mkdir -p po/mo/$$l/LC_MESSAGES; \
 			msgfmt -o po/mo/$$l/LC_MESSAGES/tazpkg-notify.mo \
 				po/tazpkg-notify/$$l.po ; \
+			echo "done"; \
 		fi; \
-		
 	done;
 
 # Installation.
@@ -65,8 +66,7 @@ install:
 	install -m 0755 -d $(DESTDIR)$(DOCDIR)/tazpkg
 	cp -a doc/* $(DESTDIR)$(DOCDIR)/tazpkg
 	# The i18n files
-	#cp -a po/mo/* $(DESTDIR)$(PREFIX)/share/locale
-
+	cp -a po/mo/* $(DESTDIR)$(PREFIX)/share/locale
 	# Desktop integration
 	mkdir -p $(DESTDIR)$(PREFIX)/share
 	cp -a  applications $(DESTDIR)$(PREFIX)/share
