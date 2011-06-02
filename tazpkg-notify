@@ -22,8 +22,8 @@ LOCALSTATE="/var/lib/tazpkg"
 TEXTDOMAIN='tazpkg-notify'
 export TEXTDOMAIN
 
-up=`cat $LOCALSTATE/packages.up | wc -l`
-rel=`cat /etc/slitaz-release`
+up=$(cat $LOCALSTATE/packages.up | wc -l)
+rel=$(cat /etc/slitaz-release)
 
 # Kill the notification icon after user pressed on it.
 kill_notification() {
@@ -86,8 +86,7 @@ up() {
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		#tazweb http://tazpanel:8090/pkgs.cgi?up &
-		2) subox tazpkgbox & ;;
+		2) tazweb http://tazpanel:82/pkgs.cgi?up & ;;
 		*) continue ;;
 	esac
 }
@@ -119,14 +118,13 @@ old_list_notify() {
 # Main missing packages.list function
 old_list() {
 	# Store box results
-	main=`old_list_main`
+	main=$(old_list_main)
 	ret=$?
 	kill_notification
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		# tazweb http://tazpanel:8090/pkgs.cgi?recharge &
-		2) subox tazpkgbox & ;;
+		2) tazweb http://tazpanel:82/pkgs.cgi?recharge & ;;
 		*) continue ;;
 	esac
 }
@@ -159,14 +157,13 @@ no_list_notify() {
 # Main missing packages.list function
 no_list() {
 	# Store box results
-	main=`no_list_main`
+	main=$(no_list_main)
 	ret=$?
 	kill_notification
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		# tazweb http://tazpanel:8090/pkgs.cgi?recharge &
-		2) subox tazpkgbox & ;;
+		2) tazweb http://tazpanel:82/pkgs.cgi?recharge & ;;
 		*) continue ;;
 	esac
 }
@@ -188,7 +185,7 @@ case $1 in
 		# (live or first boot)
 		sleep 10
 		[ "$up" -gt 0 ] && up_notify && exit 0
-		mtime=`find /var/lib/tazpkg/packages.list -mtime +10;`
+		mtime=$(find /var/lib/tazpkg/packages.list -mtime +10;)
 		[ "$mtime" ] && old_list_notify && exit 0
 		[ ! -f $LOCALSTATE/packages.list ] && no_list_notify \
 			&& exit 0 ;;
