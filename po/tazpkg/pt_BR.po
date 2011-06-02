@@ -27,9 +27,7 @@ msgstr "Uso"
 
 #: tazpkg:89
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
-msgstr ""
-"tazpkg [comando] [pacote|diretório|padrão|lista|categoria|--opt] "
-"[diretório|--opt]"
+msgstr "tazpkg [comando] [pacote|dir|padrão|lista|cat|--opt] [dir|--opt]"
 
 #: tazpkg:91
 msgid "Commands"
@@ -53,7 +51,7 @@ msgstr "Cria uma lista dos pacotes instalados em formato xHTML."
 
 #: tazpkg:96
 msgid "List all available packages on the mirror (--diff for new)."
-msgstr "Lista os pacotes disponí­veis no mirror (--diff para novos)."
+msgstr "Lista os pacotes disponíveis no mirror (--diff para novos)."
 
 #: tazpkg:97
 msgid "Print information about a package."
@@ -101,8 +99,7 @@ msgstr "Extrai um pacote (*.tazpkg) em um diretório."
 
 #: tazpkg:108
 msgid "Pack an unpacked or prepared package tree."
-msgstr ""
-"Empacota e desempacota ou prerara uma árvore de diretórios para pacote."
+msgstr "Empacota ou prerara uma árvore de diretórios para pacote."
 
 #: tazpkg:109
 msgid "Recharge your packages.list from the mirror."
@@ -110,7 +107,7 @@ msgstr "Recarrega o arquivo packages.list a partir do mirror."
 
 #: tazpkg:110
 msgid "Check packages md5sum to list and install latest upgrades."
-msgstr "Verifique o md5sum do pacote para lista e instale a última atualização"
+msgstr "Verifica o md5sum dos pacotes listados e instala a última atualização"
 
 #: tazpkg:111
 msgid "Create a package archive from an installed package."
@@ -123,12 +120,11 @@ msgstr "Cria um pacote dos arquivos de configuração."
 #: tazpkg:113
 #, fuzzy
 msgid "Rebuild a package with a better compression ratio."
-msgstr "Reconstrói um pacote com uma melhor compressão."
+msgstr "Reconstrói um pacote com melhor compressão."
 
 #: tazpkg:114
 msgid "Block an installed package version or unblock it for upgrade."
-msgstr ""
-"Bloqueia uma versâo de pacote instalada ou desbloqueia para atualização."
+msgstr "Bloqueia pacote instalado ou desbloqueia para atualização."
 
 #: tazpkg:115
 msgid "Download a package into the current directory."
@@ -204,7 +200,7 @@ msgstr "Executa novamente funções de pós instalação do pacote."
 
 #: tazpkg:137
 msgid "Tazpkg usage for command up"
-msgstr "Tazpkg uso para o commando up"
+msgstr "Utilização para o commando up"
 
 #: tazpkg:137
 msgid "tazpkg up [--option]"
@@ -212,7 +208,7 @@ msgstr "tazpkg up [--opção]"
 
 #: tazpkg:138
 msgid "Without options run in interactive mode and ask before install"
-msgstr "Sem opções executado em modo interativo e pedir antes da instalação"
+msgstr "Execução em modo interativo e com confirmação antes da instalação"
 
 #: tazpkg:140
 msgid "Where options are"
@@ -221,7 +217,7 @@ msgstr "Quando as opções são"
 #: tazpkg:141
 #, fuzzy
 msgid "Check only for available upgrades"
-msgstr "Atualizações disponíveis"
+msgstr "Checa somente atualizações disponíveis"
 
 #: tazpkg:142
 #, fuzzy
@@ -230,7 +226,7 @@ msgstr "Recarrega o arquivo packages.list a partir do mirror."
 
 #: tazpkg:143
 msgid "Check for upgrades and install them all"
-msgstr "Verifique se há atualizações e instalár los todos"
+msgstr "Verifica se há atualizações e as instala"
 
 #: tazpkg:145
 msgid "Example"
@@ -269,9 +265,8 @@ msgid ""
 "You must probably run 'tazpkg recharge' as root to get the latest list of\n"
 "packages available on the mirror."
 msgstr ""
-"Você provavelmente deve executar 'tazpkg recharge' como root para obter uma "
-"lista\n"
-"de pacotes atualizada a partir do mirror."
+"Você provavelmente deve executar 'tazpkg recharge' como root para obter uma\n"
+"lista de pacotes atualizada a partir do mirror."
 
 #: tazpkg:368
 #, sh-format
@@ -303,8 +298,7 @@ msgstr "Checando dependências de pós instalação... "
 #: tazpkg:512
 #, sh-format
 msgid "Please run 'tazpkg install $PACKAGE_FILE' in / and retry."
-msgstr ""
-"Por favor execute 'tazpkg install $PACKAGE_FILE' em / e tente novamente."
+msgstr "Execute 'tazpkg install $PACKAGE_FILE' em / e tente novamente."
 
 #: tazpkg:586
 #, sh-format
@@ -430,10 +424,9 @@ msgid ""
 "specify\n"
 "the complete address to the directory of the packages and packages.list file."
 msgstr ""
-"Por favor informa a URL do novo mirror (http, ftp ou caminho local). Você "
+"Por favor informe a URL do novo mirror (http, ftp ou caminho local). Você "
 "deve especificar\n"
-"o endereço completo para o diretório em que se encontra o arquivo packages."
-"list."
+"o endereço completo para o diretório dos pacotes e arquivo packages.list."
 
 #: tazpkg:973
 msgid "New mirror(s) URL : "
@@ -455,7 +448,7 @@ msgstr "AVISO: dependência desconhecida para $lib"
 #: tazpkg:1210
 #, fuzzy, sh-format
 msgid "$PACKAGE_FILE does not look like an Archlinux/Alpine package !"
-msgstr "$PACKAGE_FILE não se parece com um pacote Archlinux !"
+msgstr "$PACKAGE_FILE não se parece com um pacote Archlinux/Alpine !"
 
 #: tazpkg:1261
 #, sh-format
@@ -690,7 +683,7 @@ msgstr "Por favor especifique um padrão ou nome de arquivo para buscar."
 
 #: tazpkg:1672
 msgid "Example : 'tazpkg search-file libnss'"
-msgstr "Examplo : 'tazpkg search-file libnss'"
+msgstr "Exemplo : 'tazpkg search-file libnss'"
 
 #: tazpkg:1677 tazpkg:1737
 msgid "Search result for file"
@@ -712,7 +705,7 @@ msgstr "$match arquivo(s) encontrado(s) para: $pkg"
 
 #: tazpkg:1732
 msgid "Example : 'tazpkg search-pkgname libnss'"
-msgstr "Examplo : 'tazpkg search-pkgname libnss'"
+msgstr "Exemplo : 'tazpkg search-pkgname libnss'"
 
 #: tazpkg:1750
 #, sh-format
@@ -738,7 +731,7 @@ msgstr "Por favor indique o lançamento desejado na linha de comando."
 
 #: tazpkg:1850
 msgid "Example: tazpkg set-release cooking"
-msgstr "Examplo: tazpkg set-release cooking"
+msgstr "Exemplo: tazpkg set-release cooking"
 
 #: tazpkg:1876
 #, sh-format
@@ -789,7 +782,7 @@ msgstr "Reinstala pacotes modificados por $PACKAGE"
 #: tazpkg:1976
 #, sh-format
 msgid "Check $INSTALLED/$i for reinstallation"
-msgstr "Verifique $INSTALLED/$i para reinstalação"
+msgstr "Verifica $INSTALLED/$i para reinstalação"
 
 #: tazpkg:1986
 #, sh-format
@@ -936,20 +929,20 @@ msgstr ""
 
 #: tazpkg:2358
 msgid "Your packages list is older than one week... recharging"
-msgstr "Sua lista de pacotes é mais de uma semana... aualizando"
+msgstr "Sua lista de pacotes é possui mais de uma semana... aualizando"
 
 #: tazpkg:2363
 msgid "Update type"
-msgstr "Tipo de actualização"
+msgstr "Tipo de atualização"
 
 #: tazpkg:2385
 msgid "New build   :"
-msgstr "Construção:"
+msgstr "Nova compilação:"
 
 #: tazpkg:2388
 #, fuzzy
 msgid "New version :"
-msgstr "Versão     :"
+msgstr "Nova Versão :"
 
 #: tazpkg:2399 tazpkg:2428
 msgid "-e"
@@ -958,8 +951,7 @@ msgstr "-e"
 #: tazpkg:2406
 #, sh-format
 msgid "You have $upnb available upgrades$blocks on $pkgs installed packages"
-msgstr ""
-"Você tem $upnb atualizações disponíveis$blocks em $pkgs pacotes instalados"
+msgstr "Há $upnb atualizações disponíveis$blocks em $pkgs pacotes instalados"
 
 #: tazpkg:2415
 #, fuzzy
