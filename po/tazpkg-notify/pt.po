@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tazpkg-notify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-02 02:59+0200\n"
+"POT-Creation-Date: 2011-06-02 03:37+0200\n"
 "PO-Revision-Date: 2011-04-08 18:07+0100\n"
 "Last-Translator: Claudinei Pereira <claudinei@slitaz.org>\n"
 "Language-Team: Portuguese <i18n@slitaz.org>\n"
@@ -52,6 +52,6 @@ msgstr ""
 msgid "Upgrade:2"
 msgstr "Atualizar:2"
 
-#: tazpkg-notify:107 tazpkg-notify:147
+#: tazpkg-notify:106 tazpkg-notify:145
 msgid "Recharge now:2"
 msgstr "Recarregar agora:2"
