@@ -2440,10 +2440,13 @@ packages."
 			fi
 			case "$install" in
 				y|Y|yes|YES|Yes)
-					for pkg in `cat $UP_LIST`
+					for pkg in $(cat $UP_LIST)
 					do
 						echo 'y' | tazpkg get-install $pkg --forced
-					done ;;
+					done
+					# List a generated each time and must be cleaned so
+					# tazpkg-notify dont find upgrade anymore.
+					rm $UP_LIST && touch $UP_LIST ;;
 				*)
 					gettext -e "Leaving without any upgrades installed.\n\n"
 					exit 0 ;;
