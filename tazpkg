@@ -111,8 +111,6 @@ usage ()
   repack           `gettext \"Create a package archive from an installed package.\"`
   repack-config    `gettext \"Create a package archive with configuration files.\"`
   recompress       `gettext \"Rebuild a package with a better compression ratio.\"`
-  upgrade          `gettext \"Upgrade one or all installed package(s) (obsolete).\"`
-  upgradeable      `gettext \"Build upgradeable packages list quickly. (buggy)\"`
   block|unblock    `gettext \"Block an installed package version or unblock it for upgrade.\"`
   get              `gettext \"Download a package into the current directory.\"`
   get-install      `gettext \"Download and install a package from the mirror.\"`
@@ -1437,13 +1435,10 @@ translate_querry()
 		Y) gettext "Y" ;;
 		n) gettext "n" ;;
 		N) gettext "N" ;;
-		
 		# Support other cases but keep them untranslated.
 		*) echo "$1" ;;
-		
 	esac
 }
-
 
 ###################
 # Tazpkg commands #
@@ -1452,7 +1447,6 @@ translate_querry()
 case "$COMMAND" in
 	list)
 		# List all installed packages or a specific category.
-		#
 		if [ "$2" = "blocked" ]; then
 			echo ""
 			echo -e "\033[1m`gettext \"Blocked packages\"`\033[0m"
@@ -1590,7 +1584,6 @@ case "$COMMAND" in
 		echo "" ;;
 	list-files)
 		# List files installed with the package.
-		#
 		check_for_package_on_cmdline
 		check_for_receipt
 		echo ""
@@ -1603,7 +1596,6 @@ case "$COMMAND" in
 		echo "" ;;
 	info)
 		# Information about package.
-		#
 		check_for_package_on_cmdline
 		check_for_receipt
 		EXTRAVERSION=""
@@ -1649,7 +1641,6 @@ case "$COMMAND" in
 		fi ;;
 	search)
 		# Search for a package by pattern or name.
-		#
 		PATTERN="$2"
 		if [ -z "$PATTERN" ]; then
 			echo ""
@@ -1675,7 +1666,6 @@ case "$COMMAND" in
 		esac ;;
 	search-file)
 		# Search for a file by pattern or name in all files.list.
-		#
 		if [ -z "$2" ]; then
 			echo ""
 			gettext "Please specify a pattern or file name to search for."; echo
@@ -1747,7 +1737,7 @@ case "$COMMAND" in
 		echo -e "\033[1m`gettext \"Search result for file\"`\033[0m $2"
 		separator
 		
-	 # Search for a file on mirror and output only the package name
+		# Search for a file on mirror and output only the package name
 		match=0
 		for i in $LOCALSTATE/files.list.lzma \
 				 $LOCALSTATE/undigest/*/files.list.lzma; do
@@ -1768,7 +1758,6 @@ case "$COMMAND" in
 		;;
 	install)
 		# Install .tazpkg packages.
-		#
 		check_root
 		check_for_package_on_cmdline
 		check_for_package_file
@@ -1801,7 +1790,6 @@ case "$COMMAND" in
 		update_mime_database $ROOT ;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
-		#
 		check_root
 		if [ -z "$2" ]; then
 			echo ""
@@ -1849,15 +1837,12 @@ $LIST"
 		rm -f $2-processed ;;
 	add-flavor)
 		# Install a set of packages from a flavor.
-		#
 		install_flavor $2 ;;
 	install-flavor)
 		# Install a set of packages from a flavor and purge other ones.
-		#
 		install_flavor $2 --purge ;;
 	set-release)
 		# Change curent release and upgrade packages.
-		#
 		RELEASE=$2
 		if [ -z "$RELEASE" ]; then
 			echo ""
@@ -1881,7 +1866,6 @@ $LIST"
 		done ;;
 	remove)
 		# Remove packages.
-		#
 		check_root
 		check_for_package_on_cmdline
 		get_options_list="root auto"
@@ -2004,7 +1988,6 @@ $LIST"
 		echo "" ;;
 	extract)
 		# Extract .tazpkg cpio archive into a directory.
-		#
 		check_for_package_on_cmdline
 		check_for_package_file
 		echo ""
@@ -2028,7 +2011,6 @@ $LIST"
 		echo "" ;;
 	recompress)
 		# Recompress .tazpkg cpio archive with lzma.
-		#
 		check_for_package_on_cmdline
 		check_for_package_file
 		echo ""
@@ -2054,7 +2036,6 @@ $LIST"
 		rm -rf $TMP_DIR ;;
 	list-config)
 		# List configuration files installed.
-		#
 		if [ "$2" = "--box" ]; then
 			mkdir -p $TMP_DIR && cd $TMP_DIR
 			FILES="$INSTALLED/*/volatile.cpio.gz"
@@ -2089,7 +2070,6 @@ $LIST"
 		fi ;;
 	repack-config)
 		# Create SliTaz package archive from configuration files.
-		#
 		mkdir -p $TMP_DIR && cd $TMP_DIR
 		CONFIG_VERSION=1.0
 		mkdir config-$CONFIG_VERSION
@@ -2125,7 +2105,6 @@ EOT
 		;;
 	repack)
 		# Create SliTaz package archive from an installed package.
-		#
 		check_for_package_on_cmdline
 		check_for_receipt
 		EXTRAVERSION=""
@@ -2193,7 +2172,6 @@ EOT
 		echo "" ;;
 	pack)
 		# Create SliTaz package archive using cpio and gzip.
-		#
 		check_for_package_on_cmdline
 		cd $PACKAGE
 		if [ ! -f "receipt" ]; then
@@ -2249,7 +2227,6 @@ EOT
 		fi ;;
 	recharge)
 		# Recharge packages.list from a mirror.
-		#
 		check_root
 		get_options_list="root forced list rootconfig"
 		get_options
@@ -2357,7 +2334,7 @@ packages."
 			echo ""
 			fi
 		done ;;
-	up)
+	up|upgrade)
 		#
 		# This is the new way to upgrade packages making 'upgrade' and
 		# upgradeable out-of-date. This new way is much, much more faster!
@@ -2453,170 +2430,8 @@ packages."
 			esac
 		fi
 		echo "" ;;
-	upgradeable)
-		# Build upgradeable-packages.list quickly.
-		#
-		check_root
-		cd $LOCALSTATE
-		while read md5 file ; do
-			fgrep -qs "$md5  $file" packages.md5 && continue
-			for i in 1 2 3 4 5; do
-				file=${file%-*}
-				[ -d installed/$file ] || continue
-				echo $file
-				break
-			done
-		done < installed.md5 > upgradeable-packages.list.tmp
-		uniq upgradeable-packages.list.tmp upgradeable-packages.list ;;
-	upgrade)
-		# Upgrade all installed packages with the new version from the mirror.
-		#
-		check_root
-		check_for_packages_list
-		
-		# Get repositories priority list.
-		look_for_priority
-		
-		cd $LOCALSTATE
-		# Touch the blocked pkgs list to avoid errors and remove any old
-		# upgrade list.
-		touch blocked-packages.list
-		rm -f upgradeable-packages.list
-		echo ""
-		echo -e "\033[1m`gettext \"Available upgrades\"`\033[0m"
-		separator
-		echo ""
-		# Some packages must be installed first
-		FIRST_CLASS_PACKAGE=" glibc-base slitaz-base-files slitaz-boot-scripts "
-		if [ -n "$PACKAGE_FILE" -a -d "$INSTALLED/$PACKAGE_FILE" ]; then
-			ALL=$INSTALLED/$PACKAGE_FILE
-		else
-			ALL="$(ls -d $INSTALLED/*)"
-		fi
-		for pkg in $ALL
-		do
-			[ -f $pkg/receipt ] || continue
-			EXTRAVERSION=""
-			. $pkg/receipt
-			# Display package name to show that Tazpkg is working...
-			echo -en "\\033[0G                                         "
-			echo -en "\\033[0G$PACKAGE"
-			# Skip specified pkgs listed in $LOCALSTATE/blocked-packages.list
-			if grep -qs "^$PACKAGE" $BLOCKED; then
-				blocked=$(($blocked+1))
-			else
-				# Check if the installed package is in the current list (other
-				# mirror or local).
-				NEW_PACKAGE=$(get_package_filename $PACKAGE)
-
-				if [ -n "$NEW_PACKAGE" ]; then
-					# Set new pkg and version for future comparison
-					NEW_VERSION=`echo $NEW_PACKAGE | sed s/$PACKAGE-/''/`
-					# Change '-' and 'pre' to points.
-					NEW_VERSION=`echo $NEW_VERSION | sed s/'-'/'.'/`
-					VERSION=`echo $VERSION | sed s/'-'/'.'/`$EXTRAVERSION
-					NEW_VERSION=`echo $NEW_VERSION | sed s/'pre'/'.'/`
-					VERSION=`echo $VERSION | sed s/'pre'/'.'/`
-					NEW_VERSION=`echo $NEW_VERSION | sed 's/[A-Z]\.//'`
-					VERSION=`echo $VERSION | sed 's/[A-Z]\.//'`
-					# Compare version. Upgrades are only available for official
-					# packages, so we control the mirror and it should be ok if
-					# we just check for equality.
-					RELEASE=""
-					if [ -f installed.md5 -a -f packages.md5 ]; then
-						current_md5=$(fgrep -s "  $PACKAGE-$VERSION" installed.md5 | awk '{ print $1 }')
-						new_md5=$(fgrep -hs "  $PACKAGE-$VERSION" packages.md5 undigest/*/packages.md5 | head -1 | awk '{ print $1 }')
-						[ -n "$current_md5" ] && [ -n "$new_md5" ] &&
-						[ "$current_md5" != "$new_md5" ] && RELEASE=$(gettext "build")
-					fi
-					if [ "$VERSION" != "$NEW_VERSION" -o -n "$RELEASE" ]; then
-						# Version seems different. Check for major, minor or
-						# revision
-						PKG_MAJOR=`echo ${VERSION%_*} | cut -f1 -d"."`
-						NEW_MAJOR=`echo ${NEW_VERSION%_*} | cut -f1 -d"."`
-						PKG_MINOR=`echo ${VERSION%_*} | cut -f2 -d"."`
-						NEW_MINOR=`echo ${NEW_VERSION%_*} | cut -f2 -d"."`
-						# Minor
-						if [ "$NEW_MINOR" -gt "$PKG_MINOR" ] 2> /dev/null; then
-							RELEASE=$(gettext "minor")
-						fi
-						if [ "$NEW_MINOR" -lt "$PKG_MINOR" ] 2> /dev/null; then
-							RELEASE=$(gettext "WARNING")
-							FIXE=yes
-						fi
-						# Major
-						if [ "$NEW_MAJOR" -gt "$PKG_MAJOR" ] 2> /dev/null; then
-							RELEASE=$(gettext "major")
-							FIXE=""
-						fi
-						if [ "$NEW_MAJOR" -lt "$PKG_MAJOR" ] 2> /dev/null; then
-							RELEASE=$(gettext "WARNING")
-							FIXE=yes
-						fi
-						# Default to revision.
-						if [ -z $RELEASE ]; then
-							RELEASE=$(gettext "revision")
-						fi
-						# Pkg name is already displayed by the check process.
-						echo -en "\033[24G $VERSION"
-						echo -en "\033[38G --->"
-						echo -en "\033[43G $NEW_VERSION"
-						echo -en "\033[58G `translate_category $CATEGORY`"
-						echo -e "\033[72G $RELEASE"
-						up=$(($up+1))
-						echo "$PACKAGE" >> upgradeable-packages.list
-						case "$FIRST_CLASS_PACKAGE" in
-						*\ $PACKAGE\ *) echo "$PACKAGE" >> upgradeable-packages.list$$;;
-						esac
-						unset RELEASE
-					fi
-					packages=$(($packages+1))
-				fi
-			fi
-		done
-		if [ -z $blocked ]; then
-			blocked=0
-		fi
-		# Clean last checked package and display summary.
-		if [ ! "$up" = "" ]; then
-			echo -e "\\033[0G                                         "
-			separator
-			eval_gettext "\$packages installed and listed packages to consider, \$up to upgrade, \$blocked blocked."; echo
-			echo ""
-		else
-			echo -e "\\033[0G`gettext \"System is up-to-date.\"`                    "
-			echo ""
-			separator
-			eval_gettext "\$packages installed and listed packages to consider, 0 to upgrade, \$blocked blocked."; echo
-			echo ""
-			exit 0
-		fi
-		# What to do if major or minor version is smaller.
-		if [ "$FIXE" == "yes" ]; then
-			gettext \
-"WARNING ---> Installed package seems more recent than the mirrored
-one. You can block packages using the command : 'tazpkg block package'.
-Or upgrade packages at your own risk."
-			echo ""
-		fi
-		# Ask for upgrade, it can be done another time.
-		gettext "Upgrade now"
-		echo -n " (`translate_querry y`/`translate_querry N`) ? "
-		read answer
-		if [ ! "$answer" = "$(translate_querry y)" ]; then
-			echo ""
-			gettext "Exiting. No package upgraded."; echo
-			echo ""
-			exit 0
-		fi
-		# If answer is yes (y). Install all new versions.
-		cat upgradeable-packages.list >> upgradeable-packages.list$$
-		mv -f upgradeable-packages.list$$ upgradeable-packages.list
-		yes y | tazpkg get-install-list upgradeable-packages.list --forced
-		rm -f upgradeable-packages.list ;;
 	bugs)
 		# Show known bugs in package(s)
-		#
 		cd $INSTALLED
 		shift
 		LIST=$@
@@ -2638,7 +2453,6 @@ EOT
 		echo "$MSG" ;;
 	check)
 		# Check installed packages set.
-		#
 		check_root
 		
 		# Get repositories priority list.
@@ -2728,7 +2542,6 @@ EOT
 		gettext "Check completed."; echo ;;
 	block)
 		# Add a pkg name to the list of blocked packages.
-		#
 		check_root
 		check_for_package_on_cmdline
 		echo ""
@@ -2747,7 +2560,6 @@ EOT
 		echo "" ;;
 	unblock)
 		# Remove a pkg name from the list of blocked packages.
-		#
 		check_root
 		check_for_package_on_cmdline
 		echo ""
@@ -2767,7 +2579,6 @@ EOT
 		echo "" ;;
 	get)
 		# Downlowd a package with wget.
-		#
 		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
@@ -2812,7 +2623,6 @@ EOT
 		;;
 	get-install)
 		# Download and install a package.
-		#
 		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
@@ -2878,7 +2688,6 @@ EOT
 		update_mime_database $ROOT ;;
 	clean-cache)
 		# Remove all downloaded packages.
-		#
 		check_root
 		files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
 		echo ""
@@ -2890,7 +2699,6 @@ EOT
 		eval_gettext "\$files file(s) removed from cache."; echo -e "\n" ;;
 	list-undigest)
 		# list undigest URLs.
-		#
 		if [ "$2" = "--box" ]; then
 			for i in $LOCALSTATE/undigest/*/mirror; do
 				[ -f $i ] || continue
@@ -2911,7 +2719,6 @@ EOT
 		fi ;;
 	remove-undigest)
 		# remove undigest URL.
-		#
 		check_root
 		undigest="$2"
 		if [ -d $LOCALSTATE/undigest/$2 ]; then
@@ -2929,7 +2736,6 @@ EOT
 		fi ;;
 	add-undigest|setup-undigest)
 		# Add undigest URL.
-		#
 		check_root
 		undigest=$2
 		[ -d $LOCALSTATE/undigest ] || mkdir $LOCALSTATE/undigest
@@ -2947,12 +2753,10 @@ EOT
 		setup_mirror $LOCALSTATE/undigest/$undigest $3 ;;
 	setup-mirror)
 		# Change mirror URL.
-		#
 		check_root
 		setup_mirror $LOCALSTATE $2 ;;
 	reconfigure)
 		# Replay post_install from receipt
-		#
 		check_for_package_on_cmdline
 		check_root
 		ROOT=""
@@ -2986,7 +2790,6 @@ EOT
 		fi ;;
 	shell)
 		# Tazpkg SHell
-		#
 		if test $(id -u) = 0 ; then
 			PROMPT="\\033[1;33mtazpkg\\033[0;39m# "
 		else
