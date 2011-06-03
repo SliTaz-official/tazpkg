@@ -91,7 +91,7 @@ usage ()
 \033[1m`gettext \"Commands\"`: \033[0m
   usage            `gettext \"Print this short usage.\"`
   bugs             `gettext \"Show known bugs in packages.\"`
-  list|-           `gettext \"List installed packages on the system by category or all.\"`
+  list|-l          `gettext \"List installed packages on the system by category or all.\"`
   xhtml-list       `gettext \"Create a xHTML list of installed packages.\"`
   list-mirror      `gettext \"List all available packages on the mirror (--diff for new).\"`
   info             `gettext \"Print information about a package.\"`
