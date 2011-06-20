@@ -64,6 +64,9 @@ BLOCKED=$LOCALSTATE/blocked-packages.list
 UP_LIST=$LOCALSTATE/packages.up
 DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
 
+# Need by check_depends
+TMPLOCALSTATE=
+
 # Check if the directories and files used by Tazpkg
 # exist. If not and user is root we create them.
 check_base_dir()
@@ -1061,9 +1064,10 @@ find_depends()
 {
 	DEFAULT_DEPENDS="glibc-base gcc-lib-base"
 
-	[ -f $LOCALSTATE/files.list.lzma ] || tazpkg recharge > /dev/null
-	for i in $LOCALSTATE/files.list.lzma \
- 		$LOCALSTATE/undigest/*/files.list.lzma ; do
+	[ -n "$TMPLOCALSTATE" ] || TMPLOCALSTATE=$LOCALSTATE
+	[ -f $TMPLOCALSTATE/files.list.lzma ] || tazpkg recharge > /dev/null
+	for i in $TMPLOCALSTATE/files.list.lzma \
+ 		$TMPLOCALSTATE/undigest/*/files.list.lzma ; do
  		[ -f $i ] && lzma d $i -so >> $TMP_DIR/files.list
 	done
 	find $TMP_DIR/$file/fs -type f | while read chkfile ; do
@@ -2836,6 +2840,8 @@ EOT
 	convert|-c)
 		# convert misc package format to .tazpkg
 		check_for_package_file
+		[ -n "$TARGET_DIR" -a -s "$TARGET_DIR/files.list.lzma" ] && 
+			TMPLOCALSTATE="$TARGET_DIR"
 		if [ "$(dd if=$PACKAGE_FILE bs=8 count=1 skip=1 2> /dev/null)" \
 		      == "debian-b" ]; then
 			convert_deb
