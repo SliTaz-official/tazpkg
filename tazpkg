@@ -2357,7 +2357,20 @@ packages."
 					install="n" ;;
 			esac
 		done
-		mtime=`find /var/lib/tazpkg/packages.list -mtime +7`
+		installed_md5=$LOCALSTATE/installed.md5
+		pkg_desc=$LOCALSTATE/packages.desc
+		pkg_list=$LOCALSTATE/packages.list
+		pkg_md5=$LOCALSTATE/packages.md5
+		if [ -f $LOCALSTATE/priority ]; then
+			for i in $(cat $LOCALSTATE/priority); do
+				if [ -f $LOCALSTATE/undigest/$i/mirror ]; then
+					pkg_desc=$LOCALSTATE/undigest/$i/packages.desc
+					pkg_list=$LOCALSTATE/undigest/$i/packages.list
+					pkg_md5=$LOCALSTATE/undigest/$i/packages.md5
+				fi
+			done
+		fi
+		mtime=`find $pkg_list -mtime +7`
 		if [ "$mtime" ]; then
 			gettext "Your packages list is older than one week... recharging"
 			tazpkg recharge
@@ -2375,11 +2388,11 @@ packages."
 			unset VERSION EXTRAVERSION
 			. $pkg/receipt
 			md5=$(fgrep "  $PACKAGE-${VERSION}$EXTRAVERSION.tazpkg" \
-				../installed.md5 | awk '{print $1}')
-			if ! fgrep -q "$md5  $PACKAGE-" ../packages.md5; then
+				$installed_md5 | awk '{print $1}')
+			if ! fgrep -q "$md5  $PACKAGE-" $pkg_md5; then
 				# Skip when not found on mirror (local package)
-				grep -q ^$PACKAGE- ../packages.list || continue
-				new=$(grep "^$PACKAGE |" ../packages.desc | awk '{print $3}')
+				grep -q ^$PACKAGE- $pkg_list || continue
+				new=$(grep "^$PACKAGE |" $pkg_desc | awk '{print $3}')
 				if $(grep -qs "^$PACKAGE" $BLOCKED); then
 					# Skip pkgs listed in $LOCALSTATE/blocked-packages.list
 					blocked_count=$(($blocked_count+1))
