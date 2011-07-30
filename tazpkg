@@ -2301,7 +2301,7 @@ EOT
 			# ID file & wanted/depends/libraries files were implemented
 			# at the same time. Not all repositories have them.
 			if [ -f ID ]; then
-				for i in wanted depends library; do
+				for i in wanted depends libraries; do
 					download_from "$(cat mirror)" $i.txt
 				done
 			fi
