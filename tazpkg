@@ -42,9 +42,10 @@ export TEXTDOMAIN
 # and actions.
 COMMAND=$1
 PACKAGE=${2%/}
-PACKAGE_DIR="$(dirname $PACKAGE)"
-[ -n "$PACKAGE" -a "$PACKAGE_DIR" != "." ] && 
-PACKAGE_FILE="$(cd $PACKAGE_DIR ; pwd)/${PACKAGE##*/}"
+PACKAGE_DIR="$(cd $(dirname $PACKAGE))"
+[ "$PACKAGE_DIR" = "." ] && PACKAGE_DIR=""
+[ -n "$PACKAGE" ] && 
+PACKAGE_FILE="$($PACKAGE_DIR ; pwd)/${PACKAGE##*/}"
 if [ -f "$PACKAGE" ]; then
 	# Set pkg basename for install, extract
 	PACKAGE=$(basename ${PACKAGE%.tazpkg} 2>/dev/null)
