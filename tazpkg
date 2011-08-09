@@ -42,7 +42,7 @@ export TEXTDOMAIN
 # and actions.
 COMMAND=$1
 PACKAGE=${2%/}
-PACKAGE_DIR="$(cd $(dirname $PACKAGE) 2>/dev/null; pwd)"
+PACKAGE_DIR="$([ -n "$PACKAGE" ] && cd $(dirname $PACKAGE); pwd)"
 [ -n "$PACKAGE" ] && 
 PACKAGE_FILE="$PACKAGE_DIR/${PACKAGE##*/}"
 if [ -f "$PACKAGE" ]; then
@@ -77,6 +77,7 @@ check_base_dir()
 		check_dir $1$INSTALLED
 		if [ ! -f "$1$LOCALSTATE/mirror" ]; then
 			echo "$DEFAULT_MIRROR" > $1$LOCALSTATE/mirror
+			[ -n "$1" ] && cp $LOCALSTATE/packages.* $1$LOCALSTATE/
 		fi
 	fi
 }
