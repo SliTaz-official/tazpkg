@@ -42,7 +42,7 @@ export TEXTDOMAIN
 # and actions.
 COMMAND=$1
 PACKAGE=${2%/}
-PACKAGE_DIR="$([ -n "$PACKAGE" ] && cd $(dirname $PACKAGE); pwd)"
+PACKAGE_DIR="$(cd $(dirname $PACKAGE) 2>/dev/null; pwd)"
 [ -n "$PACKAGE" ] && 
 PACKAGE_FILE="$PACKAGE_DIR/${PACKAGE##*/}"
 if [ -f "$PACKAGE" ]; then
