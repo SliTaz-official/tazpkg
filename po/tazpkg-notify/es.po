@@ -1,0 +1,60 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tazpkg Notification 4.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-06-02 04:20+0200\n"
+"PO-Revision-Date: 2011-08-05 00:25-0300\n"
+"Last-Translator: Lucas Gioia <lucas.lucas.lucas24@gmail.com>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: ARGENTINA\n"
+
+#: tazpkg-notify:38
+#, sh-format
+msgid ""
+"<b>There are $up upgradeable packages for your SliTaz $rel</b>\n"
+"You should upgrade your system to get all the latest fixes\n"
+"and improvements from the SliTaz contributors"
+msgstr ""
+"<b>Hay $up paquetes actualizables para su SliTaz $rel</b>\n"
+"Debe actualizar su sistema para tener las últimas revisiones\n"
+"y mejoras de los contribuyentes de Slitaz."
+
+#: tazpkg-notify:45
+#, sh-format
+msgid ""
+"<b>Your SliTaz $rel packages list is older than 10 days</b>\n"
+"You should recharge the list to check for updates"
+msgstr ""
+"<b>Su lista de paquetes SliTaz $rel está desactualizada por más de 10 días</b>\n"
+"Debe recargarla para comprobar si existen nuevas actualizaciónes."
+
+#: tazpkg-notify:51
+#, sh-format
+msgid ""
+"<b>No packages list found on your SliTaz $rel system</b>\n"
+"You will need to recharge the list of mirrored packages\n"
+"if you want to install packages or upgrade your system"
+msgstr ""
+"<b>No se encuentra la lista de paquetes en su sistema SliTaz $rel</b>\n"
+"Necesita recargar la lista de paquetes del espejo\n"
+"si usted busca instalar paquetes o actualizar su sistema."
+
+#: tazpkg-notify:68
+msgid "Upgrade:2"
+msgstr "Actualizar:2"
+
+#: tazpkg-notify:106
+#: tazpkg-notify:145
+msgid "Recharge now:2"
+msgstr "Recarga ahora:2"
+
