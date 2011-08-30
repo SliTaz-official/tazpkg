@@ -8,6 +8,9 @@ LINGUAS?=fr pt_BR es
 
 VERSION:=$(shell grep ^VERSION=[0-9] tazpkg | cut -d '=' -f 2)
 
+tmpdir = tar-install/tazpkg-$(VERSION)
+tarball = tazpkg-$(VERSION).tar.gz
+
 all: msgfmt
 	
 # i18n.
@@ -52,7 +55,7 @@ msgfmt:
 
 # Installation.
 
-install:
+install: msgfmt
 	# Tazpkg command line interface
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
@@ -87,7 +90,20 @@ uninstall:
 
 clean:
 	rm -rf _pkg
+	rm -rf tar-install
 	rm -rf po/mo
 	rm -f po/*/*~
 	rm -f po/*/*.mo
 	
+
+targz:
+	rm -rf ${tmpdir}
+	mkdir -p ${tmpdir}
+	
+	make DESTDIR=${tmpdir} install
+	
+	cd tar-install ; \
+	tar cvzf ${tarball} tazpkg-$(VERSION) ; \
+	cd -
+	
+	@echo "** Tarball successfully created in tar-install/${tarball}"
