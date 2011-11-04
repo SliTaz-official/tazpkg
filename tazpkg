@@ -1922,7 +1922,7 @@ $LIST"
 			separator
 			# Pre remove commands.
 			if grep -q ^pre_remove $ROOT$INSTALLED/$PACKAGE/receipt; then
-				pre_remove
+				pre_remove $ROOT
 			fi
 			gettext "Removing all files installed..."
 			if [ -f $ROOT$INSTALLED/$PACKAGE/modifiers ]; then
@@ -1942,7 +1942,7 @@ $LIST"
 			fi
 			status
 			if grep -q ^post_remove $ROOT$INSTALLED/$PACKAGE/receipt; then
-				post_remove
+				post_remove $ROOT
 			fi
 			# Remove package receipt.
 			gettext "Removing package receipt..."
