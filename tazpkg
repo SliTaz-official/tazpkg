@@ -629,6 +629,10 @@ END {
 	if [ "$(fgrep /usr/share/mime $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
 		updatemimedb=yes
 	fi
+	# Compile glib schemas if needed.
+	if [ "$(fgrep /usr/share/glib-2.0/schemas $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
+		compile_schemas=yes
+	fi
 	cd $TOP_DIR
 	separator
 	eval_gettext "\$PACKAGE (\$VERSION\$EXTRAVERSION) is installed."; echo
@@ -1381,6 +1385,13 @@ update_mime_database()
 {
 	if [ -f $1/usr/bin/update-mime-database ] && [ -n "$updatemimedb" ]; then
 		$1/usr/bin/update-mime-database $1/usr/share/mime
+	fi
+}
+
+compile_glib_schemas()
+{
+	if [ -f $1/usr/bin/glib-compile-schemas ] && [ -n "$compile_schemas" ]; then
+		$1/usr/bin/glib-compile-schemas $1/usr/share/glib-2.0/schemas
 	fi
 }
 
