@@ -2351,7 +2351,7 @@ packages."
 			echo ""
 			fi
 		done ;;
-	up|upgrade)
+	up|upgrade|--help-up)
 		#
 		# This is the new way to upgrade packages making 'upgrade' and
 		# upgradeable out-of-date. This new way is much, much more faster!
@@ -2359,6 +2359,10 @@ packages."
 		# and easy to handle vars after using only md5sum to compare packages
 		# 
 		# Options available for the command: up
+		if [ "$COMMAND" == "--help-up" ]; then
+			usage_up
+			exit 1
+		fi
 		for opt in $@
 		do
 			case "$opt" in
@@ -2393,7 +2397,7 @@ packages."
 		echo -en "\033[26G " && gettext "Update type"
 		echo -e "\033[0m"
 		separator
-		cd $LOCALSTATE/installed
+		cd $INSTALLED
 		echo "" > $UP_LIST
 		blocked_count=0
 		for pkg in *
