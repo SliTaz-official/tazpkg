@@ -2375,23 +2375,20 @@ packages."
 			esac
 		done
 		installed_md5=$LOCALSTATE/installed.md5
-		pkg_desc=$LOCALSTATE/packages.desc
-		pkg_list=$LOCALSTATE/packages.list
-		pkg_md5=$LOCALSTATE/packages.md5
-		if [ -f $LOCALSTATE/priority ]; then
-			for i in $(cat $LOCALSTATE/priority); do
-				if [ -f $LOCALSTATE/undigest/$i/mirror ]; then
-					pkg_desc=$LOCALSTATE/undigest/$i/packages.desc
-					pkg_list=$LOCALSTATE/undigest/$i/packages.list
-					pkg_md5=$LOCALSTATE/undigest/$i/packages.md5
+		look_for_priority
+		for repo in $priority; do
+			pkg_list=$repo/packages.list
+			mtime=`find $pkg_list -mtime +7`
+			if [ "$mtime" ]; then
+				if [ "$repo" = "$LOCALSTATE" ]; then
+					repo_name=main
+				else
+					repo_name="${repo##*/}"
 				fi
-			done
-		fi
-		mtime=`find $pkg_list -mtime +7`
-		if [ "$mtime" ]; then
-			gettext "Your packages list is older than one week... recharging"
-			tazpkg recharge
-		fi
+				eval_gettext "\$pkg_list is older than one week... recharging"; echo
+				tazpkg recharge $repo_name
+			fi
+		done
 		echo -en "\n\033[1m"
 		gettext "Package"
 		echo -en "\033[26G " && gettext "Update type"
@@ -2406,14 +2403,23 @@ packages."
 			. $pkg/receipt
 			md5=$(fgrep "  $PACKAGE-${VERSION}$EXTRAVERSION.tazpkg" \
 				$installed_md5 | awk '{print $1}')
-			if ! fgrep -q "$md5  $PACKAGE-" $pkg_md5; then
-				# Skip when not found on mirror (local package)
-				grep -q ^$PACKAGE- $pkg_list || continue
-				new=$(grep "^$PACKAGE |" $pkg_desc | awk '{print $3}')
-				if $(grep -qs "^$PACKAGE" $BLOCKED); then
+			for repo in $priority; do
+				pkg_desc=$repo/packages.desc
+				pkg_list=$repo/packages.list
+				pkg_md5=$repo/packages.md5
+
+				if ! fgrep -q "$md5  $PACKAGE-" $pkg_md5; then
+					# Jump to next repository in priority if pkg doesn't exists
+					# in this one.
+					grep -q ^$PACKAGE- $pkg_list || continue
+
 					# Skip pkgs listed in $LOCALSTATE/blocked-packages.list
-					blocked_count=$(($blocked_count+1))
-				else
+					if $(grep -qs "^$PACKAGE" $BLOCKED); then
+						blocked_count=$(($blocked_count+1))
+						break
+					fi
+					
+					new=$(grep "^$PACKAGE |" $pkg_desc | awk '{print $3}')
 					if [ "$VERSION" == "$new" ]; then
 						echo -n "$PACKAGE"
 						echo -e "\\033[26G `gettext \"New build   :\"` $md5"
@@ -2422,8 +2428,9 @@ packages."
 						echo -e "\\033[26G `gettext \"New version :\"` $new"
 					fi
 					echo "$PACKAGE" >> $UP_LIST
+					break
 				fi
-			fi
+			done
 		done
 		sed -i /^$/d $UP_LIST
 		upnb=$(cat $UP_LIST | wc -l)
