@@ -590,12 +590,12 @@ END {
 		# save 'official' configuration files
 		eval_gettext "Saving configuration files for \$PACKAGE... "
 		for i in $CONFIG_FILES; do
-			{ cd fs ; find ${i#/} -type f; cd ..; }
+			{ cd fs ; find ${i#/} -type f 2> /dev/null; cd ..; }
 		done | { cd fs ; cpio -o -H newc --quiet | gzip -9; cd ..; } > \
 			$ROOT$INSTALLED/$PACKAGE/volatile.cpio.gz
 		# keep user configuration files
 		for i in $CONFIG_FILES; do
-			{ cd fs ; find ${i#/} -type f; cd ..; }
+			{ cd fs ; find ${i#/} -type f 2> /dev/null; cd ..; }
 		done | while read i; do
 			[ -e $ROOT/$i ] || continue
 			cp -a $ROOT/$i fs/$i
