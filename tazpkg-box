@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# Small GTK boxes to TazPKG for deep desktop integration. PcmanFM 0.5.x have a
+# patch to extract TazPKG file but not Thunar and othet FM. TazPKGbox try to
+# follow freedesktop standards.
+#
+# Copyright (C) 2012 SliTaz GNU/Linux - GNU gpl v2
+#
+# Authors : Christophe Lincoln <pankso@slitaz.org>
+#
+
+# Main GUI box function with pure Yad spec
+actions_main() {
+	title=$(gettext "TazPKG actions")
+	text=$(gettext "Package file name:")
+	yad --text="$text <b>$pkg</b>" \
+		--width=520 --height=80 --dialog-sep \
+		--center --on-top --window-icon="tazpkg" \
+		--image="tazpkg" --image-on-top \
+		--button="Install:3" --button="Extract:2" \
+		--button="gtk-close:1"
+}
+
+# Actions user can do when clicking on a package.
+actions() {
+	# Store box results
+	main=$(actions_main)
+	ret=$?
+	# Deal with --button values
+	case $ret in
+		1) exit 0 ;;
+		2) tazpkg extract $pkg && exit 0 ;;
+		3) tazpkg -i $pkg --forced | tazbox out && exit 0 ;;
+	esac
+}
+
+#
+# Script commands
+#
+
+case "$1" in
+	usage)
+		echo "Usage: $(basename $0) [command]" ;;
+	actions)
+		pkg="$2"
+		actions ;;
+esac
+
+exit 0
+
