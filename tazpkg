@@ -398,7 +398,7 @@ download_from()
 	shift
 	for i in $mirrors; do
 		case "$i" in
-		http://*|ftp://*) wget -c $i$@ && break;;
+		http://*|ftp://*) wget -c $i/$@ && break;;
 		*) ln -sf $i/$1 . && break;;
 		esac
 	done
