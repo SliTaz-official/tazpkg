@@ -29,8 +29,8 @@ actions() {
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		2) tazpkg extract $pkg && exit 0 ;;
-		3) tazpkg -i $pkg --forced | tazbox out && exit 0 ;;
+		2) terminal -e "tazpkg extract $pkg" && exit 0 ;;
+		3) terminal -e "tazpkg -i $pkg --forced" && exit 0 ;;
 	esac
 }
 
