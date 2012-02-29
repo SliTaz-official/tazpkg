@@ -7,7 +7,7 @@
 # be run by the WM autostart script or ~/.xsession and needs a systray to
 # sit in like in LXpanel or Tint2.
 #
-# Copyright (C) 2011 SliTaz GNU/Linux - GNU gpl v2
+# Copyright (C) 2012 SliTaz GNU/Linux - GNU gpl v2
 #
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #

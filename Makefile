@@ -59,9 +59,9 @@ install: msgfmt
 	# Tazpkg command line interface
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
-	# Tazpkgbox GUI
+	# Tazpkg-box GUI
 	install -m 0777 tazpkg-notify $(DESTDIR)$(PREFIX)/bin
-	install -m 0777 tazpkgbox-install $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 tazpkg-box $(DESTDIR)$(PREFIX)/bin
 	# Configuration files
 	install -m 0755 -d $(DESTDIR)$(SYSCONFDIR)
 	install -m 0644 tazpkg.conf $(DESTDIR)$(SYSCONFDIR)
@@ -81,9 +81,8 @@ install: msgfmt
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkg
-	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkgbox
+	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkg-box
 	rm -rf $(DESTDIR)$(PREFIX)/tazpkg-notify
-	rm -f $(DESTDIR)$(PREFIX)/tazpkgbox-install
 	rm -rf $(DESTDIR)$(DOCDIR)/tazpkg
 	rm -f $(DESTDIR)$(SYSCONFDIR)/tazpkg.conf 
 	rm -rf $(DESTDIR)$(PREFIX)/share/locale/*/LC_MESSAGES/tazpkg*.mo
