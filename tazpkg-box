@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Small GTK boxes to TazPKG for deep desktop integration. PcmanFM 0.5.x have a
-# patch to extract TazPKG file but not Thunar and othet FM. TazPKGbox try to
+# Small GTK boxes to TazPKG for deep desktop integration. PcmanFM 0.5.x has a
+# patch to extract TazPKG file but not Thunar and other FM. TazPKGbox tries to
 # follow freedesktop standards.
 #
 # Copyright (C) 2012 SliTaz GNU/Linux - GNU gpl v2

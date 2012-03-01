@@ -2461,7 +2461,7 @@ packages."
 					do
 						echo 'y' | tazpkg get-install $pkg --forced
 					done
-					# List a generated each time and must be cleaned so
+					# List is generated each time and must be cleaned so
 					# tazpkg-notify dont find upgrade anymore.
 					rm $UP_LIST && touch $UP_LIST ;;
 				*)
