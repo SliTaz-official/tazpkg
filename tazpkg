@@ -2291,8 +2291,8 @@ EOT
 			if [ -f ID ]; then
 				mv -f ID ID.bak
 				cat ID.bak > ID
-				rm ID.bak
 			fi
+			rm ID.bak
 
 			echo ""
 			if [ "$path" != "$LOCALSTATE" ]; then
