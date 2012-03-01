@@ -2324,14 +2324,6 @@ EOT
 
 			download_from $primary_mirror files.list.lzma
 
-			# ID file & wanted/depends/libraries files were implemented
-			# at the same time. Not all repositories have them.
-			if [ -f ID ]; then
-				for i in wanted depends libraries; do
-					download_from $primary_mirror $i.txt
-				done
-			fi
-
 			if [ -f "packages.list.bak" ]; then
 				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
 				sed -i s/+// packages.diff
