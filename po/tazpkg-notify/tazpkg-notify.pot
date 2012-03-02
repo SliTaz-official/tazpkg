@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Tazpkg Notification 4.8\n"
+"Project-Id-Version: Tazpkg Notification 4.8.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-29 20:26+0100\n"
+"POT-Creation-Date: 2012-03-02 15:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,33 +17,53 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tazpkg-notify:38
-#, sh-format
-msgid ""
-"<b>There are $up upgradeable packages for your SliTaz $rel</b>\n"
-"You should upgrade your system to get all the latest fixes\n"
-"and improvements from the SliTaz contributors"
+#: tazpkg-notify:25
+msgid "Installed packages"
 msgstr ""
 
-#: tazpkg-notify:45
-#, sh-format
-msgid ""
-"<b>Your SliTaz $rel packages list is older than 10 days</b>\n"
-"You should recharge the list to check for updates"
+#: tazpkg-notify:46
+msgid "My packages"
+msgstr ""
+
+#: tazpkg-notify:47
+msgid "Recharge lists"
+msgstr ""
+
+#: tazpkg-notify:48
+msgid "Check upgrade"
+msgstr ""
+
+#: tazpkg-notify:49
+msgid "TazPKG SHell"
+msgstr ""
+
+#: tazpkg-notify:50
+msgid "TazPKG manual"
 msgstr ""
 
 #: tazpkg-notify:51
+msgid "Close notification"
+msgstr ""
+
+#: tazpkg-notify:57
+msgid "Usage:"
+msgstr ""
+
+#: tazpkg-notify:69
 #, sh-format
-msgid ""
-"<b>No packages list found on your SliTaz $rel system</b>\n"
-"You will need to recharge the list of mirrored packages\n"
-"if you want to install packages or upgrade your system"
+msgid "No packages list found - $text"
 msgstr ""
 
-#: tazpkg-notify:68
-msgid "Upgrade:2"
+#: tazpkg-notify:76
+msgid "Your packages list is older than 10 days"
 msgstr ""
 
-#: tazpkg-notify:106 tazpkg-notify:145
-msgid "Recharge now:2"
+#: tazpkg-notify:84
+#, sh-format
+msgid "There are <b>$up</b> upgradeable packages"
+msgstr ""
+
+#: tazpkg-notify:90
+#, sh-format
+msgid "System is up to date - $text"
 msgstr ""

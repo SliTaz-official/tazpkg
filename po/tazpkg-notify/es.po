@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tazpkg Notification 4.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-02 04:20+0200\n"
+"POT-Creation-Date: 2012-03-02 15:10+0100\n"
 "PO-Revision-Date: 2011-08-05 00:25-0300\n"
 "Last-Translator: Lucas Gioia <lucas.lucas.lucas24@gmail.com>\n"
 "Language-Team: \n"
@@ -18,43 +18,83 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: ARGENTINA\n"
 
-#: tazpkg-notify:38
-#, sh-format
-msgid ""
-"<b>There are $up upgradeable packages for your SliTaz $rel</b>\n"
-"You should upgrade your system to get all the latest fixes\n"
-"and improvements from the SliTaz contributors"
+#: tazpkg-notify:25
+msgid "Installed packages"
 msgstr ""
-"<b>Hay $up paquetes actualizables para su SliTaz $rel</b>\n"
-"Debe actualizar su sistema para tener las últimas revisiones\n"
-"y mejoras de los contribuyentes de Slitaz."
 
-#: tazpkg-notify:45
-#, sh-format
-msgid ""
-"<b>Your SliTaz $rel packages list is older than 10 days</b>\n"
-"You should recharge the list to check for updates"
+#: tazpkg-notify:46
+msgid "My packages"
 msgstr ""
-"<b>Su lista de paquetes SliTaz $rel está desactualizada por más de 10 días</b>\n"
-"Debe recargarla para comprobar si existen nuevas actualizaciónes."
 
-#: tazpkg-notify:51
-#, sh-format
-msgid ""
-"<b>No packages list found on your SliTaz $rel system</b>\n"
-"You will need to recharge the list of mirrored packages\n"
-"if you want to install packages or upgrade your system"
-msgstr ""
-"<b>No se encuentra la lista de paquetes en su sistema SliTaz $rel</b>\n"
-"Necesita recargar la lista de paquetes del espejo\n"
-"si usted busca instalar paquetes o actualizar su sistema."
-
-#: tazpkg-notify:68
-msgid "Upgrade:2"
-msgstr "Actualizar:2"
-
-#: tazpkg-notify:106
-#: tazpkg-notify:145
-msgid "Recharge now:2"
+#: tazpkg-notify:47
+#, fuzzy
+msgid "Recharge lists"
 msgstr "Recarga ahora:2"
 
+#: tazpkg-notify:48
+msgid "Check upgrade"
+msgstr ""
+
+#: tazpkg-notify:49
+msgid "TazPKG SHell"
+msgstr ""
+
+#: tazpkg-notify:50
+msgid "TazPKG manual"
+msgstr ""
+
+#: tazpkg-notify:51
+msgid "Close notification"
+msgstr ""
+
+#: tazpkg-notify:57
+msgid "Usage:"
+msgstr ""
+
+#: tazpkg-notify:69
+#, sh-format
+msgid "No packages list found - $text"
+msgstr ""
+
+#: tazpkg-notify:76
+msgid "Your packages list is older than 10 days"
+msgstr ""
+
+#: tazpkg-notify:84
+#, sh-format
+msgid "There are <b>$up</b> upgradeable packages"
+msgstr ""
+
+#: tazpkg-notify:90
+#, sh-format
+msgid "System is up to date - $text"
+msgstr ""
+
+#~ msgid ""
+#~ "<b>There are $up upgradeable packages for your SliTaz $rel</b>\n"
+#~ "You should upgrade your system to get all the latest fixes\n"
+#~ "and improvements from the SliTaz contributors"
+#~ msgstr ""
+#~ "<b>Hay $up paquetes actualizables para su SliTaz $rel</b>\n"
+#~ "Debe actualizar su sistema para tener las últimas revisiones\n"
+#~ "y mejoras de los contribuyentes de Slitaz."
+
+#~ msgid ""
+#~ "<b>Your SliTaz $rel packages list is older than 10 days</b>\n"
+#~ "You should recharge the list to check for updates"
+#~ msgstr ""
+#~ "<b>Su lista de paquetes SliTaz $rel está desactualizada por más de 10 "
+#~ "días</b>\n"
+#~ "Debe recargarla para comprobar si existen nuevas actualizaciónes."
+
+#~ msgid ""
+#~ "<b>No packages list found on your SliTaz $rel system</b>\n"
+#~ "You will need to recharge the list of mirrored packages\n"
+#~ "if you want to install packages or upgrade your system"
+#~ msgstr ""
+#~ "<b>No se encuentra la lista de paquetes en su sistema SliTaz $rel</b>\n"
+#~ "Necesita recargar la lista de paquetes del espejo\n"
+#~ "si usted busca instalar paquetes o actualizar su sistema."
+
+#~ msgid "Upgrade:2"
+#~ msgstr "Actualizar:2"
