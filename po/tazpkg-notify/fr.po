@@ -1,0 +1,70 @@
+# French translations for Tazpkg Notification package.
+# Copyright (C) 2012 THE Tazpkg Notification'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Tazpkg Notification package.
+# Linux User <pankso@slitaz.org>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Tazpkg Notification 4.8.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-02 15:13+0100\n"
+"PO-Revision-Date: 2012-03-02 15:21+0100\n"
+"Last-Translator: Christophe Lincoln <pankso@slitaz.org>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: tazpkg-notify:25
+msgid "Installed packages"
+msgstr "Paquets installés"
+
+#: tazpkg-notify:46
+msgid "My packages"
+msgstr "Mes paquets"
+
+#: tazpkg-notify:47
+msgid "Recharge lists"
+msgstr "Recharger les listes"
+
+#: tazpkg-notify:48
+msgid "Check upgrade"
+msgstr "Vérifier les mises à jours"
+
+#: tazpkg-notify:49
+msgid "TazPKG SHell"
+msgstr "SHell de TazPKG"
+
+#: tazpkg-notify:50
+msgid "TazPKG manual"
+msgstr "Manuel de TazPKG"
+
+#: tazpkg-notify:51
+msgid "Close notification"
+msgstr "Fermer la notification"
+
+#: tazpkg-notify:57
+msgid "Usage:"
+msgstr "Utilisation:"
+
+#: tazpkg-notify:69
+#, sh-format
+msgid "No packages list found - $text"
+msgstr "Aucune liste de paquets trouvées - $text"
+
+#: tazpkg-notify:76
+msgid "Your packages list is older than 10 days"
+msgstr "Liste des paquets plus ancienne que 10 jours"
+
+#: tazpkg-notify:84
+#, sh-format
+msgid "There are <b>$up</b> upgradeable packages"
+msgstr "Il y a <b>$up</b> mises à jours disponnibles"
+
+#: tazpkg-notify:90
+#, sh-format
+msgid "System is up to date - $text"
+msgstr "Le system est à jour - $text"
+
