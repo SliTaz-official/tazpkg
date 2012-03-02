@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Small GTK boxes to TazPKG for deep desktop integration. PcmanFM 0.5.x has a
-# patch to extract TazPKG file but not Thunar and other FM. TazPKGbox tries to
+# Small GTK boxes to TazPKG for deep desktop integration. PcmanFM 0.5.x have a
+# patch to extract TazPKG file but not Thunar and othet FM. TazPKGbox try to
 # follow freedesktop standards.
 #
 # Copyright (C) 2012 SliTaz GNU/Linux - GNU gpl v2
@@ -9,13 +9,15 @@
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #
 
+icon="/usr/share/pixmaps/tazpkg.png"
+
 # Main GUI box function with pure Yad spec
 actions_main() {
 	title=$(gettext "TazPKG actions")
-	text=$(gettext "Package file name:")
-	yad --text="$text <b>$pkg</b>" \
-		--width=520 --height=80 --dialog-sep \
-		--center --on-top --window-icon="tazpkg" \
+	text=$(gettext "Package name:")
+	yad --text="$text <b>${pkg%.tazpkg}</b>" \
+		--title="$title" --width=480 --height=100 \
+		--center --on-top --window-icon=$icon \
 		--image="tazpkg" --image-on-top \
 		--button="Install:3" --button="Extract:2" \
 		--button="gtk-close:1"
@@ -29,8 +31,8 @@ actions() {
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		2) terminal -e "tazpkg extract $pkg" && exit 0 ;;
-		3) terminal -e "tazpkg -i $pkg --forced" && exit 0 ;;
+		2) tazpkg extract $pkg | $0 output ;;
+		3) tazpkg -i $pkg --forced | $0 output ;;
 	esac
 }
 
@@ -39,10 +41,19 @@ actions() {
 #
 
 case "$1" in
-	usage)
-		echo "Usage: $(basename $0) [command]" ;;
+	usage|help|-u|-h)
+		echo "Usage: $(basename $0) [command] [pkg|cmd]" ;;
+	output)
+		# Nice GTK output for install and extract.
+		sed	-e s'/\[^Gm]*./ /g' -e s'/^=.*//' | \
+		yad --text-info \
+			--width=480 --height=260 --center --on-top \
+			--title="TazPKG" --window-icon=$icon \
+			--fore="#ffffff" --back="#000000" --wrap \
+			--margins=4 --button="gtk-close:0" ;;
 	actions)
-		pkg="$2"
+		pkg=$(basename $2)
+		cd $(dirname $2)
 		actions ;;
 esac
 

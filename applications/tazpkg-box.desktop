@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Tazpkg Manager
 Name[fr]=Gestionnaire de TazPKG
-Exec=tazbox su "tazpkg-box actions ""%f"""
+Exec=tazbox su tazpkg-box actions ""%f""
 Icon=tazpkg
 NoDisplay=True
 Type=Application
