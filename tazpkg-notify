@@ -23,6 +23,7 @@ db="/var/lib/tazpkg"
 doc="/usr/share/doc/tazpkg/tazpkg.html"
 installed=$(ls $db/installed | wc -l)
 text="$(gettext "Installed packages") <b>$installed</b>"
+icon="/usr/share/pixmaps/tazpkg.png"
 [ -f "$db/packages.list" ] && mtime=$(find $db/packages.list -mtime +10;)
 [ -f "$db/packages.up" ] && up=$(cat $db/packages.up | wc -l)
 
@@ -33,7 +34,7 @@ listen() {
 	# Attach a file descriptor
 	exec 3<> $fifo	
 	# Notification icon
-	yad --notification --listen --image="tazpkg" \
+	yad --notification --listen --image=$icon \
 		--text="Checking packages lists - $text" <&3
 	# Clean-up
 	rm -f $fifo
