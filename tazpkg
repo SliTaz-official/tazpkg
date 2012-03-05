@@ -21,7 +21,7 @@
 #           Antoine Bodin <gokhlayeh@slitaz.org>
 #           Christopher Rogers <slaxemulator@gmail.com>
 #
-VERSION=4.8.2
+VERSION=4.9.1
 
 ####################
 # Script variables #
