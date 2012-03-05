@@ -2310,14 +2310,6 @@ EOT
 				status
 			fi
 
-			# Make sure we use the first mirror of mirrors list.
-			download_from ${primary_mirror%%packages/*} mirrors
-			[ -f mirrors ] || mv mirrors.bak mirrors 2> /dev/null
-			if [ -s mirrors ]; then
-				primary_mirror="$(head -1 mirrors)packages${primary_mirror#*/packages}"
-				echo $primary_mirror > mirror
-			fi
-
 			for i in desc md5 txt list equiv; do
 				download_from $primary_mirror packages.$i
 			done
