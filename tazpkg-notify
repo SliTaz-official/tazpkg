@@ -35,7 +35,7 @@ listen() {
 	exec 3<> $fifo	
 	# Notification icon
 	yad --notification --listen --image=$icon \
-		--text="Checking packages lists - $text" <&3
+		--text="$(gettext "Checking packages lists") - $text" <&3
 	# Clean-up
 	rm -f $fifo
 }
@@ -44,7 +44,7 @@ listen() {
 menu() {
 	cat << EOT
 menu:\
-$(gettext "My packages")!tazweb $panel?list!tazpkg|\
+$(gettext "My packages")!tazweb $panel?list!tazpkg-up|\
 $(gettext "Recharge lists")!tazweb $panel?recharge!tazpkg-up|\
 $(gettext "Check upgrade")!tazweb $panel?up!tazpkg-up|\
 $(gettext "TazPKG SHell")!terminal -e tazpkg shell!xterm|\

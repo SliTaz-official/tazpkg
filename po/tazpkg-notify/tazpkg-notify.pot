@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Tazpkg Notification 4.8.2\n"
+"Project-Id-Version: Tazpkg Notification 4.9.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-02 15:13+0100\n"
+"POT-Creation-Date: 2012-03-06 13:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,49 +21,53 @@ msgstr ""
 msgid "Installed packages"
 msgstr ""
 
-#: tazpkg-notify:46
-msgid "My packages"
+#: tazpkg-notify:38
+msgid "Checking packages lists"
 msgstr ""
 
 #: tazpkg-notify:47
-msgid "Recharge lists"
+msgid "My packages"
 msgstr ""
 
 #: tazpkg-notify:48
-msgid "Check upgrade"
+msgid "Recharge lists"
 msgstr ""
 
 #: tazpkg-notify:49
-msgid "TazPKG SHell"
+msgid "Check upgrade"
 msgstr ""
 
 #: tazpkg-notify:50
-msgid "TazPKG manual"
+msgid "TazPKG SHell"
 msgstr ""
 
 #: tazpkg-notify:51
+msgid "TazPKG manual"
+msgstr ""
+
+#: tazpkg-notify:52
 msgid "Close notification"
 msgstr ""
 
-#: tazpkg-notify:57
+#: tazpkg-notify:58
 msgid "Usage:"
 msgstr ""
 
-#: tazpkg-notify:69
+#: tazpkg-notify:70
 #, sh-format
 msgid "No packages list found - $text"
 msgstr ""
 
-#: tazpkg-notify:76
+#: tazpkg-notify:77
 msgid "Your packages list is older than 10 days"
 msgstr ""
 
-#: tazpkg-notify:84
+#: tazpkg-notify:85
 #, sh-format
 msgid "There are <b>$up</b> upgradeable packages"
 msgstr ""
 
-#: tazpkg-notify:90
+#: tazpkg-notify:91
 #, sh-format
 msgid "System is up to date - $text"
 msgstr ""
