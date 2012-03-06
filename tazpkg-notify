@@ -44,7 +44,7 @@ listen() {
 menu() {
 	cat << EOT
 menu:\
-$(gettext "My packages")!tazweb $panel?list!tazpkg-up|\
+$(gettext "My packages")!tazweb $panel?list!tazpkg|\
 $(gettext "Recharge lists")!tazweb $panel?recharge!tazpkg-up|\
 $(gettext "Check upgrade")!tazweb $panel?up!tazpkg-up|\
 $(gettext "TazPKG SHell")!terminal -e tazpkg shell!xterm|\
