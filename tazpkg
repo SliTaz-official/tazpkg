@@ -629,6 +629,10 @@ END {
 	if [ "$(fgrep /usr/share/mime $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
 		updatemimedb=yes
 	fi
+	# Update-icon-database
+	if [ "$(fgrep /usr/share/icon/hicolor $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
+		updateicondb=yes
+	fi
 	# Compile glib schemas if needed.
 	if [ "$(fgrep /usr/share/glib-2.0/schemas $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
 		compile_schemas=yes
@@ -1388,6 +1392,13 @@ update_mime_database()
 	fi
 }
 
+update_icon_database()
+{
+	if [ -f $1/usr/bin/gtk-update-icon-cache ] && [ -n "$updateicondb" ]; then
+		$1/usr/bin/gtk-update-icon-cache $1/usr/share/icons/hicolor
+	fi
+}
+
 compile_glib_schemas()
 {
 	if [ -f $1/usr/bin/glib-compile-schemas ] && [ -n "$compile_schemas" ]; then
@@ -1804,7 +1815,9 @@ case "$COMMAND" in
 		fi
 		install_package $ROOT
 		update_desktop_database $ROOT
-		update_mime_database $ROOT ;;
+		update_mime_database $ROOT 
+		update_icon_database $ROOT 
+		compile_glib_schemas $ROOT ;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
 		check_root
