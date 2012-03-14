@@ -1,0 +1,74 @@
+# Tazpkg-notify Portuguese Translation.
+# Copyright (C) 2012 www.slitaz.org 
+# This file is distributed under the same license as the Tazpkg-notify package.
+# Claudinei Pereira <claudinei@slitaz.org>, 2012.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Tazpkg Notification 4.9.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-06 13:22+0100\n"
+"PO-Revision-Date: 2012-03-14 03:05+0100\n"
+"Last-Translator: Claudinei Pereira <claudinei@slitaz.org>\n"
+"Language-Team: Portuguese <i18n@slitaz.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: tazpkg-notify:25
+msgid "Installed packages"
+msgstr "Pacotes instalados"
+
+#: tazpkg-notify:38
+msgid "Checking packages lists"
+msgstr "Checando lista de pacotes"
+
+#: tazpkg-notify:47
+msgid "My packages"
+msgstr "Meus pacotes"
+
+#: tazpkg-notify:48
+msgid "Recharge lists"
+msgstr "Recarregar listas"
+
+#: tazpkg-notify:49
+msgid "Check upgrade"
+msgstr "Checar atualizações"
+
+#: tazpkg-notify:50
+msgid "TazPKG SHell"
+msgstr "TazPKG SHell"
+
+#: tazpkg-notify:51
+msgid "TazPKG manual"
+msgstr "Manual do TazPKG"
+
+#: tazpkg-notify:52
+msgid "Close notification"
+msgstr "Fechar notificação"
+
+#: tazpkg-notify:58
+msgid "Usage:"
+msgstr "Utilização:"
+
+#: tazpkg-notify:70
+#, sh-format
+msgid "No packages list found - $text"
+msgstr "Nenhuma lista de pacotes encontrada - $text"
+
+#: tazpkg-notify:77
+msgid "Your packages list is older than 10 days"
+msgstr "Sua lista de pacotes possui mais de 10 dias"
+
+#: tazpkg-notify:85
+#, sh-format
+msgid "There are <b>$up</b> upgradeable packages"
+msgstr "Há <b>$up</b> pacotes atualizáveis"
+
+#: tazpkg-notify:91
+#, sh-format
+msgid "System is up to date - $text"
+msgstr "Sistema está atualizado - $text"
