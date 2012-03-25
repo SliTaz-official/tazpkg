@@ -398,7 +398,7 @@ download_from()
 	shift
 	for i in $mirrors; do
 		case "$i" in
-		http://*|ftp://*) wget -c $i/$@ && break;;
+		http://*|ftp://*) wget -c $i$@ && break;;
 		*) ln -sf $i/$1 . && break;;
 		esac
 	done
@@ -2280,15 +2280,10 @@ EOT
 		for path in $repository_to_recharge; do
 			[ -f $path/mirror ] || continue
 			cd $path
-
-			# We use 'head -1' instead of 'cat' because previous versions of
-			# tazpkg filled mirror file with several entries, but we want only
-			# one.
-			primary_mirror=$(head -1 mirror)
-
+			
 			# Quietly check if recharging is needed.
 			[ -f ID ] && mv ID ID.bak
-			download_from $primary_mirror ID >/dev/null 2>/dev/null
+			download_from "$(cat mirror)" ID >/dev/null 2>/dev/null
 			if [ -f ID ] && fgrep -q `cat ID.bak 2>/dev/null || echo "null"` ID; then
 				if [ "$path" = "$LOCALSTATE" ]; then
 					repository_name=Main
@@ -2304,9 +2299,9 @@ EOT
 			if [ -f ID ]; then
 				mv -f ID ID.bak
 				cat ID.bak > ID
+                                rm ID.bak
 			fi
-			rm ID.bak
-
+			
 			echo ""
 			if [ "$path" != "$LOCALSTATE" ]; then
 				echo -e "`gettext \"Recharging undigest\"` $(basename $path):"
@@ -2323,12 +2318,19 @@ EOT
 				status
 			fi
 
-			for i in desc md5 txt list equiv; do
-				download_from $primary_mirror packages.$i
+                        for i in desc md5 txt list equiv; do
+				download_from "$(cat mirror)" packages.$i
 			done
 
-			download_from $primary_mirror files.list.lzma
-
+			download_from "$(cat mirror)" files.list.lzma
+                                 
+                        download_from "$(sed 's|packages/.*||' < mirror)" mirrors
+    		        [ -f mirrors ] || mv mirrors.bak mirrors 2> /dev/null
+         		suffix=$(head -1 mirror)
+        		suffix=packages${suffix#*/packages}
+        		for i in $(cat mirrors 2> /dev/null); do
+        		fgrep -qs $i mirror || echo $i$suffix >> mirror
+        		done
 			if [ -f "packages.list.bak" ]; then
 				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
 				sed -i s/+// packages.diff
