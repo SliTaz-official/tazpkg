@@ -20,7 +20,7 @@ export TEXTDOMAIN
 fifo=/tmp/$(basename $0).fifo
 panel="http://tazpanel:82/pkgs.cgi"
 db="/var/lib/tazpkg"
-doc="/usr/share/doc/tazpkg/tazpkg.html"
+doc="file:///usr/share/doc/tazpkg/tazpkg.html"
 installed=$(ls $db/installed | wc -l)
 text="$(gettext "Installed packages") <b>$installed</b>"
 icon="/usr/share/pixmaps/tazpkg.png"
