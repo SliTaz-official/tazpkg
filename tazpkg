@@ -1381,28 +1381,28 @@ DEGIN { show=0 }
 update_desktop_database()
 {
 	if [ -f $1/usr/bin/update-desktop-database ] && [ -n "$updatedesktopdb" ]; then
-		$1/usr/bin/update-desktop-database $1/usr/share/applications 2>/dev/null
+		chroot "$1/" /usr/bin/update-desktop-database /usr/share/applications 2>/dev/null
 	fi
 }
 
 update_mime_database()
 {
 	if [ -f $1/usr/bin/update-mime-database ] && [ -n "$updatemimedb" ]; then
-		$1/usr/bin/update-mime-database $1/usr/share/mime
+		chroot "$1/" /usr/bin/update-mime-database /usr/share/mime
 	fi
 }
 
 update_icon_database()
 {
 	if [ -f $1/usr/bin/gtk-update-icon-cache ] && [ -n "$updateicondb" ]; then
-		$1/usr/bin/gtk-update-icon-cache $1/usr/share/icons/hicolor
+		chroot "$1/" /usr/bin/gtk-update-icon-cache /usr/share/icons/hicolor
 	fi
 }
 
 compile_glib_schemas()
 {
 	if [ -f $1/usr/bin/glib-compile-schemas ] && [ -n "$compile_schemas" ]; then
-		$1/usr/bin/glib-compile-schemas $1/usr/share/glib-2.0/schemas
+		chroot "$1/" /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 	fi
 }
 
