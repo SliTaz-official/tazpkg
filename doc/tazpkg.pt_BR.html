@@ -39,7 +39,7 @@ que contém um sistema de arquivos comprimido com o gzip, uma receita e uma
 descrição opcional. O Tazpkg também gerencia dependências baseado nas receitas
 de pacote: cada receita contém todas as informações sobre um pacote e também
 pode incluir funções de pré e pós-instalação. A mesma receita é usada pelo
-Tazwok para compilar fontes e gerar um pacote .tazpkg.
+Cookutils para compilar fontes e gerar um pacote .tazpkg.
 </p>
 <p>
 O Tazpkg é inteiramente construído a partir do zero usando SHell Script.
@@ -97,7 +97,7 @@ a última e a atual lista de pacotes:
 <p>
 Mostra qualquer informação disponível na receita para o pacote em questão - sua
 versão, categoria, mantenedor, website e quaisquer dependências (veja também 
-Tazwok para mais informações sobre receitas):
+Cookutils para mais informações sobre receitas):
 </p>
 <pre>
  # tazpkg info busybox
@@ -225,7 +225,7 @@ o pacote será extraido no diretório atual usando o formato nome do pacote-vers
 <p>
 O comando "pack" cria um pacote a partir de um diretório preparado previamente
 ou a partir de um pacote extraido localmente. Pode também criar manualmente um
-pacote .tazpkg (veja a documentação do Tazwok para a criação automática de 
+pacote .tazpkg (veja a documentação do Cookutils para a criação automática de 
 pacotes). Para "empacotar" (pack) um pacote:
 </p>
 <pre>

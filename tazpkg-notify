@@ -79,7 +79,7 @@ case $1 in
 			echo "tooltip:$tooltip" > $fifo
 			echo "icon:tazpkg-up" > $fifo && exit 0
 		fi
-		# Avalaible upgrades
+		# Available upgrades
 		if [ "$up" -gt 0 ]; then
 			tooltip=$(eval_gettext \
 				"There are <b>\$up</b> upgradeable packages")
