@@ -13,13 +13,7 @@
 #
 # (C) 2007-2012 SliTaz - GNU General Public License v3.
 #
-# Authors : Christophe Lincoln <pankso@slitaz.org>
-#           Pascal Bellard <pascal.bellard@slitaz.org>
-#           Eric Joseph-Alexandre <erjo@slitaz.org>
-#           Paul Issott <paul@slitaz.org>
-#           Rohit Joshi <jozee@slitaz.org>
-#           Antoine Bodin <gokhlayeh@slitaz.org>
-#           Christopher Rogers <slaxemulator@gmail.com>
+# Authors : Seee AUTHORS files
 #
 VERSION=4.9.1
 
@@ -398,8 +392,9 @@ download_from()
 	shift
 	for i in $mirrors; do
 		case "$i" in
-		http://*|ftp://*) wget -c $i/$@ && break;;
-		*) ln -sf $i/$1 . && break;;
+			# Mirror URL can have a trailing slash or not.
+			http://*|ftp://*) wget -c ${i%/}/$@ && break;;
+			*) ln -sf $i/$1 . && break;;
 		esac
 	done
 }
@@ -2309,10 +2304,10 @@ EOT
 
 			if [ -f "packages.list" ]; then
 				gettext "Creating backup of the last packages list..."
-				for i in  wanted.txt depends.txt libraries.txt \
-				packages.desc packages.md5 packages.txt \
-				packages.list packages.equiv files.list.lzma \
-				mirrors; do
+				for i in packages.desc packages.md5 packages.txt \
+					packages.list packages.equiv files.list.lzma \
+					mirrors
+				do
 					mv -f $i $i.bak 2>/dev/null
 				done
 				status
