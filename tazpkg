@@ -9,13 +9,12 @@
 # done using gettext and eval_gettext, ex:
 # 	gettext "displayed text"; echo
 # 	eval_gettext "display \$VARIABLE"; echo
-# 	echo -e "BOLD `gettext \"i18n message\"`"
 #
 # (C) 2007-2012 SliTaz - GNU General Public License v3.
 #
 # Authors : Seee AUTHORS files
 #
-VERSION=4.9.1
+VERSION=4.9.2
 
 ####################
 # Script variables #
