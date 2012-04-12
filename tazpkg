@@ -175,8 +175,10 @@ get_options()
 		fi
 		if [ "$get_option" = "${get_option/=}" ]; then
 			export $get_option=yes
+			export opts="$opts --$get_option"
 		else
 			export $get_option
+			export opts="$opts --$get_option"
 		fi
 	done
 }
@@ -2698,6 +2700,16 @@ EOT
 
 		get_options_list="root forced list rootconfig"
 		get_options
+		
+		# Install all pkgs specified in argument.
+		for arg in $@
+		do
+			case $arg in
+				-*|get-install) continue ;;
+				*) tazpkg -gi $arg $opts ;;
+			esac
+		done
+		exit 0
 		
 		DO_CHECK=""
 		[ "$forced" ] && DO_CHECK=no
