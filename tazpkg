@@ -14,11 +14,13 @@
 #
 # Authors : Seee AUTHORS files
 #
-VERSION=4.9.2
 
 ####################
 # Script variables #
 ####################
+
+# TazPKG version
+VERSION=4.9.2
 
 source /usr/lib/slitaz/libtaz
 source_lib commons
@@ -290,7 +292,7 @@ get_cache_dir()
 {
 	echo $rep > $tmp/rep
 	if [ "$rep" = "$LOCALSTATE" ]; then
-		CACHE_DIR="$SAVE_CACHE_DIR/$SLITAZ_VERSION/packages"
+		CACHE_DIR="$SAVE_CACHE_DIR/$SLITAZ_RELEASE/packages"
 	elif [ "${rep%-incoming}" = "$rep" ]; then
 		CACHE_DIR="$SAVE_CACHE_DIR/${rep##*/}/packages"
 	else
