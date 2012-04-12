@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Tazpkg URL
+Categories=Network;
+MimeType=x-scheme-handler/tazpkg;application/tazpkg;
+Exec=tazpkg-box %u
+Terminal=false
+NoDisplay=true
