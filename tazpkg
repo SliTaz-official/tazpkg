@@ -159,10 +159,6 @@ check_base_dir()
 }
 check_base_dir
 
-separator() {
-	echo "================================================================================"
-}
-
 # Store -- options in a variable.
 get_options()
 {
