@@ -22,8 +22,7 @@
 # TazPKG version
 VERSION=4.9.2
 
-source /usr/lib/slitaz/libtaz
-source_lib commons
+. /etc/slitaz/slitaz.conf
 . /etc/slitaz/tazpkg.conf
 
 # Include gettext helper script.
@@ -54,11 +53,10 @@ INSTALL_LIST=""
 SAVE_CACHE_DIR="$CACHE_DIR"
 
 # Path to tazpkg used dir and configuration files
-INSTALLED=$LOCALSTATE/installed
 MIRROR=$LOCALSTATE/mirror
 BLOCKED=$LOCALSTATE/blocked-packages.list
 UP_LIST=$LOCALSTATE/packages.up
-DEFAULT_MIRROR="http://mirror.slitaz.org/packages/`cat /etc/slitaz-release`/"
+DEFAULT_MIRROR="$ONLINE_PKGS"
 
 # Need by check_depends
 TMPLOCALSTATE=
@@ -107,7 +105,7 @@ usage ()
   extract          `gettext \"Extract a (*.tazpkg) package into a directory.\"`
   pack             `gettext \"Pack an unpacked or prepared package tree.\"`
   recharge         `gettext \"Recharge your packages.list from the mirror.\"`
-  up|--help-up     `gettext \"Check packages md5sum to list and install latest upgrades.\"`
+  up|--help-up     `gettext \"Check packages $CHECKSUM to list and install latest upgrades.\"`
   repack           `gettext \"Create a package archive from an installed package.\"`
   repack-config    `gettext \"Create a package archive with configuration files.\"`
   recompress       `gettext \"Rebuild a package with a better compression ratio.\"`
@@ -410,7 +408,7 @@ log()
 {
 	local extra
 	[ "$1" = "Installed" ] && \
-	extra=" - $(fgrep $PACKAGE-$VERSION $LOCALSTATE/installed.md5 | awk '{ print $1 }')"
+	extra=" - $(fgrep $PACKAGE-$VERSION $LOCALSTATE/installed.$SUM | awk '{ print $1 }')"
 	[ -e $LOG ] || touch $LOG
 	DATE=`date +'%F %T'`
 	[ -w $LOG ] &&
@@ -514,9 +512,9 @@ install_package()
 		cp $TMP_DIR/files.list $ROOT$INSTALLED/$PACKAGE 2> /dev/null
 		rm -rf $TMP_DIR 2> /dev/null
 		sed -i "/ $(basename $PACKAGE_FILE)$/d" \
-			$ROOT$LOCALSTATE/installed.md5 2> /dev/null
+			$ROOT$LOCALSTATE/installed.$SUM 2> /dev/null
 		cd $(dirname $PACKAGE_FILE)
-		md5sum $(basename $PACKAGE_FILE) >> $ROOT$LOCALSTATE/installed.md5
+		$CHECKSUM $(basename $PACKAGE_FILE) >> $ROOT$LOCALSTATE/installed.$SUM
 	}
 	# Resolve package deps.
 	check_for_deps $ROOT
@@ -608,8 +606,8 @@ END {
 		cp description.txt $ROOT$INSTALLED/$PACKAGE
 	fi
 	# Copy the md5sum if found.
-	if [ -f "md5sum" ]; then
-		cp md5sum $ROOT$INSTALLED/$PACKAGE
+	if [ -f "$CHECKSUM" ]; then
+		cp $CHECKSUM $ROOT$INSTALLED/$PACKAGE
 	fi
 	# Pre install commands.
 	if grep -q ^pre_install $ROOT$INSTALLED/$PACKAGE/receipt; then
@@ -665,6 +663,10 @@ END {
 	# Compile glib schemas if needed.
 	if [ "$(fgrep /usr/share/glib-2.0/schemas $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
 		compile_schemas=yes
+	fi
+	# Update depmod list
+	if [ "$(fgrep /lib/modules $ROOT$INSTALLED/$PACKAGE/files.list") ]; then
+		updatedepmod=yes
 	fi
 	cd $TOP_DIR
 	separator
@@ -1435,6 +1437,13 @@ compile_glib_schemas()
 	fi
 }
 
+update_kernel_modules()
+{
+	if [ -f $1/sbin/depmod ] && [ -n "$updatedepmod" ]; then
+		chroot "$1/" /sbin/depmod -a
+	fi
+}
+
 translate_category()
 {
 	case $1 in
@@ -2002,7 +2011,7 @@ $LIST"
 			rm -rf $ROOT$INSTALLED/$PACKAGE
 			status
 			sed -i "/ $PACKAGE-$VERSION$EXTRAVERSION$/d" \
-				$LOCALSTATE/installed.md5 2> /dev/null
+				$LOCALSTATE/installed.$SUM 2> /dev/null
 			# Log this activity
 			log Removed
 			if [ "$ALTERED" ]; then
@@ -2212,10 +2221,10 @@ EOT
 			. $INSTALLED/$PACKAGE/receipt
 			repack_cleanup fs
 		fi
-		if [ -f $INSTALLED/$PACKAGE/md5sum ]; then
-			sed 's,  ,  fs,' < $INSTALLED/$PACKAGE/md5sum | \
-			md5sum -s -c || {
-				gettext "Can't repack, md5sum error."; echo
+		if [ -f $INSTALLED/$PACKAGE/$CHECKSUM ]; then
+			sed 's,  ,  fs,' < $INSTALLED/$PACKAGE/$CHECKSUM | \
+			$CHECKSUM -s -c || {
+				gettext "Can't repack, $CHECKSUM error."; echo
 				cd $TOP_DIR
 				rm -rf $TMP_DIR
 				exit 1
@@ -2246,17 +2255,17 @@ EOT
 			find . -type l -print >> ../files.list
 			cd .. && sed -i s/'^.'/''/ files.list
 			status
-			gettext "Creating md5sum of files..."
+			gettext "Creating $CHECKSUM of files..."
 			while read file; do
 				[ -L "fs$file" ] && continue
 				[ -f "fs$file" ] || continue
 				case "$file" in
 				/lib/modules/*/modules.*|*.pyc) continue;;
 				esac
-				md5sum "fs$file" | sed 's/  fs/  /'
-			done < files.list > md5sum
+				$CHECKSUM "fs$file" | sed 's/  fs/  /'
+			done < files.list > $CHECKSUM
 			status
-			UNPACKED_SIZE=$(du -chs fs receipt files.list md5sum \
+			UNPACKED_SIZE=$(du -chs fs receipt files.list $CHECKSUM \
 				description.txt 2> /dev/null | awk \
 				'{ sz=$1 } END { print sz }')
 			# Build cpio archives.
@@ -2265,7 +2274,7 @@ EOT
 			rm -rf fs
 			status
 			PACKED_SIZE=$(du -chs fs.cpio.lzma receipt files.list \
-				md5sum description.txt 2> /dev/null | awk \
+				$CHECKSUM description.txt 2> /dev/null | awk \
 				'{ sz=$1 } END { print sz }')
 			gettext "Updating receipt sizes..."
 			sed -i s/^PACKED_SIZE.*$// receipt
@@ -2342,7 +2351,7 @@ EOT
 
 			if [ -f "packages.list" ]; then
 				gettext "Creating backup of the last packages list..."
-				for i in packages.desc packages.md5 packages.txt \
+				for i in packages.desc packages.$SUM packages.txt \
 					packages.list packages.equiv files.list.lzma \
 					mirrors
 				do
@@ -2406,7 +2415,7 @@ packages."
 					install="n" ;;
 			esac
 		done
-		installed_md5=$LOCALSTATE/installed.md5
+		installed_sum=$LOCALSTATE/installed.$SUM
 		look_for_priority
 		for repo in $priority; do
 			pkg_list=$repo/packages.list
@@ -2434,13 +2443,13 @@ packages."
 			unset VERSION EXTRAVERSION
 			. $pkg/receipt
 			md5=$(fgrep "  $PACKAGE-${VERSION}$EXTRAVERSION.tazpkg" \
-				$installed_md5 | awk '{print $1}')
+				$installed_sum | awk '{print $1}')
 			for repo in $priority; do
 				pkg_desc=$repo/packages.desc
 				pkg_list=$repo/packages.list
-				pkg_md5=$repo/packages.md5
+				pkg_sum=$repo/packages.$SUM
 
-				if ! fgrep -q "$md5  $PACKAGE-" $pkg_md5; then
+				if ! fgrep -q "$md5  $PACKAGE-" $pkg_sum; then
 					# Jump to next repository in priority if pkg doesn't exists
 					# in this one.
 					grep -q ^$PACKAGE- $pkg_list || continue
@@ -2570,7 +2579,7 @@ EOT
 		gettext "Looking for known bugs... "; echo
 		tazpkg bugs
 		if [ "$PACKAGE_FILE" = "--full" ]; then
-			for file in */md5sum; do
+			for file in */$CHECKSUM; do
 				CONFIG_FILES=""
 				. $(dirname "$file")/receipt
 				[ -s "$file" ] || continue
@@ -2582,8 +2591,8 @@ EOT
 						esac
 					done
 					echo "$md5  $f"
-				done < "$file" | md5sum -c - 2> /dev/null | \
-				  grep -v OK$ | sed 's/FAILED$/MD5SUM MISMATCH/'
+				done < "$file" | $CHECKSUM -c - 2> /dev/null | \
+				  grep -v OK$ | sed 's/FAILED$/$CHECKSUM MISMATCH/'
 			done
 			FILES=" "
 			for file in $(cat */files.list); do
@@ -2684,7 +2693,7 @@ EOT
 				eval_gettext "Continuing \$PACKAGE download"; echo
 				download $PACKAGE.tazpkg
 			}
-			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.md5)" ]; then
+			if [ "$($CHECKSUM $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.$SUM)" ]; then
 				rm -f $PACKAGE.tazpkg
 				download $PACKAGE.tazpkg
 			fi
@@ -2755,7 +2764,7 @@ EOT
 				eval_gettext "Continuing \$PACKAGE download"; echo
 				download $PACKAGE.tazpkg
 			}
-			if [ "$(md5sum $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.md5)" ]; then
+			if [ "$($CHECKSUM $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.$SUM)" ]; then
 				rm -f $PACKAGE.tazpkg
 				download $PACKAGE.tazpkg
 			fi
