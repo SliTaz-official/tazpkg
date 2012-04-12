@@ -150,6 +150,37 @@ separator() {
 	echo "================================================================================"
 }
 
+# Check if dir exist
+check_dir()
+{
+	if ! [ -d "$1" ]; then
+		echo -n "Creating $1..."
+		mkdir -p "$1"
+		status
+		return 1
+	fi
+}
+
+# Store -- options in a variable.
+get_options()
+{
+	if echo "$log_command" | fgrep -q ' '--help; then
+		echo "Available options for $(echo `basename "$log_command"` | cut -d ' ' -f 1,2) : $get_options_list"
+		exit 0
+	fi
+	for get_option in $(echo "$log_command" | tr ' ' '\n' | grep ^-- | sed 's/^--//'); do
+		if [ "${get_options_list/${get_option%%=*}}" = "$get_options_list" ]; then
+			echo "Option ${get_option%%=*} is incorrect, valid options are : $get_options_list". >&2
+			exit 1
+		fi
+		if [ "$get_option" = "${get_option/=}" ]; then
+			export $get_option=yes
+		else
+			export $get_option
+		fi
+	done
+}
+
 # Check for a package name on cmdline.
 check_for_package_on_cmdline()
 {
