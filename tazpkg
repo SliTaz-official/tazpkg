@@ -667,7 +667,7 @@ END {
 		compile_schemas=yes
 	fi
 	# Update depmod list
-	if [ "$(fgrep /lib/modules $ROOT$INSTALLED/$PACKAGE/files.list") ]; then
+	if [ "$(fgrep /lib/modules $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
 		updatedepmod=yes
 	fi
 	cd $TOP_DIR
