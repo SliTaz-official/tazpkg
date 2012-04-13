@@ -25,6 +25,8 @@ VERSION=4.9.2
 . /etc/slitaz/slitaz.conf
 . /etc/slitaz/tazpkg.conf
 
+. /lib/libtaz.sh
+
 # Include gettext helper script.
 . /usr/bin/gettext.sh
 
@@ -60,21 +62,6 @@ DEFAULT_MIRROR="$ONLINE_PKGS"
 
 # Need by check_depends
 TMPLOCALSTATE=
-
-# Check if the directories and files used by Tazpkg
-# exist. If not and user is root we create them.
-check_base_dir()
-{
-	if test $(id -u) = 0 ; then
-		check_dir $1$CACHE_DIR
-		check_dir $1$INSTALLED
-		if [ ! -f "$1$LOCALSTATE/mirror" ]; then
-			echo "$DEFAULT_MIRROR" > $1$LOCALSTATE/mirror
-			[ -n "$1" ] && cp $LOCALSTATE/packages.* $1$LOCALSTATE/
-		fi
-	fi
-}
-check_base_dir
 
 ####################
 # Script functions #
@@ -146,10 +133,6 @@ usage_up() {
 "
 }
 
-separator() {
-	echo "================================================================================"
-}
-
 # Check if dir exist
 check_dir()
 {
@@ -159,6 +142,25 @@ check_dir()
 		status
 		return 1
 	fi
+}
+
+# Check if the directories and files used by Tazpkg
+# exist. If not and user is root we create them.
+check_base_dir()
+{
+	if test $(id -u) = 0 ; then
+		check_dir $1$CACHE_DIR
+		check_dir $1$INSTALLED
+		if [ ! -f "$1$LOCALSTATE/mirror" ]; then
+			echo "$DEFAULT_MIRROR" > $1$LOCALSTATE/mirror
+			[ -n "$1" ] && cp $LOCALSTATE/packages.* $1$LOCALSTATE/
+		fi
+	fi
+}
+check_base_dir
+
+separator() {
+	echo "================================================================================"
 }
 
 # Store -- options in a variable.
