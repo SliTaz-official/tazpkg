@@ -1728,7 +1728,7 @@ case "$COMMAND" in
 				search_in_installed_packages
 				search_in_packages_list ;;
 		esac ;;
-	search-file)
+	search-file|-sf)
 		# Search for a file by pattern or name in all files.list.
 		if [ -z "$2" ]; then
 			echo ""
@@ -2711,14 +2711,13 @@ EOT
 		get_options
 		
 		# Install all pkgs specified in argument.
-		for arg in $@
-		do
-			case $arg in
-				-*|get-install) continue ;;
-				*) tazpkg -gi $arg $opts ;;
-			esac
-		done
-		exit 0
+		#for arg in $@
+		#do
+			#case $arg in
+				#-*|get-install) continue ;;
+				#*) tazpkg -gi $arg $opts ;;
+			#esac
+		#done
 		
 		DO_CHECK=""
 		[ "$forced" ] && DO_CHECK=no
