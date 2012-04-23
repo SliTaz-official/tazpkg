@@ -151,6 +151,7 @@ check_base_dir()
 	if test $(id -u) = 0 ; then
 		check_dir $1$CACHE_DIR
 		check_dir $1$INSTALLED
+		check_dir $1$SLITAZ_LOGS
 		if [ ! -f "$1$LOCALSTATE/mirror" ]; then
 			echo "$DEFAULT_MIRROR" > $1$LOCALSTATE/mirror
 			[ -n "$1" ] && cp $LOCALSTATE/packages.* $1$LOCALSTATE/
@@ -158,28 +159,6 @@ check_base_dir()
 	fi
 }
 check_base_dir
-
-# Store -- options in a variable.
-get_options()
-{
-	if echo "$log_command" | fgrep -q ' '--help; then
-		echo "Available options for $(echo `basename "$log_command"` | cut -d ' ' -f 1,2) : $get_options_list"
-		exit 0
-	fi
-	for get_option in $(echo "$log_command" | tr ' ' '\n' | grep ^-- | sed 's/^--//'); do
-		if [ "${get_options_list/${get_option%%=*}}" = "$get_options_list" ]; then
-			echo "Option ${get_option%%=*} is incorrect, valid options are : $get_options_list". >&2
-			exit 1
-		fi
-		if [ "$get_option" = "${get_option/=}" ]; then
-			export $get_option=yes
-			export opts="$opts --$get_option"
-		else
-			export $get_option
-			export opts="$opts --$get_option"
-		fi
-	done
-}
 
 # Check for a package name on cmdline.
 check_for_package_on_cmdline()
@@ -1826,9 +1805,6 @@ case "$COMMAND" in
 		check_for_package_on_cmdline
 		check_for_package_file
 		
-		get_options_list="root forced list rootconfig"
-		get_options
-		
 		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
 		if [ "$rootconfig" ]; then
@@ -1934,8 +1910,7 @@ $LIST"
 		# Remove packages.
 		check_root
 		check_for_package_on_cmdline
-		get_options_list="root auto"
-		get_options
+		
 		[ "$root" ] && ROOT="$root" 
 		if [ ! -f "$ROOT$INSTALLED/$PACKAGE/receipt" ]; then
 			echo ""
@@ -2016,9 +1991,9 @@ $LIST"
 				if [ "$auto" ]; then
 					answer=`translate_querry y`
 				else
-				eval_gettext "Remove packages depending on \$PACKAGE"
-				echo -n " (`translate_querry y`/`translate_querry N`) ? "
-				read answer
+					eval_gettext "Remove packages depending on \$PACKAGE"
+					echo -n " (`translate_querry y`/`translate_querry N`) ? "
+					read answer
 				fi
 				if [ "$answer" = "$(translate_querry y)" ]; then
 					for i in $ALTERED; do
@@ -2032,9 +2007,9 @@ $LIST"
 				if [ "$auto" ]; then
 					answer=`translate_querry y`
 				else
-				eval_gettext "Reinstall packages modified by \$PACKAGE"
-				echo -n " (`translate_querry y`/`translate_querry N`) ? "
-				read answer
+					eval_gettext "Reinstall packages modified by \$PACKAGE"
+					echo -n " (`translate_querry y`/`translate_querry N`) ? "
+					read answer
 				fi
 				if [ "$answer" = "$(translate_querry y)" ]; then
 					for i in $REFRESH; do
@@ -2298,8 +2273,7 @@ EOT
 		# must have only the choosen main mirror.
 		#
 		check_root
-		get_options_list="root forced list rootconfig"
-		get_options
+		
 		ARG=$2
 		if [ "$root" ]; then
 			LOCALSTATE=$root$LOCALSTATE
@@ -2663,9 +2637,6 @@ EOT
 		check_for_package_on_cmdline
 		check_for_packages_list
 		
-		get_options_list="root rootconfig"
-		get_options
-		
 		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		if [ "$rootconfig" ]; then
 			if [ "$root" ]; then
@@ -2706,18 +2677,6 @@ EOT
 		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
-
-		get_options_list="root forced list rootconfig"
-		get_options
-		
-		# Install all pkgs specified in argument.
-		#for arg in $@
-		#do
-			#case $arg in
-				#-*|get-install) continue ;;
-				#*) tazpkg -gi $arg $opts ;;
-			#esac
-		#done
 		
 		DO_CHECK=""
 		[ "$forced" ] && DO_CHECK=no
