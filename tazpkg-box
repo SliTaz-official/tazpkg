@@ -38,8 +38,8 @@ actions() {
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		2) tazpkg extract $pkg | output ;;
-		3) tazpkg -i $pkg --forced | output ;;
+		2) tazpkg extract $pkg --output="raw" | output ;;
+		3) tazpkg -i $pkg --forced --output="raw" | output ;;
 	esac
 }
 
@@ -48,7 +48,7 @@ dl_inst() {
 	pkg=$(basename $url) 
 	gettext "Downloading: $pkg"; echo -e "\n"
 	cd /tmp && wget $url 2>&1
-	tazpkg -i $pkg --forced 2>&1
+	tazpkg -i $pkg --forced --output="raw" 2>&1
 	rm -f $pkg
 }
 

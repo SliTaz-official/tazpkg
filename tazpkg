@@ -1,18 +1,15 @@
 #!/bin/sh
 # Tazpkg - Tiny autonomous zone packages manager.
 #
-# This is a lightwight packages manager for *.tazpkg files written in
-# SHell script. It works well with Busybox ash shell and bash. Tazpkg lets you
+# This is a lightwight packages manager for *.tazpkg files written in SHell 
+# script. It works well with Busybox ash shell and bash. Tazpkg lets you
 # list, install, remove, download or get information about a package. You can
 # use 'tazpkg usage' to get a list of commands with short descriptions. Tazpkg
-# also resolves dependencies and can upgrade packages from a mirror. I18n is
-# done using gettext and eval_gettext, ex:
-# 	gettext "displayed text"; echo
-# 	eval_gettext "display \$VARIABLE"; echo
+# also resolves dependencies and can upgrade packages from a mirror.
 #
 # (C) 2007-2012 SliTaz - GNU General Public License v3.
 #
-# Authors : Seee AUTHORS files
+# Authors : See the AUTHORS files
 #
 
 ####################
@@ -20,17 +17,15 @@
 ####################
 
 # TazPKG version
-VERSION=4.9.2
+VERSION=5.0
 
 . /etc/slitaz/slitaz.conf
 . /etc/slitaz/tazpkg.conf
 
 . /lib/libtaz.sh
 
-# Include gettext helper script.
+# Internationalization.
 . /usr/bin/gettext.sh
-
-# Export package name for gettext.
 TEXTDOMAIN='tazpkg'
 export TEXTDOMAIN
 
@@ -85,7 +80,7 @@ usage ()
   list-config      `gettext \"List the configuration files.\"`
   search|-s        `gettext \"Search for a package by pattern or name (options: -i|-l|-m).\"`
   search-pkgname   `gettext \"Search on mirror for package having a particular file.\"`
-  search-file	   `gettext \"Search for file(s) in all installed packages files.\"`
+  search-file|-sf  `gettext \"Search for file(s) in all installed packages files.\"`
   install|-i       `gettext \"Install a local (*.tazpkg) package (--forced to force).\"`
   install-list     `gettext \"Install all packages from a list of packages.\"`
   remove|-r        `gettext \"Remove the specified package and all installed files.\"`
@@ -501,7 +496,7 @@ install_package()
 	mkdir -p $TMP_DIR
 	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $INSTALL_LIST-processed
 	echo ""
-	echo -e "\033[1m`gettext \"Installation of :\"`\033[0m $PACKAGE"
+	boldify "$(gettext "Installation of :") $PACKAGE"
 	separator
 	eval_gettext "Copying \$PACKAGE... "
 	cp $PACKAGE_FILE $TMP_DIR
@@ -984,7 +979,7 @@ setup_mirror()
 		cp -f $1/mirror $1/mirror.bak
 	fi
 	echo ""
-	echo -e "\033[1m`gettext \"Current mirror(s)\"`\033[0m"
+	boldify "$(gettext "Current mirror(s)")"
 	separator
 	echo "  `cat $1/mirror 2> /dev/null`"
 	gettext \
@@ -2739,7 +2734,7 @@ EOT
 		check_root
 		files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
 		echo ""
-		echo -e "\033[1m`gettext \"Clean cache:\"`\033[0m $CACHE_DIR"
+		boldify "$(gettext "Clean cache:") $CACHE_DIR"
 		separator
 		gettext "Cleaning cache directory..."
 		rm -rf $CACHE_DIR/*
@@ -2754,7 +2749,7 @@ EOT
 			done
 		else
 			echo ""
-			echo -e "\033[1m`gettext \"Current undigest(s)\"`\033[0m"
+			boldify "$(gettext "Current undigest(s)")"
 			separator
 			for i in $LOCALSTATE/undigest/*/mirror; do
 				if [ ! -f $i ]; then
