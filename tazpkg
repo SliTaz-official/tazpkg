@@ -494,7 +494,7 @@ install_package()
 		install_deps $ROOT
 	fi
 	mkdir -p $TMP_DIR
-	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $INSTALL_LIST-processed
+	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $ROOT$LOCALSTATE/$INSTALL_LIST-processed
 	echo ""
 	boldify "$(gettext "Installation of :") $PACKAGE"
 	separator
