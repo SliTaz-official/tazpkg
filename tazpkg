@@ -72,7 +72,6 @@ usage ()
   usage            `gettext \"Print this short usage.\"`
   bugs             `gettext \"Show known bugs in packages.\"`
   list|-l          `gettext \"List installed packages on the system by category or all.\"`
-  xhtml-list       `gettext \"Create a xHTML list of installed packages.\"`
   list-mirror      `gettext \"List all available packages on the mirror (--diff for new).\"`
   info             `gettext \"Print information about a package.\"`
   desc             `gettext \"Print description of a package (if it exists).\"`
@@ -772,73 +771,6 @@ install_deps()
 will probably not work."; echo
 		echo ""
 	fi
-}
-
-# xHTML packages list header.
-xhtml_header()
-{
-	cat > $XHTML_LIST << _EOT_
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<title>Install packages on: `hostname`</title>
-	<meta charset="utf-8" />
-	<style type="text/css">
-	body { font: 88% sans-serif, vernada, arial; margin: 0; }
-	#header { background: #351a0a; height: 40px; border-bottom: 8px solid #d66018; }
-	#content { margin: 40px 80px; text-align: justify; }
-	#footer { text-align: center; padding: 20px; border-top: 1px solid #ddd; }
-	h1 { margin: 0; padding: 8px; color: #fff; font-size: 20px; }
-	h2 { color: #444; } h3 { color: #666; font-size: 140%; }
-	pre { background-color: #f8f8f8; border: 1px solid #ddd; padding: 10px;
-		-moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;}
-	</style>
-</head>
-<body>
-
-<body>
-<div id="header">
-	<h1>Installed packages list</h1>
-</div>
-
-<!-- Start content -->
-<div id="content">
-
-<p>
-_packages_ packages installed - List generated on : $DATE
-<p>
-
-_EOT_
-}
-
-# xHTML content with packages info.
-xhtml_pkg_info()
-{
-	cat >> $XHTML_LIST << _EOT_
-<h3>$PACKAGE</h3>
-<pre>
-Version    : $VERSION$EXTRAVERSION
-Short desc : $SHORT_DESC
-Web site   : <a href="$WEB_SITE">$WEB_SITE</a>
-</pre>
-
-_EOT_
-}
-
-# xHTML packages list footer.
-xhtml_footer()
-{
-	cat >> $XHTML_LIST << _EOT_
-<hr />
-<p id="footer">
-$packages packages installed - List generated on : $DATE
-</p>
-
-<!-- End content -->
-</div>
-</body>
-</html>
-_EOT_
 }
 
 # Search pattern in installed packages.
@@ -1551,39 +1483,6 @@ case "$COMMAND" in
 			eval_gettext "\$packages packages installed."; echo
 			echo ""
 		fi ;;
-	xhtml-list)
-		# Get info in receipts and build list.
-		DATE=`date +%Y-%m-%d\ \%H:%M:%S`
-		if [ -n "$2" ]; then
-			XHTML_LIST=$2
-		else
-			XHTML_LIST=installed-packages.html
-		fi
-		echo ""
-		echo -e "\033[1m`gettext \"Creating xHTML list of installed packages\"`\033[0m"
-		separator
-		gettext "Generating xHTML header..."
-		xhtml_header
-		status
-		# Packages
-		gettext "Creating packages information..."
-		for pkg in $INSTALLED/*
-		do
-			[ -f $pkg/receipt ] || continue
-			EXTRAVERSION=""
-			. $pkg/receipt
-			xhtml_pkg_info
-			packages=$(($packages+1))
-		done
-		status
-		gettext "Generating xHTML footer..."
-		xhtml_footer
-		status
-		# sed pkgs nb in header.
-		sed -i s/'_packages_'/"$packages"/ $XHTML_LIST
-		separator
-		eval_gettext "\$XHTML_LIST created - $packages packages."; echo
-		echo "" ;;
 	list-mirror)
 		# List all available packages on the mirror. Option --diff displays
 		# last mirrored packages diff (see recharge).
