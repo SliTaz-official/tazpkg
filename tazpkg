@@ -1,7 +1,7 @@
 #!/bin/sh
 # Tazpkg - Tiny autonomous zone packages manager.
 #
-# This is a lightwight packages manager for *.tazpkg files written in SHell 
+# This is a lightwight packages manager for *.tazpkg files written in SHell
 # script. It works well with Busybox ash shell and bash. Tazpkg lets you
 # list, install, remove, download or get information about a package. You can
 # use 'tazpkg usage' to get a list of commands with short descriptions. Tazpkg
@@ -34,7 +34,7 @@ export TEXTDOMAIN
 COMMAND=$1
 PACKAGE=${2%/}
 PACKAGE_DIR="$(cd $(dirname $PACKAGE 2>/dev/null) 2>/dev/null; pwd)"
-[ -n "$PACKAGE" ] && 
+[ -n "$PACKAGE" ] &&
 PACKAGE_FILE="$PACKAGE_DIR/${PACKAGE##*/}"
 if [ -f "$PACKAGE" ]; then
 	# Set pkg basename for install, extract
@@ -159,7 +159,7 @@ check_base_dir
 check_for_package_on_cmdline()
 {
 	if [ -z "$PACKAGE" ]; then
-		echo "" 
+		echo ""
 		gettext "Please specify a package name on the command line."; echo
 		echo ""
 		exit 0
@@ -302,7 +302,7 @@ equivalent_pkg()
 # get a virtual package from packages.equiv
 virtual_pkg()
 {
-	for i in $(for rep in $priority; do 
+	for i in $(for rep in $priority; do
 		grep -hs "^$1=" $rep/packages.equiv
 		done | sed "s/^$1=//"); do
 		if echo $i | fgrep -q : ; then
@@ -330,10 +330,10 @@ get_package_filename()
 			sed 's/^ *//')
 		[ "$pkg" ] && pkg=$(grep -sh "^$1-$pkg" \
 			$rep/packages.list | head -1)
-		
+
 		# Allow user to call a package with his version number.
 		[ "$pkg" ] || pkg=$(grep -sh "^$1$" $rep/packages.list | head -1)
-		
+
 		[ "$pkg" ] || pkg=$(grep -sh "^$1-[0-9]" \
 			$rep/packages.list | head -1)
 		[ "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" \
@@ -442,7 +442,7 @@ remove_with_path()
 {
 	# Avoid dirname errors by checking for argument.
 	[ "$1" ] || return
-	
+
 	local dir
 	rm -f $1 2>/dev/null
 	dir="$1"
@@ -536,8 +536,8 @@ install_package()
 		[ -d "$ROOT$i" ] && continue
 		echo "- $i"
 		check=true
-	  done ; 
-	  $check && for i in *; do 
+	  done ;
+	  $check && for i in *; do
 	  	[ "$i" == "$PACKAGE" ] && continue
 	  	[ -s $i/files.list ] || continue
 	  	awk "{ printf \"$i %s\\n\",\$1 }" < $i/files.list
@@ -712,7 +712,7 @@ check_for_deps()
 	fi
 }
 
-# Install all missing deps. Auto install or ask user then install all missing 
+# Install all missing deps. Auto install or ask user then install all missing
 # deps from local dir, cdrom, media or from the mirror. In case we want to
 # install packages from local, we need a packages.list to find the version.
 install_deps()
@@ -927,10 +927,10 @@ please run 'tazpkg recharge' once as root before searching."; echo
 install_flavor()
 {
 	check_root
-	
+
 	# Get repositories priority list.
 	look_for_priority
-	
+
 	FLAVOR=$1
 	ARG=$2
 	mkdir -p $TMP_DIR
@@ -1433,10 +1433,10 @@ translate_category()
 		misc) gettext "misc" ;;
 		meta) gettext "meta" ;;
 		non-free) gettext "non-free" ;;
-		
+
 		# Support custom categories by keeping them untranslated.
 		*) echo "$1" ;;
-		
+
 	esac
 }
 
@@ -1457,12 +1457,12 @@ reverse_translate_category()
 		`gettext "misc"`) echo "misc" ;;
 		`gettext "meta"`) echo "meta" ;;
 		`gettext "non-free"`) echo "non-free" ;;
-		
+
 		# If category is not one of those translated in native language,
 		# keep it untranslated. This allows both native and english
 		# language support. This also supports custom categories.
 		*) echo "$1" ;;
-		
+
 	esac
 }
 
@@ -1714,7 +1714,7 @@ case "$COMMAND" in
 		echo ""
 		echo -e "\033[1m`gettext \"Search result for file\"`\033[0m $2"
 		separator
-		
+
 		if [ "$3" == "--mirror" ]; then
 
 			match=0
@@ -1762,7 +1762,7 @@ case "$COMMAND" in
 			eval_gettext "\$match file(s) found for: \$pkg"; echo
 			echo ""
 		fi ;;
-	search-pkgname) 
+	search-pkgname)
 		# Search for a package name
 		if [ -z "$2" ]; then
 			echo ""
@@ -1774,7 +1774,7 @@ case "$COMMAND" in
 		echo ""
 		echo -e "\033[1m`gettext \"Search result for file\"`\033[0m $2"
 		separator
-		
+
 		# Search for a file on mirror and output only the package name
 		match=0
 		for i in $LOCALSTATE/files.list.lzma \
@@ -1799,7 +1799,7 @@ case "$COMMAND" in
 		check_root
 		check_for_package_on_cmdline
 		check_for_package_file
-		
+
 		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
 		if [ "$rootconfig" ]; then
@@ -1822,8 +1822,8 @@ case "$COMMAND" in
 		fi
 		install_package $ROOT
 		update_desktop_database $ROOT
-		update_mime_database $ROOT 
-		update_icon_database $ROOT 
+		update_mime_database $ROOT
+		update_icon_database $ROOT
 		compile_glib_schemas $ROOT ;;
 	install-list|get-install-list)
 		# Install a set of packages from a list.
@@ -1905,8 +1905,8 @@ $LIST"
 		# Remove packages.
 		check_root
 		check_for_package_on_cmdline
-		
-		[ "$root" ] && ROOT="$root" 
+
+		[ "$root" ] && ROOT="$root"
 		if [ ! -f "$ROOT$INSTALLED/$PACKAGE/receipt" ]; then
 			echo ""
 			eval_gettext "\$PACKAGE is not installed."; echo
@@ -2268,7 +2268,7 @@ EOT
 		# must have only the choosen main mirror.
 		#
 		check_root
-		
+
 		ARG=$2
 		if [ "$root" ]; then
 			LOCALSTATE=$root$LOCALSTATE
@@ -2285,11 +2285,11 @@ EOT
 			fi
 		else
 			repository_to_recharge="$LOCALSTATE $LOCALSTATE/undigest/*"
-		fi	
+		fi
 		for path in $repository_to_recharge; do
 			[ -f $path/mirror ] || continue
 			cd $path
-			
+
 			# Quietly check if recharging is needed.
 			[ -f ID ] && mv ID ID.bak
 			download_from "$(cat mirror)" ID >/dev/null 2>/dev/null
@@ -2310,7 +2310,7 @@ EOT
 				cat ID.bak > ID
 				rm ID.bak
 			fi
-			
+
 			echo ""
 			if [ "$path" != "$LOCALSTATE" ]; then
 				echo -e "`gettext \"Recharging undigest\"` $(basename $path):"
@@ -2330,9 +2330,9 @@ EOT
 			for i in desc md5 txt list equiv; do
 				download_from "$(cat mirror)" packages.$i
 			done
-			download_from "$(cat mirror)" files.list.lzma             
+			download_from "$(cat mirror)" files.list.lzma
 			download_from "$(sed 's|packages/.*||' < mirror)" mirrors
-			
+
 			if [ -f "packages.list.bak" ]; then
 				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
 				sed -i s/+// packages.diff
@@ -2365,7 +2365,7 @@ packages."
 		# upgradeable out-of-date. This new way is much, much more faster!
 		# Look into installed packages and get data from receipt, it is fast
 		# and easy to handle vars after using only md5sum to compare packages
-		# 
+		#
 		# Options available for the command: up
 		if [ "$COMMAND" == "--help-up" ]; then
 			usage_up
@@ -2382,6 +2382,7 @@ packages."
 					install="n" ;;
 			esac
 		done
+		time=$(date +%s)
 		installed_sum=$LOCALSTATE/installed.$SUM
 		look_for_priority
 		for repo in $priority; do
@@ -2397,10 +2398,10 @@ packages."
 				tazpkg recharge $repo_name
 			fi
 		done
-		echo -en "\n\033[1m"
-		gettext "Package"
-		echo -en "\033[26G " && gettext "Update type"
-		echo -e "\033[0m"
+		newline
+		boldify $(gettext "Package") \
+		$(echo -n $(indent 28 $(gettext "Version"))) \
+		$(echo -n $(indent 48 $(gettext "Status")))
 		separator
 		cd $INSTALLED
 		echo "" > $UP_LIST
@@ -2421,19 +2422,22 @@ packages."
 					# in this one.
 					grep -q ^$PACKAGE- $pkg_list || continue
 
+					echo -n "$PACKAGE"
+					echo -n $(indent 28 "$VERSION")
+
 					# Skip pkgs listed in $LOCALSTATE/blocked-packages.list
 					if $(grep -qs "^$PACKAGE" $BLOCKED); then
-						blocked_count=$(($blocked_count+1))
+						blocked_count=$(($blocked_count + 1))
+						colorize 31 $(indent 48 $(gettext "Blocked"))
 						break
 					fi
-					
+
 					new=$(grep "^$PACKAGE |" $pkg_desc | awk '{print $3}')
+
 					if [ "$VERSION" == "$new" ]; then
-						echo -n "$PACKAGE"
-						echo -e "\\033[26G `gettext \"New build   :\"` $md5"
+						colorize 34 $(indent 48 $(gettext "New build"))
 					else
-						echo -n "$PACKAGE"
-						echo -e "\\033[26G `gettext \"New version :\"` $new"
+						colorize 32 $(indent 48 $(gettext "New version") $new)
 					fi
 					echo "$PACKAGE" >> $UP_LIST
 					break
@@ -2443,16 +2447,20 @@ packages."
 		sed -i /^$/d $UP_LIST
 		upnb=$(cat $UP_LIST | wc -l)
 		pkgs=$(ls | wc -l)
+		time=$(($(date +%s) - $time))
 		if [ "$upnb" = 0 ]; then
 			install="n"
 			gettext -e "System is up-to-date...\n\n"
-		else
-			separator
+		fi
+		separator
+		echo -n "$pkgs "; gettext "installed packages scanned in"; echo " ${time}s"
+		newline
+		if [ "$upnb" != 0 ]; then
 			echo -en "\033[1m"
 			if [ "$blocked_count" -gt 0 ]; then
 				blocks=`eval_gettext " (\$blocked_count blocked)"`
 			fi
-			eval_gettext "You have \$upnb available upgrades\$blocks on \$pkgs installed packages"
+			eval_gettext "You have \$upnb available upgrades\$blocks"
 			echo -e "\033[0m\n"
 		fi
 		# Pkgs to upgrade ? Skip, let install them all or ask user
@@ -2503,10 +2511,10 @@ EOT
 	check)
 		# Check installed packages set.
 		check_root
-		
+
 		# Get repositories priority list.
 		look_for_priority
-		
+
 		cd $INSTALLED
 		for PACKAGE in `ls`; do
 			if [ ! -f $PACKAGE/receipt ]; then
@@ -2631,7 +2639,7 @@ EOT
 		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
-		
+
 		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		if [ "$rootconfig" ]; then
 			if [ "$root" ]; then
@@ -2643,10 +2651,10 @@ EOT
 				exit 1
 			fi
 		fi
-		
+
 		# Get repositories priority list.
 		look_for_priority
-		
+
 		CURRENT_DIR=$PWD
 		check_for_package_in_list
 		cd $CACHE_DIR
@@ -2672,7 +2680,7 @@ EOT
 		check_root
 		check_for_package_on_cmdline
 		check_for_packages_list
-		
+
 		DO_CHECK=""
 		[ "$forced" ] && DO_CHECK=no
 		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
@@ -2726,8 +2734,8 @@ EOT
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
 		[ "$rootconfig" ] && LOCALSTATE=${LOCALSTATE#$root}
 		install_package $ROOT
-		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT 
-		update_desktop_database $ROOT 
+		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT
+		update_desktop_database $ROOT
 		update_mime_database $ROOT ;;
 	clean-cache|-cc)
 		# Remove all downloaded packages.
@@ -2879,7 +2887,7 @@ EOT
 	convert|-c)
 		# convert misc package format to .tazpkg
 		check_for_package_file
-		[ -n "$TARGET_DIR" -a -s "$TARGET_DIR/files.list.lzma" ] && 
+		[ -n "$TARGET_DIR" -a -s "$TARGET_DIR/files.list.lzma" ] &&
 			TMPLOCALSTATE="$TARGET_DIR"
 		if [ "$(dd if=$PACKAGE_FILE bs=8 count=1 skip=1 2> /dev/null)" \
 		      == "debian-b" ]; then

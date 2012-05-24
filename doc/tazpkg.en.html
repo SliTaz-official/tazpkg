@@ -43,14 +43,14 @@ cpio archive containing a filesystem compressed with gzip,
 a receipt and an optional description. Tazpkg also manages
 dependencies based on package receipts. Each receipt contains
 all the information about a package and can also include
-pre and post installation functions. The same receipt is 
-used by Cookutils to compile sources and generate a .tazpkg 
+pre and post installation functions. The same receipt is
+used by Cookutils to compile sources and generate a .tazpkg
 package.
 </p>
 <p>
-Tazpkg is entirely built from scratch using SHell script, 
-compatible with Bash; it runs under Ash—part of the Busybox 
-project. Tazpkg is distributed under the free GNU license GPL V3. 
+Tazpkg is entirely built from scratch using SHell script,
+compatible with Bash; it runs under Ash—part of the Busybox
+project. Tazpkg is distributed under the free GNU license GPL V3.
 </p>
 
 
@@ -60,8 +60,8 @@ project. Tazpkg is distributed under the free GNU license GPL V3.
 <h3 id="list">list</h3>
 
 <p>
-List packages installed on the system. This command displays 
-a column list of all installed packages, It also allows you to list the 
+List packages installed on the system. This command displays
+a column list of all installed packages, It also allows you to list the
 categories, packages based on category and packages placed on hold.
 You can also use the <tt><a href="#search">search</a></tt> command
 for a list based on a term or package name:
@@ -108,7 +108,7 @@ the differences between the last and current list of packages:
 <h3 id="info">info</h3>
 
 <p>
-Display any information available in the receipt for the 
+Display any information available in the receipt for the
 package in question—its version, category, maintainer,
 Web site and any dependencies (see also Cookutils for more
 information on receipts):
@@ -160,7 +160,7 @@ To list the files installed with the package bc:
 <p>
 Search for packages by owner or package name. This command
 will search for the term wanted in the installed packages and the
-list of available packages on the mirror. To obtain the 
+list of available packages on the mirror. To obtain the
 latest list of installable packages on the mirror, just
 run <code>tazpkg recharge</code> before conducting a search:
 </p>
@@ -174,7 +174,7 @@ run <code>tazpkg recharge</code> before conducting a search:
 <p>
 The <tt>search-file</tt> command allows you to search for a file
 among the files installed by the packages. This command is very
-useful to find the full path to a file and determine if 
+useful to find the full path to a file and determine if
 a file is present on the system. Example:
 </p>
 <pre>
@@ -187,10 +187,10 @@ a file is present on the system. Example:
 <p>
 This command allows the installation of a local package with
 the <tt>.tazpkg</tt> extension. See
-<tt><a href="#get-install">get-install</a></tt> to install a 
+<tt><a href="#get-install">get-install</a></tt> to install a
 package from the internet. Note that you can force the
 installation via the <tt>--forced</tt>, <tt>uninstall</tt> and
-<tt>reinstall</tt> options 
+<tt>reinstall</tt> options
 or specify the root system where you want to install the
 packages via the <tt>--root=</tt> option:
 </p>
@@ -215,9 +215,9 @@ and can also be forced:
 <h3 id="link">link</h3>
 
 <p>
-This command allows the installation of a package from another media 
-device. The set up is done through symbolic links and consumes very little 
-memory. It is generally used within the system RAM to install add-ons 
+This command allows the installation of a package from another media
+device. The set up is done through symbolic links and consumes very little
+memory. It is generally used within the system RAM to install add-ons
 from an USB key:
 </p>
 <pre>
@@ -256,7 +256,7 @@ in the current directory using the name <tt><em>package-version</em></tt>:
 
 <p>
 The <tt>pack</tt> command will create a package from a directory
-prepared in advance or from an unpacked package. It can 
+prepared in advance or from an unpacked package. It can
 also manually create a .tazpkg package (see the Cookutils documentation
 for the automatic creation of packages). To pack a package:
 </p>
@@ -282,8 +282,8 @@ To repack a package:
 <p>
 The <tt>repack-config</tt> command recreates a package
 of the system configuration files (see
-<tt><a href="#list-config">list-config</a></tt>). It is enough 
-to install the package to find the current configuration. To repack 
+<tt><a href="#list-config">list-config</a></tt>). It is enough
+to install the package to find the current configuration. To repack
 the configuration files:
 </p>
 <pre>
@@ -294,9 +294,9 @@ the configuration files:
 <h3 id="recharge">recharge</h3>
 
 <p>
-Recharge the list of available packages on the mirror. 
+Recharge the list of available packages on the mirror.
 This command will download the most recent <tt>packages.list</tt>
-of installable packages on the mirror and before starting 
+of installable packages on the mirror and before starting
 will save the old list. Once the list is updated,
 you can then use the <tt><a href="#list">list</a></tt> and
 <tt><a href="#search">search</a></tt> commands. To view
@@ -318,8 +318,8 @@ on the current mirror. Upgrading packages is an important
 part of system security, it helps to keep you secure with
 the latest updates and fixes. The SliTaz project,
 although tiny, provides regular updates on security and generally
-offers the latest versions of software. Note that this 
-function is aimed at people with SliTaz installed on a 
+offers the latest versions of software. Note that this
+function is aimed at people with SliTaz installed on a
 hard drive. Updated packages in LiveCD mode will be lost on
 system shutdown. To upgrade or display the full <tt>up</tt> options:
 </p>
@@ -335,7 +335,7 @@ system shutdown. To upgrade or display the full <tt>up</tt> options:
 
 <p>
 The <tt>check</tt> command can check dependencies on installed
-packages and determine whether all the files needed for the 
+packages and determine whether all the files needed for the
 repacking of packages are present:
 </p>
 <pre>
@@ -377,7 +377,7 @@ you can use <code>pwd</code>. To get the Grub package:
 <p>
 Get and install a package from a mirror on the internet.
 The <tt>get-install</tt> command begins by checking whether the
-package exists on the mirror and if it has been already downloaded. 
+package exists on the mirror and if it has been already downloaded.
 For a list of packages on the mirror, we must
 use the <tt><a href="#list-mirror">list-mirror</a></tt> command.
 To install the package Grub:
@@ -390,9 +390,9 @@ To install the package Grub:
 <h3 id="clean-cache">clean-cache</h3>
 
 <p>
-Remove *.tazpkg packages downloaded to the cache. During 
+Remove *.tazpkg packages downloaded to the cache. During
 installation, Tazpkg keeps a copy of packages downloaded
-from the web. This is done to save bandwidth in case of 
+from the web. This is done to save bandwidth in case of
 reinstallation, but you may want to free up space on the hard
 drive or re-download the packages:
 </p>
@@ -477,7 +477,7 @@ Lists additional undigest mirrors:
 <h3 id="convert">convert</h3>
 
 <p>
-Converts a Debian package (.deb), Redhat (.rpm), Slackware (.tgz) or 
+Converts a Debian package (.deb), Redhat (.rpm), Slackware (.tgz) or
 Archlinux (.pkg.tar.gz) package into a SliTaz package (.tazpkg):
 </p>
 <pre>
@@ -487,7 +487,7 @@ Archlinux (.pkg.tar.gz) package into a SliTaz package (.tazpkg):
 
 <h3 id="set-release">set-release</h3>
 <p>
-The <tt>set-release</tt> command changes the current version and 
+The <tt>set-release</tt> command changes the current version and
 upgrades all of the packages to the latest release:
 </p>
 <pre>
