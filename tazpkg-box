@@ -9,6 +9,11 @@
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #
 
+# Internationalization.
+. /usr/bin/gettext.sh
+TEXTDOMAIN='tazpkg'
+export TEXTDOMAIN
+
 title=$(gettext "TazPKG Action")
 icon="/usr/share/pixmaps/tazpkg.png"
 opts="--image=tazpkg --image-on-top --width=520 --center --on-top"
@@ -22,11 +27,12 @@ output() {
 
 # Main GUI box function with pure Yad spec
 actions_main() {
-	text=$(gettext "Package name:")
-	yad --text="$text <b>${pkg%.tazpkg}</b>" $opts \
+	pkgname=${pkg%.tazpkg}
+	text=$(eval_gettext 'Package name: <b>$pkgname</b>')
+	yad --text="$text" $opts \
 		--title="$title" --height=100 \
 		--window-icon=$icon --image-on-top \
-		--button="Install:3" --button="Extract:2" \
+		--button="$(gettext 'Install'):3" --button="$(gettext 'Extract'):2" \
 		--button="gtk-close:1"
 }
 
@@ -38,15 +44,15 @@ actions() {
 	# Deal with --button values
 	case $ret in
 		1) exit 0 ;;
-		2) tazpkg extract $pkg --output="raw" | output ;;
-		3) tazpkg -i $pkg --forced --output="raw" | output ;;
+		2) tazpkg extract $pkg . --output="raw" | output ;;
+		3) tazpkg -i $pkg . --forced --output="raw" | output ;;
 	esac
 }
 
 # TazPKG URL Handler.
 dl_inst() {
 	pkg=$(basename $url) 
-	gettext "Downloading: $pkg"; echo -e "\n"
+	eval_gettext "Downloading: \$pkg"; echo -e "\n"
 	cd /tmp && wget $url 2>&1
 	tazpkg -i $pkg --forced --output="raw" 2>&1
 	rm -f $pkg
@@ -58,7 +64,8 @@ dl_inst() {
 
 case "$1" in
 	usage|help|-u|-h)
-		echo "Usage: $(basename $0) [actions|url] [pkg]" ;;
+		progname=$(basename $0)
+		eval_gettext "Usage: \$progname [actions|url] [pkg]" ;;
 	tazpkg://*)
 		# TazPKG URL's handler.
 		url="http://${1#tazpkg://}"

@@ -4,7 +4,7 @@ PREFIX?=/usr
 DOCDIR?=$(PREFIX)/share/doc
 SYSCONFDIR?=/etc/slitaz
 DESTDIR?=
-LINGUAS?=fr pt_BR es
+LINGUAS?=fr pt_BR es ru
 
 VERSION:=$(shell grep ^VERSION=[0-9] tazpkg | cut -d '=' -f 2)
 
@@ -18,7 +18,7 @@ all: msgfmt
 pot:
 	xgettext -o po/tazpkg/tazpkg.pot -L Shell \
 		--package-name=Tazpkg \
-		--package-version="$(VERSION)" ./tazpkg
+		--package-version="$(VERSION)" -kaction -ktitle ./tazpkg ./tazpkg-box
 	xgettext -o po/tazpkg-notify/tazpkg-notify.pot -L Shell \
 		--package-name="Tazpkg Notification" \
 		--package-version="$(VERSION)" ./tazpkg-notify

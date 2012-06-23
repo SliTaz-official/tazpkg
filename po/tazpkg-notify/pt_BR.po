@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tazpkg Notification 4.9.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-06 13:22+0100\n"
+"POT-Creation-Date: 2012-06-09 23:46+0000\n"
 "PO-Revision-Date: 2012-03-14 03:05+0100\n"
 "Last-Translator: Claudinei Pereira <claudinei@slitaz.org>\n"
 "Language-Team: Portuguese <i18n@slitaz.org>\n"
@@ -18,57 +18,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: tazpkg-notify:25
-msgid "Installed packages"
-msgstr "Pacotes instalados"
+#: tazpkg-notify:26
+#, fuzzy, sh-format
+msgid "<b>$installed</b> installed package"
+msgid_plural "<b>$installed</b> installed packages"
+msgstr[0] "Pacotes instalados"
+msgstr[1] "Pacotes instalados"
 
-#: tazpkg-notify:38
-msgid "Checking packages lists"
+#: tazpkg-notify:40
+#, fuzzy, sh-format
+msgid "Checking packages lists - $text"
 msgstr "Checando lista de pacotes"
 
-#: tazpkg-notify:47
+#: tazpkg-notify:49
 msgid "My packages"
 msgstr "Meus pacotes"
 
-#: tazpkg-notify:48
+#: tazpkg-notify:50
 msgid "Recharge lists"
 msgstr "Recarregar listas"
 
-#: tazpkg-notify:49
+#: tazpkg-notify:51
 msgid "Check upgrade"
 msgstr "Checar atualizações"
 
-#: tazpkg-notify:50
+#: tazpkg-notify:52
 msgid "TazPKG SHell"
 msgstr "TazPKG SHell"
 
-#: tazpkg-notify:51
+#: tazpkg-notify:53
 msgid "TazPKG manual"
 msgstr "Manual do TazPKG"
 
-#: tazpkg-notify:52
+#: tazpkg-notify:54
 msgid "Close notification"
 msgstr "Fechar notificação"
 
-#: tazpkg-notify:58
+#: tazpkg-notify:60
 msgid "Usage:"
 msgstr "Utilização:"
 
-#: tazpkg-notify:70
+#: tazpkg-notify:71
 #, sh-format
 msgid "No packages list found - $text"
 msgstr "Nenhuma lista de pacotes encontrada - $text"
 
-#: tazpkg-notify:77
+#: tazpkg-notify:78
 msgid "Your packages list is older than 10 days"
 msgstr "Sua lista de pacotes possui mais de 10 dias"
 
-#: tazpkg-notify:85
-#, sh-format
-msgid "There are <b>$up</b> upgradeable packages"
-msgstr "Há <b>$up</b> pacotes atualizáveis"
+#: tazpkg-notify:86
+#, fuzzy, sh-format
+msgid "There is <b>$up</b> upgradeable package"
+msgid_plural "There are <b>$up</b> upgradeable packages"
+msgstr[0] "Há <b>$up</b> pacotes atualizáveis"
+msgstr[1] "Há <b>$up</b> pacotes atualizáveis"
 
-#: tazpkg-notify:91
+#: tazpkg-notify:93
 #, sh-format
 msgid "System is up to date - $text"
 msgstr "Sistema está atualizado - $text"

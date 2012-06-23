@@ -22,7 +22,9 @@ panel="http://tazpanel:82/pkgs.cgi"
 db="/var/lib/tazpkg"
 doc="file:///usr/share/doc/tazpkg/tazpkg.html"
 installed=$(ls $db/installed | wc -l)
-text="$(gettext "Installed packages") <b>$installed</b>"
+text="$(eval_ngettext \
+		'<b>$installed</b> installed package' \
+		'<b>$installed</b> installed packages' $installed)"
 icon="/usr/share/pixmaps/tazpkg.png"
 [ -f "$db/packages.list" ] && mtime=$(find $db/packages.list -mtime +10;)
 [ -f "$db/packages.up" ] && up=$(cat $db/packages.up | wc -l)
@@ -30,12 +32,12 @@ icon="/usr/share/pixmaps/tazpkg.png"
 # Notification icon
 listen() {
 	# Manage the I/O redirection from SHell
-	rm -f $fifo && mkfifo $fifo		
+	rm -f $fifo && mkfifo $fifo
 	# Attach a file descriptor
-	exec 3<> $fifo	
+	exec 3<> $fifo
 	# Notification icon
 	yad --notification --listen --image=$icon \
-		--text="$(gettext "Checking packages lists") - $text" <&3
+		--text="$(eval_gettext 'Checking packages lists - $text')" <&3
 	# Clean-up
 	rm -f $fifo
 }
@@ -66,8 +68,7 @@ case $1 in
 		sleep 6
 		# Missing packages list
 		if [ ! -f $db/packages.list ]; then
-			tooltip=$(eval_gettext \
-				"No packages list found - \$text")
+			tooltip=$(eval_gettext 'No packages list found - $text')
 			echo "action:tazweb $panel?recharge" > $fifo
 			echo "tooltip:$tooltip" > $fifo
 			echo "icon:tazpkg-up" > $fifo && exit 0
@@ -81,14 +82,15 @@ case $1 in
 		fi
 		# Available upgrades
 		if [ "$up" -gt 0 ]; then
-			tooltip=$(eval_gettext \
-				"There are <b>\$up</b> upgradeable packages")
+			tooltip=$(eval_ngettext \
+				'There is <b>$up</b> upgradeable package' \
+				'There are <b>$up</b> upgradeable packages' $up)
 			echo "action:tazweb $panel?up" > $fifo
 			echo "tooltip:$tooltip" > $fifo
 			echo "icon:tazpkg-up" > $fifo && exit 0
 		fi
 		# Nothing to do, close notification
-		tooltip=$(eval_gettext "System is up to date - \$text")
+		tooltip=$(eval_gettext 'System is up to date - $text')
 		echo "tooltip:$tooltip" > $fifo
 		sleep 10
 		echo "quit" > $fifo ;;
