@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Tazpkg 4.9.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-23 00:48+0000\n"
-"PO-Revision-Date: 2012-06-23 00:49-0000\n"
+"PO-Revision-Date: 2012-07-01 22:51-0000\n"
 "Last-Translator: Aleksej Bobylev <al.bobylev@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: \n"
@@ -54,7 +54,7 @@ msgstr "разработка"
 
 #: tazpkg:39
 msgid "system-tools"
-msgstr "системные утилиты"
+msgstr "система"
 
 #: tazpkg:40
 msgid "security"
