@@ -86,7 +86,7 @@ else
 fi
 TARGET_DIR=$3
 TOP_DIR=`pwd`
-TMP_DIR=$tmp/$RANDOM
+TMP_DIR=/tmp/$RANDOM
 INSTALL_LIST=""
 SAVE_CACHE_DIR="$CACHE_DIR"
 
@@ -1349,6 +1349,23 @@ BEGIN { show=0 }
 ' > $TMP_DIR/$file/description.txt
 	cd $TMP_DIR/$file/fs/
 	rpm2cpio $PACKAGE_FILE | cpio -idm --quiet
+	# rpm2cpio can't extract some new RPMs
+	if [ $? == 1 ]; then
+		if [ ! -e $INSTALLED/p7zip-full/receipt ]; then
+			boldify $(gettext "Unable to extract the RPM using standard tools (rpm2cpio).")
+			gettext "Do you want to install 'p7zip-full' package" && confirm
+			if [ $? = 0 ]; then
+				tazpkg -gi p7zip-full
+			else
+				rm -rf $TMP_DIR
+				exit 1
+			fi
+		fi
+		# we may already have 7z or may just installed it in the step above
+		if [ -e $INSTALLED/p7zip-full/receipt ]; then
+			7z x -so $PACKAGE_FILE | cpio -idm --quiet
+		fi
+	fi
 	cd ../..
 	echo "DEPENDS=\"$(find_depends)\"" >> $TMP_DIR/$file/receipt
 	show_unresolved_lib $TMP_DIR/$file/receipt
