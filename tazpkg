@@ -1361,7 +1361,7 @@ BEGIN { show=0 }
 				exit 1
 			fi
 		fi
-		# we may already have 7z or may just installed it in the step above
+		# we may already have 7z or may have just installed it in the step above
 		if [ -e $INSTALLED/p7zip-full/receipt ]; then
 			7z x -so $PACKAGE_FILE | cpio -idm --quiet
 		fi
@@ -2114,8 +2114,8 @@ EOT
 	recharge)
 		# Recharge packages.list from a mirror.
 		#
-		# WARRNING: The mirrors file have all SliTaz mirrors but mirror
-		# must have only the choosen main mirror.
+		# WARNING: The mirrors file has all SliTaz mirrors but mirror
+		# must have only the chosen main mirror.
 		#
 		check_root $@
 
