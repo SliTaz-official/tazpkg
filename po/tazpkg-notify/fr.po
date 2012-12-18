@@ -60,7 +60,7 @@ msgstr "Utilisation:"
 #: tazpkg-notify:71
 #, sh-format
 msgid "No packages list found - $text"
-msgstr "Aucune liste de paquets trouvées - $text"
+msgstr "Aucune liste de paquets trouvée - $text"
 
 #: tazpkg-notify:78
 msgid "Your packages list is older than 10 days"
@@ -70,8 +70,8 @@ msgstr "Liste des paquets plus ancienne que 10 jours"
 #, fuzzy, sh-format
 msgid "There is <b>$up</b> upgradeable package"
 msgid_plural "There are <b>$up</b> upgradeable packages"
-msgstr[0] "Il y a <b>$up</b> mises à jours disponnibles"
-msgstr[1] "Il y a <b>$up</b> mises à jours disponnibles"
+msgstr[0] "Il y a <b>$up</b> mises à jours disponibles"
+msgstr[1] "Il y a <b>$up</b> mises à jours disponibles"
 
 #: tazpkg-notify:93
 #, sh-format
