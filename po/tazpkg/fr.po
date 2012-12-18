@@ -158,7 +158,7 @@ msgstr "Extrait un paquet (*.tazpkg) dans un répertoire."
 
 #: tazpkg:132
 msgid "Pack an unpacked or prepared package tree."
-msgstr "Empaquète le dossier d'un paquet décompressé."
+msgstr "Empaqueter un paquet décompressé ou préparer l'arborescence de celui-ci."
 
 #: tazpkg:133
 msgid "Recharge your packages.list from the mirror."
@@ -173,7 +173,7 @@ msgstr ""
 
 #: tazpkg:135
 msgid "Create a package archive from an installed package."
-msgstr "Re-créé un paquet avec un paquet installé."
+msgstr "Re-créé un paquet depuis le paquet installé."
 
 #: tazpkg:136
 msgid "Create a package archive with configuration files."
@@ -538,11 +538,11 @@ msgstr "$PACKAGE_FILE ne semble pas être un paquet Slackware !"
 
 #: tazpkg:1355
 msgid "Unable to extract the RPM using standard tools (rpm2cpio)."
-msgstr ""
+msgstr "Impossible d'extraire le paquet RPM avec l'outil standard (rpm2cpio)."
 
 #: tazpkg:1356
 msgid "Do you want to install 'p7zip-full' package"
-msgstr ""
+msgstr "Voulez-vous installer le paquet 'p7zip-full'"
 
 #: tazpkg:1422
 msgid "Blocked packages"
@@ -607,7 +607,7 @@ msgstr[1] "$pkgs nouveaux paquets listés sur le miroir."
 
 #: tazpkg:1492
 msgid "Unable to list anything, no packages.diff found."
-msgstr "Impossible lister quoi que ce soit, pas de packages.diff trouvé."
+msgstr "Impossible de lister quoi que ce soit, pas de packages.diff trouvé."
 
 #: tazpkg:1493
 msgid "Recharge your current list to create a first diff."
@@ -687,7 +687,7 @@ msgstr "Description de: $PACKAGE"
 
 #: tazpkg:1544
 msgid "Sorry, no description available for this package."
-msgstr "Désolé, pas description disponible pour ce paquet."
+msgstr "Désolé, pas de description disponible pour ce paquet."
 
 #: tazpkg:1552
 msgid "Please specify a pattern or package name to search for."
@@ -700,7 +700,7 @@ msgstr "Exemple: 'tazpkg search paint'"
 #: tazpkg:1557
 #, sh-format
 msgid "Search result for: $PATTERN"
-msgstr "Résulat de recherche pour: $PATTERN"
+msgstr "Résulat de la recherche pour: $PATTERN"
 
 #: tazpkg:1574 tazpkg:1632
 msgid "Please specify a pattern or file name to search for."
@@ -713,7 +713,7 @@ msgstr "Exemple : 'tazpkg search-file libnss'"
 #: tazpkg:1580
 #, sh-format
 msgid "Search result for file $s_file"
-msgstr "Résultat de recherche pour un fichier $s_file"
+msgstr "Résultat de la recherche pour le fichier $s_file"
 
 #: tazpkg:1611
 #, fuzzy, sh-format
@@ -739,7 +739,7 @@ msgstr "Exemple : 'tazpkg search-pkgname libnss'"
 #: tazpkg:1638
 #, fuzzy, sh-format
 msgid "Search result for package $s_pkg"
-msgstr "Résultat de recherche pour un fichier"
+msgstr "Résultat de la recherche pour le paquet $s_pkg"
 
 #: tazpkg:1650
 #, sh-format
@@ -750,8 +750,8 @@ msgstr "0 fichiers trouvés pour : $file"
 #, sh-format
 msgid "$match package found with file: $file"
 msgid_plural "$match packages found with file: $file"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "$match paquet trouvé contenant le fichier: $file"
+msgstr[1] "$match paquets trouvés contenant le fichier: $file"
 
 #: tazpkg:1695
 #, fuzzy
@@ -882,7 +882,7 @@ msgstr "Supprimer $PACKAGE ($VERSION$EXTRAVERSION) ?"
 #: tazpkg:2001
 #, sh-format
 msgid "Can't repack $PACKAGE"
-msgstr "Impossible d'empaqueter $PACKAGE"
+msgstr "Impossible de réempaqueter $PACKAGE"
 
 #: tazpkg:2005
 #, sh-format
@@ -891,12 +891,12 @@ msgstr "Ne peut réempaqueter, les fichiers de $PACKAGE on été modifiés par:"
 
 #: tazpkg:2017
 msgid "Can't repack, the following files are lost:"
-msgstr "Ne réempaqueter, les fichiers suivants sont perdu:"
+msgstr "Ne peut réempaqueter, les fichiers suivants sont perdu:"
 
 #: tazpkg:2044
 #, sh-format
 msgid "Can't repack, $CHECKSUM error."
-msgstr "Impossible d'empaqueter, erreur $CHECKSUM."
+msgstr "Impossible de réempaqueter, erreur $CHECKSUM."
 
 #: tazpkg:2055
 #, sh-format
@@ -906,11 +906,11 @@ msgstr "Paquet $PACKAGE réempaqueter avec succès."
 #: tazpkg:2057 tazpkg:2111
 #, sh-format
 msgid "Size: $pkg_size"
-msgstr ""
+msgstr "Taille: $pkg_size"
 
 #: tazpkg:2065
 msgid "Receipt is missing. Please read the documentation."
-msgstr "La recette manque. Veuillez lire la documentation."
+msgstr "La recette n'a pas été trouvée. Veuillez lire la documentation."
 
 #: tazpkg:2068
 #, fuzzy, sh-format
@@ -940,7 +940,7 @@ msgstr "Création de l'archive cpio complète..."
 
 #: tazpkg:2105
 msgid "Restoring original package tree..."
-msgstr "Restoration de l'arbre original du paquet..."
+msgstr "Restauration de l'arbre original du paquet..."
 
 #: tazpkg:2109
 #, sh-format
@@ -955,7 +955,7 @@ msgstr "$repo n'existe pas."
 #: tazpkg:2153
 #, sh-format
 msgid "Undigest $base_path"
-msgstr ""
+msgstr "Indigeste $base_path"
 
 #: tazpkg:2155
 #, sh-format
@@ -969,7 +969,7 @@ msgstr "Recharge indigeste $base_path:"
 
 #: tazpkg:2174
 msgid "Creating backup of the last packages list..."
-msgstr "Création des sauvegardes des listes de paquets..."
+msgstr "Création d'une sauvegarde de la dernière liste de paquets..."
 
 #: tazpkg:2198
 #, fuzzy, sh-format
@@ -980,7 +980,7 @@ msgstr[1] "$new_pkgs nouveaux paquets sur le miroir."
 
 #: tazpkg:2201
 msgid "No new packages on the mirror."
-msgstr "Aucun nouveau paquets sur le miroir."
+msgstr "Aucun nouveaux paquets sur le miroir."
 
 #: tazpkg:2206
 msgid ""
@@ -1009,7 +1009,7 @@ msgstr "Version"
 
 #: tazpkg:2250
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: tazpkg:2275
 #, fuzzy
@@ -1121,7 +1121,7 @@ msgstr "Les paquets suivants contiennent $file :"
 #: tazpkg:2433
 #, sh-format
 msgid "  $pkg (overridden by $overriders)"
-msgstr ""
+msgstr " $pkg (remplacé par $overriders)"
 
 #: tazpkg:2440
 #, fuzzy
@@ -1154,7 +1154,7 @@ msgstr "$PACKAGE n'est pas dans la liste des paquets bloqués."
 
 #: tazpkg:2500 tazpkg:2545
 msgid "rootconfig needs --root= option used."
-msgstr ""
+msgstr "rootconfig nécessite l'utilisation de l'option --root="
 
 #: tazpkg:2513 tazpkg:2572
 #, fuzzy, sh-format
@@ -1193,12 +1193,12 @@ msgstr "Aucun miroir indigeste trouvé."
 #: tazpkg:2627
 #, sh-format
 msgid "Remove $undigest undigest"
-msgstr "Enlève le miroir $undigest"
+msgstr "Supprimer le miroir $undigest"
 
 #: tazpkg:2629
 #, sh-format
 msgid "Removing $undigest undigest..."
-msgstr "Enlève le miroir $undigest..."
+msgstr "Suppression du miroir $undigest..."
 
 #: tazpkg:2635
 #, sh-format
@@ -1244,7 +1244,7 @@ msgstr "Vous êtes déjà dans un SHell Tazpkg."
 
 #: tazpkg:2756
 msgid "Unsupported format"
-msgstr "Format pas supporté"
+msgstr "Format non supporté"
 
 #: tazpkg:2764
 msgid ""
@@ -1253,6 +1253,10 @@ msgid ""
 "example: 'tazpkg link openoffice /mnt' will use less than 100k in\n"
 "         your running system ram.\n"
 msgstr ""
+"\n"
+"usage:   tazpkg link package_name slitaz_root\n"
+"exemple: 'tazpkg link openoffice /mnt' utilisera moins de 100k\n"
+"         en mémoire sur votre système.\n"
 
 #: tazpkg:2772
 #, sh-format
@@ -1284,11 +1288,11 @@ msgstr ""
 #: tazpkg-box:31
 #, sh-format
 msgid "Package name: <b>$pkgname</b>"
-msgstr ""
+msgstr "Nom du paquet: <b>$pkgname</b>"
 
 #: tazpkg-box:35
 msgid "Install"
-msgstr ""
+msgstr "Installation de:"
 
 #: tazpkg-box:35
 #, fuzzy
@@ -1298,7 +1302,7 @@ msgstr "Extraction de:"
 #: tazpkg-box:55
 #, sh-format
 msgid "Downloading: $pkg"
-msgstr ""
+msgstr "Téléchargements: $pkg"
 
 #: tazpkg-box:68
 #, sh-format
