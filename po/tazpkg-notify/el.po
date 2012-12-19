@@ -21,25 +21,25 @@ msgstr ""
 #, sh-format
 msgid "<b>$installed</b> installed package"
 msgid_plural "<b>$installed</b> installed packages"
-msgstr[0] "<b>$installed</b> ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Î± Ï€Î±ÎºÎ­Ï„Î±"
-msgstr[1] "<b>$installed</b> ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Î± Ï€Î±ÎºÎ­Ï„Î±"
+msgstr[0] "<b>$installed</b> εγκατεστημένα πακέτα"
+msgstr[1] "<b>$installed</b> εγκατεστημένα πακέτα"
 
 #: tazpkg-notify:40
 #, sh-format
 msgid "Checking packages lists - $text"
-msgstr "Î“Î¯Î½ÎµÏ„Î±Î¹ Î­Î»ÎµÎ³Ï‡Î¿Ï‚ ÏƒÏ„Î¹Ï‚ Î»Î¯ÏƒÏ„ÎµÏ‚ Ï€Î±ÎºÎ­Ï„Ï‰Î½ - $text"
+msgstr "Γίνεται έλεγχος στις λίστες πακέτων - $text"
 
 #: tazpkg-notify:49
 msgid "My packages"
-msgstr "Î¤Î± Ï€Î±ÎºÎ­Ï„Î±"
+msgstr "Τα πακέτα"
 
 #: tazpkg-notify:50
 msgid "Recharge lists"
-msgstr "Î•Ï€Î±Î½Î±Ï†ÏŒÏÏ„Ï‰ÏƒÎ· Ï„Ï‰Î½ Î»Î¹ÏƒÏ„ÏŽÎ½"
+msgstr "Επαναφόρτωση των λιστών"
 
 #: tazpkg-notify:51
 msgid "Check upgrade"
-msgstr "Î•Î»Î­Î³Î¾Ï„Îµ Î³Î¹Î± ÎµÎ½Î·Î¼Î­ÏÏ‰ÏƒÎ·/ Î±Î½Î±Î²Î¬Î¸Î¼Î¹ÏƒÎ·"
+msgstr "Ελέγξτε για ενημέρωση/ αναβάθμιση"
 
 #: tazpkg-notify:52
 msgid "TazPKG SHell"
@@ -47,33 +47,34 @@ msgstr ""
 
 #: tazpkg-notify:53
 msgid "TazPKG manual"
-msgstr "Î•Î³Ï‡ÎµÎ¹ÏÎ¯Î´Î¹Î¿ TazPKG"
+msgstr "Εγχειρίδιο TazPKG"
 
 #: tazpkg-notify:54
 msgid "Close notification"
-msgstr "ÎšÎ»ÎµÎ¯ÏƒÎ¹Î¼Î¿ Ï€ÏÎ¿ÎµÎ¹Î´Î¿Ï€Î¿Î¯Î·ÏƒÎ·Ï‚"
+msgstr "Κλείσιμο προειδοποίησης"
 
 #: tazpkg-notify:60
 msgid "Usage:"
-msgstr "Î§ÏÎ®ÏƒÎ·:"
+msgstr "Χρήση:"
 
 #: tazpkg-notify:71
 #, sh-format
 msgid "No packages list found - $text"
-msgstr "Î”ÎµÎ½ Î²ÏÎ­Î¸Î·ÎºÎ±Î½ Ï€Î±ÎºÎ­Ï„Î± Î¼Îµ Î»Î¯ÏƒÏ„ÎµÏ‚ - $text"
+msgstr "Δεν βρέθηκαν πακέτα με λίστες - $text"
 
 #: tazpkg-notify:78
 msgid "Your packages list is older than 10 days"
-msgstr "Î— Î»Î¯ÏƒÏ„Î± ÏƒÎ±Ï‚ Î¼Îµ Ï„Î± Ï€Î±ÎºÎ­Ï„Î± ÎµÎ¯Î½Î±Î¹ Ï€Î±Î»Î¹ÏŒÏ„ÎµÏÎ· Ï„Ï‰Î½ 10 Î·Î¼ÎµÏÏŽÎ½"
+msgstr "Η λίστα σας με τα πακέτα είναι παλιότερη των 10 ημερών"
 
 #: tazpkg-notify:86
 #, sh-format
 msgid "There is <b>$up</b> upgradeable package"
 msgid_plural "There are <b>$up</b> upgradeable packages"
-msgstr[0] "Î¥Ï€Î¬ÏÏ‡Î¿Ï…Î½ <b>$up</b> Î±Î½Î±Î²Î±Î¸Î¼Î¯ÏƒÎ¹Î¼Î± Ï€Î±ÎºÎ­Ï„Î±"
-msgstr[1] "Î¥Ï€Î¬ÏÏ‡Î¿Ï…Î½ <b>$up</b> Î±Î½Î±Î²Î±Î¸Î¼Î¯ÏƒÎ¹Î¼Î± Ï€Î±ÎºÎ­Ï„Î±"
+msgstr[0] "Υπάρχουν <b>$up</b> αναβαθμίσιμα πακέτα"
+msgstr[1] "Υπάρχουν <b>$up</b> αναβαθμίσιμα πακέτα"
 
 #: tazpkg-notify:93
 #, sh-format
 msgid "System is up to date - $text"
-msgstr "Î¤Î¿ ÏƒÏÏƒÏ„Î·Î¼Î± ÎµÎ¯Î½Î±Î¹ ÎµÎ½Î·Î¼ÎµÏÏ‰Î¼Î­Î½Î¿ - $text"
+msgstr "Το σύστημα είναι ενημερωμένο - $text"
+

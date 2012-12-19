@@ -19,7 +19,7 @@ msgstr ""
 
 #: tazpkg:37
 msgid "base-system"
-msgstr "Î²Î±ÏƒÎ¹ÎºÏŒ - ÏƒÏÏƒÏ„Î·Î¼Î±"
+msgstr "βασικό - σύστημα"
 
 #: tazpkg:37
 msgid "x-window"
@@ -27,60 +27,60 @@ msgstr ""
 
 #: tazpkg:37
 msgid "utilities"
-msgstr "Î²Î¿Î·Î¸Î·Ï„Î¹ÎºÎ¬ Ï€ÏÎ¿Î³ÏÎ¬Î¼Î¼Î±Ï„Î± (utilities)"
+msgstr "βοηθητικά προγράμματα (utilities)"
 
 #: tazpkg:38
 msgid "network"
-msgstr "Î´Î¯ÎºÏ„Ï…Î¿"
+msgstr "δίκτυο"
 
 #: tazpkg:38
 msgid "graphics"
-msgstr "Î³ÏÎ±Ï†Î¹ÎºÎ¬"
+msgstr "γραφικά"
 
 #: tazpkg:38
 msgid "multimedia"
-msgstr "Ï€Î¿Î»Ï…Î¼Î­ÏƒÎ±"
+msgstr "πολυμέσα"
 
 #: tazpkg:39
 msgid "office"
-msgstr "Î³ÏÎ±Ï†ÎµÎ¯Î¿"
+msgstr "γραφείο"
 
 #: tazpkg:39
 msgid "development"
-msgstr "Î±Î½Î¬Ï€Ï„Ï…Î¾Î·"
+msgstr "ανάπτυξη"
 
 #: tazpkg:39
 msgid "system-tools"
-msgstr "ÎµÏÎ³Î±Î»ÎµÎ¯Î±-ÏƒÏ…ÏƒÏ„Î®Î¼Î±Ï„Î¿Ï‚"
+msgstr "εργαλεία-συστήματος"
 
 #: tazpkg:40
 msgid "security"
-msgstr "Î±ÏƒÏ†Î¬Î»ÎµÎ¹Î±"
+msgstr "ασφάλεια"
 
 #: tazpkg:40
 msgid "games"
-msgstr "Ï€Î±Î¹Î³Î½Î¯Î´Î¹Î±"
+msgstr "παιγνίδια"
 
 #: tazpkg:40
 msgid "misc"
-msgstr "Î´Î¹Î¬Ï†Î¿ÏÎ±"
+msgstr "διάφορα"
 
 #: tazpkg:40
 msgid "meta"
-msgstr "Î¼ÎµÏ„Î±"
+msgstr "μετα"
 
 #: tazpkg:41
 msgid "non-free"
-msgstr "Î¼Î·-ÎµÎ»ÎµÏÎ¸ÎµÏÎ±"
+msgstr "μη-ελεύθερα"
 
 #: tazpkg:110
 #, sh-format
 msgid "SliTaz package manager - Version: $VERSION"
-msgstr "Î”Î¹Î±Ï‡ÎµÎ¹ÏÎ¹ÏƒÏ„Î®Ï‚ Ï€Î±ÎºÎ­Ï„Ï‰Î½ Ï„Î¿Ï… SliTaz - ÎˆÎºÎ´Î¿ÏƒÎ·: $VERSION"
+msgstr "Διαχειριστής πακέτων του SliTaz - Έκδοση: $VERSION"
 
 #: tazpkg:112
 msgid "Usage:"
-msgstr "Î§ÏÎ®ÏƒÎ·:"
+msgstr "Χρήση:"
 
 #: tazpkg:113
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
@@ -92,160 +92,160 @@ msgstr ""
 
 #: tazpkg:116
 msgid "Commands:"
-msgstr "Î•Î½Ï„Î¿Î»Î­Ï‚:"
+msgstr "Εντολές:"
 
 #: tazpkg:117
 msgid "Print this short usage."
-msgstr "Î•ÎºÏ„ÏÏ€Ï‰ÏƒÎ· Î±Ï…Ï„Î®Ï‚ Ï„Î·Ï‚ ÏƒÏÎ½Ï„Î¿Î¼Î·Ï‚ Ï‡ÏÎ®ÏƒÎ·Ï‚."
+msgstr "Εκτύπωση αυτής της σύντομης χρήσης."
 
 #: tazpkg:118
 msgid "Show known bugs in packages."
-msgstr "Î•Î¼Ï†Î¬Î½Î¹ÏƒÎ· Ï„Ï‰Î½ Î³Î½Ï‰ÏƒÏ„ÏŽÎ½ ÏƒÏ†Î±Î»Î¼Î¬Ï„Ï‰Î½ ÏƒÏ„Î± Ï€Î±ÎºÎ­Ï„Î±."
+msgstr "Εμφάνιση των γνωστών σφαλμάτων στα πακέτα."
 
 #: tazpkg:119
 msgid "List installed packages on the system by category or all."
-msgstr "Î Î±ÏÎ¬Î¸ÎµÏƒÎ· ÏƒÎµ Î»Î¯ÏƒÏ„Î± Ï„Ï‰Î½ ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Ï‰Î½ Ï€Î±ÎºÎ­Ï„Ï‰Î½ Ï„Î¿Ï… ÏƒÏ…ÏƒÏ„Î®Î¼Î±Ï„Î¿Ï‚, Î±Î½Î¬ ÎºÎ±Ï„Î·Î³Î¿ÏÎ¯Î±, Î® ÎºÎ±Î¹ ÏŒÎ»Ï‰Î½."
+msgstr "Παράθεση σε λίστα των εγκατεστημένων πακέτων του συστήματος, ανά κατηγορία, ή και όλων."
 
 #: tazpkg:120
 msgid "List all available packages on the mirror (--diff for new)."
-msgstr "Î Î±ÏÎ¬Î¸ÎµÏƒÎ· ÏƒÎµ Î»Î¯ÏƒÏ„Î± ÏŒÎ»Ï‰Î½ Ï„Ï‰Î½ ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Ï‰Î½ Ï€Î±ÎºÎ­Ï„Ï‰Î½ ÏƒÏ„Î¿ mirror "
+msgstr "Παράθεση σε λίστα όλων των εγκατεστημένων πακέτων στο mirror "
 
 #: tazpkg:121
 msgid "Print information about a package."
-msgstr "Î•ÎºÏ„ÏÏ€Ï‰ÏƒÎ· Ï€Î»Î·ÏÎ¿Ï†Î¿ÏÎ¹ÏŽÎ½ ÏƒÏ‡ÎµÏ„Î¹ÎºÎ¬ Î¼Îµ Î­Î½Î± Ï€Î±ÎºÎ­Ï„Î¿."
+msgstr "Εκτύπωση πληροφοριών σχετικά με ένα πακέτο."
 
 #: tazpkg:122
 msgid "Print description of a package (if it exists)."
-msgstr "Î•ÎºÏ„ÏÏ€Ï‰ÏƒÎ· Ï€ÎµÏÎ¹Î³ÏÎ±Ï†Î®Ï‚ ÎµÎ½ÏŒÏ‚ Ï€Î±ÎºÎ­Ï„Î¿Ï… (Î±Î½ Ï…Ï€Î¬ÏÏ‡ÎµÎ¹)."
+msgstr "Εκτύπωση περιγραφής ενός πακέτου (αν υπάρχει)."
 
 #: tazpkg:123
 msgid "List the files installed with a package."
-msgstr "Î Î±ÏÎ¬Î¸ÎµÏƒÎ· ÏƒÎµ Î»Î¯ÏƒÏ„Î± Ï„Ï‰Î½ Î±ÏÏ‡ÎµÎ¯Ï‰Î½ Ï€Î¿Ï… ÎµÎ³ÎºÎ±Ï„Î±ÏƒÏ„Î¬Î¸Î·ÎºÎ±Î½ Î¼Îµ Î­Î½Î± Ï€Î±ÎºÎ­Ï„Î¿."
+msgstr "Παράθεση σε λίστα των αρχείων που εγκαταστάθηκαν με ένα πακέτο."
 
 #: tazpkg:124
 msgid "List the configuration files."
-msgstr "Î Î±ÏÎ¬Î¸ÎµÏƒÎ· ÏƒÎµ Î»Î¯ÏƒÏ„Î± Ï„Ï‰Î½ Î±ÏÏ‡ÎµÎ¯Ï‰Î½ ÏÏ…Î¸Î¼Î¯ÏƒÎµÏ‰Î½."
+msgstr "Παράθεση σε λίστα των αρχείων ρυθμίσεων."
 
 #: tazpkg:125
 msgid "Search for a package by pattern or name (options: -i|-l|-m)."
-msgstr "Î‘Î½Î±Î¶Î®Ï„Î·ÏƒÎ· ÎµÎ½ÏŒÏ‚ Ï€Î±ÎºÎ­Ï„Î¿Ï… Î¼Îµ Î²Î¬ÏƒÎ· Î­Î½Î± pattern Î® Ï„Î¿ ÏŒÎ½Î¿Î¼Î± (options: -i|-l|-m)."
+msgstr "Αναζήτηση ενός πακέτου με βάση ένα pattern ή το όνομα (options: -i|-l|-m)."
 
 #: tazpkg:126
 msgid "Search on mirror for package having a particular file."
-msgstr "Î‘Î½Î±Î¶Î®Ï„Î·ÏƒÎ· ÎµÎ½ÏŒÏ‚ mirror Î³Î¹Î± Ï€Î±ÎºÎ­Ï„Î± Ï€Î¿Ï… Î­Ï‡Î¿Ï…Î½ Î­Î½Î± Î¹Î´Î¹Î±Î¯Ï„ÎµÏÎ¿ Î±ÏÏ‡ÎµÎ¯Î¿."
+msgstr "Αναζήτηση ενός mirror για πακέτα που έχουν ένα ιδιαίτερο αρχείο."
 
 #: tazpkg:127
 msgid "Search for file(s) in all installed packages files."
-msgstr "Î‘Î½Î±Î¶Î®Ï„Î·ÏƒÎ· Î³Î¹Î± Î±ÏÏ‡ÎµÎ¯Î¿(Î±) ÏƒÎµ ÏŒÎ»Î± Ï„Î± Î±ÏÏ‡ÎµÎ¯Î± ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Ï‰Î½ Ï€Î±ÎºÎ­Ï„Ï‰Î½."
+msgstr "Αναζήτηση για αρχείο(α) σε όλα τα αρχεία εγκατεστημένων πακέτων."
 
 #: tazpkg:128
 msgid "Install a local (*.tazpkg) package (--forced to force)."
-msgstr "Î•Î³ÎºÎ±Ï„Î¬ÏƒÏ„Î±ÏƒÎ· ÎµÎ½ÏŒÏ‚ Ï„Î¿Ï€Î¹ÎºÎ¿Ï (*.tazpkg) Ï€Î±ÎºÎ­Ï„Î¿Ï… (--forced Î³Î¹Î± ÎµÎ¾Î±Î½Î±Î³ÎºÎ±ÏƒÎ¼ÏŒ)."
+msgstr "Εγκατάσταση ενός τοπικού (*.tazpkg) πακέτου (--forced για εξαναγκασμό)."
 
 #: tazpkg:129
 msgid "Install all packages from a list of packages."
-msgstr "Î•Î³ÎºÎ±Ï„Î¬ÏƒÏ„Î±ÏƒÎ· ÏŒÎ»Ï‰Î½ Ï„Ï‰Î½ Ï€Î±ÎºÎ­Ï„Ï‰Î½ Î±Ï€ÏŒ Î¼Î¯Î± Î»Î¯ÏƒÏ„Î± Ï€Î±ÎºÎ­Ï„Ï‰Î½."
+msgstr "Εγκατάσταση όλων των πακέτων από μία λίστα πακέτων."
 
 #: tazpkg:130
 msgid "Remove the specified package and all installed files."
-msgstr "Î”Î¹Î±Î³ÏÎ±Ï†Î® Ï„Î¿Ï… ÏƒÏ…Î³ÎºÎµÎºÏÎ¹Î¼Î­Î½Î¿Ï… Ï€Î±ÎºÎ­Ï„Î¿Ï… ÎºÎ±Î¹ ÏŒÎ»Ï‰Î½ Ï„Ï‰Î½ ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Ï‰Î½ Ï€Î±ÎºÎ­Ï„Ï‰Î½."
+msgstr "Διαγραφή του συγκεκριμένου πακέτου και όλων των εγκατεστημένων πακέτων."
 
 #: tazpkg:131
 msgid "Extract a (*.tazpkg) package into a directory."
-msgstr "Î•Î¾Î±Î³Ï‰Î³Î® ÎµÎ½ÏŒÏ‚ Ï€Î±ÎºÎ­Ï„Î¿Ï… (*.tazpkg) ÏƒÎµ Î­Î½Î±Î½ ÎºÎ±Ï„Î¬Î»Î¿Î³Î¿ (directory)"
+msgstr "Εξαγωγή ενός πακέτου (*.tazpkg) σε έναν κατάλογο (directory)"
 
 #: tazpkg:132
 msgid "Pack an unpacked or prepared package tree."
-msgstr "Î Î±ÎºÎµÏ„Î¬ÏÎ¹ÏƒÎ¼Î± ÎµÎ½ÏŒÏ‚ Î±Ï€Î±ÎºÎµÏ„Î¬ÏÎ¹ÏƒÏ„Î¿Ï… Î® ÎµÎ½ÏŒÏ‚ Ï€ÏÎ¿ÎµÏ„Î¿Î¹Î¼Î±ÏƒÎ¼Î­Î½Î¿Ï… Î´Î­Î½Î´ÏÎ¿Ï… Ï€Î±ÎºÎ­Ï„Ï‰Î½."
+msgstr "Πακετάρισμα ενός απακετάριστου ή ενός προετοιμασμένου δένδρου πακέτων."
 
 #: tazpkg:133
 msgid "Recharge your packages.list from the mirror."
-msgstr "Î•Ï€Î±Î½Î±Ï†ÏŒÏÏ„Ï‰ÏƒÎ· Î±Ï€ÏŒ Ï„Î¿ mirror Ï„Î·Ï‚ Î»Î¯ÏƒÏ„Î±Ï‚ packages.list Ï€Î¿Ï… Î­Ï‡ÎµÏ„Îµ."
+msgstr "Επαναφόρτωση από το mirror της λίστας packages.list που έχετε."
 
 #: tazpkg:134
 #, sh-format
 msgid "Check packages $CHECKSUM to list and install latest upgrades."
-msgstr "Î•Î»Î­Î³Î¾Ï„Îµ Ï„Î¿ $CHECKSUM Ï„Ï‰Î½ Ï€Î±ÎºÎ­Ï„Ï‰Î½ ÏƒÏ„Î· Î»Î¯ÏƒÏ„Î± ÎºÎ±Î¹ Î±Ï€ÎµÎ³ÎºÎ±Ï„Î±ÏƒÏ„Î®ÏƒÏ„Îµ ÏŒÎ»ÎµÏ‚ Ï„Î¹Ï‚ ÎµÎ½Î·Î¼ÎµÏÏŽÏƒÎµÎ¹Ï‚."
+msgstr "Ελέγξτε το $CHECKSUM των πακέτων στη λίστα και απεγκαταστήστε όλες τις ενημερώσεις."
 
 #: tazpkg:135
 msgid "Create a package archive from an installed package."
-msgstr "Î”Î·Î¼Î¹Î¿Ï…ÏÎ³Î®ÏƒÏ„Îµ Î­Î½Î± Î±ÏÏ‡ÎµÎ¯Î¿ Ï€Î±ÎºÎ­Ï„Ï‰Î½ Î±Ï€ÏŒ Î­Î½Î± ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Î¿ Ï€Î±ÎºÎ­Ï„Î¿."
+msgstr "Δημιουργήστε ένα αρχείο πακέτων από ένα εγκατεστημένο πακέτο."
 
 #: tazpkg:136
 msgid "Create a package archive with configuration files."
-msgstr "Î”Î·Î¼Î¹Î¿Ï…ÏÎ³Î®ÏƒÏ„Îµ Î­Î½Î± Î±ÏÏ‡ÎµÎ¯Î¿ Ï€Î±ÎºÎ­Ï„Ï‰Î½ Î¼Îµ Î±ÏÏ‡ÎµÎ¯Î± ÏÏ…Î¸Î¼Î¯ÏƒÎµÏ‰Î½."
+msgstr "Δημιουργήστε ένα αρχείο πακέτων με αρχεία ρυθμίσεων."
 
 #: tazpkg:137
 msgid "Rebuild a package with a better compression ratio."
-msgstr "Î‘Î½Î±Î´ÏŒÎ¼Î·ÏƒÎ· ÎµÎ½ÏŒÏ‚ Ï€Î±ÎºÎ­Ï„Î¿Ï… Î¼Îµ ÎºÎ±Î»ÏÏ„ÎµÏÎ· ÏƒÏ‡Î­ÏƒÎ· ÏƒÏ…Î¼Ï€Î¯ÎµÏƒÎ·Ï‚."
+msgstr "Αναδόμηση ενός πακέτου με καλύτερη σχέση συμπίεσης."
 
 #: tazpkg:138
 msgid "Block an installed package version or unblock it for upgrade."
-msgstr "ÎœÏ€Î»Î¿ÎºÎ¬ÏÎ¹ÏƒÎ¼Î± ÎµÎ½ÏŒÏ‚ ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Î¿Ï… Ï€Î±ÎºÎ­Ï„Î¿Ï… Î® Î¾ÎµÎ¼Ï€Î»Î¿ÎºÎ¬ÏÎ¹ÏƒÎ¼Î± Î³Î¹Î± Î½Î± Î³Î¯Î½ÎµÎ¹ ÎµÎ½Î·Î¼Î­ÏÏ‰ÏƒÎ·."
+msgstr "Μπλοκάρισμα ενός εγκατεστημένου πακέτου ή ξεμπλοκάρισμα για να γίνει ενημέρωση."
 
 #: tazpkg:139
 msgid "Download a package into the current directory."
-msgstr "ÎœÎµÏ„Î±Ï†ÏŒÏÏ„Ï‰ÏƒÎ· ÎµÎ½ÏŒÏ‚ Ï€Î±ÎºÎ­Ï„Î¿Ï… ÏƒÏ„Î¿Î½ Ï„ÏÎ­Ï‡Î¿Î½Ï„Î± ÎºÎ±Ï„Î¬Î»Î¿Î³Î¿."
+msgstr "Μεταφόρτωση ενός πακέτου στον τρέχοντα κατάλογο."
 
 #: tazpkg:140
 msgid "Download and install a package from the mirror."
-msgstr "ÎœÎµÏ„Î±Ï†ÏŒÏÏ„Ï‰ÏƒÎ· ÎºÎ±Î¹ ÎµÎ³ÎºÎ±Ï„Î¬ÏƒÏ„Î±ÏƒÎ· ÎµÎ½ÏŒÏ‚ Ï€Î±ÎºÎ­Ï„Î¿Ï… Î±Ï€ÏŒ Ï„Î¿ mirror."
+msgstr "Μεταφόρτωση και εγκατάσταση ενός πακέτου από το mirror."
 
 #: tazpkg:141
 msgid "Download and install a list of packages from the mirror."
-msgstr "ÎœÎµÏ„Î±Ï†ÏŒÏÏ„Ï‰ÏƒÎ· ÎºÎ±Î¹ ÎµÎ³ÎºÎ±Ï„Î¬ÏƒÏ„Î±ÏƒÎ· Î¼Î¯Î±Ï‚ Î»Î¯ÏƒÏ„Î±Ï‚ Ï€Î±ÎºÎ­Ï„Ï‰Î½ Î±Ï€ÏŒ Ï„Î¿ mirror."
+msgstr "Μεταφόρτωση και εγκατάσταση μίας λίστας πακέτων από το mirror."
 
 #: tazpkg:142
 msgid "Verify consistency of installed packages."
-msgstr "Î•Ï€Î±Î»Î®Î¸ÎµÏ…ÏƒÎ· Î¿Î¼Î¿Î¹Î¿Î³Î­Î½ÎµÎ¹Î±Ï‚ (consistency) Ï„Ï‰Î½ ÎµÎ³ÎºÎ±Ï„ÎµÏƒÏ„Î·Î¼Î­Î½Ï‰Î½ Ï€Î±ÎºÎ­Ï„Ï‰Î½."
+msgstr "Επαλήθευση ομοιογένειας (consistency) των εγκατεστημένων πακέτων."
 
 #: tazpkg:143
 msgid "Install the flavor list of packages."
-msgstr "Î•Î³ÎºÎ±Ï„Î±ÏƒÏ„Î®ÏƒÏ„Îµ Ï„Î·Î½ Î»Î¯ÏƒÏ„Î± Ï€Î±ÎºÎ­Ï„Ï‰Î½ flavor."
+msgstr "Εγκαταστήστε την λίστα πακέτων flavor."
 
 #: tazpkg:144
 msgid "Install the flavor list of packages and remove other ones."
-msgstr "Î•Î³ÎºÎ±Ï„Î±ÏƒÏ„Î®ÏƒÏ„Îµ Ï„Î·Î½ Î»Î¯ÏƒÏ„Î± Ï€Î±ÎºÎ­Ï„Ï‰Î½ flavor ÎºÎ±Î¹ Î´Î¹Î±Î³ÏÎ¬ÏˆÏ„Îµ Î´Î¹Î¬Ï†Î¿ÏÎ± Î¬Î»Î»Î±."
+msgstr "Εγκαταστήστε την λίστα πακέτων flavor και διαγράψτε διάφορα άλλα."
 
 #: tazpkg:145
 msgid "Change release and update packages."
-msgstr "Î‘Î»Î»Î¬Î¾Ï„Îµ Ï„Î± Ï€Î±ÎºÎ­Ï„Î± release ÎºÎ±Î¹ ÎºÎ¬Î½Ï„Îµ ÎµÎ½Î·Î¼Î­ÏÏ‰ÏƒÎ·."
+msgstr "Αλλάξτε τα πακέτα release και κάντε ενημέρωση."
 
 #: tazpkg:146
 msgid "Clean all packages downloaded in cache directory."
-msgstr "Î”Î¹Î±Î³ÏÎ¬ÏˆÏ„Îµ ÏŒÎ»Î± Ï„Î± Î¼ÎµÏ„Î±Ï†Î¿ÏÏ„Ï‰Î¼Î­Î½Î± Ï€Î±ÎºÎ­Ï„Î± Î±Ï€ÏŒ Ï„Î¿Î½ ÎºÎ±Ï„Î¬Î»Î¿Î³Î¿ ÎºÏÏ…Ï†Î®Ï‚ Î¼Î½Î®Î¼Î·Ï‚ (cache)"
+msgstr "Διαγράψτε όλα τα μεταφορτωμένα πακέτα από τον κατάλογο κρυφής μνήμης (cache)"
 
 #: tazpkg:147
 msgid "Display dependencies tree."
-msgstr "Î•Î¼Ï†Î¬Î½Î¹ÏƒÎ· Î´Î­Î½Î´ÏÎ¿Ï… ÎµÎ¾Î±ÏÏ„Î®ÏƒÎµÏ‰Î½."
+msgstr "Εμφάνιση δένδρου εξαρτήσεων."
 
 #: tazpkg:148
 msgid "Display reverse dependencies tree."
-msgstr "Î•Î¼Ï†Î¬Î½Î¹ÏƒÎ· Î´Î­Î½Î´ÏÎ¿Ï… Î±Î½Ï„Î¯ÏƒÏ„ÏÎ¿Ï†Ï‰Î½ ÎµÎ¾Î±ÏÏ„Î®ÏƒÎµÏ‰Î½."
+msgstr "Εμφάνιση δένδρου αντίστροφων εξαρτήσεων."
 
 #: tazpkg:149
 msgid "Convert a deb/rpm/tgz/arch package to a slitaz (.tazpkg)."
-msgstr "ÎœÎµÏ„Î±Ï„ÏÎ¿Ï€Î® ÎµÎ½ÏŒÏ‚ Ï€Î±ÎºÎ­Ï„Î¿Ï… deb/rpm/tgz/arch ÏƒÎµ Î¼Î¿ÏÏ†Î® slitaz (.tazpkg)."
+msgstr "Μετατροπή ενός πακέτου deb/rpm/tgz/arch σε μορφή slitaz (.tazpkg)."
 
 #: tazpkg:150
 msgid "Link a package from another slitaz installation."
-msgstr "Î£Ï…Î½Î´Î­ÏƒÏ„Îµ (link) Î­Î½Î± Ï€Î±ÎºÎ­Ï„Î¿ Î±Ï€ÏŒ Î¼Î¹Î± Î¬Î»Î»Î· ÎµÎ³ÎºÎ±Ï„Î¬ÏƒÏ„Î±ÏƒÎ· Ï„Î¿Ï… SliTaz."
+msgstr "Συνδέστε (link) ένα πακέτο από μια άλλη εγκατάσταση του SliTaz."
 
 #: tazpkg:151
 msgid "Change the mirror url configuration."
-msgstr "Î‘Î»Î»Î¬Î¾Ï„Îµ Ï„Î· ÏÏÎ¸Î¼Î¹ÏƒÎ· Î³Î¹Î± Ï„Î¿ url Ï„Î¿Ï… mirror."
+msgstr "Αλλάξτε τη ρύθμιση για το url του mirror."
 
 #: tazpkg:152
 msgid "List undigest mirrors."
-msgstr "Î Î±ÏÎ¬Î¸ÎµÏƒÎ· ÏƒÎµ Î»Î¯ÏƒÏ„Î± Ï„Ï‰Î½ undigest mirrors."
+msgstr "Παράθεση σε λίστα των undigest mirrors."
 
 #: tazpkg:153
 msgid "Remove an undigest mirror."
-msgstr "Î”Î¹Î±Î³ÏÎ±Ï†Î® ÏŒÎ»Ï‰Î½ Ï„Ï‰Î½ undigest mirrors."
+msgstr "Διαγραφή όλων των undigest mirrors."
 
 #: tazpkg:154
 msgid "Add an undigest mirror."
-msgstr "Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· ÎµÎ½ÏŒÏ‚ undigest mirror."
+msgstr "Προσθήκη ενός undigest mirror."
 
 #: tazpkg:155
 msgid "Update an undigest mirror."
@@ -1264,3 +1264,4 @@ msgstr ""
 #, sh-format
 msgid "Usage: $progname [actions|url] [pkg]"
 msgstr ""
+
