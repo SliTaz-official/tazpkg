@@ -1307,7 +1307,7 @@ msgstr "Téléchargements: $pkg"
 #: tazpkg-box:68
 #, sh-format
 msgid "Usage: $progname [actions|url] [pkg]"
-msgstr ""
+msgstr "Usage: $progname [actions|url] [paquet]"
 
 #~ msgid "y"
 #~ msgstr "o"
