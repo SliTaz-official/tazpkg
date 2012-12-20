@@ -90,7 +90,7 @@ msgstr "tazpkg [commande] [paquet|rép|motif|liste|cat|--opt] [rép|--opt]"
 
 #: tazpkg:114
 msgid "SHell:"
-msgstr ""
+msgstr "SHell:"
 
 #: tazpkg:116
 msgid "Commands:"
@@ -510,7 +510,7 @@ msgstr "Rien n'a été changé"
 #: tazpkg:976
 #, sh-format
 msgid "Setting mirror(s) to: $NEW_MIRROR_URL"
-msgstr ""
+msgstr "Nouvelle URL pour le mirroir: $NEW_MIRROR_URL"
 
 #: tazpkg:1098
 msgid "No dependency for"
@@ -524,7 +524,7 @@ msgstr "ATTENTION: dépendance inconnue pour $lib"
 #: tazpkg:1167 tazpkg:1306
 #, sh-format
 msgid "Invalid target: $target (expected i386)"
-msgstr ""
+msgstr "Cible invalide: $target (i386 attendu)"
 
 #: tazpkg:1204
 #, sh-format
@@ -633,7 +633,7 @@ msgstr "Fichiers installés avec: $PACKAGE"
 #, fuzzy, sh-format
 msgid "<c 32>$files</c> file installed with $PACKAGE"
 msgid_plural "<c 32>$files</c> files installed with $PACKAGE"
-msgstr[0] "<c 32>$files</c> fichiers installés avec $PACKAGE"
+msgstr[0] "<c 32>$files</c> fichier installé avec $PACKAGE"
 msgstr[1] "<c 32>$files</c> fichiers installés avec $PACKAGE"
 
 #: tazpkg:1522
@@ -794,7 +794,7 @@ msgstr "Les paquets suivant dépendent de $PACKAGE:"
 #: tazpkg:1798
 #, sh-format
 msgid "The following packages have been modified by $PACKAGE:"
-msgstr "Les paquets suivant on été modifié par $PACKAGE:"
+msgstr "Les paquets suivant ont été modifié par $PACKAGE:"
 
 #: tazpkg:1806
 #, sh-format
@@ -975,7 +975,7 @@ msgstr "Création d'une sauvegarde de la dernière liste de paquets..."
 #, fuzzy, sh-format
 msgid "$new_pkgs new package on the mirror."
 msgid_plural "$new_pkgs new packages on the mirror."
-msgstr[0] "$new_pkgs nouveaux paquets sur le miroir."
+msgstr[0] "$new_pkgs nouveau paquet sur le miroir."
 msgstr[1] "$new_pkgs nouveaux paquets sur le miroir."
 
 #: tazpkg:2201
@@ -1043,14 +1043,14 @@ msgstr[1] "Paquets installés"
 msgid "$blocked_count blocked"
 msgid_plural "$blocked_count blocked"
 msgstr[0] "($blocked_count bloqué)"
-msgstr[1] "($blocked_count bloqué)"
+msgstr[1] "($blocked_count bloqués)"
 
 #: tazpkg:2309
 #, fuzzy, sh-format
 msgid "You have $upnb available upgrade $blocks"
 msgid_plural "You have $upnb available upgrades $blocks"
 msgstr[0] ""
-"Vous avez $upnb mises à jour disponibles$blocks sur $pkgs paquets installés"
+"Vous avez $upnb mises à jour disponible$blocks sur $pkgs paquets installés"
 msgstr[1] ""
 "Vous avez $upnb mises à jour disponibles$blocks sur $pkgs paquets installés"
 
@@ -1283,7 +1283,7 @@ msgstr "Le paquet est installé mais ne fonctionnera probablement pas."
 
 #: tazpkg-box:17
 msgid "TazPKG Action"
-msgstr ""
+msgstr "Opération faite par TazPkg"
 
 #: tazpkg-box:31
 #, sh-format
