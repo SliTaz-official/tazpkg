@@ -1,13 +1,13 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Greek translations for TazPkg package.
+# Copyright (C) 2012 SliTaz
+# This file is distributed under the same license as the TazPkg package.
 # Constantine Mousafiris <kvisitor@gnugr.org>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Tazpkg Notification 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-01 22:49+0000\n"
-"PO-Revision-Date: 2012-11-21 13:20+0200\n"
+"PO-Revision-Date: 2012-12-16 00:40+0200\n"
 "Last-Translator: Constantine Mousafiris <kvisitor@gnugr.org>\n"
 "Language-Team: Kostis Mousafiris\n"
 "Language: el\n"
@@ -21,7 +21,7 @@ msgstr ""
 #, sh-format
 msgid "<b>$installed</b> installed package"
 msgid_plural "<b>$installed</b> installed packages"
-msgstr[0] "<b>$installed</b> εγκατεστημένα πακέτα"
+msgstr[0] "<b>$installed</b> εγκατεστημένο πακέτο"
 msgstr[1] "<b>$installed</b> εγκατεστημένα πακέτα"
 
 #: tazpkg-notify:40
@@ -70,11 +70,10 @@ msgstr "Η λίστα σας με τα πακέτα είναι παλιότερ�
 #, sh-format
 msgid "There is <b>$up</b> upgradeable package"
 msgid_plural "There are <b>$up</b> upgradeable packages"
-msgstr[0] "Υπάρχουν <b>$up</b> αναβαθμίσιμα πακέτα"
+msgstr[0] "Υπάρχει <b>$up</b> αναβαθμίσιμο πακέτο"
 msgstr[1] "Υπάρχουν <b>$up</b> αναβαθμίσιμα πακέτα"
 
 #: tazpkg-notify:93
 #, sh-format
 msgid "System is up to date - $text"
 msgstr "Το σύστημα είναι ενημερωμένο - $text"
-
