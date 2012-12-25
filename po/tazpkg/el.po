@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Tazpkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-14 14:24+0000\n"
-"PO-Revision-Date: 2012-12-16 00:37+0200\n"
+"PO-Revision-Date: 2012-12-23 14:08+0200\n"
 "Last-Translator: Constantine Mousafiris <kvisitor@gnugr.org>\n"
 "Language-Team: Kostis Mousafiris\n"
 "Language: el\n"
@@ -27,7 +27,7 @@ msgstr "x-window"
 
 #: tazpkg:37
 msgid "utilities"
-msgstr "βοηθητικά προγράμματα (utilities)"
+msgstr "Βοηθήματα"
 
 #: tazpkg:38
 msgid "network"
@@ -47,7 +47,7 @@ msgstr "γραφείο"
 
 #: tazpkg:39
 msgid "development"
-msgstr "ανάπτυξη"
+msgstr "προγραμματισμός"
 
 #: tazpkg:39
 msgid "system-tools"
@@ -84,11 +84,12 @@ msgstr "Χρήση:"
 
 #: tazpkg:113
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
-msgstr "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
+msgstr ""
+"tazpkg [εντολή] [πακέτο|κατάλ.|τρόπος|λίστα|cat|--επιλογή] [κατάλ.|--επιλογή]"
 
 #: tazpkg:114
 msgid "SHell:"
-msgstr "SHell:"
+msgstr "Κέλυφος:"
 
 #: tazpkg:116
 msgid "Commands:"
@@ -104,11 +105,15 @@ msgstr "Εμφάνιση των γνωστών σφαλμάτων στα πακ�
 
 #: tazpkg:119
 msgid "List installed packages on the system by category or all."
-msgstr "Παράθεση σε λίστα των εγκατεστημένων πακέτων του συστήματος, ανά κατηγορία, ή και όλων."
+msgstr ""
+"Λίστα των εγκατεστημένων πακέτων συστήματος, ανά κατηγορία\n"
+"                   (ή όλων)."
 
 #: tazpkg:120
 msgid "List all available packages on the mirror (--diff for new)."
-msgstr "Παράθεση σε λίστα όλων των εγκατεστημένων πακέτων στο mirror "
+msgstr ""
+"Λίστα με όλα τα διαθέσιμα πακέτα στο mirror\n"
+"                   (--diff για τα καινούργια)."
 
 #: tazpkg:121
 msgid "Print information about a package."
@@ -120,27 +125,31 @@ msgstr "Εκτύπωση περιγραφής ενός πακέτου (αν υπ
 
 #: tazpkg:123
 msgid "List the files installed with a package."
-msgstr "Παράθεση σε λίστα των αρχείων που εγκαταστάθηκαν με ένα πακέτο."
+msgstr "Λίστα αρχείων που εγκαταστάθηκαν με ένα πακέτο."
 
 #: tazpkg:124
 msgid "List the configuration files."
-msgstr "Παράθεση σε λίστα των αρχείων ρυθμίσεων."
+msgstr "Λίστα των αρχείων ρυθμίσεων."
 
 #: tazpkg:125
 msgid "Search for a package by pattern or name (options: -i|-l|-m)."
-msgstr "Αναζήτηση ενός πακέτου με βάση ένα pattern ή το όνομα (options: -i|-l|-m)."
+msgstr "Αναζήτηση πακέτου με pattern ή με όνομα (επιλογές: -i|-l|-m)."
 
 #: tazpkg:126
 msgid "Search on mirror for package having a particular file."
-msgstr "Αναζήτηση ενός mirror για πακέτα που έχουν ένα ιδιαίτερο αρχείο."
+msgstr "Αναζήτηση mirror για πακέτα με ένα ιδιαίτερο αρχείο."
 
 #: tazpkg:127
 msgid "Search for file(s) in all installed packages files."
-msgstr "Αναζήτηση για αρχείο(α) σε όλα τα αρχεία εγκατεστημένων πακέτων."
+msgstr ""
+"Αναζήτηση για αρχείο(α) σε όλα τα αρχεία εγκατεστημένων\n"
+"                   πακέτων."
 
 #: tazpkg:128
 msgid "Install a local (*.tazpkg) package (--forced to force)."
-msgstr "Εγκατάσταση ενός τοπικού (*.tazpkg) πακέτου (--forced για εξαναγκασμό)."
+msgstr ""
+"Εγκαταστήστε ένα τοπικό (*.tazpkg) πακέτο\n"
+"                   (--forced για εξαναγκασμό)."
 
 #: tazpkg:129
 msgid "Install all packages from a list of packages."
@@ -148,24 +157,32 @@ msgstr "Εγκατάσταση όλων των πακέτων από μία λί
 
 #: tazpkg:130
 msgid "Remove the specified package and all installed files."
-msgstr "Διαγραφή του συγκεκριμένου πακέτου και όλων των εγκατεστημένων πακέτων."
+msgstr ""
+"Διαγραφή του συγκεκριμένου πακέτου και όλων των\n"
+"                   εγκατεστημένων πακέτων."
 
 #: tazpkg:131
 msgid "Extract a (*.tazpkg) package into a directory."
-msgstr "Εξαγωγή ενός πακέτου (*.tazpkg) σε έναν κατάλογο (directory)"
+msgstr "Εξαγωγή ενός πακέτου (*.tazpkg) σε έναν κατάλογο."
 
 #: tazpkg:132
 msgid "Pack an unpacked or prepared package tree."
-msgstr "Πακετάρισμα ενός απακετάριστου ή ενός προετοιμασμένου δένδρου πακέτων."
+msgstr ""
+"Πακετάρισμα ενός απακετάριστου ή ενός προετοιμασμένου δένδρου\n"
+"                   πακέτων."
 
 #: tazpkg:133
 msgid "Recharge your packages.list from the mirror."
-msgstr "Επαναφόρτωση από το mirror της λίστας packages.list που έχετε."
+msgstr ""
+"Επαναφόρτωση από το mirror της λίστας packages.list\n"
+"                   που έχετε."
 
 #: tazpkg:134
 #, sh-format
 msgid "Check packages $CHECKSUM to list and install latest upgrades."
-msgstr "Ελέγξτε το $CHECKSUM των πακέτων στη λίστα και απεγκαταστήστε όλες τις ενημερώσεις."
+msgstr ""
+"Ελέγξτε το $CHECKSUM των πακέτων στη λίστα\n"
+"                   και εγκαταστήστε τις τελευταίες αναβαθμίσεις."
 
 #: tazpkg:135
 msgid "Create a package archive from an installed package."
@@ -181,7 +198,9 @@ msgstr "Αναδόμηση ενός πακέτου με καλύτερη σχέ�
 
 #: tazpkg:138
 msgid "Block an installed package version or unblock it for upgrade."
-msgstr "Μπλοκάρισμα ενός εγκατεστημένου πακέτου ή ξεμπλοκάρισμα για να γίνει ενημέρωση."
+msgstr ""
+"Μπλοκάρετε ένα εγκατεστημένο πακέτο, ή ξεμπλοκάρετέ το για\n"
+"                   να γίνει αναβάθμιση."
 
 #: tazpkg:139
 msgid "Download a package into the current directory."
@@ -193,20 +212,25 @@ msgstr "Μεταφόρτωση και εγκατάσταση ενός πακέτ
 
 #: tazpkg:141
 msgid "Download and install a list of packages from the mirror."
-msgstr "Μεταφόρτωση και εγκατάσταση μίας λίστας πακέτων από το mirror."
+msgstr ""
+"Μεταφόρτωση και εγκατάσταση μίας λίστας πακέτων από\n"
+"                   το mirror."
 
 #: tazpkg:142
 msgid "Verify consistency of installed packages."
-msgstr "Επαλήθευση ομοιογένειας (consistency) των εγκατεστημένων πακέτων."
-msgstr "Επαλήθευση ομοιογένειας (consistency) των εγκατεστημένων πακέτων."
+msgstr "Επαλήθευση ακεραιτότητας των εγκατεστημένων πακέτων."
 
 #: tazpkg:143
 msgid "Install the flavor list of packages."
-msgstr "Εγκαταστήστε την λίστα πακέτων flavor."
+msgstr ""
+"Εγκαταστήστε τη λίστα με τις πληροφορίες για τα πακέτα\n"
+"                   που περιέχονται στα flavors (εκδόσεις) του SliTaz."
 
 #: tazpkg:144
 msgid "Install the flavor list of packages and remove other ones."
-msgstr "Εγκαταστήστε την λίστα πακέτων flavor και διαγράψτε διάφορα άλλα."
+msgstr ""
+"Εγκαταστήστε τη λίστα με πληροφορίες για τα πακέτα σε όλα τα\n"
+"                   flavors (εκδόσεις) του SliTaz και διαγράψτε κάποια άλλα."
 
 #: tazpkg:145
 msgid "Change release and update packages."
@@ -214,7 +238,9 @@ msgstr "Αλλάξτε τα πακέτα release και κάντε ενημέρ�
 
 #: tazpkg:146
 msgid "Clean all packages downloaded in cache directory."
-msgstr "Διαγράψτε όλα τα μεταφορτωμένα πακέτα από τον κατάλογο κρυφής μνήμης (cache)"
+msgstr ""
+"Διαγράψτε όλα τα μεταφορτωμένα πακέτα στον κατάλογο της\n"
+"                   κρυφής μνήμης (cache)"
 
 #: tazpkg:147
 msgid "Display dependencies tree."
@@ -226,11 +252,15 @@ msgstr "Εμφάνιση δένδρου αντίστροφων εξαρτήσε�
 
 #: tazpkg:149
 msgid "Convert a deb/rpm/tgz/arch package to a slitaz (.tazpkg)."
-msgstr "Μετατροπή ενός πακέτου deb/rpm/tgz/arch σε μορφή slitaz (.tazpkg)."
+msgstr ""
+"Μετατροπή ενός πακέτου deb/rpm/tgz/arch σε μορφή slitaz\n"
+"                   (.tazpkg)."
 
 #: tazpkg:150
 msgid "Link a package from another slitaz installation."
-msgstr "Συνδέστε (link) ένα πακέτο από μια άλλη εγκατάσταση του SliTaz."
+msgstr ""
+"Συνδέστε (link) ένα πακέτο από μια άλλη εγκατάσταση του\n"
+"                   SliTaz."
 
 #: tazpkg:151
 msgid "Change the mirror url configuration."
@@ -254,15 +284,16 @@ msgstr "Ενημέρωση ενός πειραματικού (undigest) mirror."
 
 #: tazpkg:156
 msgid "Replay post install script from package."
-msgstr "Να ξαναπαίξει το σενάριο (script) post install από το πακέτο."
+msgstr "Ξαναπαίξτε το post install script από το πακέτο."
 
 #: tazpkg:163
 msgid "<b>Tazpkg usage for command up:</b> tazpkg up [--option]"
-msgstr "<b>Χρήση του Tazpkg για τη εντολή:</b> tazpkg up [--option]"
+msgstr "<b>Χρήση του Tazpkg για την  εντολή up:</b> tazpkg up [--επιλογή]"
 
 #: tazpkg:164
 msgid "Without options run in interactive mode and ask before install"
-msgstr "Χωρίς επιλογές εκτέλεση σε διαδραστικό τρόπο και υποβολή ερώτησης πριν την εγκατάσταση"
+msgstr ""
+"Εκτέλεση με διαδραστικό τρόπο, χωρίς επιλογές και ερώτηση πριν την εγκατάσταση"
 
 #: tazpkg:166
 msgid "Where options are:"
@@ -270,15 +301,15 @@ msgstr "Όπου οι επιλογές είναι:"
 
 #: tazpkg:167
 msgid "Check only for available upgrades"
-msgstr "Να γίνει έλεγχος μόνο για διαθέσιμες ενημερώσεις"
+msgstr "Έλεγχος μόνο για διαθέσιμες αναβαθμίσεις"
 
 #: tazpkg:168
 msgid "Force recharge of packages list and check"
-msgstr "Βίαια επαναφόρτωση των πακέτων list και check"
+msgstr "Αναγκαστική επαναφόρτωση της λίστας με τα πακέτα και έλεγχος"
 
 #: tazpkg:169
 msgid "Check for upgrades and install them all"
-msgstr "Να γίνει έλεγχος για ενημερώσεις και να εγκατασταθούν όλες"
+msgstr "Έλεγχος για αναβαθμίσεις και εγκατάσταση όλων"
 
 #: tazpkg:171
 msgid "Example:"
@@ -310,8 +341,8 @@ msgid ""
 "use the --forced option to force installation or remove it and reinstall."
 msgstr ""
 "Το πακέτο $PACKAGE είναι ήδη εγκατεστημένο.\n"
-"Μπορείτε να χρησιμοποιήσετε την επιλογή --forced για να το εγκαταστήσετε\n"
-"βιαίως ή να το απεγκαταστήσετε και να το επανεγκαταστήσετε."
+"Μπορείτε να χρησιμοποιήσετε την επιλογή --forced για να κάνετε υποχρεωτική\n"
+"εγκατάσταση, ή κάντε πρώτα διαγραφή και, μετά, επανεγκατάσταση."
 
 #: tazpkg:302
 #, sh-format
@@ -330,7 +361,7 @@ msgstr ""
 #, sh-format
 msgid "Unable to find: $PACKAGE in the mirrored packages list."
 msgstr ""
-"Αδύνατη ανεύρεση του: $PACKAGE στη λίστα πακέτων που βρίσκονται στον mirror."
+"Αδύνατη η ανεύρεση του: $PACKAGE στη λίστα πακέτων που βρίσκονται στον mirror."
 
 #: tazpkg:478
 #, sh-format
@@ -339,7 +370,7 @@ msgstr "Γίνεται εξαγωγή του $PACKAGE..."
 
 #: tazpkg:482 tazpkg:486
 msgid "Extracting the pseudo fs..."
-msgstr "Γίνεται εξαγωγή του pseudo fs..."
+msgstr "Γίνεται εξαγωγή του ψευδο-συστήματος αρχείων (pseudo fs)..."
 
 #: tazpkg:549
 #, sh-format
@@ -353,12 +384,15 @@ msgstr "Γίνεται αντιγραφή του $PACKAGE..."
 
 #: tazpkg:562
 msgid "Checking post install dependencies..."
-msgstr "Γίνεται έλεγχος των εξαρτήσεων post install..."
+msgstr ""
+"Μετά την ολοκλήρωση της εγκατάστασης, γίνεται έλεγχος για τις εξαρτήσεις..."
 
 #: tazpkg:565
 #, sh-format
 msgid "Please run 'tazpkg install $PACKAGE_FILE' in / and retry."
-msgstr "Παρακαλώ εγκαταστήστε το $PACKAGE_FILE' στο / και ξαναπροσπαθήστε."
+msgstr ""
+"Παρακαλώ εκτελέστε την εντολή 'tazpkg install $PACKAGE_FILE'\n"
+"στον αρχικό κατάλογο συστήματος / και, κατόπιν, ξαναπροσπαθήστε."
 
 #: tazpkg:639
 #, sh-format
@@ -377,7 +411,7 @@ msgstr "Γίνεται απομάκρυνση του παλιού $PACKAGE..."
 
 #: tazpkg:665
 msgid "Removing all tmp files..."
-msgstr "Γίνεται απομάκρυνση όλων των αρχείων temp ..."
+msgstr "Γίνεται απομάκρυνση όλων των προσωρινών αρχείων temp..."
 
 #: tazpkg:693
 #, sh-format
@@ -387,7 +421,8 @@ msgstr "Το $PACKAGE ($VERSION$EXTRAVERSION) είναι εγκατεστημέ�
 #: tazpkg:743
 #, sh-format
 msgid "WARNING Dependency loop between $PACKAGE and $i."
-msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ Υπάρχει μια λούπα εξάρτησης ανάμεσα στο $PACKAGE και το $i."
+msgstr ""
+"ΠΡΟΕΙΔΟΠΟΙΗΣΗ Υπάρχει βρόχος (loop) εξάρτησης ανάμεσα στο $PACKAGE και το $i."
 
 #: tazpkg:747
 #, sh-format
@@ -421,7 +456,7 @@ msgid ""
 "Leaving dependencies for $PACKAGE unresolved.\n"
 "The package is installed but will probably not work."
 msgstr ""
-"Κάποιες εξαρτήσεις για το $PACKAGE αφέθηκαν ανεπίλυτες.\n"
+"Κάποιες εξαρτήσεις για το $PACKAGE έμειναν ανεπίλυτες.\n"
 "Το πακέτο εγκαταστάθηκε, αλλά μάλλον δε θα δουλέψει."
 
 #: tazpkg:828
@@ -431,7 +466,7 @@ msgstr "Εγκατεστημένα πακέτα"
 #: tazpkg:841
 #, sh-format
 msgid "0 installed packages found for: $PATTERN"
-msgstr "0 εγκατεστημένα πακέτα βρέθηκαν για το: $PATTERN"
+msgstr "Δεν βρέθηκε κανένα εγκατεστημένο πακέτο για το: $PATTERN"
 
 #: tazpkg:845
 #, sh-format
@@ -449,14 +484,16 @@ msgid ""
 "No 'packages.list' found to check for mirrored packages. For more results,\n"
 "please run 'tazpkg recharge' once as root before searching."
 msgstr ""
-"Δεν βρέθηκε καμία 'packages.list' για να γίνει έλεγχος για πακέτα στον mirror.\n"
-"Για περισσότερα αποτελέσματα, παρακαλώ εκτελέστε μια φορά το 'tazpkg recharge'\n"
-"σαν διαχειριστής συστήματος (root) πριν κάνετε αναζήτηση."
+"Δεν βρέθηκε κανένα 'packages.txt' για να γίνει έλεγxος των πακέτων στο "
+"mirror.\n"
+"Για περισσότερα αποτελέσματα, παρακαλω εκτελέστε μια φορά το 'tazpkg "
+"recharge'\n"
+" ως διαχειριστής συστήματος (root), πριν την αναζήτηση."
 
 #: tazpkg:868 tazpkg:896
 #, sh-format
 msgid "0 available packages found for: $PATTERN"
-msgstr "0 διαθέσιμα πακέτα βρέθηκαν για το: $PATTERN"
+msgstr "Δεν βρέθηκαν διαθέσιμα πακέτα για το: $PATTERN"
 
 #: tazpkg:872 tazpkg:900
 #, sh-format
@@ -467,16 +504,17 @@ msgstr[1] "$packages διαθέσιμα πακέτα βρέθηκαν για τ�
 
 #: tazpkg:881
 msgid "Matching packages name with version and desc"
-msgstr "Ταίριασμα του ονόματος των πακέτων με την έκδοση και το desc"
+msgstr "Ταίριασμα του ονόματος των πακέτων με την έκδοση και την περιγραφή"
 
 #: tazpkg:891
 msgid ""
 "No 'packages.txt' found to check for mirrored packages. For more results,\n"
 "please run 'tazpkg recharge' once as root before searching."
 msgstr ""
-"Δεν βρέθηκε κανένα 'packages.txt' για να γίνει έλεγχος για τα πακέτα στον\n"
-"mirror. Για περισσότερα αποτελέσματα, παρακαλώ εκτελέστε μια φορά το\n"
-"'tazpkg recharge' ως διαχειριστής συστήματος (root) πριν την αναζήτηση."
+"Δεν βρέθηκε κανένα 'packages.txt' για να γίνει έλεγχος πακέτων στο mirror.\n"
+"Για περισσότερα αποτελέσματα, παρακαλώ εκτελέστε μια φορά το 'tazpkg "
+"recharge'\n"
+"ως διαχειριστής σηυστήματος (root), πριν την αναζήτηση."
 
 #: tazpkg:947
 #, sh-format
@@ -489,11 +527,13 @@ msgstr "Τρέχοντες mirror(s)"
 
 #: tazpkg:963
 msgid ""
-"Please enter URL of the new mirror (http, ftp or local path). You must specify\n"
+"Please enter URL of the new mirror (http, ftp or local path). You must "
+"specify\n"
 "the complete address to the directory of the packages and packages.list file."
 msgstr ""
-"Παρακαλώ εισάγετε ένα URL του νέου mirror (http, ftp ή της τοπικής διαδρομής).\n"
-"Πρέπει να ορίσετε την πλήρη διεύθυνση στον κατάλογο των πακέτων και στο αρχείο\n"
+"Παρακαλώ εισάγετε ένα URL του νέου mirror (http, ftp ή την τοπική διαδρομή).\n"
+"Πρέπει να ορίσετε την πλήρη διεύθυνση στον κατάλογο των πακέτων και στο "
+"αρχείο\n"
 "'packages.list'."
 
 #: tazpkg:966
@@ -535,7 +575,8 @@ msgstr "Το $PACKAGE_FILE δεν μοιάζει να είναι ένα πακέ
 
 #: tazpkg:1355
 msgid "Unable to extract the RPM using standard tools (rpm2cpio)."
-msgstr "Αδύνατη η εξαγωγή του  RPM με τη χρήση τυποποιημένων εργαλείων (rpm2cpio)."
+msgstr ""
+"Αδύνατη η εξαγωγή του  RPM με τη χρήση τυποποιημένων εργαλείων (rpm2cpio)."
 
 #: tazpkg:1356
 msgid "Do you want to install 'p7zip-full' package"
@@ -567,10 +608,18 @@ msgstr "Εγκατεστημένα πακέτα στην κατηγορία: $AS
 
 #: tazpkg:1459
 #, sh-format
-msgid "<c 32>$packages</c> package installed of category <c 34>$ASKED_CATEGORY_I18N</c>."
-msgid_plural "<c 32>$packages</c> packages installed of category <c 34>$ASKED_CATEGORY_I18N</c>."
-msgstr[0] "<c 32>$packages</c> πακέτο εγκατεστημένο στην κατηγορία <c 34>$ASKED_CATEGORY_I18N</c>."
-msgstr[1] "<c 32>$packages</c> πακέτα εγκατεστημένα στην κατηγορία <c 34>$ASKED_CATEGORY_I18N</c>."
+msgid ""
+"<c 32>$packages</c> package installed of category <c 34>$ASKED_CATEGORY_I18N</"
+"c>."
+msgid_plural ""
+"<c 32>$packages</c> packages installed of category <c 34>"
+"$ASKED_CATEGORY_I18N</c>."
+msgstr[0] ""
+"<c 32>$packages</c> πακέτο εγκατεστημένο στην κατηγορία <c 34>"
+"$ASKED_CATEGORY_I18N</c>."
+msgstr[1] ""
+"<c 32>$packages</c> πακέτα εγκατεστημένα στην κατηγορία <c 34>"
+"$ASKED_CATEGORY_I18N</c>."
 
 #: tazpkg:1464
 msgid "List of all installed packages"
@@ -600,7 +649,8 @@ msgstr "Αδύνατο να παρατεθεί οτιδήποτε σε λίστ�
 
 #: tazpkg:1493
 msgid "Recharge your current list to create a first diff."
-msgstr "Επαναφορτώστε την τρέχουσα λίστα σας για να δημιουργηθεί μία πρώτη διαφ."
+msgstr ""
+"Επαναφορτώστε την τρέχουσα λίστα σας για να δημιουργηθεί μία πρώτη διαφ."
 
 #: tazpkg:1497
 msgid "List of available packages on the mirror"
@@ -631,43 +681,43 @@ msgstr "Πληροφορίες για το Tazpkg"
 
 #: tazpkg:1524
 msgid "Package    :"
-msgstr "Πακέτο              :"
+msgstr "Πακέτο           :"
 
 #: tazpkg:1525
 msgid "Version    :"
-msgstr "Έκδοση              :"
+msgstr "Έκδοση           :"
 
 #: tazpkg:1526
 msgid "Category   :"
-msgstr "Κατηγορία           :"
+msgstr "Κατηγορία        :"
 
 #: tazpkg:1527
 msgid "Short desc :"
-msgstr "Σύντομη περιγραφή   :"
+msgstr "Σύντομη περιγραφή:"
 
 #: tazpkg:1528
 msgid "Maintainer :"
-msgstr "Συντηρητής          :"
+msgstr "Συντηρητής       :"
 
 #: tazpkg:1529
 msgid "Depends    :"
-msgstr "Εξαρτάται από       :"
+msgstr "Εξαρτάται από    :"
 
 #: tazpkg:1530
 msgid "Suggested  :"
-msgstr "Προτεινόμενο        :"
+msgstr "Προτεινόμενο     :"
 
 #: tazpkg:1531
 msgid "Build deps :"
-msgstr "Εξαρτήσεις του Build:"
+msgstr "Εξαρτήσεις που χρειάζονται για να χτιστεί το πακέτο:"
 
 #: tazpkg:1532
 msgid "Wanted src :"
-msgstr "Αναζητείται src     :"
+msgstr "Αναζητείται src  :"
 
 #: tazpkg:1533
 msgid "Web site   :"
-msgstr "Ιστότοπος           :"
+msgstr "Ιστότοπος        :"
 
 #: tazpkg:1539
 #, sh-format
@@ -681,8 +731,8 @@ msgstr "Συγγνώμη, δεν υπάρχει διαθέσιμη περιγρ�
 #: tazpkg:1552
 msgid "Please specify a pattern or package name to search for."
 msgstr ""
-"Παρακαλώ καθορίστε ένα μοντέλο (pattern) ή ένα όνομα πακέτου για να γίνει\n"
-"αναζήτηση."
+"Παρακαλώ καθορίστε ένα μοντέλο (pattern) ή ένα όνομα πακέτου για το οποίο\n"
+"να γίνει αναζήτηση."
 
 #: tazpkg:1553
 msgid "Example : 'tazpkg search paint'"
@@ -693,10 +743,10 @@ msgstr "Παράδειγμα : 'tazpkg search paint'"
 msgid "Search result for: $PATTERN"
 msgstr "Να γίνει αναζήτηση για το: $PATTERN"
 
-#: tazpkg:1574
-#: tazpkg:1632
+#: tazpkg:1574 tazpkg:1632
 msgid "Please specify a pattern or file name to search for."
-msgstr "Παρακαλώ καθορίστε ένα pattern ή ένα όνομα αρχείου για να γίνει αναζήτηση."
+msgstr ""
+"Παρακαλώ καθορίστε ένα pattern ή ένα όνομα αρχείου για να γίνει αναζήτηση."
 
 #: tazpkg:1575
 msgid "Example : 'tazpkg search-file libnss'"
@@ -715,7 +765,7 @@ msgstr "Πακέτο $PACKAGE:"
 #: tazpkg:1621
 #, sh-format
 msgid "0 file found for: $pkg"
-msgstr "0 αρχεία βρέθηκαν για το: $pkg"
+msgstr "Δεν βρέθηκε κανένα αρχείο για το: $pkg"
 
 #: tazpkg:1624
 #, sh-format
@@ -736,7 +786,7 @@ msgstr "Αναζήτηση για το πακέτο $s_pkg"
 #: tazpkg:1650
 #, sh-format
 msgid "0 file found for: $file"
-msgstr "0 αρχεία βρέθηκαν για το: $file"
+msgstr "Δεν βρέθηκε κανένα αρχείο για το: $file"
 
 #: tazpkg:1654
 #, sh-format
@@ -750,8 +800,8 @@ msgid ""
 "Please change directory (cd) to the packages repository and specify the\n"
 "list of packages to install. Example: tazpkg install-list packages.list"
 msgstr ""
-"Παρακαλώ αλλάξτε κατάλογο (cd) στο αποθετήριο πακέτων και καθορίστε την λίστα\n"
-"των πακέτων προς εγκατάσταση. Παράδειγμα: tazpkg install-list packages.list"
+"Παρακαλώ αλλάξτε κατάλογο (cd) στο αποθετήριο πακέτων και ορίστε την\n"
+"λίστα των πακέτων προς εγκατάσταση. Π.χ.: tazpkg install-list packages.list"
 
 #: tazpkg:1702
 #, sh-format
@@ -959,7 +1009,8 @@ msgstr "Γίνεται επαναφόρτωση του πειραματικού 
 
 #: tazpkg:2174
 msgid "Creating backup of the last packages list..."
-msgstr "Γίνεται λήψη αντιγράφου ασφαλείας του καταλόγου με τα τελευταία πακέτα..."
+msgstr ""
+"Γίνεται λήψη αντιγράφου ασφαλείας του καταλόγου με τα τελευταία πακέτα..."
 
 #: tazpkg:2198
 #, sh-format
@@ -978,15 +1029,17 @@ msgid ""
 "list, a list of differences will be displayed to show new and upgradeable\n"
 "packages."
 msgstr ""
-"Ο τελευταίος κατάλογος packages.list είναι έτοιμος προς χρήση. Σημειώστε ότι\n"
-"την επόμενη φορά που θα ξανφορτώσετε τον κατάλογο, θα εμφανιστεί μια λίστα με\n"
-"διαφορές, για να δείξει τα νέα και ενημερώσιμα πακέτα."
+"Ο τελευταίος κατάλογος packages.list είναι έτοιμος για χρήση. Σημειώστε ότι "
+"την\n"
+"επόμενη φορά που θα ξαναφορτώσετε τον κατάλογο, θα εμφανιστεί μια λίστα\n"
+"με διαφορές, για να δείξει τα νέα και ενημερώσιμα πακέτα."
 
 #: tazpkg:2246
 #, sh-format
 msgid "$pkg_list is older than one week... recharging"
 msgstr ""
-"Ο κατάλογος $pkg_list είναι παλιότερος από μια εβδομάδα... γίνεται επαναφόρτωση"
+"Ο κατάλογος $pkg_list είναι παλιότερος από μια εβδομάδα... γίνεται "
+"επαναφόρτωση"
 
 #: tazpkg:2250
 msgid "Package"
@@ -1021,8 +1074,8 @@ msgstr "Το σύστημα είναι ενημερωμένο..."
 #, sh-format
 msgid "$pkgs installed package scanned in ${time}s"
 msgid_plural "$pkgs installed packages scanned in ${time}s"
-msgstr[0] "$pkgs το εγκατεστημένο πακέτο σαρώθηκε σε ${time}s"
-msgstr[1] "$pkgs τα εγκατεστημένα πακέτα σαρώθηκαν σε ${time}s"
+msgstr[0] "$pkgs το εγκατεστημένο πακέτο σαρώθηκε σε $time δευτερόλεπτα"
+msgstr[1] "$pkgs τα εγκατεστημένα πακέτα σαρώθηκαν σε $time δευτερόλεπτα"
 
 #: tazpkg:2305
 #, sh-format
@@ -1086,7 +1139,7 @@ msgstr "Εξαρτήσεις που λείπουν για το $PACKAGE-$VERSION
 #: tazpkg:2398
 #, sh-format
 msgid "Dependencies loop between $PACKAGE and:"
-msgstr "Υπάρχει λούπα εξαρτήσεων ανάμεσα στο $PACKAGE και το:"
+msgstr "Υπάρχει βρόχος (loop) εξαρτήσεων ανάμεσα στο $PACKAGE και το:"
 
 #: tazpkg:2402
 msgid "Looking for known bugs..."
@@ -1209,17 +1262,18 @@ msgstr "Εγκαταστήστε το πακέτο με το 'tazpkg install' ή
 
 #: tazpkg:2701
 msgid "Tazpkg SHell."
-msgstr "Tazpkg SHell."
+msgstr "Κέλυφος του Tazpkg"
 
 #: tazpkg:2702
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr ""
-"Πληκτρολογήστε την εντολή 'usage' για να εμφανισθεί ένας κατάλογος με όλες\n"
-"τις διαθέσιμες εντολές ή την εντολή 'quit' ή απλώς 'q' για να βγείτε."
+"Πληκτρολογήστε την εντολή 'usage' για να εμφανισθεί ένας κατάλογος με όλες "
+"τις\n"
+"διαθέσιμες εντολές, ή δώστε την εντολή 'quit', ή απλώς 'q' για να βγείτε."
 
 #: tazpkg:2712
 msgid "You are already running a Tazpkg SHell."
-msgstr "Τρέχετε ήδη ένα Tazpkg SHell."
+msgstr "Τρέχετε ήδη ένα κέλυφος Tazpkg"
 
 #: tazpkg:2756
 msgid "Unsupported format"
@@ -1233,9 +1287,9 @@ msgid ""
 "         your running system ram.\n"
 msgstr ""
 "\n"
-"χρήση:      tazpkg link package_name slitaz_root\n"
+"χρήση:      tazpkg link όνομα_πακέτου καταλόγου_συστήματος_του_slitaz\n"
 "παράδειγμα: Το 'tazpkg link openoffice /mnt' θα χρησιμοποιήσει λιγώτερα από\n"
-"            100k στο σύστημα που τρέχετε.\n"
+"            100KB στο σύστημα που τρέχετε.\n"
 
 #: tazpkg:2772
 #, sh-format
@@ -1285,4 +1339,4 @@ msgstr "Γίνεται μεταφόρτωση: $pkg"
 #: tazpkg-box:68
 #, sh-format
 msgid "Usage: $progname [actions|url] [pkg]"
-msgstr "Χρήση: $progname [actions|url] [pkg]"
+msgstr "Χρήση: $progname [actions|url] [πακέτο]"
