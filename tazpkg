@@ -17,7 +17,7 @@
 ####################
 
 # TazPKG version
-VERSION=5.0
+VERSION=5.1
 
 . /etc/slitaz/slitaz.conf
 . /etc/slitaz/tazpkg.conf
