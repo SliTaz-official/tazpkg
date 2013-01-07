@@ -1520,6 +1520,11 @@ case "$COMMAND" in
 		EXTRAVERSION=""
 		. $INSTALLED/$PACKAGE/receipt
 		title 'Tazpkg information'
+		# Display localized short description
+		if [ -e "$LOCALSTATE/packages-desc.$LANG" ]; then
+			LOCDESC=$(grep -e "^$PACKAGE	" $LOCALSTATE/packages-desc.$LANG | cut -d'	' -f2)
+			[ "x$LOCDESC" != "x" ] && SHORT_DESC="$LOCDESC"
+		fi
 		emsg "\
 <b>$(gettext 'Package    :')</b> $PACKAGE
 <b>$(gettext 'Version    :')</b> $VERSION$EXTRAVERSION
