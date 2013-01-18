@@ -1008,7 +1008,7 @@ for i in * ; do
 	DEPENDS=""
 	. $i/receipt
 	echo "$i $(echo $DEPENDS)"
-done | awk -v search=$SEARCH '
+done | busybox awk -v search=$SEARCH '
 function show_deps(deps, all_deps, pkg, space)
 {
 	if (all_deps[pkg] == 1) return
