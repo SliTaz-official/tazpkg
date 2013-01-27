@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tazpkg-notify package.
 # Claudinei Pereira <claudinei@slitaz.org>, 2012.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Tazpkg Notification 4.9.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-09 23:46+0000\n"
-"PO-Revision-Date: 2012-03-14 03:05+0100\n"
+"PO-Revision-Date: 2013-01-27 04:22-0300\n"
 "Last-Translator: Claudinei Pereira <claudinei@slitaz.org>\n"
 "Language-Team: Portuguese <i18n@slitaz.org>\n"
 "Language: pt_BR\n"
@@ -19,16 +18,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: tazpkg-notify:26
-#, fuzzy, sh-format
+#, sh-format
 msgid "<b>$installed</b> installed package"
 msgid_plural "<b>$installed</b> installed packages"
-msgstr[0] "Pacotes instalados"
-msgstr[1] "Pacotes instalados"
+msgstr[0] "<b>$installed</b> Pacote instalado"
+msgstr[1] "<b>$installed</b> Pacotes instalados"
 
 #: tazpkg-notify:40
-#, fuzzy, sh-format
+#, sh-format
 msgid "Checking packages lists - $text"
-msgstr "Checando lista de pacotes"
+msgstr "Checando lista de pacotes - $text"
 
 #: tazpkg-notify:49
 msgid "My packages"
@@ -68,10 +67,10 @@ msgid "Your packages list is older than 10 days"
 msgstr "Sua lista de pacotes possui mais de 10 dias"
 
 #: tazpkg-notify:86
-#, fuzzy, sh-format
+#, sh-format
 msgid "There is <b>$up</b> upgradeable package"
 msgid_plural "There are <b>$up</b> upgradeable packages"
-msgstr[0] "Há <b>$up</b> pacotes atualizáveis"
+msgstr[0] "Há <b>$up</b> pacote atualizável"
 msgstr[1] "Há <b>$up</b> pacotes atualizáveis"
 
 #: tazpkg-notify:93
