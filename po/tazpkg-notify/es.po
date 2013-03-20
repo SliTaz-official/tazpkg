@@ -34,7 +34,7 @@ msgstr "Mis paquetes"
 
 #: tazpkg-notify:50
 msgid "Recharge lists"
-msgstr "Regarcar Listas"
+msgstr "Recargar listas"
 
 #: tazpkg-notify:51
 msgid "Check upgrade"
