@@ -1,0 +1,14 @@
+cat <<EOT
+<li><a href="/pkgs.cgi">$(gettext 'Packages')</a>
+	<ul>
+		<li><a href="/pkgs.cgi?list"><img
+			src="/styles/default/images/tazpkg.png" />$(gettext 'My packages')</a></li>
+		<li><a href="/pkgs.cgi?recharge"><img
+			src="/styles/default/images/update.png" />$(gettext 'Recharge list')</a></li>
+		<li><a href="/pkgs.cgi?up"><img
+			src="/styles/default/images/update.png" />$(gettext 'Check updates')</a></li>
+		<li><a href="/pkgs.cgi?admin"><img
+			src="/styles/default/images/edit.png" />$(gettext 'Administration')</a></li>
+	</ul>
+</li>
+EOT

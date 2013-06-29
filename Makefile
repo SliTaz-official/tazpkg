@@ -68,6 +68,10 @@ install: msgfmt
 	# Documentation
 	install -m 0755 -d $(DESTDIR)$(DOCDIR)/tazpkg
 	cp -a doc/* $(DESTDIR)$(DOCDIR)/tazpkg
+	# tazpanel files
+	install -m 0755 -d $(DESTDIR)/var/www/tazpanel/menu.d
+	cp -a pkgs.cgi $(DESTDIR)/var/www/tazpanel
+	cp -a pkgs $(DESTDIR)/var/www/tazpanel/menu.d
 	# The i18n files
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/share/locale
 	cp -a po/mo/* $(DESTDIR)$(PREFIX)/share/locale
@@ -82,6 +86,8 @@ install: msgfmt
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkg
 	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkg-box
+	rm -f $(DESTDIR)$(PREFIX)/var/www/tazpanel/menu.d/pkgs
+	rm -f $(DESTDIR)$(PREFIX)/var/www/tazpanel/pkgs.cgi
 	rm -rf $(DESTDIR)$(PREFIX)/tazpkg-notify
 	rm -rf $(DESTDIR)$(DOCDIR)/tazpkg
 	rm -f $(DESTDIR)$(SYSCONFDIR)/tazpkg.conf 
