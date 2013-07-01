@@ -829,7 +829,7 @@ EOT
 <div>
 	<form method="get" action="$SCRIPT_NAME">
 		<p>
-			$(eval_gettext 'Packages in the cache: $cache_files ($cache_size)')
+			$(eval_gettext "Packages in the cache: $cache_files ($cache_size)")
 			<input type="hidden" name="admin" value="clean" />
 			<input type="submit" value="Clean" />
 		</p>
@@ -904,7 +904,7 @@ EOT
 <h3 id="dvd">$(gettext 'SliTaz packages DVD')</h3>
 
 <p>$(eval_gettext "A bootable DVD image of all available packages for the \
-\$version version is generated every day. It also contains a copy of the \
+$version version is generated every day. It also contains a copy of the \
 website and can be used without an internet connection. This image can be \
 installed on a DVD or an USB key.")</p>
 
