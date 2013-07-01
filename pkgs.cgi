@@ -374,7 +374,7 @@ EOT
 			if [ "$repo" != "Public" ]; then
 				Repo_Name="$(repo_name $i)"
 				cat << EOT
-<h3>$(eval_gettext "Repository: \$Repo_Name")</h3>
+<h3>$(eval_gettext "Repository: $Repo_Name")</h3>
 EOT
 			fi
 			cat << EOT
@@ -847,7 +847,7 @@ EOT
 			echo '<div class="box">'
 			if [ $i != $LOCALSTATE/mirrors ]; then
 				Repo_Name="$(repo_name $(dirname $i))"
-				echo "<h4>$(eval_gettext 'Repository: $Repo_Name')</h4>"
+				echo "<h4>$(eval_gettext "Repository: $Repo_Name")</h4>"
 			fi
 			echo "<ul>"
 			list_mirrors $i
