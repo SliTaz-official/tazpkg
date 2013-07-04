@@ -1285,8 +1285,12 @@ CATEGORY="misc"
 SHORT_DESC="$descrip"
 WEB_SITE="http://packages.debian.org/search?keywords=$package"
 MAINTAINER="nobody@slitaz.org"
-DEPENDS="$(find_depends)"
 EOT
+		LICENSE="$(grep /usr/share/common-licenses/ \
+		  $PACKAGE_FILE $TMP_DIR/$file/fs/usr/share/doc/*/copyright | \
+		  sed 's|.*common-licenses/\([-\.A-Za-z0-9]*\).*|\1|;s|[-\.]$||q')"
+		[ -n "$LICENSE" ] && echo "LICENSE=\"$LICENSE\"" >> $file/receipt
+		echo "DEPENDS=\"$(find_depends)\"" >> $file/receipt
 		[ -s conffiles ] && cat >> $file/receipt <<EOT
 CONFIG_FILES="$(cat conffiles)"
 EOT
