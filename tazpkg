@@ -1535,6 +1535,7 @@ case "$COMMAND" in
 <b>$(gettext 'Category   :')</b> $(gettext $CATEGORY)
 <b>$(gettext 'Short desc :')</b> $SHORT_DESC
 <b>$(gettext 'Maintainer :')</b> $MAINTAINER"
+		[ "$LICENSE" ] &&		emsg "<b>$(gettext 'License    :')</b> $DEPENDS"
 		[ "$DEPENDS" ] &&		emsg "<b>$(gettext 'Depends    :')</b> $DEPENDS"
 		[ "$SUGGESTED" ] &&		emsg "<b>$(gettext 'Suggested  :')</b> $SUGGESTED"
 		[ "$BUILD_DEPENDS" ] &&	emsg "<b>$(gettext 'Build deps :')</b> $BUILD_DEPENDS"
