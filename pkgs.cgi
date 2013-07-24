@@ -1,12 +1,12 @@
 #!/bin/sh
 #
-# TazPKG CGI interface - Manage packages via a browser
+# TazPkg CGI interface - Manage packages via a browser
 #
 # This CGI interface extensively uses tazpkg to manage packages and have
 # its own code for some tasks. Please KISS, it is important and keep speed
 # in mind. Thanks, Pankso.
 #
-# (C) 2011 SliTaz GNU/Linux - BSD License
+# (C) 2011-2013 SliTaz GNU/Linux - BSD License
 #
 
 . lib/libtazpanel
@@ -14,8 +14,10 @@ get_config
 header
 
 # xHTML 5 header with special side bar for categories.
-TITLE=$(gettext 'TazPanel - Packages')
+TITLE=$(TEXTDOMAIN='tazpkg'; gettext 'TazPanel - Packages')
 xhtml_header | sed 's/id="content"/id="content-sidebar"/'
+
+export TEXTDOMAIN='tazpkg'
 
 pkg_info_link()
 {
@@ -154,21 +156,21 @@ sidebar() {
 	cat << EOT
 <div id="sidebar">
 	<h4>$(gettext 'Categories')</h4>
-	<a class="active_base-system" href="$SCRIPT_NAME?cat=base-system&repo=$repo">$(gettext 'Base-system')</a>
-	<a class="active_x-window" href="$SCRIPT_NAME?cat=x-window&repo=$repo">$(gettext 'X window')</a>
-	<a class="active_utilities" href="$SCRIPT_NAME?cat=utilities&repo=$repo">$(gettext 'Utilities')</a>
-	<a class="active_network" href="$SCRIPT_NAME?cat=network&repo=$repo">$(gettext 'Network')</a>
-	<a class="active_games" href="$SCRIPT_NAME?cat=games&repo=$repo">$(gettext 'Games')</a>
-	<a class="active_graphics" href="$SCRIPT_NAME?cat=graphics&repo=$repo">$(gettext 'Graphics')</a>
-	<a class="active_office" href="$SCRIPT_NAME?cat=office&repo=$repo">$(gettext 'Office')</a>
-	<a class="active_multimedia" href="$SCRIPT_NAME?cat=multimedia&repo=$repo">$(gettext 'Multimedia')</a>
-	<a class="active_development" href="$SCRIPT_NAME?cat=development&repo=$repo">$(gettext 'Development')</a>
-	<a class="active_system-tools" href="$SCRIPT_NAME?cat=system-tools&repo=$repo">$(gettext 'System tools')</a>
-	<a class="active_security" href="$SCRIPT_NAME?cat=security&repo=$repo">$(gettext 'Security')</a>
-	<a class="active_misc" href="$SCRIPT_NAME?cat=misc&repo=$repo">$(gettext 'Misc')</a>
-	<a class="active_meta" href="$SCRIPT_NAME?cat=meta&repo=$repo">$(gettext 'Meta')</a>
-	<a class="active_non-free" href="$SCRIPT_NAME?cat=non-free&repo=$repo">$(gettext 'Non free')</a>
-	<a class="active_all" href="$SCRIPT_NAME?cat=all&repo=$repo">$(gettext 'All')</a>
+	<a class="active_base-system" href="$SCRIPT_NAME?cat=base-system&repo=$repo">$(gettext 'base-system')</a>
+	<a class="active_x-window" href="$SCRIPT_NAME?cat=x-window&repo=$repo">$(gettext 'x-window')</a>
+	<a class="active_utilities" href="$SCRIPT_NAME?cat=utilities&repo=$repo">$(gettext 'utilities')</a>
+	<a class="active_network" href="$SCRIPT_NAME?cat=network&repo=$repo">$(gettext 'network')</a>
+	<a class="active_games" href="$SCRIPT_NAME?cat=games&repo=$repo">$(gettext 'games')</a>
+	<a class="active_graphics" href="$SCRIPT_NAME?cat=graphics&repo=$repo">$(gettext 'graphics')</a>
+	<a class="active_office" href="$SCRIPT_NAME?cat=office&repo=$repo">$(gettext 'office')</a>
+	<a class="active_multimedia" href="$SCRIPT_NAME?cat=multimedia&repo=$repo">$(gettext 'multimedia')</a>
+	<a class="active_development" href="$SCRIPT_NAME?cat=development&repo=$repo">$(gettext 'development')</a>
+	<a class="active_system-tools" href="$SCRIPT_NAME?cat=system-tools&repo=$repo">$(gettext 'system-tools')</a>
+	<a class="active_security" href="$SCRIPT_NAME?cat=security&repo=$repo">$(gettext 'security')</a>
+	<a class="active_misc" href="$SCRIPT_NAME?cat=misc&repo=$repo">$(gettext 'misc')</a>
+	<a class="active_meta" href="$SCRIPT_NAME?cat=meta&repo=$repo">$(gettext 'meta')</a>
+	<a class="active_non-free" href="$SCRIPT_NAME?cat=non-free&repo=$repo">$(gettext 'non-free')</a>
+	<a class="active_all" href="$SCRIPT_NAME?cat=all&repo=$repo">$(gettext 'all')</a>
 EOT
 
 	if [ -d $LOCALSTATE/undigest ]; then
@@ -578,7 +580,7 @@ EOT
 		sidebar
 		loading_msg
 		cat << EOT
-<h2>Tazpkg: $cmd</h2>
+<h2>TazPkg: $cmd</h2>
 
 <form method="get" action="$SCRIPT_NAME">
 <div id="actions">
@@ -729,7 +731,7 @@ EOT
 
 	*\ admin\ * )
 		#
-		# Tazpkg configuration page
+		# TazPkg configuration page
 		#
 		cmd=$(GET admin)
 		case "$cmd" in
@@ -775,7 +777,7 @@ EOT
 		cat << EOT
 <h2>$(gettext 'Administration')</h2>
 <div>
-	<p>$(gettext 'Tazpkg administration and settings')</p>
+	<p>$(gettext 'TazPkg administration and settings')</p>
 </div>
 <div id="actions">
 	<a class="button" href='$SCRIPT_NAME?admin=&action=saveconf'>
@@ -992,5 +994,6 @@ EOT
 esac
 
 # xHTML 5 footer
+export TEXTDOMAIN='tazpkg'
 xhtml_footer
 exit 0

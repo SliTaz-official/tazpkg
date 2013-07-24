@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-	<title>Tazpkg Manual (en)</title>
 	<meta charset="utf-8" />
-	<link rel="shortcut icon" href="favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>TazPkg Manual (en)</title>
+	<link rel="stylesheet" type="text/css" href="../slitaz-doc.css" />
+	<script type="text/javascript" src="../slitaz-doc.js"></script>
 </head>
 <body>
 
 <!-- Header -->
 <div id="header">
-	<h1>Tazpkg Manual</h1>
+	<h1>TazPkg Manual</h1>
 </div>
 
 <!-- Start content -->
@@ -20,27 +20,27 @@
 <h2>NAME</h2>
 
 <p>
-	Tazpkg - Tiny autonomous zone package manager
+	TazPkg - Tiny autonomous zone package manager
 </p>
 
 
 <h2>SYNTAX</h2>
 
 <pre>
- tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
+tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
 </pre>
 
 
 <h2>DESCRIPTION</h2>
 
 <p>
-Tazpkg is an ultralightweight (~ 80KB) package manager to
+TazPkg is an ultralightweight (~ 80KB) package manager to
 install, list, download, update or remove precompiled packages
-on a GNU/Linux system. Tazpkg offers commands for searching
+on a GNU/Linux system. TazPkg offers commands for searching
 and creating packages and was created independently for the project.
 The format of the packages using the *.tazpkg extension is a
 cpio archive containing a filesystem compressed with gzip,
-a receipt and an optional description. Tazpkg also manages
+a receipt and an optional description. TazPkg also manages
 dependencies based on package receipts. Each receipt contains
 all the information about a package and can also include
 pre and post installation functions. The same receipt is
@@ -48,9 +48,9 @@ used by Cookutils to compile sources and generate a .tazpkg
 package.
 </p>
 <p>
-Tazpkg is entirely built from scratch using SHell script,
+TazPkg is entirely built from scratch using SHell script,
 compatible with Bash; it runs under Ash - part of the Busybox
-project. Tazpkg is distributed under the free GNU license GPL V3.
+project. TazPkg is distributed under the free GNU license GPL V3.
 </p>
 
 
@@ -136,7 +136,8 @@ text file, justified to 80 characters to fit in a standard terminal):
 Lists the system configuration files. The <tt>--box</tt> option displays
 in table format:
 </p>
-<pre># tazpkg list-config
+<pre>
+# tazpkg list-config
 # tazpkg list-config --box
 </pre>
 
@@ -178,7 +179,7 @@ useful to find the full path to a file and determine if
 a file is present on the system. Example:
 </p>
 <pre>
- $ tazpkg search-file <em>libnss</em>
+$ tazpkg search-file <em>libnss</em>
 </pre>
 
 
@@ -207,7 +208,8 @@ Install a set of packages listed in a file. This command
 allows you to (download and) install several packages with a single command
 and can also be forced:
 </p>
-<pre># tazpkg install-list <em>my-packages.list</em>
+<pre>
+# tazpkg install-list <em>my-packages.list</em>
 # tazpkg get-install-list <em>my-packages.list</em> --forced
 </pre>
 
@@ -391,7 +393,7 @@ To install the package Grub:
 
 <p>
 Remove *.tazpkg packages downloaded to the cache. During
-installation, Tazpkg keeps a copy of packages downloaded
+installation, TazPkg keeps a copy of packages downloaded
 from the web. This is done to save bandwidth in case of
 reinstallation, but you may want to free up space on the hard
 drive or re-download the packages:

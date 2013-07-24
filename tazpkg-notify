@@ -1,30 +1,31 @@
 #!/bin/sh
 #
-# TazPKG Notify - Notification icon for Tazpkg packages. Recharging pkgs
+# TazPkg Notify - Notification icon for TazPkg packages. Recharging pkgs
 # list can be done automatically at boot, so notifies users if some
 # updates are available. Also notifies users if the packages list is too
 # old and out-of-date or if no packages list found. This script should
 # be run by the WM autostart script or ~/.xsession and needs a systray to
 # sit in like in LXpanel or Tint2.
 #
-# Copyright (C) 2012 SliTaz GNU/Linux - GNU gpl v2
+# Copyright (C) 2012 SliTaz GNU/Linux - GNU GPL v2
 #
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #
 
 # I18n
 . /usr/bin/gettext.sh
-TEXTDOMAIN='tazpkg-notify'
-export TEXTDOMAIN
+export TEXTDOMAIN='tazpkg'
 
 fifo=/tmp/$(basename $0).fifo
 panel="http://tazpanel:82/pkgs.cgi"
 db="/var/lib/tazpkg"
 doc="file:///usr/share/doc/tazpkg/tazpkg.html"
+
 installed=$(ls $db/installed | wc -l)
+num="<b>$installed</b>"
 text="$(eval_ngettext \
-		'<b>$installed</b> installed package' \
-		'<b>$installed</b> installed packages' $installed)"
+		'$num installed package' \
+		'$num installed packages' $installed)"
 icon="/usr/share/pixmaps/tazpkg.png"
 [ -f "$db/packages.list" ] && mtime=$(find $db/packages.list -mtime +10;)
 [ -f "$db/packages.up" ] && up=$(cat $db/packages.up | wc -l)
@@ -49,8 +50,8 @@ menu:\
 $(gettext "My packages")!tazweb $panel?list!tazpkg|\
 $(gettext "Recharge lists")!tazweb $panel?recharge!tazpkg-up|\
 $(gettext "Check upgrade")!tazweb $panel?up!tazpkg-up|\
-$(gettext "TazPKG SHell")!terminal -e tazpkg shell!xterm|\
-$(gettext "TazPKG manual")!tazweb $doc!text-html|\
+$(gettext "TazPkg SHell")!terminal -e tazpkg shell!xterm|\
+$(gettext "TazPkg manual")!tazweb $doc!text-html|\
 $(gettext "Close notification")!quit!gtk-close
 EOT
 }
@@ -82,9 +83,10 @@ case $1 in
 		fi
 		# Available upgrades
 		if [ "$up" -gt 0 ]; then
+			num="<b>$up</b>"
 			tooltip=$(eval_ngettext \
-				'There is <b>$up</b> upgradeable package' \
-				'There are <b>$up</b> upgradeable packages' $up)
+				'There is $num upgradeable package' \
+				'There are $num upgradeable packages' $up)
 			echo "action:tazweb $panel?up" > $fifo
 			echo "tooltip:$tooltip" > $fifo
 			echo "icon:tazpkg-up" > $fifo && exit 0

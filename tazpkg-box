@@ -1,12 +1,12 @@
 #!/bin/sh
 #
-# Small GTK boxes to TazPKG for deep desktop integration. PcmanFM 0.5.x has a
-# patch to extract a TazPKG file but not Thunar and other FM. TazPKGbox tries
+# Small GTK boxes to TazPkg for deep desktop integration. PcmanFM 0.5.x has a
+# patch to extract a TazPkg file but not Thunar and other FM. TazPkgBox tries
 # to follow freedesktop standards.
 #
-# Copyright (C) 2012 SliTaz GNU/Linux - GNU gpl v2
+# Copyright (C) 2011-2013 SliTaz GNU/Linux - GNU GPL v2
 #
-# Authors : Christophe Lincoln <pankso@slitaz.org>
+# Authors: Christophe Lincoln <pankso@slitaz.org>
 #
 
 # Internationalization.
@@ -14,14 +14,14 @@
 TEXTDOMAIN='tazpkg'
 export TEXTDOMAIN
 
-title=$(gettext "TazPKG Action")
+title=$(gettext "TazPkg Action")
 icon="/usr/share/pixmaps/tazpkg.png"
-opts="--image=tazpkg --image-on-top --width=520 --center --on-top"
+opts="--image=tazpkg --image-on-top --center --on-top"
 
 # Nice GTK output for install and extract.
 output() {
 	yad --text-info $opts --text="<b>$title</b>" \
-		--height=260 --title="$title" --window-icon=$icon \
+		--height=260 --width=520 --title="$title" --window-icon=$icon \
 		--tail --margins=4 --button="gtk-close:0"
 }
 
@@ -30,10 +30,10 @@ actions_main() {
 	pkgname=${pkg%.tazpkg}
 	text=$(eval_gettext 'Package name: <b>$pkgname</b>')
 	yad --text="$text" $opts \
-		--title="$title" --height=100 \
-		--window-icon=$icon --image-on-top \
+		--title="$title" \
+		--window-icon=$icon \
 		--button="$(gettext 'Install'):3" --button="$(gettext 'Extract'):2" \
-		--button="gtk-close:1"
+		--button="gtk-cancel:1"
 }
 
 # Actions user can do when clicking on a package.
@@ -49,7 +49,7 @@ actions() {
 	esac
 }
 
-# TazPKG URL Handler.
+# TazPkg URL Handler.
 dl_inst() {
 	pkg=$(basename $url) 
 	eval_gettext "Downloading: \$pkg"; echo -e "\n"
@@ -64,10 +64,10 @@ dl_inst() {
 
 case "$1" in
 	usage|help|-u|-h)
-		progname=$(basename $0)
-		eval_gettext "Usage: \$progname [actions|url] [pkg]" ;;
+		echo "$(gettext 'Usage:') $(basename $0) [actions|$(gettext 'URL')] \
+[$(gettext 'package')]" ;;
 	tazpkg://*)
-		# TazPKG URL's handler.
+		# TazPkg URL's handler.
 		url="http://${1#tazpkg://}"
 		dl_inst | output ;;
 	actions)

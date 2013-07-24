@@ -1,22 +1,22 @@
 #!/bin/sh
-# Tazpkg - Tiny autonomous zone packages manager.
+# TazPkg - Tiny autonomous zone packages manager.
 #
 # This is a lightwight packages manager for *.tazpkg files written in SHell
-# script. It works well with Busybox ash shell and bash. Tazpkg lets you
+# script. It works well with Busybox ash shell and bash. TazPkg lets you
 # list, install, remove, download or get information about a package. You can
-# use 'tazpkg usage' to get a list of commands with short descriptions. Tazpkg
+# use 'tazpkg usage' to get a list of commands with short descriptions. TazPkg
 # also resolves dependencies and can upgrade packages from a mirror.
 #
-# (C) 2007-2012 SliTaz - GNU General Public License v3.
+# (C) 2007-2013 SliTaz - GNU General Public License v3.
 #
-# Authors : See the AUTHORS files
+# Authors: See the AUTHORS files
 #
 
 ####################
 # Script variables #
 ####################
 
-# TazPKG version
+# TazPkg version
 VERSION=5.1
 
 . /etc/slitaz/slitaz.conf
@@ -56,7 +56,7 @@ reverse_translate_category()
 }
 
 #
-# Tazpkg output functions
+# TazPkg output functions
 #
 # Print localized title
 title() { newline; boldify "$(eval_gettext "$1")"; separator; }
@@ -160,7 +160,8 @@ EOT
 
 usage_up() {
 	cat << EOT
-$(emsg "$(gettext '<b>Tazpkg usage for command up:</b> tazpkg up [--option]')")
+$(emsg "<b>$(gettext 'TazPkg usage for command up:')</b>")
+  tazpkg up [$(gettext 'option')]
 * $(gettext 'Without options run in interactive mode and ask before install')
 
 $(boldify "$(gettext 'Where options are:')")
@@ -186,7 +187,7 @@ check_dir()
 	fi
 }
 
-# Check if the directories and files used by Tazpkg
+# Check if the directories and files used by TazPkg
 # exist. If not and user is root we create them.
 check_base_dir()
 {
@@ -227,10 +228,10 @@ check_for_package_file()
 # Check for the receipt of an installed package.
 check_for_receipt()
 {
-	if [ ! -f "$1$INSTALLED/$PACKAGE/receipt" ]; then
-		FS=$1
+	receipt_path="$1$INSTALLED/$PACKAGE/receipt"
+	if [ ! -f $receipt_path ]; then
 		newline
-		eval_gettext "Unable to find the receipt: \$FS\$INSTALLED/\$PACKAGE/receipt"; echo
+		eval_gettext 'Unable to find the receipt: $receipt_path'; echo
 		newline
 		exit 0
 	fi
@@ -238,7 +239,7 @@ check_for_receipt()
 
 # Get repositories priority using $LOCALSTATE/priority.
 # In this files, undigest are called by their name and main mirror
-# by main. Sort order : priority
+# by main. Sort order: priority
 look_for_priority()
 {
 [ -s $LOCALSTATE/priority ] && priority=$(cat $LOCALSTATE/priority)
@@ -284,8 +285,9 @@ check_for_installed_package()
 {
 	if [ -n "$(get_installed_package_pathname $PACKAGE $1)" ]; then
 		newline
-		eval_gettext "\$PACKAGE package is already installed. You can
-use the --forced option to force installation or remove it and reinstall."; echo
+		eval_gettext "\$PACKAGE package is already installed.
+You can use the --forced option to force installation or remove it
+and reinstall."; echo
 		newline
 		exit 0
 	fi
@@ -294,12 +296,13 @@ use the --forced option to force installation or remove it and reinstall."; echo
 # Check for packages.list to download and install packages.
 check_for_packages_list()
 {
-	if [ ! -f "$LOCALSTATE/packages.list" ]; then
+	list_path="$LOCALSTATE/packages.list"
+	if [ ! -f "$list_path" ]; then
 		if test $(id -u) = 0 ; then
 			tazpkg recharge
 		else
 			newline
-			eval_gettext "Unable to find the list: \$LOCALSTATE/packages.list"; echo
+			eval_gettext 'Unable to find the list: $list_path'; echo
 			gettext \
 "You must probably run 'tazpkg recharge' as root to get the latest list of
 packages available on the mirror."; echo
@@ -562,7 +565,8 @@ install_package()
 		action "Checking post install dependencies..."
 		[ -f $INSTALLED/$PACKAGE/receipt ]
 		if ! status; then
-			eval_gettext "Please run 'tazpkg install \$PACKAGE_FILE' in / and retry."; echo
+			command="tazpkg install $PACKAGE_FILE"
+			eval_gettext "Please run '\$command' in / and retry."; echo
 			rm -rf $TMP_DIR
 			exit 1
 		fi
@@ -690,7 +694,8 @@ END {
 		updatedepmod=yes
 	fi
 	cd $TOP_DIR
-	footer "$(eval_gettext '$PACKAGE ($VERSION$EXTRAVERSION) is installed.')"
+	pkg_name="$PACKAGE ($VERSION$EXTRAVERSION)"
+	footer "$(eval_gettext '$pkg_name is installed.')"
 	# Log this activity
 	[ -n "$ROOT" ] || log_pkg Installed
 }
@@ -733,19 +738,21 @@ check_for_deps()
 	. $TMP_DIR/receipt
 	PACKAGE=$saved
 	rm -rf $TMP_DIR
+
+	num=0
 	for pkgorg in $DEPENDS
 	do
 		i=$(equivalent_pkg $pkgorg $1)
 		if [ ! -d "$1$INSTALLED/$i" ]; then
 			MISSING_PACKAGE=$i
-			deps=$(($deps+1))
+			num=$(($num+1))
 		elif [ ! -f "$1$INSTALLED/$i/receipt" ]; then
 			eval_gettext "WARNING Dependency loop between \$PACKAGE and \$i."; echo
 		fi
 	done
+
 	if [ ! "$MISSING_PACKAGE" = "" ]; then
-		emsg "$(eval_gettext '<b>Tracking dependencies for:</b> $PACKAGE')"
-		separator
+		title "$(eval_gettext 'Tracking dependencies for: $PACKAGE')"
 		for pkgorg in $DEPENDS
 		do
 			i=$(equivalent_pkg $pkgorg $1)
@@ -756,8 +763,8 @@ check_for_deps()
 		done
 		separator
 		eval_ngettext \
-			"\$deps missing package to install." \
-			"\$deps missing packages to install." $deps; echo
+			"\$num missing package to install." \
+			"\$num missing packages to install." $num; echo
 	fi
 }
 
@@ -828,22 +835,23 @@ search_in_installed_packages()
 	gettext "Installed packages"; echo
 	separator
 	list=`ls -1 $INSTALLED | grep -i "$PATTERN"`
+	num=0
 	for pkg in $list
 	do
 		EXTRAVERSION=""
 		[ -f $INSTALLED/$pkg/receipt ] || continue
 		. $INSTALLED/$pkg/receipt
 		emsg "$PACKAGE<i 24> $VERSION$EXTRAVERSION<i 42> $(gettext $CATEGORY)"
-		packages=$(($packages+1))
+		num=$(($num+1))
 	done
 	# Set correct ending messages.
-	if [ "$packages" = "" ]; then
-		eval_gettext "0 installed packages found for: \$PATTERN"; echo
+	if [ x$num == x ]; then
+		eval_gettext "No installed packages found for: \$PATTERN"; echo
 		newline
 	else
 		footer "$(eval_ngettext \
-			'$packages installed package found for: $PATTERN' \
-			'$packages installed packages found for: $PATTERN' $packages)"
+			'$num installed package found for: $PATTERN' \
+			'$num installed packages found for: $PATTERN' $num)"
 	fi
 }
 
@@ -852,10 +860,10 @@ search_in_packages_list()
 {
 	gettext "Available packages name-version"; echo
 	separator
-	packages=0
+	num=0
 	for i in $LOCALSTATE/packages.list $LOCALSTATE/undigest/*/packages.list; do
 		grep -is "$PATTERN" $i
-		packages=$(($packages + `grep -is "$PATTERN" $i | wc -l`))
+		num=$(($num + `grep -is "$PATTERN" $i | wc -l`))
 	done
 	if [ ! -f "$LOCALSTATE/packages.list" ]; then
 		newline
@@ -864,13 +872,13 @@ search_in_packages_list()
 please run 'tazpkg recharge' once as root before searching."; echo
 		newline
 	fi
-	if [ "$packages" = "0" ]; then
-		eval_gettext "0 available packages found for: \$PATTERN"; echo
+	if [ "$num" = "0" ]; then
+		eval_gettext "No available packages found for: \$PATTERN"; echo
 		newline
 	else
 		footer "$(eval_ngettext \
-			'$packages available package found for: $PATTERN' \
-			'$packages available packages found for: $PATTERN' $packages)"
+			'$num available package found for: $PATTERN' \
+			'$num available packages found for: $PATTERN' $packages)"
 	fi
 }
 
@@ -880,10 +888,10 @@ search_in_packages_txt()
 {
 	gettext "Matching packages name with version and desc"; echo
 	separator
-	packages=0
+	num=0
 	for i in $LOCALSTATE/packages.txt $LOCALSTATE/undigest/*/packages.txt; do
 		grep -is -A 2 "^$PATTERN" $i
-		packages=$(($packages + `grep -is "^$PATTERN" $i | wc -l`))
+		num=$(($num + `grep -is "^$PATTERN" $i | wc -l`))
 	done
 	if [ ! -f "$LOCALSTATE/packages.txt" ]; then
 		newline
@@ -892,13 +900,13 @@ search_in_packages_txt()
 please run 'tazpkg recharge' once as root before searching."; echo
 		newline
 	fi
-	if [ "$packages" = "0" ]; then
-		eval_gettext "0 available packages found for: \$PATTERN"; echo
+	if [ "$num" = "0" ]; then
+		eval_gettext "No available packages found for: \$PATTERN"; echo
 		newline
 	else
 		footer "$(eval_ngettext \
-			'$packages available package found for: $PATTERN' \
-			'$packages available packages found for: $PATTERN' $packages)"
+			'$num available package found for: $PATTERN' \
+			'$num available packages found for: $PATTERN' $packages)"
 	fi
 }
 
@@ -1415,7 +1423,7 @@ update_kernel_modules()
 }
 
 ###################
-# Tazpkg commands #
+# TazPkg commands #
 ###################
 
 case "$COMMAND" in
@@ -1434,14 +1442,13 @@ case "$COMMAND" in
 		# Display the list of categories.
 		if [ "$1" = "cat" -o "$1" = "categories" ]; then
 			title 'Packages categories'
+			num=0
 			for i in $PKGS_CATEGORIES
 			do
 				gettext $i; echo
-				categories=$(($categories+1))
+				num=$(($num+1))
 			done
-			footer "$(eval_ngettext \
-				'$categories category' \
-				'$categories categories' $categories)"; echo
+			footer "$(eval_ngettext '$num category' '$num categories' $num)"; echo
 			exit 0
 		fi
 		# Check for an asked category.
@@ -1459,9 +1466,10 @@ case "$COMMAND" in
 					packages=$(($packages+1))
 				fi
 			done
+			num="<c 32>$packages</c>"; cat_name="<c 34>$ASKED_CATEGORY_I18N</c>"
 			footer "$(emsg $(eval_ngettext \
-				'<c 32>$packages</c> package installed of category <c 34>$ASKED_CATEGORY_I18N</c>.' \
-				'<c 32>$packages</c> packages installed of category <c 34>$ASKED_CATEGORY_I18N</c>.' \
+				'$num package installed of category $cat_name.' \
+				'$num packages installed of category $cat_name.' \
 				$packages))"; echo
 		else
 			# By default list all packages and versions.
@@ -1471,12 +1479,13 @@ case "$COMMAND" in
 				[ -f $pkg/receipt ] || continue
 				EXTRAVERSION=""
 				. $pkg/receipt
-				echo -e "$PACKAGE\033[24G $VERSION$EXTRAVERSION\033[42G $(gettext $CATEGORY)"
+				echo -e "$PACKAGE\033[35G $VERSION$EXTRAVERSION\033[53G $(gettext $CATEGORY)"
 				packages=$(($packages+1))
 			done
+			num="<c 32>$packages</c>"
 			footer "$(emsg $(eval_ngettext \
-				'<c 32>$packages</c> <b>package installed.</b>' \
-				'<c 32>$packages</c> <b>packages installed.</b>' $packages))"
+				'$num package installed.' \
+				'$num packages installed.' $packages))"
 		fi ;;
 	list-mirror|-lm)
 		# List all available packages on the mirror. Option --diff displays
@@ -1487,10 +1496,10 @@ case "$COMMAND" in
 				if [ -f "$LOCALSTATE/packages.diff" ]; then
 					title 'Mirrored packages diff'
 					cat $LOCALSTATE/packages.diff
-					pkgs=`cat $LOCALSTATE/packages.diff | wc -l`
+					num=$(cat $LOCALSTATE/packages.diff | wc -l)
 					footer "$(eval_ngettext \
-						'$pkgs new package listed on the mirror.' \
-						'$pkgs new packages listed on the mirror.' $pkgs)"
+						'$num new package listed on the mirror.' \
+						'$num new packages listed on the mirror.' $num)"
 				else
 					newline
 					gettext "Unable to list anything, no packages.diff found."; echo
@@ -1502,9 +1511,10 @@ case "$COMMAND" in
 				cat $LOCALSTATE/packages.txt ;;
 		esac
 		pkgs=$(cat $LOCALSTATE/packages.list | wc -l)
-		footer "$(emsg $(eval_ngettext \
-			'<c 32>$pkgs</c> package in the last recharged list.' \
-			'<c 32>$pkgs</c> packages in the last recharged list.' $pkgs))"
+		num=$(emsg "<c 32>$pkgs</c>")
+		footer "$(eval_ngettext \
+			'$num package in the last recharged list.' \
+			'$num packages in the last recharged list.' $pkgs)"
 		;;
 	list-files|-lf)
 		# List files installed with the package.
@@ -1513,9 +1523,10 @@ case "$COMMAND" in
 		title 'Installed files by: $PACKAGE'
 		cat $INSTALLED/$PACKAGE/files.list | sort
 		files=$(cat $INSTALLED/$PACKAGE/files.list | wc -l)
-		footer "$(emsg $(eval_ngettext \
-			'<c 32>$files</c> file installed with $PACKAGE' \
-			'<c 32>$files</c> files installed with $PACKAGE' $files))"
+		num=$(emsg "<c 32>$files</c>")
+		footer "$(eval_ngettext \
+			'$num file installed with $PACKAGE' \
+			'$num files installed with $PACKAGE' $files)"
 		;;
 	info)
 		# Information about package.
@@ -1523,7 +1534,7 @@ case "$COMMAND" in
 		check_for_receipt
 		EXTRAVERSION=""
 		. $INSTALLED/$PACKAGE/receipt
-		title 'Tazpkg information'
+		title 'TazPkg information'
 		# Display localized short description
 		if [ -e "$LOCALSTATE/packages-desc.$LANG" ]; then
 			LOCDESC=$(grep -e "^$PACKAGE	" $LOCALSTATE/packages-desc.$LANG | cut -d'	' -f2)
@@ -1560,7 +1571,7 @@ case "$COMMAND" in
 		if [ -z "$PATTERN" ]; then
 			newline
 			gettext "Please specify a pattern or package name to search for."; echo
-			gettext "Example : 'tazpkg search paint'"; echo
+			echo "$(gettext 'Example:') 'tazpkg search paint'"
 			newline
 			exit 0
 		fi
@@ -1582,7 +1593,7 @@ case "$COMMAND" in
 		if [ -z "$2" ]; then
 			newline
 			gettext "Please specify a pattern or file name to search for."; echo
-			gettext "Example : 'tazpkg search-file libnss'"; echo
+			echo "$(gettext 'Example:') 'tazpkg search-file libnss'"
 			newline
 			exit 0
 		fi
@@ -1630,9 +1641,10 @@ case "$COMMAND" in
 		if [ "$match" = "" ]; then
 			eval_gettext "0 file found for: \$pkg"; echo
 		else
+			num=$(emsg "<c 32>$files</c>")
 			footer "$(eval_ngettext \
-				'$match file found for: $pkg' \
-				'$match files found for: $pkg' $match)"
+				'$num file found for: $pkg' \
+				'$num files found for: $pkg' $match)"
 		fi
 		;;
 	search-pkgname)
@@ -1640,7 +1652,7 @@ case "$COMMAND" in
 		if [ -z "$2" ]; then
 			newline
 			gettext "Please specify a pattern or file name to search for."; echo
-			gettext "Example : 'tazpkg search-pkgname libnss'"; echo
+			echo "$(gettext 'Example:') 'tazpkg search-pkgname libnss'"
 			newline
 			exit 0
 		fi
@@ -1657,12 +1669,13 @@ case "$COMMAND" in
 		done
 		file=$2
 		if [ "$match" = "0" ]; then
-			eval_gettext "0 file found for: \$file"; echo
+			eval_gettext "No file found for: \$file"; echo
 			newline
 		else
+			num=$(emsg "<c 32>$files</c>")
 			footer "$(eval_ngettext \
-				'$match package found with file: $file' \
-				'$match packages found with file: $file' $match)"
+				'$num package found with file: $file' \
+				'$num packages found with file: $file' $match)"
 		fi
 		;;
 	install|-i)
@@ -1755,7 +1768,7 @@ $LIST"
 		if [ -z "$RELEASE" ]; then
 			newline
 			gettext "Please specify the release you want on the command line."; echo
-			gettext "Example: tazpkg set-release cooking"; echo
+			echo "$(gettext 'Example:') tazpkg set-release cooking"
 			newline
 			exit 0
 		fi
@@ -2204,9 +2217,10 @@ EOT
 				cat packages.diff
 				new_pkgs=`cat packages.diff | wc -l`
 				if [ "$new_pkgs" != 0 ]; then
+					num=$(emsg "<c 32>$new_pkgs</c>")
 					footer "$(eval_ngettext \
-						'$new_pkgs new package on the mirror.' \
-						'$new_pkgs new packages on the mirror.' $new_pkgs)"
+						'$num new package on the mirror.' \
+						'$num new packages on the mirror.' $new_pkgs)"
 				else
 					gettext "No new packages on the mirror."; echo
 					newline
@@ -2307,17 +2321,19 @@ packages.')"
 			gettext "System is up-to-date..."; echo
 			newline
 		fi
+		num=$(emsg "<c 32>$new_pkgs</c>")
 		footer "$(eval_ngettext \
-			'$pkgs installed package scanned in ${time}s' \
-			'$pkgs installed packages scanned in ${time}s' $pkgs)"
+			'$num installed package scanned in ${time}s' \
+			'$num installed packages scanned in ${time}s' $pkgs)"
 		if [ "$upnb" != 0 ]; then
 			if [ "$blocked_count" -gt 0 ]; then
-				blocks="("$(eval_ngettext '$blocked_count blocked' \
-					'$blocked_count blocked' $blocked_count)")"
+				num=$blocked_count
+				blocked=$(eval_ngettext '$num blocked' '$num blocked' $num)
 			fi
+			num=$upnb
 			boldify "$(eval_ngettext \
-				'You have $upnb available upgrade $blocks' \
-				'You have $upnb available upgrades $blocks' $upnb)"
+				'You have $num available upgrade ($blocked)' \
+				'You have $num available upgrades ($blocked)' $num)"
 			newline
 		fi
 		# Pkgs to upgrade ? Skip, let install them all or ask user
@@ -2336,7 +2352,7 @@ packages.')"
 						echo 'y' | tazpkg get-install $pkg --forced
 					done
 					# List is generated each time and must be cleaned so
-					# tazpkg-notify dont find upgrade anymore.
+					# tazpkg-notify don't find upgrade anymore.
 					rm $UP_LIST && touch $UP_LIST ;;
 				*)
 					gettext "Leaving without any upgrades installed."; echo
@@ -2439,11 +2455,12 @@ EOT
 				do
 					pkg=${f%/files.list}
 					if [ -f $pkg/modifiers ]; then
-						overriders="$(cat $pkg/modifiers)"
-						eval_gettext '  $pkg (overridden by $overriders)'
+						pkg_list="$(cat $pkg/modifiers)"
+						overriders=$(eval_gettext '(overridden by $pkg_list)')
 					else
-						echo -n "  $pkg"
+						overriders=''
 					fi
+					echo -n "  $pkg $overriders"
 					newline
 				done
 			done
@@ -2607,9 +2624,10 @@ EOT
 		action "Cleaning cache directory..."
 		rm -rf $CACHE_DIR/*
 		status
+		num=$(emsg "<c 32>$new_pkgs</c>")
 		footer "$(eval_ngettext \
-			'$files file removed from cache.' \
-			'$files files removed from cache.' $files)"
+			'$num file removed from cache.' \
+			'$num files removed from cache.' $files)"
 		;;
 	list-undigest)
 		# list undigest URLs.
@@ -2700,7 +2718,7 @@ EOT
 			newline
 		fi ;;
 	shell)
-		# Tazpkg SHell
+		# TazPkg SHell
 		if test $(id -u) = 0 ; then
 			PROMPT="\\033[1;33mtazpkg\\033[0;39m# "
 		else
@@ -2708,7 +2726,7 @@ EOT
 		fi
 		if [ ! "$2" = "--noheader" ]; then
 			clear
-			title 'Tazpkg SHell.'
+			title 'TazPkg SHell.'
 			gettext "Type 'usage' to list all available commands or 'quit' or 'q' to exit."; echo
 			newline
 		fi
@@ -2719,7 +2737,7 @@ EOT
 				q|quit)
 					break ;;
 				shell)
-					gettext "You are already running a Tazpkg SHell."; echo ;;
+					gettext "You are already running a TazPkg SHell."; echo ;;
 				su)
 					su -c 'exec tazpkg shell --noheader' && break ;;
 				"")

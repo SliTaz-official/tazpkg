@@ -1,68 +1,78 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
 <head>
-	<title>Manuel de Tazpkg (fr)</title>
+	<title>Manuel de TazPkg (fr)</title>
 	<meta charset="utf-8" />
-	<link rel="shortcut icon" href="favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="../slitaz-doc.css" />
+	<script type="text/javascript" src="../slitaz-doc.js"></script>
 </head>
 <body>
 
 <!-- Header -->
 <div id="header">
-	<h1>Manuel de Tazpkg</h1>
+	<h1>Manuel de TazPkg</h1>
 </div>
 
 <!-- Start content -->
 <div id="content">
 
 <h2>NOM</h2>
+
 <p>
-	Tazpkg - Tiny autonomous zone package manager
+	TazPkg - Tiny autonomous zone package manager
 </p>
 
+
 <h2>SYNTAXE</h2>
+
 <pre>
- tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
- tazpkg shell
+tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]
+tazpkg shell
 </pre>
 
+
 <h2>DESCRIPTION</h2>
+
 <p>
-Tazpkg est un gestionnaire de paquets ultra léger (~35 Ko) permettant
+TazPkg est un gestionnaire de paquets ultra léger (~35 Ko) permettant
 d'installer, lister, télécharger, mettre à jour ou enlever des paquets
-précompilés sur un système GNU/Linux. Tazpkg propose aussi une commande de
+précompilés sur un système GNU/Linux. TazPkg propose aussi une commande de
 recherche et une commande pour la création de paquets. Il a été créé pour les
 besoins de SliTaz GNU/Linux, mini distribution autonome. Le format des paquets
 utilise l'extension *.tazpkg, c'est une archive cpio contenant un système de
 fichiers (fs) compressé avec gzip, la recette et une éventuelle description.
-Tazpkg fournit aussi un système de gestion des dépendances basé sur les
+TazPkg fournit aussi un système de gestion des dépendances basé sur les
 recettes des paquets. La recette contient toutes les informations au sujet du
 paquet, elle peut aussi contenir les fonctions de pre et post installation.
 Cette même recette est par ailleurs utilisée par Cookutils pour compiler les
 sources et créer un paquet tazpkg.
 </p>
 <p>
-Tazpkg est écrit en script shell depuis rien (from scratch), compatible
-Bash, et fonctionne avec Ash du projet Busybox. Tazpkg est distribué
+TazPkg est écrit en script shell depuis rien (from scratch), compatible
+Bash, et fonctionne avec Ash du projet Busybox. TazPkg est distribué
 sous license libre GNU gpl v3.
 </p>
 
+
 <h2>SHELL</h2>
+
 <p>
-Tazpkg fourni un mode SHell permettant de directement passer les commandes
+TazPkg fourni un mode SHell permettant de directement passer les commandes
 au gestionnaire de paquets. Ce mode est utile pour lancer quelques commandes
 comme la mise à jour du système, il support 'su' pour devenir admnistrateur
-mais ne propose pas le rappel des commandes. Pour utiliser Tazpkg en mode 
+mais ne propose pas le rappel des commandes. Pour utiliser TazPkg en mode 
 SHell :
 </p>
 <pre>
- $ tazpkg shell
+$ tazpkg shell
 </pre>
 
+
 <h2>COMMANDES</h2>
-<a name="list"></a>
-<h3>list</h3>
+
+
+<h3 id="list">list</h3>
+
 <p>
 Liste et compte les paquets installés sur le système. Cette commande permet
 d'afficher sur une colonne la liste tous les paquets installés, vous pouvez
@@ -72,12 +82,14 @@ les catégories, les paquets en fonction de leur catégorie et les paquets
 bloqués :
 </p>
 <pre>
- # tazpkg list
- # tazpkg list cat|categories
- # tazpkg list blocked
+# tazpkg list
+# tazpkg list cat|categories
+# tazpkg list blocked
 </pre>
-<a name="xhtml-list"></a>
-<h3>xhtml-list</h3>
+
+
+<h3 id="xhtml-list">xhtml-list</h3>
+
 <p>
 La commande 'xhtml-list' permet de créer une liste au format xHTML des
 paquets installés sur le système, une fois générée, cette liste peut être 
@@ -88,11 +100,13 @@ pouvez aussi changer le nom de la liste générée via la ligne de
 commande :
 </p>
 <pre>
- # tazpkg xhtml-list
- # tazpkg xhtml-list list-name.html
+# tazpkg xhtml-list
+# tazpkg xhtml-list list-name.html
 </pre>
-<a name="list-mirror"></a>
-<h3>list-mirror</h3>
+
+
+<h3 id="list-mirror">list-mirror</h3>
+
 <p>
 Liste et compte les paquets disponnibles sur le miroir. Cette commande va
 afficher le dernier fichier packages.list rechargé depuis le miroir, si la
@@ -102,21 +116,25 @@ des paquets disponibles. L'option --diff est utilisée pour afficher le
 fichier des différences entre la dernière et l'actuelle liste des paquets :
 </p>
 <pre>
- # tazpkg list-mirror
- # tazpkg list-mirror --diff
+# tazpkg list-mirror
+# tazpkg list-mirror --diff
 </pre>
-<a name="info"></a>
-<h3>info</h3>
+
+
+<h3 id="info">info</h3>
+
 <p>
 Donne les informations disponibles dans la recette du paquet en question, sa
 version, sa catégorie, le mainteneur, son site Web et ses éventuelles
 dépendances (voir aussi Cookutils pour plus d'informations sur les recettes) :
 </p>
 <pre>
- # tazpkg info busybox
+# tazpkg info busybox
 </pre>
-<a name="desc"></a>
-<h3>desc</h3>
+
+
+<h3 id="desc">desc</h3>
+
 <p>
 Description du paquet (si elle existe). Cette commande affiche le fichier
 description.txt propre à chaque paquet, la description est un simple fichier
@@ -125,10 +143,12 @@ terminal. Si la description du paquet n'existe pas, vous pouvez la créer et
 l'envoyer au mainteneur du paquet (quelques lignes suffisent) :
 </p>
 <pre>
- # tazpkg desc busybox
+# tazpkg desc busybox
 </pre>
-<a name="list-files"></a>
-<h3>list-files</h3>
+
+
+<h3 id="list-files">list-files</h3>
+
 <p>
 Liste et compte les fichiers installés avec un paquet. Cette commande va
 simplement lire et classer le fichier files.list propre à chaque paquet, ce
@@ -137,10 +157,12 @@ pour supprimer tous les fichiers lors de la désinstallation d'un paquet. Pour
 lister les fichier installés avec le paquet bc :
 </p>
 <pre>
- # tazpkg list-files bc
+# tazpkg list-files bc
 </pre>
-<a name="search"></a>
-<h3>search</h3>
+
+
+<h3 id="search">search</h3>
+
 <p>
 Recherche de paquets par patron ou nom de paquet. La commande 
 va chercher le terme voulu dans les paquets installés et dans les listes des
@@ -149,13 +171,17 @@ paquets installables depuis internet, il suffit de lancer 'tazpkg recharge'
 avant d'effectuer une recherche :
 </p>
 <pre>
- # tazpkg search gcc
- # tazpkg search gcc [--installed|--list|--mirror]
- Ou :
- # tazpkg search gcc [-i|-l|-m]
+# tazpkg search gcc
+# tazpkg search gcc [--installed|--list|--mirror]
 </pre>
-<a name="search-files"></a>
-<h3>search-files</h3>
+<p>Ou :</p>
+<pre>
+# tazpkg search gcc [-i|-l|-m]
+</pre>
+
+
+<h3 id="search-files">search-files</h3>
+
 <p>
 La commande 'search-file' permet de rechercher un fichier parmi tous les
 fichiers installés par tous les paquets. Cette commande est très utile pour
@@ -163,10 +189,12 @@ trouver le chemin complet vers un fichier et savoir si un fichier est bien
 présent sur le système. Exemple :
 </p>
 <pre>
- $ tazpkg search-file libnss
+$ tazpkg search-file libnss
 </pre>
-<a name="install"></a>
-<h3>install</h3>
+
+
+<h3 id="install">install</h3>
+
 <p>
 Cette commande permet l'installation d'un paquet local avec l'extension 
 .tazpkg. Voir la commande 'get-install' pour installer un paquet depuis
@@ -175,25 +203,33 @@ internet. A noter que vous  pouvez forcer l'installation via l'option
 dans lequel vous désirez installer le paquets via l'option --root= :
 </p>
 <pre>
- # tazpkg install package-1.0.tazpkg
- Ou :
- # tazpkg install path/to/package-1.0.tazpkg --forced
- Ou :
- # tazpkg install path/to/package-1.0.tazpkg --root=/mnt/rootfs
+# tazpkg install package-1.0.tazpkg
 </pre>
-<a name="install-list"></a>
-<h3>install-list</h3>
+<p>Ou :</p>
+<pre>
+# tazpkg install path/to/package-1.0.tazpkg --forced
+</pre>
+<p>Ou :</p>
+<pre>
+# tazpkg install path/to/package-1.0.tazpkg --root=/mnt/rootfs
+</pre>
+
+
+<h3 id="install-list">install-list</h3>
+
 <p>
 Installation d'un set de paquets listés dans un fichier. Cette commande
 permet d'installer plusieurs paquets en une seule commande et peut aussi être
 forcée :
 </p>
 <pre>
- # tazpkg install-list my-packages.list
- # tazpkg install-list my-packages.list --forced
+# tazpkg install-list my-packages.list
+# tazpkg install-list my-packages.list --forced
 </pre>
-<a name="link"></a>
-<h3>link</h3>
+
+
+<h3 id="link">link</h3>
+
 <p>
 Cette commande permet l'installation d'un paquet déjà installé sur un
 autre media. Cette installation s'effectue par des liens symboliques et
@@ -201,52 +237,62 @@ consomme très peu de mémoire. Elle est utilisée généralement avec un systè
 en RAM pour installer des compléments depuis une clé USB. 
 </p>
 <pre>
- # tazpkg link openoffice /media/usbdisk
+# tazpkg link openoffice /media/usbdisk
 </pre>
-<a name="add-flavor"></a>
-<h3>add-flavor</h3>
+
+
+<h3 id="add-flavor">add-flavor</h3>
+
 <p>
 Installation d'un set de paquets listés dans une saveur. Cette commande
 permet d'installer tous les paquets d'une saveur en une seule commande sans
 avoir à générer un nouveau cdrom avec tazlito.
 </p>
 <pre>
- # tazpkg add-flavor office.flavor
+# tazpkg add-flavor office.flavor
 </pre>
-<a name="install-flavor"></a>
-<h3>install-flavor</h3>
+
+
+<h3 id="install-flavor">install-flavor</h3>
+
 <p>
 Remplacement de tous les paquets par ceux listés dans une saveur. Cette
 commande permet de transformer la distribution courante en une seule commande
 sans avoir à générer un nouveau cdrom avec tazlito.
 </p>
 <pre>
- # tazpkg install-flavor office.flavor
+# tazpkg install-flavor office.flavor
 </pre>
-<a name="remove"></a>
-<h3>remove</h3>
+
+
+<h3 id="remove">remove</h3>
+
 <p>
 Désinstallation d'un paquet, il vous sera demandé confirmation (y/N). Cette
 commande va supprimer tous les fichiers installés avec le paquet, pour
-afficher cette liste, vous pouvez utiliser la commande 'list-files' de Tazpkg
+afficher cette liste, vous pouvez utiliser la commande 'list-files' de TazPkg
 suivie du nom du paquet en question. Exemple avec le paquet bc :
 </p>
 <pre>
- # tazpkg remove bc
+# tazpkg remove bc
 </pre>
-<a name="extract"></a>
-<h3>extract</h3>
+
+
+<h3 id="extract">extract</h3>
+
 <p>
 Extraire un paquet dans un répertoire donné. Si vous ne spécifiez pas le
 répertoire de destination, le paquet sera extrait dans le répertoire courant
 en utilisant le nom paquet-version :
 </p>
 <pre>
- # tazpkg extract package.tazpkg
- # tazpkg extract package.tazpkg target/dir
+# tazpkg extract package.tazpkg
+# tazpkg extract package.tazpkg target/dir
 </pre>
-<a name="pack"></a>
-<h3>pack</h3>
+
+
+<h3 id="pack">pack</h3>
+
 <p>
 La commande 'pack' permet de créer un paquet depuis un répertoire préparé à
 l'avance ou depuis un paquet désarchivé. Cette commande permet aussi de créer
@@ -254,35 +300,41 @@ manuellement un paquet.tazpkg (voir la documentation et Cookutils pour la créat
 automatique de paquets). Pour empaqueter un paquet :
 </p>
 <pre>
- # tazpkg pack package-version
+# tazpkg pack package-version
 </pre>
-<a name="repack"></a>
-<h3>repack</h3>
+
+
+<h3 id="repack">repack</h3>
+
 <p>
 La commande 'repack' permet de recréer un paquet depuis les fichiers présents
 sur le système où il a été précédemment installé. Pour réempaqueter un paquet :
 </p>
 <pre>
- # tazpkg repack package
+# tazpkg repack package
 </pre>
-<a name="recharge"></a>
-<h3>recharge</h3>
+
+
+<h3 id="recharge">recharge</h3>
+
 <p>
 Recharge la liste des paquets disponibles sur le miroir (packages.list). Cette
 commande va télécharger la plus récente liste des paquets installables depuis
-le miroir, à noter qu'avant de commencer, Tazpkg va sauvegarder l'ancienne
+le miroir, à noter qu'avant de commencer, TazPkg va sauvegarder l'ancienne
 liste. Une fois la liste à jour, vous pouvez la consulter via la commande
-'list' et effectuer un recherche de paquet via la commande 'search' de Tazpkg.
+'list' et effectuer un recherche de paquet via la commande 'search' de TazPkg.
 Pour réafficher la liste des différences, vous pouvez utiliser la commande
 'list-mirror --diff'. Et pour afficher et mettre à jour les paquets du système,
 vous pouvez utiliser 'upgrade'. Pour recharger la plus récente liste des
 paquets :
 </p>
 <pre>
- # tazpkg recharge
+# tazpkg recharge
 </pre>
-<a name="upgrade"></a>
-<h3>up ou upgrade</h3>
+
+
+<h3 id="upgrade">up ou upgrade</h3>
+
 <p>
 La commande 'upgrade' permet de mettre à jour tous les paquets installés et
 disponibles sur le miroir courant. La mise à jour des paquets est une
@@ -295,7 +347,7 @@ personnes ayant installé SliTaz sur disque dur, en mode LiveCD les paquets mis
 jour :
 </p>
 <pre>
- # tazpkg up
+# tazpkg up
 </pre>
 <p>
 	Up permet aussi d'automatiquement recharger la list des paquets ou installer
@@ -303,33 +355,38 @@ jour :
 	commande:
 </p>
 <pre>
- # tazpkg up --recharge
- # tazpkg --help-up
+# tazpkg up --recharge
+# tazpkg --help-up
 </pre>
 
-<a name="set-release"></a>
-<h3>set-release</h3>
+
+<h3 id="set-release">set-release</h3>
+
 <p>
 La commande 'set-release' permet de changer la version de SliTaz et de mettre 
 à jour tous les paquets. Attention cette commande peut être dangereuse dans 
 la cas d'une mise à jour de la version stable version en cuisson (cooking) :
 </p>
 <pre>
- # tazpkg set-release cooking
+# tazpkg set-release cooking
 </pre>
-<a name="check"></a>
-<h3>check</h3>
+
+
+<h3 id="check">check</h3>
+
 <p>
 La commande 'check' permet de vérifier les dépendances sur les paquets
 installés et de vérifier si tous les fichiers nécessaires à la reconstruction
 des paquets sont bien présents :
 </p>
 <pre>
- # tazpkg check
- # tazpkg check --full
+# tazpkg check
+# tazpkg check --full
 </pre>
-<a name="block"></a>
-<h3>block ou unblock</h3>
+
+
+<h3 id="block">block ou unblock</h3>
+
 <p>
 Les commandes 'block' et 'unblock' pemettent de bloquer la version du paquet
 installé pour qu'il ne soit pas mis à jour par la commande 'upgrade'. La liste
@@ -338,12 +395,16 @@ des paquets bloqués est contenue dans le fichier :
 Pour bloquer ou débloquer un paquet tel que Grub :
 </p>
 <pre>
- # tazpkg block grub
- Ou :
- # tazpkg unblock grub
+# tazpkg block grub
 </pre>
-<a name="get"></a>
-<h3>get</h3>
+<p>Ou :</p>
+<pre>
+# tazpkg unblock grub
+</pre>
+
+
+<h3 id="get">get</h3>
+
 <p>
 Télécharge un paquet depuis le miroir (si il existe). Le paquet téléchargé
 est stocké dans le répertoire courant, pour connaître le chemin vous pouvez
@@ -351,10 +412,12 @@ utiliser la commande 'pwd'. Pour télécharger un paquet tel que 'grub', il suff
 de lancer la commande :
 </p>
 <pre>
- # tazpkg get grub
+# tazpkg get grub
 </pre>
-<a name="get-install"></a>
-<h3>get-install</h3>
+
+
+<h3 id="get-install">get-install</h3>
+
 <p>
 Installer un paquet depuis un mirroir sur internet. La commande 'get-install'
 commence par vérifier si le paquet existe bien sur le miroir et si il n'a pas
@@ -363,22 +426,26 @@ liste des paquets sur le miroir il faut utiliser la commande 'list-mirror'
 (voir aussi recharge). Pour installer un paquet tel que 'grub' :
 </p>
 <pre>
- # tazpkg get-install grub
+# tazpkg get-install grub
 </pre>
-<a name="clean-cache"></a>
-<h3>clean-cache</h3>
+
+
+<h3 id="clean-cache">clean-cache</h3>
+
 <p>
-Supprimer les paquets Tazpkg téléchargés dans le cache. Lors de l'installation
-de paquets via le Web, Tazpkg garde une copie du paquet, cela est fait pour
+Supprimer les paquets TazPkg téléchargés dans le cache. Lors de l'installation
+de paquets via le Web, TazPkg garde une copie du paquet, cela est fait pour
 gagner de la bande passante en cas de réinstallation, mais il se peut que vous
 vouliez libérer de la place sur le disque dur ou que vous désiriez
 retélécharger des paquets :
 </p>
 <pre>
- # tazpkg clean-cache
+# tazpkg clean-cache
 </pre>
-<a name="setup-mirror"></a>
-<h3>setup-mirror</h3>
+
+
+<h3 id="setup-mirror">setup-mirror</h3>
+
 <p>
 Configurer l'URL du miroir, la commande 'setup-mirror' vous demandera alors
 l'URL du nouveau miroir. Vous pouvez spécifier plusieurs URLs en les séparant
@@ -387,10 +454,12 @@ fichier /var/lib/tazpkg/mirror. L'URL doit pointer sur le répertoire contenant
 la liste (packages.list) et les paquets :
 </p>
 <pre>
- # tazpkg setup-mirror
+# tazpkg setup-mirror
 </pre>
-<a name="setup-undigest"></a>
-<h3>setup-undigest ou add-undigest</h3>
+
+
+<h3 id="setup-undigest">setup-undigest ou add-undigest</h3>
+
 <p>
 Configurer l'URL d'un miroir complémentaire non officiel pour tester des
 paquets non encore présents sur les miroirs.
@@ -400,69 +469,83 @@ L'URL doit pointer sur le répertoire contenant
 la liste (packages.list) et les paquets :
 </p>
 <pre>
- # tazpkg setup-undigest public-repository http://my.home.org/slitaz
- # tazpkg setup-undigest local-repository /home/slitaz/packages
+# tazpkg setup-undigest public-repository http://my.home.org/slitaz
+# tazpkg setup-undigest local-repository /home/slitaz/packages
 </pre>
-<a name="remove-undigest"></a>
-<h3>remove-undigest</h3>
+
+
+<h3 id="remove-undigest">remove-undigest</h3>
+
 <p>
 Supprime l'URL un miroir complémentaire non officiel.
 </p>
 <pre>
- # tazpkg remove-undigest my-repository
+# tazpkg remove-undigest my-repository
 </pre>
-<a name="list-undigest"></a>
-<h3>list-undigest</h3>
+
+
+<h3 id="list-undigest">list-undigest</h3>
+
 <p>
 Affiche les miroirs complémentaires.
 </p>
 <pre>
- # tazpkg list-undigest
+# tazpkg list-undigest
 </pre>
-<a name="reconfigure"></a>
-<h3>reconfigure</h3>
+
+
+<h3 id="reconfigure">reconfigure</h3>
+
 <p>
 La commande 'reconfigure' permet de relancer les commande de post et 
 pre-installation d'un paquet afin de le reconfigurer si besoin est :
 </p>
 <pre>
- # tazpkg reconfigure package
+# tazpkg reconfigure package
 </pre>
-<a name="convert"></a>
-<h3>convert</h3>
+
+
+<h3 id="convert">convert</h3>
+
 <p>
 La commande 'convert' permet de convertir un paquet Debian (.deb), 
 Redhat (.rpm), Slackware (.tgz) ou Archlinux (.pkg.tar.gz) en paquet
 Slitaz (.tazpkg) :
 </p>
 <pre>
- # tazpkg convert alien-package
+# tazpkg convert alien-package
 </pre>
-<a name="depend"></a>
-<h3>depend</h3>
+
+
+<h3 id="depend">depend</h3>
+
 <p>
 Affiche l'arbre des dépendances d'un paquet, c'est à dire tous les
 paquets qui devront être installés en plus :
 </p>
 <pre>
- # tazpkg depend package
+# tazpkg depend package
 </pre>
-<a name="rdepend"></a>
-<h3>rdepend</h3>
+
+
+<h3 id="rdepend">rdepend</h3>
+
 <p>
 Affiche l'arbre des dépendances inversé d'un paquet, c'est à dire tous les
 paquets qui en dépendent directement ou indirectement :
 </p>
 <pre>
- # tazpkg rdepend package
+# tazpkg rdepend package
 </pre>
-<a name="bugs"></a>
-<h3>bugs</h3>
+
+
+<h3 id="bugs">bugs</h3>
+
 <p>
 Affiche les bugs connus :
 </p>
 <pre>
- # tazpkg bugs package
+# tazpkg bugs package
 </pre>
 
 <h2>MAINTENEUR</h2>

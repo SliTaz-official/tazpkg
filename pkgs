@@ -1,3 +1,6 @@
+TEXTDOMAIN_original=$TEXTDOMAIN
+export TEXTDOMAIN='tazpkg'
+
 cat <<EOT
 <li><a href="/pkgs.cgi">$(gettext 'Packages')</a>
 	<ul>
@@ -12,3 +15,5 @@ cat <<EOT
 	</ul>
 </li>
 EOT
+
+export TEXTDOMAIN=$TEXTDOMAIN_original

@@ -1,10 +1,10 @@
-# Makefile for Tazpkg.
+# Makefile for TazPkg.
 #
 PREFIX?=/usr
 DOCDIR?=$(PREFIX)/share/doc
 SYSCONFDIR?=/etc/slitaz
 DESTDIR?=
-LINGUAS?=el es fr pt_BR ru
+LINGUAS?=el es fr pl pt_BR ru sv
 
 VERSION:=$(shell grep ^VERSION=[0-9] tazpkg | cut -d '=' -f 2)
 
@@ -12,43 +12,30 @@ tmpdir = tar-install/tazpkg-$(VERSION)
 tarball = tazpkg-$(VERSION).tar.gz
 
 all: msgfmt
-	
+
 # i18n.
 
 pot:
-	xgettext -o po/tazpkg/tazpkg.pot -L Shell \
-		--package-name=Tazpkg \
-		--package-version="$(VERSION)" -kaction -ktitle ./tazpkg ./tazpkg-box
-	xgettext -o po/tazpkg-notify/tazpkg-notify.pot -L Shell \
-		--package-name="Tazpkg Notification" \
-		--package-version="$(VERSION)" ./tazpkg-notify
-	
+	xgettext -o po/tazpkg.pot -L Shell \
+		--package-name=TazPkg \
+		--package-version="$(VERSION)" -kaction -ktitle \
+		./tazpkg ./tazpkg-box ./pkgs ./pkgs.cgi ./tazpkg-notify
+
 msgmerge:
 	@for l in $(LINGUAS); do \
-		if [ -f "po/tazpkg/$$l.po" ]; then \
+		if [ -f "po/$$l.po" ]; then \
 			echo -n "Updating $$l po file."; \
-			msgmerge -U po/tazpkg/$$l.po po/tazpkg/tazpkg.pot ; \
-		fi; \
-		if [ -f "po/tazpkg-notify/$$l.po" ]; then \
-			echo -n "Updating $$l po file."; \
-			msgmerge -U po/tazpkg-notify/$$l.po po/tazpkg-notify/tazpkg-notify.pot; \
+			msgmerge -U po/$$l.po po/tazpkg.pot ; \
 		fi; \
 	done
 
 msgfmt:
 	@for l in $(LINGUAS); do \
-		if [ -f "po/tazpkg/$$l.po" ]; then \
+		if [ -f "po/$$l.po" ]; then \
 			echo -n "Compiling tazpkg $$l mo file... "; \
 			mkdir -p po/mo/$$l/LC_MESSAGES; \
 			msgfmt -o po/mo/$$l/LC_MESSAGES/tazpkg.mo \
-				po/tazpkg/$$l.po ; \
-			echo "done"; \
-		fi; \
-		if [ -f "po/tazpkg-notify/$$l.po" ]; then \
-			echo -n "Compiling tazpkg-notify $$l mo file... "; \
-			mkdir -p po/mo/$$l/LC_MESSAGES; \
-			msgfmt -o po/mo/$$l/LC_MESSAGES/tazpkg-notify.mo \
-				po/tazpkg-notify/$$l.po ; \
+				po/$$l.po ; \
 			echo "done"; \
 		fi; \
 	done;
@@ -56,10 +43,10 @@ msgfmt:
 # Installation.
 
 install: msgfmt
-	# Tazpkg command line interface
+	# TazPkg command line interface
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
-	# Tazpkg-box GUI
+	# TazPkg-box GUI
 	install -m 0777 tazpkg-notify $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg-box $(DESTDIR)$(PREFIX)/bin
 	# Configuration files
@@ -68,7 +55,7 @@ install: msgfmt
 	# Documentation
 	install -m 0755 -d $(DESTDIR)$(DOCDIR)/tazpkg
 	cp -a doc/* $(DESTDIR)$(DOCDIR)/tazpkg
-	# tazpanel files
+	# TazPanel files
 	install -m 0755 -d $(DESTDIR)/var/www/tazpanel/menu.d
 	cp -a pkgs.cgi $(DESTDIR)/var/www/tazpanel
 	cp -a pkgs $(DESTDIR)/var/www/tazpanel/menu.d
@@ -97,8 +84,8 @@ clean:
 	rm -rf _pkg
 	rm -rf tar-install
 	rm -rf po/mo
-	rm -f po/*/*~
-	rm -f po/*/*.mo
+	rm -f po/*~
+	rm -f po/*.mo
 	
 
 targz:
@@ -112,3 +99,6 @@ targz:
 	cd -
 	
 	@echo "** Tarball successfully created in tar-install/${tarball}"
+
+help:
+	@echo "make [ pot | msgmerge | msgfmt | all | install | uninstall | clear | targz ]"

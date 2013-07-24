@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Package Manager
+Name[ru]=Менеджер пакетов
+TryExec=tazweb
+Exec=tazweb http://tazpanel:82/pkgs.cgi
+Icon=tazpkg
+Categories=Settings;PackageManager;
