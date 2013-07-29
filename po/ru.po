@@ -230,8 +230,8 @@ msgid "Display reverse dependencies tree."
 msgstr "Показать дерево обратных зависимостей"
 
 #: tazpkg:149
-msgid "Convert a deb/rpm/tgz/arch package to a slitaz (.tazpkg)."
-msgstr "Конвертировать пакеты deb|rpm|tgz|arch в формат tazpkg"
+msgid "Convert a deb/rpm/tgz/pet/arch/ipk package to a slitaz (.tazpkg)."
+msgstr "Конвертировать пакеты deb|rpm|tgz|pet|arch|ipk в формат tazpkg"
 
 #: tazpkg:150
 msgid "Link a package from another slitaz installation."
