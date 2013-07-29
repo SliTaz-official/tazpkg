@@ -1178,11 +1178,11 @@ EOT
 	rm -rf $TMP_DIR
 }
 
-# convert a .pkg.tar.gz/.apk package to .tazpkg
+# convert a .pkg.tar.gz/.pkg.tar.xz/.apk package to .tazpkg
 convert_arch()
 {
 	mkdir -p $TMP_DIR/fs
-	tar xzf $PACKAGE_FILE -C $TMP_DIR/fs
+	busybox tar xf $PACKAGE_FILE -C $TMP_DIR/fs
 	if [ -f $TMP_DIR/fs/.PKGINFO ]; then
 		cd $TMP_DIR
 		package="$(grep ^pkgname fs/.PKGINFO | sed 's/.*= //')"
@@ -2857,7 +2857,7 @@ EOT
 			convert_pet;;
 		*.tgz)
 			convert_tgz;;
-		*.apk|*.pkg.tar.gz)
+		*.apk|*.pkg.tar.gz|*.pkg.tar.xz)
 			convert_arch;;
 		*.ipk|*.opk)
 			convert_ipk;;
