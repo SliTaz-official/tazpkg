@@ -146,7 +146,7 @@ $(boldify "$(gettext 'Commands:')")
   clean-cache|-cc  $(gettext 'Clean all packages downloaded in cache directory.')
   depends          $(gettext 'Display dependencies tree.')
   rdepends         $(gettext 'Display reverse dependencies tree.')
-  convert          $(gettext 'Convert a deb/rpm/tgz/pet/arch/ipk package to a slitaz (.tazpkg).')
+  convert          $(gettext 'Convert a deb/rpm/tgz/pet/sfs/arch/ipk package to a slitaz (.tazpkg).')
   link             $(gettext 'Link a package from another slitaz installation.')
   setup-mirror|-sm $(gettext 'Change the mirror url configuration.')
   list-undigest    $(gettext 'List undigest mirrors.')
@@ -1215,27 +1215,25 @@ EOT
 	rm -rf $TMP_DIR
 }
 
-# convert a .pet package to .tazpkg
-convert_pet()
+# get package and version from PACKAGE_FILE
+parse_pkgname()
 {
-	mkdir -p $TMP_DIR 
-	cd $TMP_DIR
-	package=$(basename $PACKAGE_FILE .pet)
+	package=$(basename $PACKAGE_FILE $1)
 	IFS='-'
 	set -- $package
 	unset IFS
 	package=$1
 	version=$2
 	if [ -z "$version" ]; then
-		tmp=${package%%[0-9\.]*}
-		version=${package#$tmp}
-		package=$tmp
+		package=${1%%[0-9\.]*}
+		version=${1#$package}
 	fi
-	tar xzf $PACKAGE_FILE 2> /dev/null
-	. $package*/*.specs
-	rm -f $package*/*.specs
+}
+
+finish_convert_puppy()
+{
+	rm -f fs/*.specs
 	file="$package-$version"
-	mv $package*/ fs
 	mkdir $file
 	mv fs $file
 	cat > $file/receipt <<EOT
@@ -1244,7 +1242,7 @@ convert_pet()
 PACKAGE="$package"
 VERSION="$version"
 CATEGORY="misc"
-SHORT_DESC="$PETMENUDESCR"
+SHORT_DESC="$desc"
 WEB_SITE="http://puppylinux.org/"
 MAINTAINER="nobody@slitaz.org"
 DEPENDS="$(find_depends)"
@@ -1269,16 +1267,41 @@ EOM
 	rm -rf $TMP_DIR
 }
 
+# convert a .sfs package to .tazpkg
+convert_sfs()
+{
+	[ -n "$(which unsquashfs)" ] || tazpkg get-install squashfs 
+	if ! unsquashfs -l $PACKAGE_FILE | grep -q squashfs-root/pet.specs$ ; then
+		eval_gettext "\$PACKAGE_FILE does not look like a Puppy package!"; echo
+		return 1
+	fi
+	mkdir -p $TMP_DIR 
+	cd $TMP_DIR
+	parse_pkgname .sfs
+	unsquashfs $PACKAGE_FILE
+	mv squashfs-root fs
+	set -- $(cat fs/pet.specs)
+	desc="$10"
+	finish_convert_puppy
+}
+
+# convert a .pet package to .tazpkg
+convert_pet()
+{
+	mkdir -p $TMP_DIR 
+	cd $TMP_DIR
+	parse_pkgname .pet
+	tar xzf $PACKAGE_FILE 2> /dev/null
+	. $package*/*.specs
+	desc="$PETMENUDESCR"
+	mv $package*/ fs
+	finish_convert_puppy
+}
+
 # convert a .tgz package to .tazpkg
 convert_tgz()
 {
-	package=$(basename $PACKAGE_FILE)
-	IFS='-'
-	set -- $package
-	unset IFS
-	package=$1
-	version=$2
-	file="$package-$version"
+	parse_pkgname
 	mkdir -p $TMP_DIR/$file/fs
 	tar xzf $PACKAGE_FILE -C $TMP_DIR/$file/fs
 	cd $TMP_DIR
@@ -2828,6 +2851,8 @@ EOT
 			convert_deb;;
 		*.rpm)
 			convert_rpm;;
+		*.sfs)
+			convert_sfs;;
 		*.pet)
 			convert_pet;;
 		*.tgz)
