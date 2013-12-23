@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Packages Notification System
+Name[fr]=Notification du système de paquets
+Exec=tazpkg-notify

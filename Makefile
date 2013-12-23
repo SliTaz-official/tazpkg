@@ -67,6 +67,10 @@ install: msgfmt
 	cp -a  applications $(DESTDIR)$(PREFIX)/share
 	cp -a  mime $(DESTDIR)$(PREFIX)/share
 	cp -a  pixmaps $(DESTDIR)$(PREFIX)/share
+	# TazPKG Notify XDG autostart
+	mkdir -p $(DESTDIR)/etc/xdg
+	cp -a xdg/autostart $(DESTDIR)/etc/xdg
+	
 
 # Uninstallation and clean-up commands.
 
