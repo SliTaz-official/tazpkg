@@ -10,5 +10,5 @@ Comment[fr]=Manuel du gestionnaire de paquets SliTaz
 Comment[ru]=Руководство по менеджеру пакетов TazPkg
 TryExec=browser
 Exec=browser file:///usr/share/doc/tazpkg/tazpkg.html
-Icon=text-html
-Categories=Documentation;System;
+Icon=slitaz-doc
+Categories=Documentation;
