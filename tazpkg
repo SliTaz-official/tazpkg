@@ -924,7 +924,7 @@ install_flavor()
 	[ -f $FLAVOR.flavor ] && cp $FLAVOR.flavor $TMP_DIR
 	cd $TMP_DIR
 	if [ -f $FLAVOR.flavor ] || download $FLAVOR.flavor; then
-		zcat $FLAVOR.flavor | cpio --quiet -i >/dev/null
+		zcat < $FLAVOR.flavor | cpio --quiet -i >/dev/null
 		while read file; do
 			for pkg in $(ls -d $INSTALLED/${file%%-*}*); do
 				[ -f $pkg/receipt ] || continue
