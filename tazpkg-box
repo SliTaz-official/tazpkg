@@ -4,7 +4,7 @@
 # patch to extract a TazPkg file but not Thunar and other FM. TazPkgBox tries
 # to follow freedesktop standards.
 #
-# Copyright (C) 2011-2013 SliTaz GNU/Linux - GNU GPL v2
+# Copyright (C) 2011-2014 SliTaz GNU/Linux - GNU GPL v2
 #
 # Authors: Christophe Lincoln <pankso@slitaz.org>
 #
@@ -14,25 +14,49 @@
 TEXTDOMAIN='tazpkg'
 export TEXTDOMAIN
 
-title=$(gettext "TazPkg Action")
+title=$(gettext "TazPKG")
+text=$(gettext "SliTaz Package Action")
 icon="/usr/share/pixmaps/tazpkg.png"
 opts="--image=tazpkg --image-on-top --center --on-top"
 
+usage() {
+	cat << EOT
+$(gettext 'Usage:') $(basename $0) [actions|URL] [$(gettext 'package')]
+EOT
+}
+
 # Nice GTK output for install and extract.
 output() {
-	yad --text-info $opts --text="<b>$title</b>" \
-		--height=260 --width=520 --title="$title" --window-icon=$icon \
+	yad --text-info $opts --title="$title" --text="<b>$text</b>" \
+		--height=260 --width=520  --window-icon=$icon \
 		--tail --margins=4 --button="gtk-close:0"
+}
+
+pkginfo() {
+	tmp=/tmp/$(basename $0)/$$
+	mkdir -p $tmp && cd $tmp
+	{ cpio --quiet -i receipt > /dev/null 2>&1; } < ${dir}/$pkg
+	. $tmp/receipt
+	#rm -rf /tmp/$(basename $0)
+	size=$(du -sh ${dir}/$pkg | awk '{print $1}')
+	echo -e "Package\n$PACKAGE
+Version\n$VERSION
+Short desc\n$SHORT_DESC
+Unpacked size\n$UNPACKED_SIZE
+Depends\n$DEPENDS"
 }
 
 # Main GUI box function with pure Yad spec
 actions_main() {
 	pkgname=${pkg%.tazpkg}
-	text=$(eval_gettext 'Package name: <b>$pkgname</b>')
-	yad --text="$text" $opts \
-		--title="$title" \
+	pkginfo | yad $opts --title="$title" \
+		--list --no-headers --no-click  \
+		--height=260 --width=520 \
+		--text="<b>$text</b>" \
 		--window-icon=$icon \
-		--button="$(gettext 'Install'):3" --button="$(gettext 'Extract'):2" \
+		--column "Name" --column "" \
+		--button="$(gettext 'Install'):3" \
+		--button="$(gettext 'Extract'):2" \
 		--button="gtk-cancel:1"
 }
 
@@ -64,17 +88,16 @@ dl_inst() {
 
 case "$1" in
 	usage|help|-u|-h)
-		echo "$(gettext 'Usage:') $(basename $0) [actions|$(gettext 'URL')] \
-[$(gettext 'package')]" ;;
+		usage ;;
 	tazpkg://*)
 		# TazPkg URL's handler.
 		url="http://${1#tazpkg://}"
 		dl_inst | output ;;
 	actions)
 		pkg=$(basename $2)
-		cd $(dirname $2)
+		dir=$(dirname $2)
+		cd $dir
 		actions ;;
 esac
 
 exit 0
-
