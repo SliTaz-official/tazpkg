@@ -471,7 +471,7 @@ download_from()
 	for i in $mirrors; do
 		case "$i" in
 			# Mirror URL can have a trailing slash or not.
-			http://*|ftp://*) wget -c ${i%/}/$@ && break ;;
+			http://*|ftp://*) busybox wget -c ${i%/}/$@ && break ;;
 			*) ln -sf $i/$1 . && break ;;
 		esac
 	done
