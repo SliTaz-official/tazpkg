@@ -444,6 +444,23 @@ log_pkg()
 	echo "$DATE - $1 - $PACKAGE ($VERSION$EXTRAVERSION)$extra" >> $LOG
 }
 
+# Download a get-package script from this mirror
+download_get_script()
+{
+	local p
+	for p in $priority ; do
+		local i
+		for i in $(cat $p/mirror) ; do
+			case "$i" in
+			http://*|ftp://*)
+				wget -O $2 ${i%packages/*}packages/get/$1 &&
+				return 0 ;;
+			esac
+		done
+	done
+	return 1
+}
+
 # Download a file from this mirror
 download_from()
 {
@@ -700,6 +717,63 @@ END {
 	footer "$(eval_gettext '$pkg_name is installed.')"
 	# Log this activity
 	[ -n "$ROOT" ] || log_pkg Installed
+}
+
+# This function may be called by a get script.
+abort_package()
+{
+	cd $CUR_DIR
+	rm -rf $TMP_DIR
+	echo "${1:-Abort $PACKAGE.}"
+	exit 1
+}
+
+# This function installs a package form a get script in the rootfs.
+install_package_from_get_script()
+{
+	SCRIPT="$1"
+	ROOT="$2"
+	[ -d $ROOT$INSTALLED/$PACKAGE ] && exit 1
+
+	grep -q no-check-certificate $SCRIPT &&
+	[ ! -d $INSTALLED/wget ] && tazpkg get-install wget
+
+	mkdir -p $TMP_DIR && cd $TMP_DIR
+
+	unset VERSION CATEGORY WEB_SITE SHORT_DESC MAINTAINER LICENSE \
+	      TARBALL WGET_URL CONFIG_FILES SUGGESTED PROVIDE DEPENDS
+	set -e
+	. $SCRIPT
+	
+	if [ ! -s $PACKAGE-$VERSION/receipt ]; then
+		cat > $PACKAGE-$VERSION/receipt <<EOT
+# SliTaz package receipt.
+
+PACKAGE="$PACKAGE"
+VERSION="$VERSION"
+CATEGORY="${CATEGORY:-non-free}"
+WEB_SITE="$WEB_SITE"
+SHORT_DESC="${SHORT_DESC:-$PACKAGE}"
+MAINTAINER="${MAINTAINER:-nobody@slitaz.org}"
+EOT
+		for i in LICENSE TARBALL WGET_URL CONFIG_FILES SUGGESTED \
+			 PROVIDE DEPENDS ; do
+			eval "[ -n \"\$$i\" ] && echo \"$i=\\\"\$$i\\\"\""
+		done >> $PACKAGE-$VERSION/receipt
+	fi
+
+	tazpkg pack $PACKAGE-$VERSION
+
+	# Clean to save RAM memory before installation
+	rm -rf $PACKAGE-$VERSION
+
+	# Install pseudo package
+	tazpkg install $PACKAGE-$VERSION.tazpkg --root=$ROOT
+	mv $PACKAGE-$VERSION.tazpkg $CACHE_DIR
+
+	# Clean
+	cd $TOP_DIR
+	rm -rf $TMP_DIR
 }
 
 # Check for loop in deps tree.
@@ -1096,7 +1170,7 @@ find_depends()
 		done
 	done
 	spc=""
-	cat $TMP_DIR/depends 2> /dev/null | sort | uniq | while read file; do
+	sort < $TMP_DIR/depends 2> /dev/null | uniq | while read file; do
 		echo -n "$spc$file"
 		spc=" "
 	done
@@ -1106,7 +1180,7 @@ show_unresolved_lib()
 {
 	if [ -s $TMP_DIR/unresolved ]; then
 		echo -e "BUGS=\"`gettext \"No dependency for\"`" >> $1
-		cat $TMP_DIR/unresolved | sort | uniq | while read file; do
+		sort < $TMP_DIR/unresolved | uniq | while read file; do
 			eval_gettext "WARNING: unknown dependency for \$lib"; echo
 			echo -n " $file" >> $1
 		done
@@ -1257,7 +1331,7 @@ post_$i()
 {
 chroot \$1/ sh - << EOT
 cd /
-$(cat $file/fs/p$i.sh | sed -e 's/\\/\\\\/g' | sed -e 's/\$/\\$/g' ; rm -f $file/fs/p$i.sh)
+$(sed -e 's/\\/\\\\/g' -e 's/\$/\\$/g' < $file/fs/p$i.sh ; rm -f $file/fs/p$i.sh)
 EOT
 }
 EOM
@@ -1372,7 +1446,7 @@ post_install()
 {
 chroot \$1/ sh - << EOT
 cd /
-$(cat $file/fs/install/doinst.sh | sed -e 's/\\/\\\\/g' | sed -e 's/\$/\\$/g')
+$(sed -e 's/\\/\\\\/g' -e 's/\$/\\$/g' < $file/fs/install/doinst.sh)
 EOT
 }
 EOM
@@ -1619,7 +1693,7 @@ case "$COMMAND" in
 				if [ -f "$LOCALSTATE/packages.diff" ]; then
 					title 'Mirrored packages diff'
 					cat $LOCALSTATE/packages.diff
-					num=$(cat $LOCALSTATE/packages.diff | wc -l)
+					num=$(wc -l < $LOCALSTATE/packages.diff)
 					footer "$(eval_ngettext \
 						'$num new package listed on the mirror.' \
 						'$num new packages listed on the mirror.' $num)"
@@ -1633,7 +1707,7 @@ case "$COMMAND" in
 				title 'List of available packages on the mirror'
 				cat $LOCALSTATE/packages.txt ;;
 		esac
-		pkgs=$(cat $LOCALSTATE/packages.list | wc -l)
+		pkgs=$(wc -l < $LOCALSTATE/packages.list)
 		num=$(emsg "<c 32>$pkgs</c>")
 		footer "$(eval_ngettext \
 			'$num package in the last recharged list.' \
@@ -1644,8 +1718,8 @@ case "$COMMAND" in
 		check_for_package_on_cmdline
 		check_for_receipt
 		title 'Installed files by: $PACKAGE'
-		cat $INSTALLED/$PACKAGE/files.list | sort
-		files=$(cat $INSTALLED/$PACKAGE/files.list | wc -l)
+		sort < $INSTALLED/$PACKAGE/files.list
+		files=$(wc -l < INSTALLED/$PACKAGE/files.list)
 		num=$(emsg "<c 32>$files</c>")
 		footer "$(eval_ngettext \
 			'$num file installed with $PACKAGE' \
@@ -2338,7 +2412,7 @@ EOT
 				sed -i s/+// packages.diff
 				title 'Mirrored packages diff'
 				cat packages.diff
-				new_pkgs=`cat packages.diff | wc -l`
+				new_pkgs=$(wc -l < packages.diff)
 				if [ "$new_pkgs" != 0 ]; then
 					num=$(emsg "<c 32>$new_pkgs</c>")
 					footer "$(eval_ngettext \
@@ -2435,7 +2509,7 @@ packages.')"
 			done
 		done
 		sed -i /^$/d $UP_LIST
-		upnb=$(cat $UP_LIST | wc -l)
+		upnb=$(wc -l < $UP_LIST)
 		pkgs=$(ls | wc -l)
 		time=$(($(date +%s) - $time))
 		if [ "$upnb" = 0 ]; then
@@ -2704,14 +2778,19 @@ EOT
 
 		AUTOEXEC="no"
 		if ! check_for_package_in_list check; then
-			PACKAGE=get-$PACKAGE
-			AUTOEXEC=$PACKAGE
-			check_for_package_in_list
-			if [ -n "$(get_installed_package_pathname $PACKAGE $ROOT)" ]; then
-				CACHE_DIR="${CACHE_DIR%/*}/get"
-				[ -d "$CACHE_DIR" ] || mkdir -p $CACHE_DIR
-				$AUTOEXEC $ROOT
+			CACHE_DIR="${CACHE_DIR%/*}/get"
+			[ -d "$CACHE_DIR" ] || mkdir -p $CACHE_DIR
+			if download_get_script $PACKAGE /tmp/$PACKAGE.$$ ; then
+				install_package_from_get_script /tmp/$PACKAGE.$$ $ROOT
 				exit 0
+			else
+				PACKAGE=get-$PACKAGE
+				AUTOEXEC=$PACKAGE
+				check_for_package_in_list
+				if [ -n "$(get_installed_package_pathname $PACKAGE $ROOT)" ]; then
+					$AUTOEXEC $ROOT
+					exit 0
+				fi
 			fi
 		fi
 		# Check if forced install.
