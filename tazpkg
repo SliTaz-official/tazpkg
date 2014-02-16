@@ -2356,8 +2356,7 @@ packages.')"
 	help-up)
 		# Options available for the command: up
 		newline; usage_up; newline
-		exit 1
-		;;
+		exit 1 ;;
 	up|upgrade)
 		#
 		# This is the new way to upgrade packages making 'upgrade' and
@@ -2442,7 +2441,7 @@ packages.')"
 			gettext "System is up-to-date..."; echo
 			newline
 		fi
-		num=$(emsg "<c 32>$new_pkgs</c>")
+		num=$(emsg "<c 32>$pkgs</c>")
 		footer "$(eval_ngettext \
 			'$num installed package scanned in ${time}s' \
 			'$num installed packages scanned in ${time}s' $pkgs)"
@@ -2450,6 +2449,8 @@ packages.')"
 			if [ "$blocked_count" -gt 0 ]; then
 				num=$blocked_count
 				blocked=$(eval_ngettext '$num blocked' '$num blocked' $num)
+			else
+				blocked="$(gettext '0 blocked')"
 			fi
 			num=$upnb
 			boldify "$(eval_ngettext \
