@@ -109,53 +109,55 @@ TMPLOCALSTATE=
 usage () {
 	cat << EOT
 
-$(eval_gettext 'SliTaz package manager - Version: $VERSION')
+$(eval_gettext 'SliTaz package manager - Version:') $(colorize 34 $VERSION)
 
 $(boldify "$(gettext 'Usage:')")
   $(gettext 'tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]')
+
 $(boldify "$(gettext 'SHell:')") tazpkg shell
 
 $(boldify "$(gettext 'Commands:')")
-  usage            $(gettext 'Print this short usage.')
-  bugs             $(gettext 'Show known bugs in packages.')
-  list|-l          $(gettext 'List installed packages on the system by category or all.')
-  list-mirror|-lm  $(gettext 'List all available packages on the mirror (--diff for new).')
-  info             $(gettext 'Print information about a package.')
-  desc             $(gettext 'Print description of a package (if it exists).')
-  list-files|-lf   $(gettext 'List the files installed with a package.')
-  list-config      $(gettext 'List the configuration files.')
-  search|-s        $(gettext 'Search for a package by pattern or name (options: -i|-l|-m).')
-  search-pkgname   $(gettext 'Search on mirror for package having a particular file.')
-  search-file|-sf  $(gettext 'Search for file(s) in all installed packages files.')
-  install|-i       $(gettext 'Install a local (*.tazpkg) package (--forced to force).')
+  usage            $(gettext 'Print this short usage')
+  bugs             $(gettext 'Show known bugs in packages')
+  activity|-a      $(gettext 'Show TazPKG activity log')
+  list|-l          $(gettext 'List installed packages on the system by category or all')
+  list-mirror|-lm  $(gettext 'List all available packages on the mirror (--diff for new)')
+  info             $(gettext 'Print information about a package')
+  desc             $(gettext 'Print description of a package (if it exists)')
+  list-files|-lf   $(gettext 'List the files installed with a package')
+  list-config      $(gettext 'List the configuration files')
+  search|-s        $(gettext 'Search for a package by pattern or name (options: -i|-l|-m)')
+  search-pkgname   $(gettext 'Search on mirror for package having a particular file')
+  search-file|-sf  $(gettext 'Search for file(s) in all installed packages files')
+  install|-i       $(gettext 'Install a local (*.tazpkg) package (--forced to force)')
   install-list     $(gettext 'Install all packages from a list of packages.')
-  remove|-r        $(gettext 'Remove the specified package and all installed files.')
-  extract|-e       $(gettext 'Extract a (*.tazpkg) package into a directory.')
-  pack             $(gettext 'Pack an unpacked or prepared package tree.')
-  recharge         $(gettext 'Recharge your packages.list from the mirror.')
-  up|help-up       $(eval_gettext 'Check packages $CHECKSUM to list and install latest upgrades.')
-  repack           $(gettext 'Create a package archive from an installed package.')
-  repack-config    $(gettext 'Create a package archive with configuration files.')
-  recompress       $(gettext 'Rebuild a package with a better compression ratio.')
-  block|unblock    $(gettext 'Block an installed package version or unblock it for upgrade.')
-  get              $(gettext 'Download a package into the current directory.')
-  get-install|-gi  $(gettext 'Download and install a package from the mirror.')
-  get-install-list $(gettext 'Download and install a list of packages from the mirror.')
-  check            $(gettext 'Verify consistency of installed packages.')
-  add-flavor       $(gettext 'Install the flavor list of packages.')
-  install-flavor   $(gettext 'Install the flavor list of packages and remove other ones.')
-  set-release      $(gettext 'Change release and update packages.')
-  clean-cache|-cc  $(gettext 'Clean all packages downloaded in cache directory.')
-  depends          $(gettext 'Display dependencies tree.')
-  rdepends         $(gettext 'Display reverse dependencies tree.')
-  convert          $(gettext 'Convert deb/rpm/tgz/pet/sfs/sb/arch/ipk package to tazpkg).')
-  link             $(gettext 'Link a package from another slitaz installation.')
-  setup-mirror|-sm $(gettext 'Change the mirror url configuration.')
-  list-undigest    $(gettext 'List undigest mirrors.')
-  remove-undigest  $(gettext 'Remove an undigest mirror.')
-  add-undigest     $(gettext 'Add an undigest mirror.')
-  setup-undigest   $(gettext 'Update an undigest mirror.')
-  reconfigure      $(gettext 'Replay post install script from package.')
+  remove|-r        $(gettext 'Remove the specified package and all installed files')
+  extract|-e       $(gettext 'Extract a (*.tazpkg) package into a directory')
+  pack             $(gettext 'Pack an unpacked or prepared package tree')
+  recharge         $(gettext 'Recharge your packages.list from the mirror')
+  up|help-up       $(eval_gettext 'Check packages $CHECKSUM to list and install latest upgrades')
+  repack           $(gettext 'Create a package archive from an installed package')
+  repack-config    $(gettext 'Create a package archive with configuration files')
+  recompress       $(gettext 'Rebuild a package with a better compression ratio')
+  block|unblock    $(gettext 'Block an installed package version or unblock it for upgrade')
+  get              $(gettext 'Download a package into the current directory')
+  get-install|-gi  $(gettext 'Download and install a package from the mirror')
+  get-install-list $(gettext 'Download and install a list of packages from the mirror')
+  check            $(gettext 'Verify consistency of installed packages')
+  add-flavor       $(gettext 'Install the flavor list of packages')
+  install-flavor   $(gettext 'Install the flavor list of packages and remove other ones')
+  set-release      $(gettext 'Change release and update packages')
+  clean-cache|-cc  $(gettext 'Clean all packages downloaded in cache directory')
+  depends          $(gettext 'Display dependencies tree')
+  rdepends         $(gettext 'Display reverse dependencies tree')
+  convert          $(gettext 'Convert deb/rpm/tgz/pet/sfs/sb/arch/ipk package to tazpkg)')
+  link             $(gettext 'Link a package from another slitaz installation')
+  setup-mirror|-sm $(gettext 'Change the mirror url configuration')
+  list-undigest    $(gettext 'List undigest mirrors')
+  remove-undigest  $(gettext 'Remove an undigest mirror')
+  add-undigest     $(gettext 'Add an undigest mirror')
+  setup-undigest   $(gettext 'Update an undigest mirror')
+  reconfigure      $(gettext 'Replay post install script from package')
 
 EOT
 }
@@ -1746,8 +1748,8 @@ case "$COMMAND" in
 		[ "$BUILD_DEPENDS" ] &&	emsg "<b>$(gettext 'Build deps :')</b> $BUILD_DEPENDS"
 		[ "$WANTED" ] && emsg "<b>$(gettext 'Wanted src :')</b> $WANTED"
 		[ "$WEB_SITE" ] && emsg "<b>$(gettext 'Web site   :')</b> $WEB_SITE"
-		footer
-		;;
+		footer ;;
+	
 	desc)
 		# Display package description.txt if available.
 		if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
@@ -1759,6 +1761,26 @@ case "$COMMAND" in
 			gettext "Sorry, no description available for this package."; echo
 			newline
 		fi ;;
+	
+	activity|log|-a)
+		# Show activity log
+		[ "$nb" ] || nb=18
+		title 'TazPKG Activity'
+		IFS=" "
+		tail -n ${nb} ${LOG} | while read date hour none action none pkg vers none
+		do
+			case "$action" in
+				Installed)
+					echo "$date $hour : $(colorize 32 $action) $pkg $vers" ;;
+				Removed)
+					echo "$date $hour : $(colorize 31 $action) $pkg $vers" ;;
+				*)
+					echo "$date $hour : $(boldify $action) $pkg $vers" ;;
+			esac
+		done 
+		unset IFS 
+		separator && newline ;;
+	
 	search|-s)
 		# Search for a package by pattern or name.
 		PATTERN="$2"
@@ -1771,7 +1793,7 @@ case "$COMMAND" in
 		fi
 		title 'Search result for: $PATTERN'
 		# Default is to search in installed pkgs and the raw list.
-		case $3 in
+		case "$3" in
 			-i|--installed)
 				search_in_installed_packages ;;
 			-l|--list)
@@ -1782,6 +1804,7 @@ case "$COMMAND" in
 				search_in_installed_packages
 				search_in_packages_list ;;
 		esac ;;
+	
 	search-file|-sf)
 		# Search for a file by pattern or name in all files.list.
 		if [ -z "$2" ]; then
