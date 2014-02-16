@@ -743,6 +743,7 @@ install_package_from_get_script()
 	      TARBALL WGET_URL CONFIG_FILES SUGGESTED PROVIDE DEPENDS
 	set -e
 	. $SCRIPT
+	set +e
 	
 	if [ ! -s $PACKAGE-$VERSION/receipt ]; then
 		cat > $PACKAGE-$VERSION/receipt <<EOT
@@ -760,6 +761,16 @@ EOT
 			eval "[ -n \"\$$i\" ] && echo \"$i=\\\"\$$i\\\"\""
 		done >> $PACKAGE-$VERSION/receipt
 	fi
+
+	DEPENDS="$(unset DEPENDS; . $PACKAGE-$VERSION/receipt ; echo $DEPENDS)"
+	for i in $(find_depends $PACKAGE-$VERSION/fs); do
+		case " $DEPENDS " in
+		*\ $i\ *) continue;;
+		esac
+		grep -q '^DEPENDS="' $PACKAGE-$VERSION/receipt ||
+			echo 'DEPENDS=""' >> $PACKAGE-$VERSION/receipt
+		sed -i "s/^DEPENDS=\"/&$i /" $PACKAGE-$VERSION/receipt
+	done
 
 	tazpkg pack $PACKAGE-$VERSION
 
@@ -1143,7 +1154,7 @@ find_depends()
  		$TMPLOCALSTATE/undigest/*/files.list.lzma ; do
  		[ -f $i ] && lzma d $i -so >> $TMP_DIR/files.list
 	done
-	find $TMP_DIR/$file/fs -type f | while read chkfile ; do
+	find ${1:-$TMP_DIR/$file/fs} -type f | while read chkfile ; do
 		is_elf $chkfile || continue
 		case "$chkfile" in
 		*.o|*.ko|*.ko.gz) continue;;
@@ -1153,7 +1164,7 @@ find_depends()
 			statically|linux-gate.so*|ld-*.so|*/ld-*.so)
 				continue;;
 			esac
-			find $TMP_DIR/$file/fs | grep -q /$lib$ && continue
+			find ${1:-$TMP_DIR/$file/fs} | grep -q /$lib$ && continue
 			for dep in $(fgrep $lib files.list | cut -d: -f1); do
 				case " $DEFAULT_DEPENDS " in
 				*\ $dep\ *) continue 2;;
