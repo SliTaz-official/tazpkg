@@ -1970,7 +1970,8 @@ $LIST"
 		for pkg in $LIST
 		do
 			grep -qs ^$pkg$ $2-processed && continue
-			tazpkg $COMMAND $pkg --list=$2 "$3" "$4" "$5"
+			[ -d "$root/var/lib/tazpkg/installed" ] && continue
+			tazpkg $COMMAND $pkg --list=$(basename $2) "$3" "$4" "$5"
 		done
 		rm -f $2-processed ;;
 	add-flavor)
@@ -2754,7 +2755,7 @@ EOT
 		check_for_package_in_list
 		cd $CACHE_DIR
 		if [ -f "$PACKAGE.tazpkg" ]; then
-			eval_gettext "\$PACKAGE already in the cache: \$CACHE_DIR"; echo
+			eval_gettext "\$PACKAGE already in the cache"; echo
 			# Check package download was finished
 			tail -c 2k $PACKAGE.tazpkg | fgrep -q 00000000TRAILER || {
 				eval_gettext "Continuing \$PACKAGE download"; echo
@@ -2768,8 +2769,8 @@ EOT
 			download $PACKAGE.tazpkg
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
-		cp -a $PACKAGE_FILE $CURRENT_DIR
-		;;
+		cp -a $PACKAGE_FILE $CURRENT_DIR ;;
+	
 	get-install|-gi)
 		# Download and install a package.
 		check_root $@
