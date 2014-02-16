@@ -1,13 +1,14 @@
 #!/bin/sh
-# TazPkg - Tiny autonomous zone packages manager.
+#
+# TazPKG - Tiny autonomous zone packages manager.
 #
 # This is a lightwight packages manager for *.tazpkg files written in SHell
-# script. It works well with Busybox ash shell and bash. TazPkg lets you
-# list, install, remove, download or get information about a package. You can
-# use 'tazpkg usage' to get a list of commands with short descriptions. TazPkg
-# also resolves dependencies and can upgrade packages from a mirror.
+# script. It works well with Busybox ash shell and bash. TazPKG lets you
+# list, install, remove, download or get information about a package. You
+# can use 'tazpkg usage' to get a list of commands with short descriptions.
+# TazPKG also resolves dependencies and can upgrade packages from a mirror.
 #
-# (C) 2007-2013 SliTaz - GNU General Public License v3.
+# (C) 2007-2014 SliTaz - GNU General Public License v3.
 #
 # Authors: See the AUTHORS files
 #
@@ -17,7 +18,7 @@
 ####################
 
 # TazPkg version
-VERSION=5.1
+VERSION=5.2
 
 . /etc/slitaz/slitaz.conf
 . /etc/slitaz/tazpkg.conf
@@ -32,6 +33,7 @@ export TEXTDOMAIN
 #
 # Functions set for translate categories
 #
+
 # No operations, only for xgettext collect
 gettext_noop() {
 	gettext "base-system"; gettext "x-window"; gettext "utilities";
@@ -1667,12 +1669,12 @@ case "$COMMAND" in
 <b>$(gettext 'Category   :')</b> $(gettext $CATEGORY)
 <b>$(gettext 'Short desc :')</b> $SHORT_DESC
 <b>$(gettext 'Maintainer :')</b> $MAINTAINER"
-		[ "$LICENSE" ] &&		emsg "<b>$(gettext 'License    :')</b> $DEPENDS"
-		[ "$DEPENDS" ] &&		emsg "<b>$(gettext 'Depends    :')</b> $DEPENDS"
-		[ "$SUGGESTED" ] &&		emsg "<b>$(gettext 'Suggested  :')</b> $SUGGESTED"
+		[ "$LICENSE" ] && emsg "<b>$(gettext 'License    :')</b> $LICENSE"
+		[ "$DEPENDS" ] && emsg "<b>$(gettext 'Depends    :')</b> $DEPENDS"
+		[ "$SUGGESTED" ] &&	emsg "<b>$(gettext 'Suggested  :')</b> $SUGGESTED"
 		[ "$BUILD_DEPENDS" ] &&	emsg "<b>$(gettext 'Build deps :')</b> $BUILD_DEPENDS"
-		[ "$WANTED" ] &&		emsg "<b>$(gettext 'Wanted src :')</b> $WANTED"
-		[ "$WEB_SITE" ] &&		emsg "<b>$(gettext 'Web site   :')</b> $WEB_SITE"
+		[ "$WANTED" ] && emsg "<b>$(gettext 'Wanted src :')</b> $WANTED"
+		[ "$WEB_SITE" ] && emsg "<b>$(gettext 'Web site   :')</b> $WEB_SITE"
 		footer
 		;;
 	desc)
