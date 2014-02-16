@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-24 22:39+0300\n"
+"POT-Creation-Date: 2014-02-16 11:29+0100\n"
 "PO-Revision-Date: 2013-07-23 03:24+0300\n"
 "Last-Translator: Aleksej Bobylev <al.bobylev@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -21,301 +21,302 @@ msgstr ""
 "X-Poedit-Basepath: ../../\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: tazpkg:37 pkgs.cgi:159
+#: tazpkg:39 pkgs.cgi:159
 msgid "base-system"
 msgstr "базовая-система"
 
-#: tazpkg:37 pkgs.cgi:160
+#: tazpkg:39 pkgs.cgi:160
 msgid "x-window"
 msgstr "иксы"
 
-#: tazpkg:37 pkgs.cgi:161
+#: tazpkg:39 pkgs.cgi:161
 msgid "utilities"
 msgstr "утилиты"
 
-#: tazpkg:38 pkgs.cgi:162
+#: tazpkg:40 pkgs.cgi:162
 msgid "network"
 msgstr "сеть"
 
-#: tazpkg:38 pkgs.cgi:164
+#: tazpkg:40 pkgs.cgi:164
 msgid "graphics"
 msgstr "графика"
 
-#: tazpkg:38 pkgs.cgi:166
+#: tazpkg:40 pkgs.cgi:166
 msgid "multimedia"
 msgstr "мультимедиа"
 
-#: tazpkg:39 pkgs.cgi:165
+#: tazpkg:41 pkgs.cgi:165
 msgid "office"
 msgstr "офис"
 
-#: tazpkg:39 pkgs.cgi:167
+#: tazpkg:41 pkgs.cgi:167
 msgid "development"
 msgstr "разработка"
 
-#: tazpkg:39 pkgs.cgi:168
+#: tazpkg:41 pkgs.cgi:168
 msgid "system-tools"
 msgstr "система"
 
-#: tazpkg:40 pkgs.cgi:169
+#: tazpkg:42 pkgs.cgi:169
 msgid "security"
 msgstr "безопасность"
 
-#: tazpkg:40 pkgs.cgi:163
+#: tazpkg:42 pkgs.cgi:163
 msgid "games"
 msgstr "игры"
 
-#: tazpkg:40 pkgs.cgi:170
+#: tazpkg:42 pkgs.cgi:170
 msgid "misc"
 msgstr "прочее"
 
-#: tazpkg:40 pkgs.cgi:171
+#: tazpkg:42 pkgs.cgi:171
 msgid "meta"
 msgstr "мета"
 
-#: tazpkg:41 pkgs.cgi:172
+#: tazpkg:43 pkgs.cgi:172
 msgid "non-free"
 msgstr "несвободные"
 
-#: tazpkg:110
+#: tazpkg:112
 #, sh-format
 msgid "SliTaz package manager - Version: $VERSION"
 msgstr "Менеджер пакетов SliTaz, версия $VERSION"
 
-#: tazpkg:112 tazpkg-box:67 tazpkg-notify:61
+#: tazpkg:114 tazpkg-box:67 tazpkg-notify:61
 msgid "Usage:"
 msgstr "Использование:"
 
-#: tazpkg:113
+#: tazpkg:115
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
 msgstr ""
 "tazpkg [команда] [пакет|папка|шаблон|список|категория|--опции] [папка|--"
 "опции]"
 
-#: tazpkg:114
+#: tazpkg:116
 msgid "SHell:"
 msgstr "Оболочка:"
 
-#: tazpkg:116
+#: tazpkg:118
 msgid "Commands:"
 msgstr "Команды:"
 
-#: tazpkg:117
+#: tazpkg:119
 msgid "Print this short usage."
 msgstr "Эта короткая справка"
 
-#: tazpkg:118
+#: tazpkg:120
 msgid "Show known bugs in packages."
 msgstr "Известные ошибки в пакетах"
 
-#: tazpkg:119
+#: tazpkg:121
 msgid "List installed packages on the system by category or all."
 msgstr "Список установленных пакетов, всех или по категориям"
 
-#: tazpkg:120
+#: tazpkg:122
 msgid "List all available packages on the mirror (--diff for new)."
 msgstr "Список всех доступных на зеркале пакетов (--diff для новых)"
 
-#: tazpkg:121
+#: tazpkg:123
 msgid "Print information about a package."
 msgstr "Информация о пакете"
 
-#: tazpkg:122
+#: tazpkg:124
 msgid "Print description of a package (if it exists)."
 msgstr "Описание пакета (если существует)"
 
-#: tazpkg:123
+#: tazpkg:125
 msgid "List the files installed with a package."
 msgstr "Список файлов пакета"
 
-#: tazpkg:124
+#: tazpkg:126
 msgid "List the configuration files."
 msgstr "Список всех конфигурационных файлов"
 
-#: tazpkg:125
+#: tazpkg:127
 msgid "Search for a package by pattern or name (options: -i|-l|-m)."
 msgstr "Поиск пакета по шаблону или названию (опции: -i|-l|-m)"
 
-#: tazpkg:126
+#: tazpkg:128
 msgid "Search on mirror for package having a particular file."
 msgstr "Поиск на зеркале пакета, имеющего указанный файл"
 
-#: tazpkg:127
+#: tazpkg:129
 msgid "Search for file(s) in all installed packages files."
 msgstr "Поиск файла(ов) среди файлов всех установленных пакетов"
 
-#: tazpkg:128
+#: tazpkg:130
 msgid "Install a local (*.tazpkg) package (--forced to force)."
 msgstr "Установить локальный пакет *.tazpkg (--forced принудительно)"
 
-#: tazpkg:129
+#: tazpkg:131
 msgid "Install all packages from a list of packages."
 msgstr "Установить все пакеты из списка пакетов"
 
-#: tazpkg:130
+#: tazpkg:132
 msgid "Remove the specified package and all installed files."
 msgstr "Удалить указанный пакет и все установленные им файлы"
 
-#: tazpkg:131
+#: tazpkg:133
 msgid "Extract a (*.tazpkg) package into a directory."
 msgstr "Распаковать пакет (*.tazpkg) в папку"
 
-#: tazpkg:132
+#: tazpkg:134
 msgid "Pack an unpacked or prepared package tree."
 msgstr "Упаковать распакованное или подготовленное дерево пакета"
 
-#: tazpkg:133
+#: tazpkg:135
 msgid "Recharge your packages.list from the mirror."
 msgstr "Получить свежий список пакетов (packages.list) с зеркала"
 
-#: tazpkg:134
+#: tazpkg:136
 #, sh-format
 msgid "Check packages $CHECKSUM to list and install latest upgrades."
 msgstr "Проверить $CHECKSUM пакетов, показать и установить обновления"
 
-#: tazpkg:135
+#: tazpkg:137
 msgid "Create a package archive from an installed package."
 msgstr "Создать пакет из файлов установленного пакета"
 
-#: tazpkg:136
+#: tazpkg:138
 msgid "Create a package archive with configuration files."
 msgstr "Создать пакет со всеми конфигурационными файлами"
 
-#: tazpkg:137
+#: tazpkg:139
 msgid "Rebuild a package with a better compression ratio."
 msgstr "Перепаковать пакет с лучшей степенью сжатия"
 
-#: tazpkg:138
+#: tazpkg:140
 msgid "Block an installed package version or unblock it for upgrade."
 msgstr "Блокировать|разблокировать установленный пакет для обновлений"
 
-#: tazpkg:139
+#: tazpkg:141
 msgid "Download a package into the current directory."
 msgstr "Загрузить пакет в текущую папку"
 
-#: tazpkg:140
+#: tazpkg:142
 msgid "Download and install a package from the mirror."
 msgstr "Загрузить пакет с зеркала и установить его"
 
-#: tazpkg:141
+#: tazpkg:143
 msgid "Download and install a list of packages from the mirror."
 msgstr "Загрузить с зеркала список пакетов и установить их"
 
-#: tazpkg:142
+#: tazpkg:144
 msgid "Verify consistency of installed packages."
 msgstr "Проверить целостность установленных пакетов"
 
-#: tazpkg:143
+#: tazpkg:145
 msgid "Install the flavor list of packages."
 msgstr "Установить список пакетов flavor"
 
-#: tazpkg:144
+#: tazpkg:146
 msgid "Install the flavor list of packages and remove other ones."
 msgstr "Установить список пакетов flavor и удалить прочие"
 
-#: tazpkg:145
+#: tazpkg:147
 msgid "Change release and update packages."
 msgstr "Изменить релиз и обновить пакеты"
 
-#: tazpkg:146
+#: tazpkg:148
 msgid "Clean all packages downloaded in cache directory."
 msgstr "Очистить кэш загруженных пакетов"
 
-#: tazpkg:147
+#: tazpkg:149
 msgid "Display dependencies tree."
 msgstr "Показать дерево зависимостей"
 
-#: tazpkg:148
+#: tazpkg:150
 msgid "Display reverse dependencies tree."
 msgstr "Показать дерево обратных зависимостей"
 
-#: tazpkg:149
-msgid "Convert a deb/rpm/tgz/pet/sfs/sb/arch/ipk package to a slitaz (.tazpkg)."
+#: tazpkg:151
+msgid ""
+"Convert a deb/rpm/tgz/pet/sfs/sb/arch/ipk package to a slitaz (.tazpkg)."
 msgstr ""
 "Конвертировать пакеты deb|rpm|tgz|pet|sfs|sb|arch|ipk\n"
 "                   в формат tazpkg"
 
-#: tazpkg:150
+#: tazpkg:152
 msgid "Link a package from another slitaz installation."
 msgstr "Присоединить пакет из другого установленного SliTaz"
 
-#: tazpkg:151
+#: tazpkg:153
 msgid "Change the mirror url configuration."
 msgstr "Изменить настройки URL зеркала"
 
-#: tazpkg:152
+#: tazpkg:154
 msgid "List undigest mirrors."
 msgstr "Список неофициальных зеркал"
 
-#: tazpkg:153
+#: tazpkg:155
 msgid "Remove an undigest mirror."
 msgstr "Удалить неофициальное зеркало"
 
-#: tazpkg:154
+#: tazpkg:156
 msgid "Add an undigest mirror."
 msgstr "Добавить неофициальное зеркало"
 
-#: tazpkg:155
+#: tazpkg:157
 msgid "Update an undigest mirror."
 msgstr "Обновить неофициальное зеркало"
 
-#: tazpkg:156
+#: tazpkg:158
 msgid "Replay post install script from package."
 msgstr "Повторно выполнить пост-установочный скрипт из пакета"
 
-#: tazpkg:163
+#: tazpkg:165
 msgid "TazPkg usage for command up:"
 msgstr "Использование команды up в TazPkg:"
 
-#: tazpkg:164
+#: tazpkg:166
 msgid "option"
 msgstr "параметр"
 
-#: tazpkg:165
+#: tazpkg:167
 msgid "Without options run in interactive mode and ask before install"
 msgstr ""
 "Без параметров запускается в интерактивном режиме с подтверждением установки"
 
-#: tazpkg:167
+#: tazpkg:169
 msgid "Where options are:"
 msgstr "Список параметров:"
 
-#: tazpkg:168
+#: tazpkg:170
 msgid "Check only for available upgrades"
 msgstr "Только проверить наличие обновлений"
 
-#: tazpkg:169
+#: tazpkg:171
 msgid "Force recharge of packages list and check"
 msgstr "Принудительно перезагрузить список пакетов и проверить"
 
-#: tazpkg:170
+#: tazpkg:172
 msgid "Check for upgrades and install them all"
 msgstr "Проверить обновления и установить их все"
 
-#: tazpkg:172 tazpkg:1574 tazpkg:1596 tazpkg:1655 tazpkg:1771
+#: tazpkg:174 tazpkg:1697 tazpkg:1719 tazpkg:1778 tazpkg:1894
 msgid "Example:"
 msgstr "Пример:"
 
-#: tazpkg:183
+#: tazpkg:185
 #, sh-format
 msgid "Creating $FOLDER..."
 msgstr "Создание папки $FOLDER…"
 
-#: tazpkg:211
+#: tazpkg:213
 msgid "Please specify a package name on the command line."
 msgstr "Укажите название пакета в командной строке."
 
-#: tazpkg:222
+#: tazpkg:224
 #, sh-format
 msgid "Unable to find: $PACKAGE_FILE"
 msgstr "Не удалось найти $PACKAGE_FILE"
 
-#: tazpkg:234
+#: tazpkg:236
 #, sh-format
 msgid "Unable to find the receipt: $receipt_path"
 msgstr "Не удалось найти рецепт $receipt_path"
 
-#: tazpkg:288
+#: tazpkg:290
 #, sh-format
 msgid ""
 "$PACKAGE package is already installed.\n"
@@ -327,12 +328,12 @@ msgstr ""
 "удалите\n"
 "и установите заново этот пакет."
 
-#: tazpkg:305
+#: tazpkg:307
 #, sh-format
 msgid "Unable to find the list: $list_path"
 msgstr "Не удалось найти список $list_path"
 
-#: tazpkg:307
+#: tazpkg:309
 msgid ""
 "You must probably run 'tazpkg recharge' as root to get the latest list of\n"
 "packages available on the mirror."
@@ -340,79 +341,79 @@ msgstr ""
 "Вы должны запустить «tazpkg recharge» от имени root, чтобы получить свежий\n"
 "список пакетов, доступных на зеркале."
 
-#: tazpkg:425
+#: tazpkg:427
 #, sh-format
 msgid "Unable to find: $PACKAGE in the mirrored packages list."
 msgstr "Не удалось найти $PACKAGE в списке пакетов зеркала."
 
-#: tazpkg:481
+#: tazpkg:483
 #, sh-format
 msgid "Extracting $PACKAGE..."
 msgstr "Распаковка пакета $PACKAGE…"
 
-#: tazpkg:485 tazpkg:489
+#: tazpkg:487 tazpkg:491
 msgid "Extracting the pseudo fs..."
 msgstr "Распаковка псевдо-файловой системы…"
 
-#: tazpkg:552
+#: tazpkg:554
 #, sh-format
 msgid "Installation of: $PACKAGE"
 msgstr "Установка пакета $PACKAGE"
 
-#: tazpkg:553
+#: tazpkg:555
 #, sh-format
 msgid "Copying $PACKAGE..."
 msgstr "Копирование пакета $PACKAGE… "
 
-#: tazpkg:565
+#: tazpkg:567
 msgid "Checking post install dependencies..."
 msgstr "Проверка пост-установочных зависимостей..."
 
-#: tazpkg:569
+#: tazpkg:571
 #, sh-format
 msgid "Please run '$command' in / and retry."
 msgstr "Выполните «$command» в «/» и повторите."
 
-#: tazpkg:643
+#: tazpkg:645
 #, sh-format
 msgid "Saving configuration files for $PACKAGE..."
 msgstr "Сохранение конфигурационных файлов в пакете $PACKAGE…"
 
-#: tazpkg:657
+#: tazpkg:659
 #, sh-format
 msgid "Installing $PACKAGE..."
 msgstr "Установка пакета $PACKAGE…"
 
-#: tazpkg:661
+#: tazpkg:663
 #, sh-format
 msgid "Removing old $PACKAGE..."
 msgstr "Удаление старого пакета $PACKAGE…"
 
-#: tazpkg:669
+#: tazpkg:671
 msgid "Removing all tmp files..."
 msgstr "Удаление всех временных файлов…"
 
-#: tazpkg:698
+#: tazpkg:700
 #, sh-format
 msgid "$pkg_name is installed."
 msgstr "Пакет $pkg_name установлен."
 
-#: tazpkg:750
+#: tazpkg:752
 #, sh-format
 msgid "WARNING Dependency loop between $PACKAGE and $i."
 msgstr "ВНИМАНИЕ! Циклическая зависимость между $PACKAGE и $i."
 
-#: tazpkg:755
+#: tazpkg:757
 #, sh-format
 msgid "Tracking dependencies for: $PACKAGE"
 msgstr "Отслеживание зависимостей пакета $PACKAGE"
 
-#: tazpkg:761
+#: tazpkg:763
 #, sh-format
 msgid "Missing: $MISSING_PACKAGE"
 msgstr "Отсутствует: $MISSING_PACKAGE"
 
-#: tazpkg:766
+#: tazpkg:768
 #, sh-format
 msgid "$num missing package to install."
 msgid_plural "$num missing packages to install."
@@ -420,16 +421,16 @@ msgstr[0] "Отсутствует $num пакет для установки."
 msgstr[1] "Отсутствуют $num пакета для установки."
 msgstr[2] "Отсутствуют $num пакетов для установки."
 
-#: tazpkg:783
+#: tazpkg:785
 msgid "Install all missing dependencies"
 msgstr "Установить все отсутствующие зависимости"
 
-#: tazpkg:799
+#: tazpkg:801
 #, sh-format
 msgid "Checking if $pkg exists in local list..."
 msgstr "Проверка наличия пакета $pkg в локальном списке…"
 
-#: tazpkg:826
+#: tazpkg:828
 #, sh-format
 msgid ""
 "Leaving dependencies for $PACKAGE unresolved.\n"
@@ -438,16 +439,16 @@ msgstr ""
 "Зависимости пакета $PACKAGE оставлены нерешенными.\n"
 "Пакет установлен, но, возможно, не будет работать."
 
-#: tazpkg:835
+#: tazpkg:837
 msgid "Installed packages"
 msgstr "Установленные пакеты"
 
-#: tazpkg:849
+#: tazpkg:851
 #, sh-format
 msgid "No installed packages found for: $PATTERN"
 msgstr "По шаблону «$PATTERN» не найдено ни одного установленного пакета."
 
-#: tazpkg:853
+#: tazpkg:855
 #, sh-format
 msgid "$num installed package found for: $PATTERN"
 msgid_plural "$num installed packages found for: $PATTERN"
@@ -455,11 +456,11 @@ msgstr[0] "По шаблону «$PATTERN» найден $num установле
 msgstr[1] "По шаблону «$PATTERN» найдены $num установленных пакета"
 msgstr[2] "По шаблону «$PATTERN» найдены $num установленных пакетов"
 
-#: tazpkg:861
+#: tazpkg:863
 msgid "Available packages name-version"
 msgstr "Название-версия доступных пакетов"
 
-#: tazpkg:871
+#: tazpkg:873
 msgid ""
 "No 'packages.list' found to check for mirrored packages. For more results,\n"
 "please run 'tazpkg recharge' once as root before searching."
@@ -469,12 +470,12 @@ msgstr ""
 "Чтобы получить больше информации, запустите «tazpkg recharge» от имени root\n"
 "перед тем, как искать."
 
-#: tazpkg:876 tazpkg:904
+#: tazpkg:878 tazpkg:906
 #, sh-format
 msgid "No available packages found for: $PATTERN"
 msgstr "По шаблону «$PATTERN» не найдено ни одного доступного пакета."
 
-#: tazpkg:880 tazpkg:908
+#: tazpkg:882 tazpkg:910
 #, sh-format
 msgid "$num available package found for: $PATTERN"
 msgid_plural "$num available packages found for: $PATTERN"
@@ -482,11 +483,11 @@ msgstr[0] "По шаблону «$PATTERN» найден $num доступный
 msgstr[1] "По шаблону «$PATTERN» найдены $num доступных пакета"
 msgstr[2] "По шаблону «$PATTERN» найдены $num доступных пакетов"
 
-#: tazpkg:889
+#: tazpkg:891
 msgid "Matching packages name with version and desc"
 msgstr "Соответствие имени пакета, версии и описания"
 
-#: tazpkg:899
+#: tazpkg:901
 msgid ""
 "No 'packages.txt' found to check for mirrored packages. For more results,\n"
 "please run 'tazpkg recharge' once as root before searching."
@@ -495,16 +496,16 @@ msgstr ""
 "Для получения результатов, перед поиском выполните «tazpkg recharge»\n"
 "с правами root."
 
-#: tazpkg:955
+#: tazpkg:957
 #, sh-format
 msgid "Can't find flavor $FLAVOR. Abort."
 msgstr "Не удалось найти редакцию $FLAVOR. Остановлено."
 
-#: tazpkg:968
+#: tazpkg:970
 msgid "Current mirror(s)"
 msgstr "Текущие зеркала"
 
-#: tazpkg:971
+#: tazpkg:973
 msgid ""
 "Please enter URL of the new mirror (http, ftp or local path). You must "
 "specify\n"
@@ -514,64 +515,74 @@ msgstr ""
 "указать\n"
 "полный адрес к папке, содержащей пакеты и файл «packages.list»."
 
-#: tazpkg:974
+#: tazpkg:976
 msgid "New mirror(s) URL: "
 msgstr "Адреса новых зеркал:"
 
-#: tazpkg:982
+#: tazpkg:984
 msgid "Nothing has been changed."
 msgstr "Ничего не было изменено."
 
-#: tazpkg:984
+#: tazpkg:986
 #, sh-format
 msgid "Setting mirror(s) to: $NEW_MIRROR_URL"
 msgstr "Новый адрес зеркала: $NEW_MIRROR_URL"
 
-#: tazpkg:1106
+#: tazpkg:1108
 msgid "No dependency for"
 msgstr "Нет зависимостей для"
 
-#: tazpkg:1108
+#: tazpkg:1110
 #, sh-format
 msgid "WARNING: unknown dependency for $lib"
 msgstr "ВНИМАНИЕ: неизвестная зависимость $lib"
 
-#: tazpkg:1175 tazpkg:1318
+#: tazpkg:1177 tazpkg:1441
 #, sh-format
 msgid "Invalid target: $target (expected i386)"
 msgstr "Неверная цель: $target (ожидалась i386)"
 
-#: tazpkg:1212
+#: tazpkg:1214
 #, sh-format
 msgid "$PACKAGE_FILE does not look like an Archlinux/Alpine package!"
 msgstr "Не похоже, чтобы $PACKAGE_FILE являлся пакетом Archlinux/Alpine!"
 
-#: tazpkg:1263
+#: tazpkg:1277
+#, fuzzy, sh-format
+msgid "$PACKAGE_FILE does not look like a Puppy package!"
+msgstr "Не похоже, чтобы $PACKAGE_FILE являлся пакетом Slackware!"
+
+#: tazpkg:1308
+#, fuzzy, sh-format
+msgid "$PACKAGE_FILE does not look like a Slax package!"
+msgstr "Не похоже, чтобы $PACKAGE_FILE являлся пакетом Slackware!"
+
+#: tazpkg:1386
 #, sh-format
 msgid "$PACKAGE_FILE does not look like a Slackware package!"
 msgstr "Не похоже, чтобы $PACKAGE_FILE являлся пакетом Slackware!"
 
-#: tazpkg:1367
+#: tazpkg:1490
 msgid "Unable to extract the RPM using standard tools (rpm2cpio)."
 msgstr "Не удалось распаковать RPM, используя стандартные средства (rpm2cpio)."
 
-#: tazpkg:1368
+#: tazpkg:1491
 msgid "Do you want to install 'p7zip-full' package"
 msgstr "Установить пакет «p7zip-full»"
 
-#: tazpkg:1434
+#: tazpkg:1557
 msgid "Blocked packages"
 msgstr "Заблокированные пакеты"
 
-#: tazpkg:1438
+#: tazpkg:1561
 msgid "No blocked packages found."
 msgstr "Заблокированные пакеты отсутствуют."
 
-#: tazpkg:1444
+#: tazpkg:1567
 msgid "Packages categories"
 msgstr "Категории пакетов"
 
-#: tazpkg:1451
+#: tazpkg:1574
 #, sh-format
 msgid "$num category"
 msgid_plural "$num categories"
@@ -579,12 +590,12 @@ msgstr[0] "$num категория"
 msgstr[1] "$num категории"
 msgstr[2] "$num категорий"
 
-#: tazpkg:1458
+#: tazpkg:1581
 #, sh-format
 msgid "Installed packages of category: $ASKED_CATEGORY_I18N"
 msgstr "Установленные пакеты категории «$ASKED_CATEGORY_I18N»"
 
-#: tazpkg:1471
+#: tazpkg:1594
 #, sh-format
 msgid "$num package installed of category $cat_name."
 msgid_plural "$num packages installed of category $cat_name."
@@ -592,11 +603,11 @@ msgstr[0] "В категории $cat_name установлен $num пакет.
 msgstr[1] "В категории $cat_name установлены $num пакета."
 msgstr[2] "В категории $cat_name установлены $num пакетов."
 
-#: tazpkg:1476
+#: tazpkg:1599
 msgid "List of all installed packages"
 msgstr "Список всех установленных пакетов"
 
-#: tazpkg:1487
+#: tazpkg:1610
 #, sh-format
 msgid "$num package installed."
 msgid_plural "$num packages installed."
@@ -604,11 +615,11 @@ msgstr[0] "Установлен $num пакет."
 msgstr[1] "Установлены $num пакета."
 msgstr[2] "Установлены $num пакетов."
 
-#: tazpkg:1497 tazpkg:2216
+#: tazpkg:1620 tazpkg:2339
 msgid "Mirrored packages diff"
 msgstr "Обновления в пакетах зеркала"
 
-#: tazpkg:1501
+#: tazpkg:1624
 #, sh-format
 msgid "$num new package listed on the mirror."
 msgid_plural "$num new packages listed on the mirror."
@@ -616,19 +627,19 @@ msgstr[0] "На зеркале появился $num новый пакет."
 msgstr[1] "На зеркале появились $num новых пакета."
 msgstr[2] "На зеркале появились $num новых пакетов."
 
-#: tazpkg:1505
+#: tazpkg:1628
 msgid "Unable to list anything, no packages.diff found."
 msgstr "Невозможно вывести список, packages.diff не обнаружен."
 
-#: tazpkg:1506
+#: tazpkg:1629
 msgid "Recharge your current list to create a first diff."
 msgstr "Перезагрузите ваш текущий список для создания первой разницы."
 
-#: tazpkg:1510
+#: tazpkg:1633
 msgid "List of available packages on the mirror"
 msgstr "Список пакетов, доступных на зеркале"
 
-#: tazpkg:1516
+#: tazpkg:1639
 #, sh-format
 msgid "$num package in the last recharged list."
 msgid_plural "$num packages in the last recharged list."
@@ -636,12 +647,12 @@ msgstr[0] "Последний обновленный список содержи
 msgstr[1] "Последний обновленный список содержит $num пакета."
 msgstr[2] "Последний обновленный список содержит $num пакетов."
 
-#: tazpkg:1523
+#: tazpkg:1646
 #, sh-format
 msgid "Installed files by: $PACKAGE"
 msgstr "Файлы, устанавливаемые с $PACKAGE:"
 
-#: tazpkg:1528
+#: tazpkg:1651
 #, sh-format
 msgid "$num file installed with $PACKAGE"
 msgid_plural "$num files installed with $PACKAGE"
@@ -649,92 +660,92 @@ msgstr[0] "$num файл, устанавливаемый с $PACKAGE."
 msgstr[1] "$num файла, устанавливаемых с $PACKAGE."
 msgstr[2] "$num файлов, устанавливаемых с $PACKAGE."
 
-#: tazpkg:1537
+#: tazpkg:1660
 msgid "TazPkg information"
 msgstr "Информация TazPkg"
 
-#: tazpkg:1544
+#: tazpkg:1667
 msgid "Package    :"
 msgstr "Пакет      :"
 
-#: tazpkg:1545
+#: tazpkg:1668
 msgid "Version    :"
 msgstr "Версия     :"
 
-#: tazpkg:1546
+#: tazpkg:1669
 msgid "Category   :"
 msgstr "Категория  :"
 
-#: tazpkg:1547
+#: tazpkg:1670
 msgid "Short desc :"
 msgstr "Описание   :"
 
-#: tazpkg:1548
+#: tazpkg:1671
 msgid "Maintainer :"
 msgstr "Мэйнтейнер :"
 
-#: tazpkg:1549
+#: tazpkg:1672
 msgid "License    :"
 msgstr "Лицензия   :"
 
-#: tazpkg:1550
+#: tazpkg:1673
 msgid "Depends    :"
 msgstr "Зависимости:"
 
-#: tazpkg:1551
+#: tazpkg:1674
 msgid "Suggested  :"
 msgstr "Предложен  :"
 
-#: tazpkg:1552
+#: tazpkg:1675
 msgid "Build deps :"
 msgstr "Зав.компил.:"
 
-#: tazpkg:1553
+#: tazpkg:1676
 msgid "Wanted src :"
 msgstr "Требуемые исходники:"
 
-#: tazpkg:1554
+#: tazpkg:1677
 msgid "Web site   :"
 msgstr "Веб-сайт   :"
 
-#: tazpkg:1560
+#: tazpkg:1683
 #, sh-format
 msgid "Description of: $PACKAGE"
 msgstr "Описание пакета $PACKAGE"
 
-#: tazpkg:1565
+#: tazpkg:1688
 msgid "Sorry, no description available for this package."
 msgstr "Описание для этого пакета недоступно."
 
-#: tazpkg:1573
+#: tazpkg:1696
 msgid "Please specify a pattern or package name to search for."
 msgstr "Укажите шаблон или название пакета, который вы хотите найти."
 
-#: tazpkg:1578
+#: tazpkg:1701
 #, sh-format
 msgid "Search result for: $PATTERN"
 msgstr "Результаты поиска $PATTERN"
 
-#: tazpkg:1595 tazpkg:1654
+#: tazpkg:1718 tazpkg:1777
 msgid "Please specify a pattern or file name to search for."
 msgstr "Укажите шаблон или название файла, который вы хотите найти."
 
-#: tazpkg:1601
+#: tazpkg:1724
 #, sh-format
 msgid "Search result for file $s_file"
 msgstr "Результаты поиска файла $s_file"
 
-#: tazpkg:1632
+#: tazpkg:1755
 #, sh-format
 msgid "Package $PACKAGE:"
 msgstr "Пакет $PACKAGE:"
 
-#: tazpkg:1642
+#: tazpkg:1765
 #, sh-format
 msgid "0 file found for: $pkg"
 msgstr "По запросу «$pkg» ничего не найдено"
 
-#: tazpkg:1646
+#: tazpkg:1769
 #, sh-format
 msgid "$num file found for: $pkg"
 msgid_plural "$num files found for: $pkg"
@@ -742,17 +753,17 @@ msgstr[0] "$num файл найден для «$pkg»"
 msgstr[1] "$num файла найдены для «$pkg»"
 msgstr[2] "$num файлов найдены для «$pkg»"
 
-#: tazpkg:1660
+#: tazpkg:1783
 #, sh-format
 msgid "Search result for package $s_pkg"
 msgstr "Результаты поиска пакета $s_pkg"
 
-#: tazpkg:1672
+#: tazpkg:1795
 #, sh-format
 msgid "No file found for: $file"
 msgstr "По запросу «$file» не найден ни один файл"
 
-#: tazpkg:1677
+#: tazpkg:1800
 #, sh-format
 msgid "$num package found with file: $file"
 msgid_plural "$num packages found with file: $file"
@@ -760,7 +771,7 @@ msgstr[0] "Найден $num пакет с файлом «$file»"
 msgstr[1] "Найдены $num пакета с файлом «$file»"
 msgstr[2] "Найдены $num пакетов с файлом «$file»"
 
-#: tazpkg:1718
+#: tazpkg:1841
 msgid ""
 "Please change directory (cd) to the packages repository and specify the\n"
 "list of packages to install. Example: tazpkg install-list packages.list"
@@ -768,211 +779,211 @@ msgstr ""
 "Перейдите (cd) в репозиторий пакетов и укажите список пакетов, которые\n"
 "требуется установить. Пример: tazpkg install-list packages.list"
 
-#: tazpkg:1725
+#: tazpkg:1848
 #, sh-format
 msgid "Unable to find: $list_file"
 msgstr "Не удалось найти «$list_file»"
 
-#: tazpkg:1748
+#: tazpkg:1871
 #, sh-format
 msgid "Adding implicit depends $pkg..."
 msgstr "Добавление неявных зависимостей $pkg..."
 
-#: tazpkg:1770
+#: tazpkg:1893
 msgid "Please specify the release you want on the command line."
 msgstr "Укажите требуемый релиз в командной строке."
 
-#: tazpkg:1796
+#: tazpkg:1919
 #, sh-format
 msgid "$PACKAGE is not installed."
 msgstr "$PACKAGE не установлен."
 
-#: tazpkg:1814
+#: tazpkg:1937
 #, sh-format
 msgid "The following packages depend on $PACKAGE:"
 msgstr "Следующие пакеты зависят от $PACKAGE:"
 
-#: tazpkg:1821
+#: tazpkg:1944
 #, sh-format
 msgid "The following packages have been modified by $PACKAGE:"
 msgstr "Следующие пакеты были изменены пакетом $PACKAGE:"
 
-#: tazpkg:1829
+#: tazpkg:1952
 #, sh-format
 msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)"
 msgstr "Удалить пакет $PACKAGE ($VERSION$EXTRAVERSION)"
 
-#: tazpkg:1833
+#: tazpkg:1956
 #, sh-format
 msgid "Removing: $PACKAGE"
 msgstr "Удаление пакета $PACKAGE"
 
-#: tazpkg:1838
+#: tazpkg:1961
 msgid "Removing all files installed..."
 msgstr "Удаление всех установленных файлов…"
 
-#: tazpkg:1859
+#: tazpkg:1982
 msgid "Removing package receipt..."
 msgstr "Удаление рецепта пакета…"
 
-#: tazpkg:1870
+#: tazpkg:1993
 #, sh-format
 msgid "Remove packages depending on $PACKAGE"
 msgstr "Удаление пакетов, зависящих от $PACKAGE"
 
-#: tazpkg:1885
+#: tazpkg:2008
 #, sh-format
 msgid "Reinstall packages modified by $PACKAGE"
 msgstr "Переустановка пакетов, измененных $PACKAGE"
 
-#: tazpkg:1891
+#: tazpkg:2014
 #, sh-format
 msgid "Check $INSTALLED/$i for reinstallation"
 msgstr "Проверка $INSTALLED/$i для переустановки"
 
-#: tazpkg:1901
+#: tazpkg:2024
 #, sh-format
 msgid "Uninstallation of $PACKAGE cancelled."
 msgstr "Деинсталляция $PACKAGE отменена."
 
-#: tazpkg:1908
+#: tazpkg:2031
 #, sh-format
 msgid "Extracting: $PACKAGE"
 msgstr "Распаковка пакета $PACKAGE"
 
-#: tazpkg:1917 tazpkg:1930
+#: tazpkg:2040 tazpkg:2053
 msgid "Copying original package..."
 msgstr "Копирование исходного пакета…"
 
-#: tazpkg:1922
+#: tazpkg:2045
 #, sh-format
 msgid "$PACKAGE is extracted to: $DESTDIR"
 msgstr "Пакет $PACKAGE распакован в папку $DESTDIR"
 
-#: tazpkg:1928
+#: tazpkg:2051
 #, sh-format
 msgid "Recompressing: $PACKAGE"
 msgstr "Перепаковка пакета $PACKAGE"
 
-#: tazpkg:1935
+#: tazpkg:2058
 msgid "Recompressing the fs..."
 msgstr "Перепаковка файловой системы…"
 
-#: tazpkg:1939
+#: tazpkg:2062
 msgid "Creating new package..."
 msgstr "Создание нового пакета…"
 
-#: tazpkg:1958
+#: tazpkg:2081
 msgid "File lost"
 msgstr "Нет файла"
 
-#: tazpkg:1971 pkgs.cgi:803
+#: tazpkg:2094 pkgs.cgi:803
 msgid "Configuration files"
 msgstr "Конфигурационные файлы"
 
-#: tazpkg:2007
+#: tazpkg:2130
 #, sh-format
 msgid "User configuration backup on $pkg_date"
 msgstr "Настройки пользователя, сохранённые $pkg_date"
 
-#: tazpkg:2022
+#: tazpkg:2145
 #, sh-format
 msgid "Repacking: $PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
 msgstr "Перепаковка пакета $PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
 
-#: tazpkg:2024
+#: tazpkg:2147
 #, sh-format
 msgid "Can't repack $PACKAGE"
 msgstr "Не удалось переупаковать $PACKAGE"
 
-#: tazpkg:2028
+#: tazpkg:2151
 #, sh-format
 msgid "Can't repack, $PACKAGE files have been modified by:"
 msgstr "Не удалось переупаковать, файлы $PACKAGE были изменены пакетами:"
 
-#: tazpkg:2040
+#: tazpkg:2163
 msgid "Can't repack, the following files are lost:"
 msgstr "Не удалось переупаковать, следующие файлы отсутствуют:"
 
-#: tazpkg:2067
+#: tazpkg:2190
 #, sh-format
 msgid "Can't repack, $CHECKSUM error."
 msgstr "Не удалось переупаковать, ошибка $CHECKSUM."
 
-#: tazpkg:2078
+#: tazpkg:2201
 #, sh-format
 msgid "Package $PACKAGE repacked successfully."
 msgstr "Пакет $PACKAGE успешно переупакован."
 
-#: tazpkg:2080 tazpkg:2134
+#: tazpkg:2203 tazpkg:2257
 #, sh-format
 msgid "Size: $pkg_size"
 msgstr "Размер: $pkg_size"
 
-#: tazpkg:2088
+#: tazpkg:2211
 msgid "Receipt is missing. Please read the documentation."
 msgstr "Отсутствует рецепт. Обратитесь к документации."
 
-#: tazpkg:2091
+#: tazpkg:2214
 #, sh-format
 msgid "Packing: $PACKAGE"
 msgstr "Упаковка пакета $PACKAGE"
 
-#: tazpkg:2093
+#: tazpkg:2216
 msgid "Creating the list of files..."
 msgstr "Создание списка файлов…"
 
-#: tazpkg:2099
+#: tazpkg:2222
 #, sh-format
 msgid "Creating $CHECKSUM of files..."
 msgstr "Создание $CHECKSUM файлов…"
 
-#: tazpkg:2113
+#: tazpkg:2236
 msgid "Compressing the fs..."
 msgstr "Сжатие файловой системы…"
 
-#: tazpkg:2120
+#: tazpkg:2243
 msgid "Updating receipt sizes..."
 msgstr "Обновление размеров в рецепте…"
 
-#: tazpkg:2125
+#: tazpkg:2248
 msgid "Creating full cpio archive..."
 msgstr "Создание полного архива cpio…"
 
-#: tazpkg:2128
+#: tazpkg:2251
 msgid "Restoring original package tree..."
 msgstr "Восстановление исходного дерева пакета…"
 
-#: tazpkg:2132
+#: tazpkg:2255
 #, sh-format
 msgid "Package $PACKAGE compressed successfully."
 msgstr "Пакет $PACKAGE успешно сжат."
 
-#: tazpkg:2157
+#: tazpkg:2280
 #, sh-format
 msgid "$repo doesn't exist."
 msgstr "$repo не существует."
 
-#: tazpkg:2176
+#: tazpkg:2299
 #, sh-format
 msgid "Undigest $base_path"
 msgstr "Неофициальное зеркало $base_path"
 
-#: tazpkg:2178
+#: tazpkg:2301
 #, sh-format
 msgid "$repository_name is up to date."
 msgstr "$repository_name в актуальном состоянии."
 
-#: tazpkg:2193
+#: tazpkg:2316
 #, sh-format
 msgid "Recharging undigest $base_path:"
 msgstr "Обновление с неофициального зеркала $base_path"
 
-#: tazpkg:2197
+#: tazpkg:2320
 msgid "Creating backup of the last packages list..."
 msgstr "Создание резервной копии последнего списка пакетов…"
 
-#: tazpkg:2222
+#: tazpkg:2345
 #, sh-format
 msgid "$num new package on the mirror."
 msgid_plural "$num new packages on the mirror."
@@ -980,11 +991,11 @@ msgstr[0] "На зеркале имеется $num новый пакет."
 msgstr[1] "На зеркале имеются $num новых пакета."
 msgstr[2] "На зеркале имеются $num новых пакетов."
 
-#: tazpkg:2225
+#: tazpkg:2348
 msgid "No new packages on the mirror."
 msgstr "На зеркале нет новых пакетов."
 
-#: tazpkg:2230
+#: tazpkg:2353
 msgid ""
 "Last packages.list is ready to use. Note that next time you recharge the\n"
 "list, a list of differences will be displayed to show new and upgradeable\n"
@@ -994,41 +1005,41 @@ msgstr ""
 "следующем обновлении списка будет отображен список различий, содержащий\n"
 "новые и обновленные пакеты."
 
-#: tazpkg:2270
+#: tazpkg:2392
 #, sh-format
 msgid "$pkg_list is older than one week... recharging"
 msgstr "Список $pkg_list старше одной недели… Обновление"
 
-#: tazpkg:2274 pkgs.cgi:436
+#: tazpkg:2396 pkgs.cgi:436
 msgid "Package"
 msgstr "Пакет"
 
-#: tazpkg:2274 pkgs.cgi:146
+#: tazpkg:2396 pkgs.cgi:146
 msgid "Version"
 msgstr "Версия"
 
-#: tazpkg:2274
+#: tazpkg:2396
 msgid "Status"
 msgstr "Состояние"
 
-#: tazpkg:2299
+#: tazpkg:2421
 msgid "Blocked"
 msgstr "заблокирован"
 
-#: tazpkg:2306
+#: tazpkg:2428
 msgid "New build"
 msgstr "Новая сборка"
 
-#: tazpkg:2308
+#: tazpkg:2430
 #, sh-format
 msgid "New version $new"
 msgstr "Новая версия $new"
 
-#: tazpkg:2321
+#: tazpkg:2443
 msgid "System is up-to-date..."
 msgstr "Система в актуальном состоянии…"
 
-#: tazpkg:2326
+#: tazpkg:2448
 #, sh-format
 msgid "$num installed package scanned in ${time}s"
 msgid_plural "$num installed packages scanned in ${time}s"
@@ -1036,7 +1047,7 @@ msgstr[0] "$num установленный пакет просканирован
 msgstr[1] "$num установленных пакета просканированы за $time с"
 msgstr[2] "$num установленных пакетов просканированы за $time с"
 
-#: tazpkg:2331
+#: tazpkg:2453
 #, sh-format
 msgid "$num blocked"
 msgid_plural "$num blocked"
@@ -1044,7 +1055,12 @@ msgstr[0] "$num заблокирован"
 msgstr[1] "$num заблокированы"
 msgstr[2] "$num заблокированы"
 
-#: tazpkg:2335
+#: tazpkg:2455
+#, fuzzy
+msgid "0 blocked"
+msgstr "$num заблокирован"
+
+#: tazpkg:2459
 #, sh-format
 msgid "You have $num available upgrade ($blocked)"
 msgid_plural "You have $num available upgrades ($blocked)"
@@ -1052,123 +1068,123 @@ msgstr[0] "Доступно обновление $num пакета ($blocked)"
 msgstr[1] "Доступно обновление $num пакетов ($blocked)"
 msgstr[2] "Доступно обновление $num пакетов ($blocked)"
 
-#: tazpkg:2345
+#: tazpkg:2469
 msgid "Do you wish to install them now: y/n ? "
 msgstr "Хотите установить их сейчас? (y/n)"
 
-#: tazpkg:2358
+#: tazpkg:2482
 msgid "Leaving without any upgrades installed."
 msgstr "Ничего не было обновлено."
 
-#: tazpkg:2370
+#: tazpkg:2494
 msgid "No known bugs."
 msgstr "Нет известных ошибок."
 
-#: tazpkg:2376
+#: tazpkg:2500
 msgid "Bug list completed"
 msgstr "Список ошибок завершен"
 
-#: tazpkg:2378
+#: tazpkg:2502
 #, sh-format
 msgid "Bugs in package $PACKAGE version $VERSION$EXTRAVERSION:"
 msgstr "Ошибки в пакете $PACKAGE версии $VERSION$EXTRAVERSION:"
 
-#: tazpkg:2395
+#: tazpkg:2519
 #, sh-format
 msgid "The package $PACKAGE installation has not completed"
 msgstr "Установка пакета $PACKAGE не была завершена"
 
-#: tazpkg:2403
+#: tazpkg:2527
 #, sh-format
 msgid "The package $PACKAGE-$VERSION$EXTRAVERSION has been modified by:"
 msgstr "Пакет $PACKAGE-$VERSION$EXTRAVERSION был изменен пакетами:"
 
-#: tazpkg:2408
+#: tazpkg:2532
 #, sh-format
 msgid "Files lost from $PACKAGE-$VERSION$EXTRAVERSION:"
 msgstr ""
 "Отсутствуют файлы, установленные пакетом $PACKAGE-$VERSION$EXTRAVERSION:"
 
-#: tazpkg:2412
+#: tazpkg:2536
 msgid "target of symlink"
 msgstr "цель ссылки"
 
-#: tazpkg:2417
+#: tazpkg:2541
 #, sh-format
 msgid "Missing dependencies for $PACKAGE-$VERSION$EXTRAVERSION:"
 msgstr "Отсутствующие зависимости для $PACKAGE-$VERSION$EXTRAVERSION:"
 
-#: tazpkg:2424
+#: tazpkg:2548
 #, sh-format
 msgid "Dependencies loop between $PACKAGE and:"
 msgstr "Циклическая зависимость между пакетами $PACKAGE и:"
 
-#: tazpkg:2428
+#: tazpkg:2552
 msgid "Looking for known bugs..."
 msgstr "Просмотр известных ошибок…"
 
-#: tazpkg:2453
+#: tazpkg:2577
 #, sh-format
 msgid "The following packages provide $file:"
 msgstr "Следующие пакеты содержат $file:"
 
-#: tazpkg:2459
+#: tazpkg:2583
 #, sh-format
 msgid "(overridden by $pkg_list)"
 msgstr "(изменен пакетами $pkg_list)"
 
-#: tazpkg:2467
+#: tazpkg:2591
 msgid "No package has installed the following files:"
 msgstr "Следующие файлы не были установлены ни одним из пакетов:"
 
-#: tazpkg:2476
+#: tazpkg:2600
 msgid "Check completed."
 msgstr "Проверка завершена."
 
-#: tazpkg:2483
+#: tazpkg:2607
 #, sh-format
 msgid "$PACKAGE is already in the blocked packages list."
 msgstr "Пакет $PACKAGE уже содержится в списке заблокированных пакетов."
 
-#: tazpkg:2487
+#: tazpkg:2611
 #, sh-format
 msgid "Add $PACKAGE to: $BLOCKED..."
 msgstr "Добавление пакета $PACKAGE к $BLOCKED…"
 
-#: tazpkg:2501
+#: tazpkg:2625
 #, sh-format
 msgid "Removing $PACKAGE from: $BLOCKED..."
 msgstr "Удаление пакета $PACKAGE из $BLOCKED…"
 
-#: tazpkg:2509
+#: tazpkg:2633
 #, sh-format
 msgid "$PACKAGE is not in the blocked packages list."
 msgstr "Пакет $PACKAGE отсутствует в списке заблокированных пакетов."
 
-#: tazpkg:2527 tazpkg:2572
+#: tazpkg:2651 tazpkg:2696
 msgid "rootconfig needs --root= option used."
 msgstr "Для rootconfig обязателен параметр --root="
 
-#: tazpkg:2540 tazpkg:2599
+#: tazpkg:2664 tazpkg:2723
 #, sh-format
 msgid "$PACKAGE already in the cache: $CACHE_DIR"
 msgstr "Пакет $PACKAGE уже находится в кеше: $CACHE_DIR"
 
-#: tazpkg:2543 tazpkg:2602
+#: tazpkg:2667 tazpkg:2726
 #, sh-format
 msgid "Continuing $PACKAGE download"
 msgstr "Продолжение загрузки пакета $PACKAGE"
 
-#: tazpkg:2623
+#: tazpkg:2747
 #, sh-format
 msgid "Clean cache: $CACHE_DIR"
 msgstr "Очистка кэша $CACHE_DIR"
 
-#: tazpkg:2624
+#: tazpkg:2748
 msgid "Cleaning cache directory..."
 msgstr "Очищается папка кэша…"
 
-#: tazpkg:2629
+#: tazpkg:2753
 #, sh-format
 msgid "$num file removed from cache."
 msgid_plural "$num files removed from cache."
@@ -1176,72 +1192,72 @@ msgstr[0] "Из кэша удалён $num файл."
 msgstr[1] "Из кэша удалены $num файла."
 msgstr[2] "Из кэша удалены $num файлов."
 
-#: tazpkg:2640
+#: tazpkg:2764
 msgid "Current undigest(s)"
 msgstr "Текущие неофициальные зеркала"
 
-#: tazpkg:2643
+#: tazpkg:2767
 msgid "No undigest mirror found."
 msgstr "Неофициальные зеркала не обнаружены."
 
-#: tazpkg:2655
+#: tazpkg:2779
 #, sh-format
 msgid "Remove $undigest undigest"
 msgstr "Удалить неофициальное зеркало $undigest"
 
-#: tazpkg:2657
+#: tazpkg:2781
 #, sh-format
 msgid "Removing $undigest undigest..."
 msgstr "Удаление неофициального зеркала $undigest…"
 
-#: tazpkg:2663
+#: tazpkg:2787
 #, sh-format
 msgid "Undigest $undigest not found"
 msgstr "Неофициальное зеркало $undigest не обнаружено"
 
-#: tazpkg:2678
+#: tazpkg:2802
 #, sh-format
 msgid "Creating new undigest $undigest."
 msgstr "Создание нового неофициального зеркала $undigest."
 
-#: tazpkg:2697
+#: tazpkg:2821
 #, sh-format
 msgid "Unknown option $u_opt."
 msgstr "Неизвестный параметр «$u_opt»."
 
-#: tazpkg:2712
+#: tazpkg:2836
 #, sh-format
 msgid "Nothing to do for $PACKAGE."
 msgstr "Пакет $PACKAGE не имеет пост-инсталляционных действий."
 
-#: tazpkg:2716
+#: tazpkg:2840
 #, sh-format
 msgid "Package $PACKAGE is not installed."
 msgstr "Пакет $PACKAGE не установлен."
 
-#: tazpkg:2717
+#: tazpkg:2841
 msgid "Install package with 'tazpkg install' or 'tazpkg get-install'"
 msgstr "Установите пакет командой «tazpkg install» или «tazpkg get-install»"
 
-#: tazpkg:2729
+#: tazpkg:2853
 msgid "TazPkg SHell."
 msgstr "Оболочка TazPkg."
 
-#: tazpkg:2730
+#: tazpkg:2854
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr ""
 "Введите «usage», чтобы выдать список всех доступных команд; «quit», «q» — "
 "выход."
 
-#: tazpkg:2740
+#: tazpkg:2864
 msgid "You are already running a TazPkg SHell."
 msgstr "Вы уже работаете в оболочке TazPkg."
 
-#: tazpkg:2784
+#: tazpkg:2914
 msgid "Unsupported format"
 msgstr "Неподдерживаемый формат"
 
-#: tazpkg:2792
+#: tazpkg:2922
 msgid ""
 "\n"
 "usage:   tazpkg link package_name slitaz_root\n"
@@ -1253,26 +1269,26 @@ msgstr ""
 "Пример:        tazpkg link openoffice /mnt\n"
 "               будет использовать менее 100 КБ ОЗУ на работающей системе.\n"
 
-#: tazpkg:2800
+#: tazpkg:2930
 #, sh-format
 msgid "$PACKAGE is already installed."
 msgstr "Пакет $PACKAGE уже установлен."
 
-#: tazpkg:2809
+#: tazpkg:2939
 #, sh-format
 msgid "Missing: $i"
 msgstr "Отсутствует: $i"
 
-#: tazpkg:2813
+#: tazpkg:2943
 msgid "Link all missing dependencies"
 msgstr "Создать ссылки на все отсутствующие зависимости"
 
-#: tazpkg:2822
+#: tazpkg:2952
 #, sh-format
 msgid "Leaving dependencies unresolved for: $PACKAGE"
 msgstr "Зависимости для пакета $PACKAGE не решены."
 
-#: tazpkg:2823
+#: tazpkg:2953
 msgid "The package is installed but probably will not work."
 msgstr "Пакет установлен, но, возможно, не будет работать."
 
