@@ -17,7 +17,7 @@
 # Script variables #
 ####################
 
-# TazPkg version
+# TazPKG version
 VERSION=5.2
 
 . /etc/slitaz/slitaz.conf
@@ -58,7 +58,7 @@ reverse_translate_category()
 }
 
 #
-# TazPkg output functions
+# TazPKG output functions
 #
 # Print localized title
 title() { newline; boldify "$(eval_gettext "$1")"; separator; }
@@ -148,7 +148,7 @@ $(boldify "$(gettext 'Commands:')")
   clean-cache|-cc  $(gettext 'Clean all packages downloaded in cache directory.')
   depends          $(gettext 'Display dependencies tree.')
   rdepends         $(gettext 'Display reverse dependencies tree.')
-  convert          $(gettext 'Convert a deb/rpm/tgz/pet/sfs/sb/arch/ipk package to a slitaz (.tazpkg).')
+  convert          $(gettext 'Convert deb/rpm/tgz/pet/sfs/sb/arch/ipk package to tazpkg).')
   link             $(gettext 'Link a package from another slitaz installation.')
   setup-mirror|-sm $(gettext 'Change the mirror url configuration.')
   list-undigest    $(gettext 'List undigest mirrors.')
@@ -162,9 +162,9 @@ EOT
 
 usage_up() {
 	cat << EOT
-$(emsg "<b>$(gettext 'TazPkg usage for command up:')</b>")
-  tazpkg up [$(gettext 'option')]
-* $(gettext 'Without options run in interactive mode and ask before install')
+$(emsg "<b>$(gettext 'Usage for command up:')</b>") tazpkg up [$(gettext 'option')]
+
+ * $(gettext 'Without options run in interactive mode and ask before install')
 
 $(boldify "$(gettext 'Where options are:')")
   --check    |-c   $(gettext 'Check only for available upgrades')
@@ -189,7 +189,7 @@ check_dir()
 	fi
 }
 
-# Check if the directories and files used by TazPkg
+# Check if the directories and files used by TazPKG
 # exist. If not and user is root we create them.
 check_base_dir()
 {
@@ -287,9 +287,10 @@ check_for_installed_package()
 {
 	if [ -n "$(get_installed_package_pathname $PACKAGE $1)" ]; then
 		newline
-		eval_gettext "\$PACKAGE package is already installed.
-You can use the --forced option to force installation or remove it
-and reinstall."; echo
+		cat << EOT
+$(colorize 34 $PACKAGE) $(gettext "package is already installed.
+You can use the --forced option to force installation.")
+EOT
 		newline
 		exit 0
 	fi
@@ -501,13 +502,9 @@ extract_package()
 	cpio -idm --quiet < ${PACKAGE_FILE##*/} && rm -f ${PACKAGE_FILE##*/}
 	status
 	if [ -f fs.cpio.lzma ]; then
-		action "Extracting the pseudo fs..."
 		unlzma -c fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
-		status
 	elif [ -f fs.cpio.gz ]; then
-		action "Extracting the pseudo fs..."
 		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
-		status
 	fi
 }
 
@@ -1620,7 +1617,7 @@ update_kernel_modules()
 }
 
 ###################
-# TazPkg commands #
+# TazPKG commands #
 ###################
 
 case "$COMMAND" in
@@ -1731,7 +1728,7 @@ case "$COMMAND" in
 		check_for_receipt
 		EXTRAVERSION=""
 		. $INSTALLED/$PACKAGE/receipt
-		title 'TazPkg information'
+		title 'TazPKG information'
 		# Display localized short description
 		if [ -e "$LOCALSTATE/packages-desc.$LANG" ]; then
 			LOCDESC=$(grep -e "^$PACKAGE	" $LOCALSTATE/packages-desc.$LANG | cut -d'	' -f2)
@@ -2818,19 +2815,22 @@ EOT
 		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT
 		update_desktop_database $ROOT
 		update_mime_database $ROOT ;;
+	
 	clean-cache|-cc)
 		# Remove all downloaded packages.
 		check_root $@
 		files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
-		title 'Clean cache: $CACHE_DIR'
+		title 'Path: $CACHE_DIR'
 		action "Cleaning cache directory..."
 		rm -rf $CACHE_DIR/*
 		status
-		num=$(emsg "<c 32>$new_pkgs</c>")
-		footer "$(eval_ngettext \
-			'$num file removed from cache.' \
-			'$num files removed from cache.' $files)"
-		;;
+		num=$(colorize 32 "$files")
+		if [ "$files" == 0 ]; then
+			footer "$(eval_gettext '$num file removed from cache.')"
+		else
+			footer "$(eval_gettext '$num files removed from cache.')"
+		fi ;;
+	
 	list-undigest)
 		# list undigest URLs.
 		if [ "$2" = "--box" ]; then
@@ -2920,7 +2920,7 @@ EOT
 			newline
 		fi ;;
 	shell)
-		# TazPkg SHell
+		# TazPKG SHell
 		if test $(id -u) = 0 ; then
 			PROMPT="\\033[1;33mtazpkg\\033[0;39m# "
 		else
@@ -2928,7 +2928,7 @@ EOT
 		fi
 		if [ ! "$2" = "--noheader" ]; then
 			clear
-			title 'TazPkg SHell.'
+			title 'TazPKG SHell.'
 			gettext "Type 'usage' to list all available commands or 'quit' or 'q' to exit."; echo
 			newline
 		fi
@@ -2939,7 +2939,7 @@ EOT
 				q|quit)
 					break ;;
 				shell)
-					gettext "You are already running a TazPkg SHell."; echo ;;
+					gettext "You are already running a TazPKG SHell."; echo ;;
 				su)
 					su -c 'exec tazpkg shell --noheader' && break ;;
 				"")
