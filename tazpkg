@@ -2515,7 +2515,6 @@ packages.')"
 		if [ "$upnb" = 0 ]; then
 			install="n"
 			gettext "System is up-to-date..."; echo
-			newline
 		fi
 		num=$(emsg "<c 32>$pkgs</c>")
 		footer "$(eval_ngettext \
