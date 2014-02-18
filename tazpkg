@@ -24,9 +24,10 @@ VERSION=5.2
 . /etc/slitaz/tazpkg.conf
 
 . /lib/libtaz.sh
+. /usr/lib/slitaz/libpkg.sh
 
 # Internationalization.
-. /usr/bin/gettext.sh
+#. /usr/bin/gettext.sh
 TEXTDOMAIN='tazpkg'
 export TEXTDOMAIN
 
@@ -738,9 +739,8 @@ install_package_from_get_script()
 	[ ! -d $INSTALLED/wget ] && tazpkg get-install wget
 
 	mkdir -p $TMP_DIR && cd $TMP_DIR
-
-	unset VERSION CATEGORY WEB_SITE SHORT_DESC MAINTAINER LICENSE \
-	      TARBALL WGET_URL CONFIG_FILES SUGGESTED PROVIDE DEPENDS
+	unset_receipt
+	
 	set -e
 	. $SCRIPT
 	set +e
