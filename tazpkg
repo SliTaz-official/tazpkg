@@ -1982,7 +1982,7 @@ $LIST"
 		do
 			grep -qs ^$pkg$ $2-processed && continue
 			[ -d "$root/var/lib/tazpkg/installed" ] && continue
-			tazpkg $COMMAND $pkg --list=$(basename $2) "$3" "$4" "$5"
+			tazpkg $COMMAND $pkg --list="$2" "$3" "$4" "$5"
 		done
 		rm -f $2-processed ;;
 	add-flavor)
