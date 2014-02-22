@@ -1729,7 +1729,7 @@ case "$COMMAND" in
 		check_for_receipt
 		title 'Installed files by: $PACKAGE'
 		sort < $INSTALLED/$PACKAGE/files.list
-		files=$(wc -l < INSTALLED/$PACKAGE/files.list)
+		files=$(wc -l < $INSTALLED/$PACKAGE/files.list)
 		num=$(emsg "<c 32>$files</c>")
 		footer "$(eval_ngettext \
 			'$num file installed with $PACKAGE' \
