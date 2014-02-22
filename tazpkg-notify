@@ -43,7 +43,7 @@ listen() {
 	rm -f $fifo
 }
 
-# Notication menu (right click)
+# Notification menu (right click)
 menu() {
 	cat << EOT
 menu:\

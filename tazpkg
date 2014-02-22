@@ -2,7 +2,7 @@
 #
 # TazPKG - Tiny autonomous zone packages manager.
 #
-# This is a lightwight packages manager for *.tazpkg files written in SHell
+# This is a lightweight packages manager for *.tazpkg files written in SHell
 # script. It works well with Busybox ash shell and bash. TazPKG lets you
 # list, install, remove, download or get information about a package. You
 # can use 'tazpkg usage' to get a list of commands with short descriptions.
@@ -180,7 +180,7 @@ $(boldify "$(gettext 'Example:')")
 EOT
 }
 
-# Check if dir exist
+# Check if dir exists
 check_dir()
 {
 	if ! [ -d "$1" ]; then
@@ -342,7 +342,7 @@ equivalent_pkg()
 			# format 'alternative:newname'
 			# if alternative is installed then substitute newname
 			if [ -f $2$INSTALLED/${i%:*}/receipt ]; then
-				# substitute package dependancy
+				# substitute package dependency
 				echo ${i#*:}
 				return
 			fi
@@ -369,7 +369,7 @@ virtual_pkg()
 			# format 'alternative:newname'
 			# if alternative is installed then substitute newname
 			if [ -f $2$INSTALLED/${i%:*}/receipt ]; then
-				# substitute package dependancy
+				# substitute package dependency
 				echo ${i#*:}
 				return
 			fi
@@ -401,7 +401,7 @@ get_package_filename()
 		[ "$pkg" ] && get_cache_dir && break
 	done
 	if [ -z "$pkg" ]; then
-		# Check for vitual package
+		# Check for virtual package
 		local equiv
 		equiv=$(virtual_pkg $1)
 		if [ "$equiv" != "$1" ]; then
@@ -546,7 +546,7 @@ install_package()
 		if grep -q ^pre_depends $TMP_DIR/receipt; then
 			pre_depends $ROOT
 		fi
-		# Keep modifers and file list on upgrade
+		# Keep modifiers and file list on upgrade
 		cp $ROOT$INSTALLED/$PACKAGE/modifiers \
 		   $ROOT$INSTALLED/$PACKAGE/files.list $TMP_DIR 2> /dev/null
 		rm -rf $ROOT$INSTALLED/$PACKAGE 2> /dev/null
@@ -728,7 +728,7 @@ abort_package()
 	exit 1
 }
 
-# This function installs a package form a get script in the rootfs.
+# This function installs a package from a get script in the rootfs.
 install_package_from_get_script()
 {
 	SCRIPT="$1"
@@ -1992,7 +1992,7 @@ $LIST"
 		# Install a set of packages from a flavor and purge other ones.
 		install_flavor $2 --purge ;;
 	set-release)
-		# Change curent release and upgrade packages.
+		# Change current release and upgrade packages.
 		RELEASE=$2
 		if [ -z "$RELEASE" ]; then
 			newline
@@ -2515,7 +2515,7 @@ packages.')"
 				pkg_sum=$repo/packages.$SUM
 
 				if ! fgrep -q "$md5  $PACKAGE-" $pkg_sum; then
-					# Jump to next repository in priority if pkg doesn't exists
+					# Jump to next repository in priority if pkg doesn't exist
 					# in this one.
 					grep -q ^$PACKAGE- $pkg_list || continue
 
@@ -2581,7 +2581,7 @@ packages.')"
 						echo 'y' | tazpkg get-install $pkg --forced
 					done
 					# List is generated each time and must be cleaned so
-					# tazpkg-notify don't find upgrade anymore.
+					# tazpkg-notify doesn't find upgrades anymore.
 					rm $UP_LIST && touch $UP_LIST ;;
 				*)
 					gettext "Leaving without any upgrades installed."; echo

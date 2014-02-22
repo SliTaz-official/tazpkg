@@ -4,14 +4,14 @@ README for TazPKG -  Tiny autonomous packages manager
 
 TazPkg is a small but powerful packages manager for SliTaz GNU/Linux and
 other UNIX-like operating systems. It uses a *.tazpkg package generally built 
-by Tazwok with a receipt found in the wok. More information can be found in 
+by Cookutils with a receipt found in the wok. More information can be found in 
 the SliTaz Cookbook and the manual.
 
 TazPkg is entirely built from scratch using SHell script; compatible with
 Bash, it runs under Ash - part of the Busybox project. TazPkg is distributed
 under the free GNU license GPL V3. 
 
-Developement HG repo: http://hg.slitaz.org/tazpkg
+Development HG repo: http://hg.slitaz.org/tazpkg
 
 
 Installation
