@@ -674,7 +674,7 @@ END {
 		status
 	fi
 	action "Installing \$PACKAGE..."
-	cp -a fs/* $ROOT/
+	[ "$(ls fs/* 2> /dev/null)" ] && cp -a fs/* $ROOT/
 	status
 	if [ -s files2remove.list ]; then
 		action "Removing old \$PACKAGE..."
