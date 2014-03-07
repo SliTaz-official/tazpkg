@@ -1,6 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=Package Manager
+Name[pt]=Gerenciador de Pacotes
+Name[pt_BR]=Gerenciador de Pacotes
 Name[ru]=Менеджер пакетов
 TryExec=tazweb
 Exec=tazweb http://tazpanel:82/pkgs.cgi
