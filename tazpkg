@@ -750,7 +750,7 @@ install_package_from_get_script()
 # SliTaz package receipt.
 
 PACKAGE="$PACKAGE"
-VERSION="$VERSION"
+VERSION="${VERSION:-unknown}"
 CATEGORY="${CATEGORY:-non-free}"
 WEB_SITE="$WEB_SITE"
 SHORT_DESC="${SHORT_DESC:-$PACKAGE}"
