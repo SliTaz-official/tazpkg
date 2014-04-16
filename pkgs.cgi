@@ -908,7 +908,7 @@ EOT
 <p>$(eval_gettext 'A bootable DVD image of all available packages for the 
 $version version is generated every day. It also contains a copy of the 
 website and can be used without an internet connection. This image can be 
-installed on a DVD or an USB key.')</p>
+installed on a DVD or a USB key.')</p>
 
 <div>
 	<form method="post" action='$SCRIPT_NAME?admin&action=dvdimage#dvd'>
