@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Manual TazPkg (es)</title>
+	<link rel="stylesheet" type="text/css" href="../slitaz-doc.css" />
+	<script type="text/javascript" src="../slitaz-doc.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<div id="header">
+	<h1>Manual TazPkg</h1>
+</div>
+
+<!-- Start content -->
+<div id="content">
+
+
+<h2>NOMBRE</h2>
+
+<p>
+	TazPkg - Pequeño administrador autónomo de paquetes y espejos de paquetes.
+</p>
+
+
+<h2>SINTAXIS</h2>
+
+<pre>
+tazpkg [comando] [package|dir|pattern|list|cat|--opt] [dir|--opt]
+</pre>
+
+
+<h2>DESCRIPCIÓN</h2>
+
+<p>
+TazPkg es un administrador de paquetes ultraligero (~ 80KB) para instalar, 
+catalogar, descargar, actualizar o desinstalar paquetes precompilados en un 
+sistema GNU/Linux. TazPkg ofrece comandos para la búsqueda y creación de 
+paquetes y fue creado independientemente para el proyecto. El formato de los 
+paquetes usando la extensión *.tazpkg es un fichero cpio que contiene un sistema 
+de archivos comprimido con gzip, un fichero de recibo y una descripción opcional. TazPkg 
+también administra dependencias basadas en los ficheros de recibo de los paquetes. Cada 
+archivo de recibo contiene toda la información sobre un paquete y también puede incluir 
+funciones para antes y después de la instalación. El mismo fichero de recibo es
+usado por Cookutils para compilar desde el código fuente y generar un paquete
+.tazpkg.
+</p>
+<p>
+TazPkg está construido completamente desde cero usando shell script, 
+compatible con Bash, se ejecuta bajo Ash (que forma parte de BusyBox). TazPkg es distribuido 
+bajo la licencia libre de GNU GPL V3. 
+</p>
+
+
+<h2>COMANDOS</h2>
+
+
+<h3 id="list">list</h3>
+
+<p>
+Lista los paquetes instalados en el sistema. Este comando muestra la 
+lista de todos los paquetes instalados. También permite mostrar la 
+lista de categorías, los paquetes correspondientes a una categoría y los paquetes 
+bloqueados. Además puedes usar el comando <tt><a 
+href="#search">search</a></tt> para mostrar una lista basada en 
+un término o en el nombre de un paquete:
+</p>
+<pre>
+# tazpkg list
+# tazpkg list cat|<em>categoría</em>
+# tazpkg list blocked
+</pre>
+
+
+<h3 id="xhtml-list">xhtml-list</h3>
+
+<p>
+El comando <tt>xhtml-list</tt> puede crear una lista XHTML de todos los 
+paquetes instalados en el sistema, la cual puede ser leída con el 
+navegador web que prefieras. Se puede ejecutar como usuario normal y 
+crea el archivo <tt>installed-packages.html</tt> en el directorio 
+actual. Tenga en cuenta que puede cambiar el nombre de la 
+lista generada a través de la línea de comandos:
+</p>
+<pre>
+# tazpkg xhtml-list
+# tazpkg xhtml-list <em>list-name.html</em>
+</pre>
+
+
+<h3 id="list-mirror">list-mirror</h3>
+
+<p>
+Lista los paquetes disponibles en el espejo. Este comando 
+mostrara el archivo <tt>packages.list</tt> recargado desde el espejo. Si este no 
+existe, se te requerirá ejecutar <code>tazpkg <a 
+href="#recharge">recharge</a></code> como administrador 
+(root) para ver la lista de paquetes disponibles. La opción 
+<tt>--diff</tt> se usa para mostrar las diferencias entre la ultima lista de paquetes y 
+la actual:
+</p>
+<pre>
+# tazpkg list-mirror
+# tazpkg list-mirror --diff
+</pre>
+
+
+<h3 id="info">info</h3>
+
+<p>
+Muestra cualquier información disponible en el fichero de recibo del paquete en 
+cuestión, como su versión, categoría, mantenedor, página web y 
+dependencias (véase también Cookutils para más información sobre 
+los ficheros de recibo):
+</p>
+<pre>
+# tazpkg info <em>busybox</em>
+</pre>
+
+
+<h3 id="desc">desc</h3>
+
+<p>
+Descripción del paquete (si existe). Este comando muestra el archivo 
+<tt>description.txt</tt> de cada paquete (un simple archivo de texto, 
+justificado a 80 caracteres para caber en una terminal estándar):
+</p>
+<pre>
+# tazpkg desc <em>busybox</em>
+</pre>
+
+
+<h3 id="list-config">list-config</h3>
+
+<p>
+Lista los archivos de configuración del sistema. La 
+opción <tt>--box</tt> muestra la lista en formato tabla: 
+</p>
+<pre>
+# tazpkg list-config
+# tazpkg list-config --box
+</pre>
+
+
+<h3 id="list-files">list-files</h3>
+
+<p>
+Lista todos los archivos instalados con un paquete. Este 
+comando simplemente lee y muestra el archivo <tt>files.list</tt> de cada 
+paquete que se genera automáticamente cuando el paquete es creado 
+y también se usa para borrar los archivos cuando se desinstala un 
+paquete.
+Para listar los archivos instalados con el paquete bc: 
+</p>
+<pre>
+# tazpkg list-files <em>bc</em>
+</pre>
+
+
+<h3 id="search">search</h3>
+
+<p>
+Busca paquetes por propietario o por el nombre del paquete. Este comando 
+buscará el termino requerido en los paquetes instalados y en la lista 
+de paquetes disponibles en el espejo. Para obtener la última lista de 
+paquetes instalables en el espejo, solo hay que ejecutar <code>tazpkg 
+recharge</code> antes de la realización de la búsqueda:
+</p>
+<pre>
+# tazpkg search <em>gcc</em>
+</pre>
+
+
+<h3 id="search-file">search-file</h3>
+
+<p>
+El comando <tt>search-file</tt> te permite buscar un 
+archivo entre los archivos instalados por los paquetes. Este comando es 
+muy útil para saber la ruta completa de un archivo y determinar si un 
+archivo esta presente en el sistema. Ejemplo:
+</p>
+<pre>
+ $ tazpkg search-file <em>libnss</em>
+</pre>
+
+
+<h3 id="install">install</h3>
+
+<p>
+Este comando te permite instalar un paquete local con la extensión 
+<tt>.tazpkg</tt>. Ver <tt><a href="#get-install">get-install</a></tt> 
+para instalar un paquete desde internet. Tenga en cuenta que puede 
+forzar la instalación con las opciones <tt>--forced</tt>, 
+<tt>uninstall</tt> y <tt>reinstall</tt> o especificar la raíz del sistema 
+donde quiere instalar los paquetes con la opción <tt>--root</tt>:
+</p>
+<pre>
+# tazpkg install <em>package-1.0.tazpkg</em>
+# tazpkg install <em>path/to/package-1.0.tazpkg</em> --forced
+# tazpkg install <em>path/to/package-1.0.tazpkg</em> --root=<em>/mnt/rootfs</em>
+</pre>
+
+
+<h3 id="install-list">install-list o get-install-list</h3>
+<p>
+Instala un conjunto de paquetes listados en un archivo. Este comando te 
+permite (descargar e) instalar varios paquetes con un solo comando y 
+también puede ser forzado:
+</p>
+<pre>
+# tazpkg install-list <em>my-packages.list</em>
+# tazpkg get-install-list <em>my-packages.list</em> --forced
+</pre>
+
+
+<h3 id="link">link</h3>
+
+<p>
+Este comando te permite la instalación de un paquete desde otro 
+dispositivo. La instalación se hace por medio de enlaces simbólicos y 
+consume muy poca memoria. Es generalmente usada dentro del sistema RAM 
+para instalar add-ons (extensiones) desde USB:
+</p>
+<pre>
+# tazpkg link <em>openoffice /media/usbdisk</em>
+</pre>
+
+
+<h3 id="remove">remove</h3>
+
+<p>
+Borra un paquete. Se te preguntará para confirmar (s/N).
+Este comando borrará todos los archivos instalados con el paquete.
+Para ver la lista de archivos, usar el comando <tt><a 
+href="#list-files">list-files</a></tt> seguido del nombre del paquete. 
+Ejemplo con el paquete bc:
+</p>
+<pre>
+# tazpkg remove <em>bc</em>
+</pre>
+
+
+<h3 id="extract">extract</h3>
+
+<p>
+Extrae un paquete en un directorio. Si no especificas el 
+directorio de destino, el paquete se extraerá en el directorio actual 
+usando el nombre <tt><em>package-version</em></tt>:
+</p>
+<pre>
+# tazpkg extract <em>package.tazpkg</em>
+# tazpkg extract <em>package.tazpkg target/dir</em>
+</pre>
+
+
+<h3 id="pack">pack</h3>
+
+<p>
+El comando <tt>pack</tt> crea un paquete desde un directorio preparado 
+de antemano o desde un paquete desempaquetado. También puede crear 
+manualmente un paquete .tazpkg (ver la documentación de Cookutils para la 
+creación automática de paquetes). Para empaquetar un paquete:
+</p>
+<pre>
+# tazpkg pack <em>package-version</em>
+</pre>
+
+
+<h3 id="repack">repack</h3>
+
+<p>
+El comando <tt>repack</tt> te permite recrear un paquete desde los 
+archivos en el sistema donde fue previamente instalado. Para recrear un 
+paquete:
+</p>
+<pre>
+# tazpkg repack <tt>package</tt>
+</pre>
+
+
+<h3 id="repack-config">repack-config</h3>
+
+<p>
+El comando <tt>repack-config</tt> recrea un paquete de archivos de 
+configuración del sistema (ver <tt><a 
+href="#list-config">list-config</a></tt>). Es suficiente instalar el 
+paquete para encontrar la configuración actual. Para reempaquetar los 
+archivos de configuración:
+</p>
+<pre>
+# tazpkg repack-config
+</pre>
+
+
+<h3 id="recharge">recharge</h3>
+
+<p>
+Recarga la lista de los paquetes disponibles en el espejo. Este comando 
+descargará el archivo  <tt>packages.list</tt> más reciente con la lista de 
+paquetes disponibles en el espejo y antes de empezar guardará una copia de la 
+lista antigua. Una vez actualizada la lista, puedes usar los comandos <tt><a 
+href="#list">list</a></tt> y <tt><a href="#search">search</a></tt>. Para ver y 
+listar las diferencias, puedes usar <code>list-mirror --diff</code>; y para ver 
+y actualizar paquetes, puedes usar el comando <tt><a 
+href="#upgrade">upgrade</a></tt>. Para recargar la ultima lista de paquetes:
+</p>
+<pre>
+# tazpkg recharge
+</pre>
+
+
+<h3 id="upgrade">up o upgrade</h3>
+
+<p>
+Upgrade te permite actualizar todos los paquetes instalados disponibles en el espejo actual. Actualizar  paquetes es una parte importante de la
+seguridad del sistema, ayuda a mantenerte seguro con las ultimas actualizaciones y 
+correcciones. El proyecto Slitaz, aunque sea pequeño, proporciona 
+actualizaciones regulares de seguridad y en general ofrece las ultimas 
+versiones de software. Tenga en cuenta que esta función esta dirigida a la gente 
+con Slitaz instalado en su disco duro. Los paquetes actualizados en el modo 
+LiveCD se perderán al apagar el sistema. Para actualizar o mostrar todas las 
+opciones de <tt>up</tt>:
+</p>
+<pre>
+# tazpkg up
+# tazpkg --help-up
+# tazpkg up --recharge --install
+# tazpkg up -r -i
+</pre>
+
+
+<h3 id="check">check</h3>
+
+<p>
+El comando <tt>check</tt> puede comprobar las dependencias en paquetes instalados
+y determinar si todos los archivos necesarios para reempacar paquetes están 
+presentes.
+</p>
+<pre>
+# tazpkg check <em>package</em>
+</pre>
+
+
+<h3 id="block">block o unblock</h3>
+
+<p>
+Los comandos <tt>block</tt> y <tt>unblock</tt> te permiten bloquear versiones de 
+paquetes instalados asi ya no estarán mantenidos por <tt><a 
+href="#upgrade">upgrade</a></tt>. La lista de paquetes en espera se encuentra 
+en <tt>/var/lib/tazpkg/blocked-packages.list</tt>. Este archivo puede ser 
+editado manualmente. Para bloquear o desbloquear un paquete como Grub:
+</p>
+<pre>
+# tazpkg block <em>grub</em>
+# tazpkg unblock <em>grub</em>
+</pre>
+
+
+<h3 id="get">get</h3>
+
+<p>
+Descargar un paquete desde el espejo (si existe). El paquete descargado es 
+almacenado en el directorio actual. Para encontrar la ruta puedes usar 
+<code>pwd</code>. Para descargar el paquete Grub:
+</p>
+<pre>
+# tazpkg get <em>grub</em>
+</pre>
+
+
+<h3 id="get-install">get-install</h3>
+
+<p>
+Descargar e instalar un paquete desde un espejo en internet. El comando 
+<tt>get-install</tt> empieza comprobando si el paquete existe en el espejo y si 
+ya ha sido descargado. Para ver la lista de paquetes en el espejo, tenemos que 
+usar el comando <tt><a href="#list-mirror">list-mirror</a></tt>. Para instalar 
+el paquete 
+Grub:
+</p>
+<pre>
+# tazpkg get-install <tt>grub</tt>
+</pre>
+
+
+<h3 id="clean-cache">clean-cache</h3>
+
+<p>
+Borra los paquetes *.tazpkg descargados en la cache. Durante la instalación, 
+TazPkg guarda una copia de paquetes descargados desde la web. Esto se hace para 
+ahorrar ancho de banda en caso de reinstalación, pero también puedes querer 
+liberar espacio en el disco duro o recargar los paquetes:
+</p>
+<pre>
+# tazpkg clean-cache
+</pre>
+
+
+<h3 id="setup-mirror">setup-mirror</h3>
+
+<p>
+Configura la dirección URL del espejo. El comando <tt>setup-mirror</tt> te 
+preguntará la dirección URL del nuevo espejo. Puedes especificar múltiples 
+direcciones URL separadas por espacios. Tenga en cuenta que también puede 
+modificar el archivo principal <tt>/var/lib/tazpkg/mirror</tt>. La dirección URL 
+tiene que indicar el directorio que contiene el archivo <tt>packages.list</tt> y 
+los paquetes:
+</p>
+<pre>
+# tazpkg setup-mirror
+</pre>
+
+
+<h3 id="reconfigure">reconfigure</h3>
+
+<p>
+Vuelve a reproducir el script de post-instalación del paquete. Ejemplo usando 
+gcc:
+</p>
+<pre>
+# tazpkg reconfigure <em>gcc</em>
+</pre>
+
+
+<h3 id="depends">depends o rdepends</h3>
+
+<p>
+Muestra un árbol de dependencias o un árbol de dependencias invertido para un 
+paquete. Ejemplos usando mpd:
+</p>
+<pre>
+# tazpkg depends <em>mpd</em>
+# tazpkg rdepends <em>mpd</em>
+</pre>
+
+
+<h3 id="add-undigest">add-undigest o setup-undigest</h3>
+
+<p>
+Establece la dirección URL de un espejo adicional no oficial para probar 
+paquetes que todavía no están presentes en los espejos oficiales. Tenga en 
+cuenta que también puede editar manualmente el archivo en 
+<tt>/var/lib/tazpkg/undigest/<em>repository</em></tt>. La dirección URL tiene 
+que indicar el directorio que contiene los paquetes y el archivo 
+<tt>packages.list</tt>:
+</p>
+<pre>
+# tazpkg add-undigest <em>public-repository http://my.home.org/slitaz</em>
+# tazpkg setup-undigest <em>local-repository /home/slitaz/packages</em>
+</pre>
+
+
+<h3 id="remove-undigest">remove-undigest</h3>
+
+<p>
+Borra la dirección de un espejo no oficial (undigest):
+</p>
+<pre>
+# tazpkg remove-undigest <em>my-repository</em>
+</pre>
+
+
+<h3 id="list-undigest">list-undigest</h3>
+
+<p>
+Lista espejos no oficiales (undigest) adicionales:
+</p>
+<pre>
+# tazpkg list-undigest
+</pre>
+
+
+<h3 id="convert">convert</h3>
+
+<p>
+Convierte los paquetes Debian (.deb), Redhat (.rpm), Slackware (.tgz) o 
+Archlinux (.pkg.tar.gz) en paquetes Slitaz (.tazpkg):
+</p>
+<pre>
+# tazpkg convert <em>alien-package</em>
+</pre>
+
+
+<h3 id="set-release">set-release</h3>
+<p>
+El comando <tt>set-release</tt> cambia la versión actual y actualiza todos los 
+paquetes a la última versión:
+</p>
+<pre>
+# tazpkg set-release <em>cooking</em>
+</pre>
+
+
+<h3 id="bugs">bugs</h3>
+<p>
+Genera una lista de los errores (bugs) conocidos de los paquetes:
+</p>
+<pre>
+# tazpkg bugs
+</pre>
+
+<h2>ENCARGADO DE MANTENIMIENTO</h2>
+<p>
+Christophe Lincoln &lt;pankso en slitaz.org&gt;
+</p>
+
+</div>
+<!-- End content -->
+</body>
+</html>
+
