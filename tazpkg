@@ -759,7 +759,7 @@ SHORT_DESC="${SHORT_DESC:-$PACKAGE}"
 MAINTAINER="${MAINTAINER:-nobody@slitaz.org}"
 EOT
 		for i in LICENSE TARBALL WGET_URL CONFIG_FILES SUGGESTED \
-			 PROVIDE DEPENDS HOST_ARCH ; do
+			 PROVIDE DEPENDS HOST_ARCH TAGS ; do
 			eval "[ -n \"\$$i\" ] && echo \"$i=\\\"\$$i\\\"\""
 		done >> $PACKAGE-$VERSION/receipt
 	fi
