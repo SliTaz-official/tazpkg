@@ -201,7 +201,7 @@ check_base_dir()
 		check_dir $1$INSTALLED
 		check_dir $1$SLITAZ_LOGS
 		if [ ! -f "$1$LOCALSTATE/mirror" ]; then
-			echo "$DEFAULT_MIRROR" > $1$LOCALSTATE/mirror
+			echo "${DEFAULT_MIRROR%/}/" > $1$LOCALSTATE/mirror
 			[ -n "$1" ] && cp $LOCALSTATE/packages.* $1$LOCALSTATE/
 		fi
 	fi
@@ -1072,7 +1072,7 @@ the complete address to the directory of the packages and packages.list file."; 
 		eval_gettext "Setting mirror(s) to: \$NEW_MIRROR_URL"; echo
 		rm -f $1/mirror
 		for i in $NEW_MIRROR_URL; do
-			echo "$i" >> $1/mirror
+			echo "${i%/}/" >> $1/mirror
 		done
 	fi
 	newline
