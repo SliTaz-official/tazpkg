@@ -4,7 +4,7 @@ PREFIX?=/usr
 DOCDIR?=$(PREFIX)/share/doc
 SYSCONFDIR?=/etc/slitaz
 DESTDIR?=
-LINGUAS?=el es fr pl pt_BR ru sv
+LINGUAS?=el es fr pl pt_BR ru sv zh_CN zh_TW
 
 VERSION:=$(shell grep ^VERSION=[0-9] tazpkg | cut -d '=' -f 2)
 
