@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: TazPkg 5.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-07 22:55+0800\n"
-"PO-Revision-Date: 2014-06-26 15:05+0800\n"
-"Last-Translator: 张文宇 <jame987165702@gmail.com>\n"
-"Language-Team: \n"
-"Language: zh_Hans_CN\n"
+"PO-Revision-Date: 2014-07-14 19:35+0800\n"
+"Last-Translator: rhsky <rhsky@qq.com>\n"
+"Language-Team: rhsky <rhsky@qq.com>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.6.5\n"
 
 #: tazpkg:39 pkgs.cgi:159
@@ -44,7 +44,7 @@ msgstr "多媒体软件"
 
 #: tazpkg:41 pkgs.cgi:165
 msgid "office"
-msgstr "办公室软件"
+msgstr "办公软件"
 
 #: tazpkg:41 pkgs.cgi:167
 msgid "development"
@@ -400,8 +400,7 @@ msgstr "欠缺: $MISSING_PACKAGE"
 #, sh-format
 msgid "$num missing package to install."
 msgid_plural "$num missing packages to install."
-msgstr[0] "有 $num 个缺少的包需要安装"
-msgstr[1] "有 $num 个缺少的包需要安装"
+msgstr[0] "有 $num 个缺少的包需要安装。"
 
 #: tazpkg:858
 msgid "Install all missing dependencies"
@@ -417,7 +416,7 @@ msgstr "正在检查 $pkg 是否在本地清单中"
 msgid ""
 "Leaving dependencies for $PACKAGE unresolved.\n"
 "The package is installed but will probably not work."
-msgstr ""
+msgstr "放任  $PACKAGE 依赖包不管。软件会被安装但是可能不会正常运行。"
 
 #: tazpkg:910
 msgid "Installed packages"
@@ -432,8 +431,7 @@ msgstr "找不到已安装包: $PATTERN"
 #, sh-format
 msgid "$num installed package found for: $PATTERN"
 msgid_plural "$num installed packages found for: $PATTERN"
-msgstr[0] "找到 $num 个已安装包: $PATTERN"
-msgstr[1] "找到 $num 个已安装包: $PATTERN"
+msgstr[0] "找到 $num 个已安装包:  $PATTERN"
 
 #: tazpkg:936
 msgid "Available packages name-version"
@@ -456,8 +454,7 @@ msgstr "找不到可用包: $PATTERN"
 #, sh-format
 msgid "$num available package found for: $PATTERN"
 msgid_plural "$num available packages found for: $PATTERN"
-msgstr[0] "找到 $num 个可用包: $PATTERN"
-msgstr[1] "找到 $num 个可用包: $PATTERN"
+msgstr[0] "找到 $num  个可用包: $PATTERN"
 
 #: tazpkg:964
 msgid "Matching packages name with version and desc"
@@ -937,7 +934,7 @@ msgstr "$repo 不存在."
 #: tazpkg:2393
 #, sh-format
 msgid "Undigest $base_path"
-msgstr ""
+msgstr "未整理包 $base_path"
 
 #: tazpkg:2395
 #, sh-format
@@ -947,7 +944,7 @@ msgstr "$repository_name 已是最新."
 #: tazpkg:2410
 #, sh-format
 msgid "Recharging undigest $base_path:"
-msgstr ""
+msgstr "重新调整 $base_path ："
 
 #: tazpkg:2414
 msgid "Creating backup of the last packages list..."
@@ -1090,12 +1087,12 @@ msgstr "正在查找已知bugs..."
 #: tazpkg:2670
 #, sh-format
 msgid "The following packages provide $file:"
-msgstr "以下包提供文件:"
+msgstr "以下包提供文件 $file :"
 
 #: tazpkg:2676
 #, sh-format
 msgid "(overridden by $pkg_list)"
-msgstr ""
+msgstr "（优先于 $pkg_list ）"
 
 #: tazpkg:2684
 msgid "No package has installed the following files:"
@@ -1160,31 +1157,31 @@ msgstr "$num 个文件已在缓存中被删除"
 
 #: tazpkg:2865
 msgid "Current undigest(s)"
-msgstr ""
+msgstr "现有未整理的包"
 
 #: tazpkg:2868
 msgid "No undigest mirror found."
-msgstr ""
+msgstr "没有发现未整理的镜像"
 
 #: tazpkg:2880
 #, sh-format
 msgid "Remove $undigest undigest"
-msgstr ""
+msgstr "移除 $undigest 未整理包"
 
 #: tazpkg:2882
 #, sh-format
 msgid "Removing $undigest undigest..."
-msgstr ""
+msgstr "移除 $undigest 未整理包……"
 
 #: tazpkg:2888
 #, sh-format
 msgid "Undigest $undigest not found"
-msgstr ""
+msgstr "未整理包 $undigest  未发现"
 
 #: tazpkg:2903
 #, sh-format
 msgid "Creating new undigest $undigest."
-msgstr ""
+msgstr "创建最新未整理的 $undigest."
 
 #: tazpkg:2922
 #, sh-format
