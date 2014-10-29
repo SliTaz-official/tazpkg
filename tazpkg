@@ -2574,15 +2574,11 @@ packages.')"
 		# Look into installed packages and get data from receipt, it is fast
 		# and easy to handle vars after using only md5sum to compare packages
 		#
-		for opt in $@
-		do
+		for opt in $@; do
 			case "$opt" in
-				--recharge|-r)
-					tazpkg recharge ;;
-				--install|-i)
-					install="y" ;;
-				--check|-c)
-					install="n" ;;
+				--recharge|-r)	tazpkg recharge ;;
+				--install|-i)	install="y" ;;
+				--check|-c) 	install="n" ;;
 			esac
 		done
 		time=$(date +%s)
@@ -2590,7 +2586,7 @@ packages.')"
 		look_for_priority
 		for repo in $priority; do
 			pkg_list=$repo/packages.list
-			mtime=`find $pkg_list -mtime +7`
+			mtime=$(find $pkg_list -mtime +7)
 			if [ "$mtime" ]; then
 				if [ "$repo" = "$LOCALSTATE" ]; then
 					repo_name=main
@@ -2605,8 +2601,8 @@ packages.')"
 		cd $INSTALLED
 		newline > $UP_LIST
 		blocked_count=0
-		for pkg in *
-		do
+		for pkg in *; do
+			[ ! -d $pkg ] && continue
 			unset VERSION EXTRAVERSION
 			. $pkg/receipt
 			md5=$(fgrep "  $PACKAGE-${VERSION}$EXTRAVERSION.tazpkg" \
@@ -2678,8 +2674,7 @@ packages.')"
 			fi
 			case "$install" in
 				y|Y|yes|YES|Yes)
-					for pkg in $(cat $UP_LIST)
-					do
+					for pkg in $(cat $UP_LIST); do
 						echo 'y' | tazpkg get-install $pkg --forced
 					done
 					# List is generated each time and must be cleaned so
