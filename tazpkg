@@ -2528,7 +2528,7 @@ EOT
 				action "Creating backup of the last packages list..."
 				for i in packages.desc packages.$SUM packages.txt \
 					packages.list packages.equiv files.list.lzma \
-					mirrors
+					extra.list mirrors
 				do
 					mv -f $i $i.bak 2>/dev/null
 				done
@@ -2539,10 +2539,13 @@ EOT
 				download_from "$(cat mirror)" packages.$i
 			done
 			download_from "$(cat mirror)" files.list.lzma
+			download_from "$(cat mirror)" extra.list
 			download_from "$(sed 's|packages/.*||' < mirror)" mirrors
 
 			if [ -f "packages.list.bak" ]; then
 				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
+				[ -f "extra.list.bak" ] &&
+				diff -u extra.list.bak extra.list | grep ^+[a-z] >> packages.diff
 				sed -i s/+// packages.diff
 				title 'Mirrored packages diff'
 				cat packages.diff

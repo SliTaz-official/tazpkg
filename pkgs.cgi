@@ -171,6 +171,7 @@ sidebar() {
 	<a class="active_meta" href="$SCRIPT_NAME?cat=meta&repo=$repo">$(gettext 'meta')</a>
 	<a class="active_non-free" href="$SCRIPT_NAME?cat=non-free&repo=$repo">$(gettext 'non-free')</a>
 	<a class="active_all" href="$SCRIPT_NAME?cat=all&repo=$repo">$(gettext 'all')</a>
+	<a class="active_extra" href="$SCRIPT_NAME?cat=extra&repo=$repo">$(gettext 'extra')</a>
 EOT
 
 	if [ -d $LOCALSTATE/undigest ]; then
@@ -384,8 +385,11 @@ EOT
 $(table_head)
 <tbody>
 EOT
-			grep "| $grep_category |" $i/packages.desc | \
-				parse_packages_desc
+			if [ "$category" == "extra" ]; then
+				sed 's,.*,&|--|--|--|http://mirror.slitaz.org/packages/get/&,' $i/extra.list
+			else
+				grep "| $grep_category |" $i/packages.desc
+			fi | parse_packages_desc
 			cat << EOT
 </tbody>
 </table>
