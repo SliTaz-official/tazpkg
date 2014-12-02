@@ -421,7 +421,7 @@ msgid ""
 "Leaving dependencies for $PACKAGE unresolved.\n"
 "The package is installed but will probably not work."
 msgstr ""
-"$PACKAGE 有未解決包依賴".
+"$PACKAGE 有未解決包依賴."
 "包已安裝但可能無法正常工作."
 
 #: tazpkg:910

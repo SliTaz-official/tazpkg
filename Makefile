@@ -13,6 +13,7 @@ tarball = tazpkg-$(VERSION).tar.gz
 
 all: msgfmt
 
+
 # i18n.
 
 pot:
@@ -40,49 +41,75 @@ msgfmt:
 		fi; \
 	done;
 
+
 # Installation.
 
 install: msgfmt
 	# TazPkg command line interface
-	install -m 0755 -d $(DESTDIR)$(PREFIX)/bin
-	install -m 0777 tazpkg $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 -d                  $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 tazpkg              $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 tazpkg-convert      $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 -d                  $(DESTDIR)$(PREFIX)/lib/tazpkg
+	install -m 0777 tazpkg-find-depends $(DESTDIR)$(PREFIX)/lib/tazpkg
+
 	# TazPkg-box GUI
 	install -m 0777 tazpkg-notify $(DESTDIR)$(PREFIX)/bin
-	install -m 0777 tazpkg-box $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 tazpkg-box    $(DESTDIR)$(PREFIX)/bin
+
 	# Configuration files
-	install -m 0755 -d $(DESTDIR)$(SYSCONFDIR)
+	install -m 0755 -d          $(DESTDIR)$(SYSCONFDIR)
 	install -m 0644 tazpkg.conf $(DESTDIR)$(SYSCONFDIR)
+
 	# Documentation
 	install -m 0755 -d $(DESTDIR)$(DOCDIR)/tazpkg
-	cp -a doc/* $(DESTDIR)$(DOCDIR)/tazpkg
+	cp -a doc/*        $(DESTDIR)$(DOCDIR)/tazpkg
+
 	# TazPanel files
 	install -m 0755 -d $(DESTDIR)/var/www/tazpanel/menu.d
-	cp -a pkgs.cgi $(DESTDIR)/var/www/tazpanel
-	cp -a pkgs $(DESTDIR)/var/www/tazpanel/menu.d
+	cp -a pkgs.cgi     $(DESTDIR)/var/www/tazpanel
+	cp -a pkgs         $(DESTDIR)/var/www/tazpanel/menu.d
+
 	# The i18n files
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/share/locale
-	cp -a po/mo/* $(DESTDIR)$(PREFIX)/share/locale
+	cp -a po/mo/*      $(DESTDIR)$(PREFIX)/share/locale
+
 	# Desktop integration
-	mkdir -p $(DESTDIR)$(PREFIX)/share
-	cp -a  applications $(DESTDIR)$(PREFIX)/share
-	cp -a  mime $(DESTDIR)$(PREFIX)/share
-	cp -a  pixmaps $(DESTDIR)$(PREFIX)/share
-	# TazPKG Notify XDG autostart
-	mkdir -p $(DESTDIR)/etc/xdg
+	mkdir -p           $(DESTDIR)$(PREFIX)/share
+	cp -a applications $(DESTDIR)$(PREFIX)/share
+	#cp -a mime         $(DESTDIR)$(PREFIX)/share # moved to shared-mime-info package
+	cp -a pixmaps      $(DESTDIR)$(PREFIX)/share
+
+	# TazPkg Notify XDG autostart
+	mkdir -p            $(DESTDIR)/etc/xdg
 	cp -a xdg/autostart $(DESTDIR)/etc/xdg
-	
+
 
 # Uninstallation and clean-up commands.
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkg
-	rm -f $(DESTDIR)$(PREFIX)/bin/tazpkg-box
-	rm -f $(DESTDIR)$(PREFIX)/var/www/tazpanel/menu.d/pkgs
-	rm -f $(DESTDIR)$(PREFIX)/var/www/tazpanel/pkgs.cgi
-	rm -rf $(DESTDIR)$(PREFIX)/tazpkg-notify
+	rm -f  $(DESTDIR)$(PREFIX)/bin/tazpkg
+	rm -f  $(DESTDIR)$(PREFIX)/bin/tazpkg-convert
+	rm -f  $(DESTDIR)$(PREFIX)/lib/tazpkg/tazpkg-find-depends
+
+	rm -f  $(DESTDIR)$(PREFIX)/bin/tazpkg-notify
+	rm -f  $(DESTDIR)$(PREFIX)/bin/tazpkg-box
+
+	rm -f  $(DESTDIR)$(SYSCONFDIR)/tazpkg.conf
+
 	rm -rf $(DESTDIR)$(DOCDIR)/tazpkg
-	rm -f $(DESTDIR)$(SYSCONFDIR)/tazpkg.conf 
-	rm -rf $(DESTDIR)$(PREFIX)/share/locale/*/LC_MESSAGES/tazpkg*.mo
+
+	rm -f  $(DESTDIR)/var/www/tazpanel/pkgs.cgi
+	rm -f  $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
+
+	rm -rf $(DESTDIR)$(PREFIX)/share/locale/*/LC_MESSAGES/tazpkg.mo
+
+	rm -f  $(DESTDIR)$(PREFIX)/share/applications/tazpkg-*.desktop
+	rm -f  $(DESTDIR)$(PREFIX)/share/applications/tazpanel-pkgs.desktop
+
+	rm -f  $(DESTDIR)$(PREFIX)/share/pixmaps/tazpkg*.png
+
+	rm -f  $(DESTDIR)/etc/xdg/autostart/tazpkg-notify.desktop
+
 
 clean:
 	rm -rf _pkg
@@ -90,19 +117,20 @@ clean:
 	rm -rf po/mo
 	rm -f po/*~
 	rm -f po/*.mo
-	
+
 
 targz:
 	rm -rf ${tmpdir}
 	mkdir -p ${tmpdir}
-	
+
 	make DESTDIR=${tmpdir} install
-	
+
 	cd tar-install ; \
 	tar cvzf ${tarball} tazpkg-$(VERSION) ; \
 	cd -
-	
+
 	@echo "** Tarball successfully created in tar-install/${tarball}"
+
 
 help:
 	@echo "make [ pot | msgmerge | msgfmt | all | install | uninstall | clear | targz ]"

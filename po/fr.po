@@ -338,7 +338,7 @@ msgid ""
 "You can use the --forced option to force installation."
 msgstr ""
 "le paquet est déjà installé.\n"
-"Vous pouvez utiliser l'option --forced pour forcer son installation.\n"
+"Vous pouvez utiliser l'option --forced pour forcer son installation."
 
 #: tazpkg:310
 #, sh-format
