@@ -968,7 +968,7 @@ install_deps()
 		answer=0
 	else
 		newline
-		_n 'Install all missing dependencies'; confirm
+		confirm "$(_ 'Install all missing dependencies? (y/N)')"
 		answer=$?
 		newline
 	fi
@@ -1745,7 +1745,7 @@ $LIST"
 		if [ "$auto" ]; then
 			answer=0
 		else
-			_n 'Remove $PACKAGE ($VERSION$EXTRAVERSION)'; confirm
+			confirm "$(_ 'Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)')"
 			answer=$?
 		fi
 		if [ $answer = 0 ]; then
@@ -1786,7 +1786,7 @@ $LIST"
 				if [ "$auto" ]; then
 					answer=0
 				else
-					_n 'Remove packages depending on $PACKAGE'; confirm
+					confirm "$(_ 'Remove packages depending on $PACKAGE? (y/N)')"
 					answer=$?
 				fi
 				if [ $answer = 0 ]; then
@@ -1801,7 +1801,7 @@ $LIST"
 				if [ "$auto" ]; then
 					answer=0
 				else
-					_n 'Reinstall packages modified by $PACKAGE'; confirm
+					confirm "$(_ 'Reinstall packages modified by $PACKAGE? (y/N)')"
 					answer=$?
 				fi
 				if [ $answer = 0 ]; then
@@ -2614,7 +2614,7 @@ EOT
 		check_root $@
 		undigest="$2"
 		if [ -d $LOCALSTATE/undigest/$2 ]; then
-			_n 'Remove $undigest undigest'; confirm
+			confirm "$(_ 'Remove $undigest undigest? (y/N)')"
 			if [ $? = 0 ]; then
 				action 'Removing $undigest undigest...'
 				rm -rf $LOCALSTATE/undigest/$2
@@ -2770,7 +2770,7 @@ example: 'tazpkg link openoffice /mnt' will use less than 100k in
 		done
 		if [ -n "$MISSING" ]; then
 			newline
-			_n 'Link all missing dependencies'; confirm
+			confirm "$(_ 'Link all missing dependencies? (y/N)')"
 			answer=$?
 			newline
 			if [ $answer = 0 ]; then

@@ -480,8 +480,8 @@ msgstr[1] "$num brakujące pakiety do instalacji."
 msgstr[2] "$num brakujących pakietów do instalacji."
 
 #: tazpkg:858
-msgid "Install all missing dependencies"
-msgstr "Zainstaluj wszystkie brakujące zalezności"
+msgid "Install all missing dependencies? (y/N)"
+msgstr "Zainstaluj wszystkie brakujące zalezności? (t/N)"
 
 #: tazpkg:874
 #, sh-format
@@ -874,8 +874,8 @@ msgstr "Poniższe pakiety zostały zmodyfikowane przez $PACKAGE:"
 
 #: tazpkg:2046
 #, sh-format
-msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)"
-msgstr "Usuwa $PACKAGE ($VERSION$EXTRAVERSION)"
+msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
+msgstr "Usuwa $PACKAGE ($VERSION$EXTRAVERSION)? (t/N)"
 
 #: tazpkg:2050
 #, sh-format
@@ -892,13 +892,13 @@ msgstr "Usuwanie recepty dla pakietu..."
 
 #: tazpkg:2087
 #, sh-format
-msgid "Remove packages depending on $PACKAGE"
-msgstr "Usunąć pakiety zależne od $PACKAGE"
+msgid "Remove packages depending on $PACKAGE? (y/N)"
+msgstr "Usunąć pakiety zależne od $PACKAGE? (t/N)"
 
 #: tazpkg:2102
 #, sh-format
-msgid "Reinstall packages modified by $PACKAGE"
-msgstr "Zainstalować ponownie pakiety zmodyfikowane przez $PACKAGE"
+msgid "Reinstall packages modified by $PACKAGE? (y/N)"
+msgstr "Zainstalować ponownie pakiety zmodyfikowane przez $PACKAGE? (t/N)"
 
 #: tazpkg:2108
 #, sh-format
@@ -1268,8 +1268,8 @@ msgstr "Nie znaleziono prywatnych repozytoriów."
 
 #: tazpkg:2880
 #, sh-format
-msgid "Remove $undigest undigest"
-msgstr "Usuwa prywatne repozytorium $undigest"
+msgid "Remove $undigest undigest? (y/N)"
+msgstr "Usuwa prywatne repozytorium $undigest? (t/N)"
 
 #: tazpkg:2882
 #, sh-format
@@ -1350,8 +1350,8 @@ msgid "Missing: $i"
 msgstr "Brakujące: $i"
 
 #: tazpkg:3044
-msgid "Link all missing dependencies"
-msgstr "Tworzy dowiązanie wszystkich brakujących zależnośći"
+msgid "Link all missing dependencies? (y/N)"
+msgstr "Tworzy dowiązanie wszystkich brakujących zależnośći? (t/N)"
 
 #: tazpkg:3053
 #, sh-format

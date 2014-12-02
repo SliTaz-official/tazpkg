@@ -407,8 +407,8 @@ msgstr[0] "有 $num 個缺少的包需要安裝"
 msgstr[1] "有 $num 個缺少的包需要安裝"
 
 #: tazpkg:858
-msgid "Install all missing dependencies"
-msgstr "安裝所有欠缺依賴"
+msgid "Install all missing dependencies? (y/N)"
+msgstr "安裝所有欠缺依賴？ （是/否）"
 
 #: tazpkg:874
 #, sh-format
@@ -786,8 +786,8 @@ msgstr "以下包已被 $PACKAGE 更改:"
 
 #: tazpkg:2046
 #, sh-format
-msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)"
-msgstr "移除 $PACKAGE ($VERSION$EXTRAVERSION)"
+msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
+msgstr "移除 $PACKAGE ($VERSION$EXTRAVERSION)？ （是/否）"
 
 #: tazpkg:2050
 #, sh-format
@@ -804,13 +804,13 @@ msgstr "正在移除包文件清單"
 
 #: tazpkg:2087
 #, sh-format
-msgid "Remove packages depending on $PACKAGE"
-msgstr "移除依賴 $PACKAGE 的包"
+msgid "Remove packages depending on $PACKAGE? (y/N)"
+msgstr "移除依賴 $PACKAGE 的包？ （是/否）"
 
 #: tazpkg:2102
 #, sh-format
-msgid "Reinstall packages modified by $PACKAGE"
-msgstr "重新安裝被 $PACKAGE 更改過的包"
+msgid "Reinstall packages modified by $PACKAGE? (y/N)"
+msgstr "重新安裝被 $PACKAGE 更改過的包？ （是/否）"
 
 #: tazpkg:2108
 #, sh-format
@@ -1174,7 +1174,7 @@ msgstr ""
 
 #: tazpkg:2880
 #, sh-format
-msgid "Remove $undigest undigest"
+msgid "Remove $undigest undigest? (y/N)"
 msgstr ""
 
 #: tazpkg:2882
@@ -1251,8 +1251,8 @@ msgid "Missing: $i"
 msgstr "欠缺: $i"
 
 #: tazpkg:3044
-msgid "Link all missing dependencies"
-msgstr "鏈接所有欠缺的依賴"
+msgid "Link all missing dependencies? (y/N)"
+msgstr "鏈接所有欠缺的依賴？ （是/否）"
 
 #: tazpkg:3053
 #, sh-format

@@ -20,7 +20,8 @@ pot:
 	xgettext -o po/tazpkg.pot -L Shell \
 		--package-name=TazPkg \
 		--package-version="$(VERSION)" -kaction -ktitle -k_ -k_n \
-		./tazpkg ./tazpkg-box ./pkgs ./pkgs.cgi ./tazpkg-notify
+		./tazpkg ./tazpkg-convert ./tazpkg-find-depends ./tazpkg-box \
+		./pkgs ./pkgs.cgi ./tazpkg-notify
 
 msgmerge:
 	@for l in $(LINGUAS); do \

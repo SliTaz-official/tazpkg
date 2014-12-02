@@ -429,8 +429,8 @@ msgstr[0] "$num paquet manquant à installer."
 msgstr[1] "$num paquets manquants à installer."
 
 #: tazpkg:858
-msgid "Install all missing dependencies"
-msgstr "Installer toutes les dépendances manquantes"
+msgid "Install all missing dependencies? (y/N)"
+msgstr "Installer toutes les dépendances manquantes ? (o/N)"
 
 #: tazpkg:874
 #, sh-format
@@ -811,8 +811,8 @@ msgstr "Les paquets suivant ont été modifié par $PACKAGE:"
 
 #: tazpkg:2046
 #, sh-format
-msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)"
-msgstr "Supprimer $PACKAGE ($VERSION$EXTRAVERSION)"
+msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
+msgstr "Supprimer $PACKAGE ($VERSION$EXTRAVERSION) ? (o/N)"
 
 #: tazpkg:2050
 #, sh-format
@@ -829,13 +829,13 @@ msgstr "Suppression de la recette du paquet..."
 
 #: tazpkg:2087
 #, sh-format
-msgid "Remove packages depending on $PACKAGE"
-msgstr "Suppression des paquets dépendant de $PACKAGE"
+msgid "Remove packages depending on $PACKAGE? (y/N)"
+msgstr "Suppression des paquets dépendant de $PACKAGE ? (o/N)"
 
 #: tazpkg:2102
 #, sh-format
-msgid "Reinstall packages modified by $PACKAGE"
-msgstr "Réinstaller les paquets modifiés par $PACKAGE"
+msgid "Reinstall packages modified by $PACKAGE? (y/N)"
+msgstr "Réinstaller les paquets modifiés par $PACKAGE ? (o/N)"
 
 #: tazpkg:2108
 #, sh-format
@@ -1209,8 +1209,8 @@ msgstr "Aucun miroir indigeste trouvé."
 
 #: tazpkg:2880
 #, sh-format
-msgid "Remove $undigest undigest"
-msgstr "Supprimer le miroir $undigest"
+msgid "Remove $undigest undigest? (y/N)"
+msgstr "Supprimer le miroir $undigest ? (o/N)"
 
 #: tazpkg:2882
 #, sh-format
@@ -1286,8 +1286,8 @@ msgid "Missing: $i"
 msgstr "Manque: $i"
 
 #: tazpkg:3044
-msgid "Link all missing dependencies"
-msgstr "Lier toutes les dépendance manquantes"
+msgid "Link all missing dependencies? (y/N)"
+msgstr "Lier toutes les dépendance manquantes ? (o/N)"
 
 #: tazpkg:3053
 #, fuzzy, sh-format

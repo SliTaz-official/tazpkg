@@ -411,7 +411,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: tazpkg:858
-msgid "Install all missing dependencies"
+msgid "Install all missing dependencies? (y/N)"
 msgstr ""
 
 #: tazpkg:874
@@ -787,7 +787,7 @@ msgstr ""
 
 #: tazpkg:2046
 #, sh-format
-msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)"
+msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
 msgstr ""
 
 #: tazpkg:2050
@@ -806,12 +806,12 @@ msgstr "Skaffar paket info..."
 
 #: tazpkg:2087
 #, sh-format
-msgid "Remove packages depending on $PACKAGE"
+msgid "Remove packages depending on $PACKAGE? (y/N)"
 msgstr ""
 
 #: tazpkg:2102
 #, sh-format
-msgid "Reinstall packages modified by $PACKAGE"
+msgid "Reinstall packages modified by $PACKAGE? (y/N)"
 msgstr ""
 
 #: tazpkg:2108
@@ -1186,7 +1186,7 @@ msgstr ""
 
 #: tazpkg:2880
 #, sh-format
-msgid "Remove $undigest undigest"
+msgid "Remove $undigest undigest? (y/N)"
 msgstr ""
 
 #: tazpkg:2882
@@ -1258,7 +1258,7 @@ msgid "Missing: $i"
 msgstr ""
 
 #: tazpkg:3044
-msgid "Link all missing dependencies"
+msgid "Link all missing dependencies? (y/N)"
 msgstr ""
 
 #: tazpkg:3053

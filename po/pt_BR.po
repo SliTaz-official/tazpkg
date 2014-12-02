@@ -407,8 +407,8 @@ msgstr[0] "$num faltante para instalar."
 msgstr[1] "$num faltantes para instalar."
 
 #: tazpkg:858
-msgid "Install all missing dependencies"
-msgstr "Instalando todas as dependências faltantes"
+msgid "Install all missing dependencies? (y/N)"
+msgstr "Instalando todas as dependências faltantes? (y/N)"
 
 #: tazpkg:874
 #, sh-format
@@ -787,8 +787,8 @@ msgstr "Os seguintes pacotes foram modificados por $PACKAGE:"
 
 #: tazpkg:2046
 #, sh-format
-msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)"
-msgstr "Remover $PACKAGE ($VERSION$EXTRAVERSION)"
+msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
+msgstr "Remover $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
 
 #: tazpkg:2050
 #, sh-format
@@ -805,13 +805,13 @@ msgstr "Removendo arquivos receipt..."
 
 #: tazpkg:2087
 #, sh-format
-msgid "Remove packages depending on $PACKAGE"
-msgstr "Removendo pacotes que dependem de $PACKAGE"
+msgid "Remove packages depending on $PACKAGE? (y/N)"
+msgstr "Removendo pacotes que dependem de $PACKAGE? (y/N)"
 
 #: tazpkg:2102
 #, sh-format
-msgid "Reinstall packages modified by $PACKAGE"
-msgstr "Reinstala pacotes modificados por $PACKAGE"
+msgid "Reinstall packages modified by $PACKAGE? (y/N)"
+msgstr "Reinstala pacotes modificados por $PACKAGE? (y/N)"
 
 #: tazpkg:2108
 #, sh-format
@@ -1175,8 +1175,8 @@ msgstr "Nenhum mirror undigest encontrado."
 
 #: tazpkg:2880
 #, sh-format
-msgid "Remove $undigest undigest"
-msgstr "Remove undigest $undigest"
+msgid "Remove $undigest undigest? (y/N)"
+msgstr "Remove undigest $undigest? (y/N)"
 
 #: tazpkg:2882
 #, sh-format
@@ -1251,8 +1251,8 @@ msgid "Missing: $i"
 msgstr "Falta: $i"
 
 #: tazpkg:3044
-msgid "Link all missing dependencies"
-msgstr "Liga todas as dependências perdidas"
+msgid "Link all missing dependencies? (y/N)"
+msgstr "Liga todas as dependências perdidas? (y/N)"
 
 #: tazpkg:3053
 #, sh-format
