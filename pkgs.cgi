@@ -26,8 +26,8 @@ pkg_info_link()
 
 i18n_desc() {
 	# Display localized short description
-	if [ -e "$LOCALSTATE/packages-desc.$LANG" ]; then
-		LOCDESC=$(grep -e "^$pkg	" $LOCALSTATE/packages-desc.$LANG | cut -d'	' -f2)
+	if [ -e "$PKGS_DB/packages-desc.$LANG" ]; then
+		LOCDESC=$(grep -e "^$pkg	" $PKGS_DB/packages-desc.$LANG | cut -d'	' -f2)
 	[ "x$LOCDESC" != "x" ] && SHORT_DESC="$LOCDESC"
 	fi
 }
@@ -61,9 +61,9 @@ packages_summary() {
 <tbody>
 <tr><td>$(gettext 'Last recharge:')</td>
 EOT
-	stat=$(stat -c %y $LOCALSTATE/packages.list | \
+	stat=$(stat -c %y $PKGS_DB/packages.list | \
 		sed 's/\(:..\):.*/\1/' | awk '{print $1}')
-	mtime=$(find $LOCALSTATE/packages.list -mtime +10)
+	mtime=$(find $PKGS_DB/packages.list -mtime +10)
 	echo -n "<td>$stat "
 	if [ "$mtime" ]; then
 		gettext '(Older than 10 days)'; echo
@@ -75,13 +75,13 @@ EOT
 <tr><td>$(gettext 'Installed packages:')</td>
 	<td>$(ls $INSTALLED | wc -l)</td></tr>
 <tr><td>$(gettext 'Mirrored packages:')</td>
-	<td>$(cat $LOCALSTATE/packages.list | wc -l)</td></tr>
+	<td>$(cat $PKGS_DB/packages.list | wc -l)</td></tr>
 <tr><td>$(gettext 'Upgradeable packages:')</td>
-	<td>$(cat $LOCALSTATE/packages.up | wc -l)</td></tr>
+	<td>$(cat $PKGS_DB/packages.up | wc -l)</td></tr>
 <tr><td>$(gettext 'Installed files:')</td>
 	<td>$(cat $INSTALLED/*/files.list | wc -l)</td></tr>
 <tr><td>$(gettext 'Blocked packages:')</td>
-	<td>$(cat $LOCALSTATE/blocked-packages.list | wc -l)</td></tr>
+	<td>$(cat $PKGS_DB/blocked-packages.list | wc -l)</td></tr>
 </tbody>
 </table>
 EOT
@@ -107,7 +107,7 @@ EOT
 
 # Parse repositories list to be able to have an icon and remove link
 list_repos() {
-	ls $LOCALSTATE/undigest 2> /dev/null | while read repo ; do
+	ls $PKGS_DB/undigest 2> /dev/null | while read repo ; do
 		cat <<EOT
 	<li><a href="$SCRIPT_NAME?admin=rm-repo=$repo">
 	    <img src="$IMAGES/clear.png">$repo</a></li>
@@ -174,13 +174,13 @@ sidebar() {
 	<a class="active_extra" href="$SCRIPT_NAME?cat=extra&repo=$repo">$(gettext 'extra')</a>
 EOT
 
-	if [ -d $LOCALSTATE/undigest ]; then
+	if [ -d $PKGS_DB/undigest ]; then
 		[ -n "$category" ] || category="base-system"
 		cat << EOT
 	<h4>$(gettext 'Repositories')</h4>
 	<a class="repo_Public" href="$SCRIPT_NAME?repo=Public&cat=$category">$(gettext 'Public')</a>
 EOT
-		for i in $(ls $LOCALSTATE/undigest); do
+		for i in $(ls $PKGS_DB/undigest); do
 			cat << EOT
 	<a class="repo_$i" href="$SCRIPT_NAME?repo=$i&cat=$category">$i</a>
 EOT
@@ -193,23 +193,23 @@ EOT
 }
 
 repo_list() {
-	if [ -n "$(ls $LOCALSTATE/undigest/ 2> /dev/null)" ]; then
+	if [ -n "$(ls $PKGS_DB/undigest/ 2> /dev/null)" ]; then
 		case "$repo" in
 		Public)	;;
-		""|Any) for i in $LOCALSTATE/undigest/* ; do
+		""|Any) for i in $PKGS_DB/undigest/* ; do
 				[ -d "$i" ] && echo "$i$1"
 			done ;;
-		*)	echo "$LOCALSTATE/undigest/$repo$1"
+		*)	echo "$PKGS_DB/undigest/$repo$1"
 			return ;;
 		esac
 	fi
-	echo "$LOCALSTATE$1"
+	echo "$PKGS_DB$1"
 }
 
 repo_name() {
 	case "$1" in
-	$LOCALSTATE)		echo "Public" ;;
-	$LOCALSTATE/undigest/*)	echo ${1#$LOCALSTATE/undigest/} ;;
+	$PKGS_DB)		echo "Public" ;;
+	$PKGS_DB/undigest/*)	echo ${1#$PKGS_DB/undigest/} ;;
 	esac
 }
 
@@ -257,7 +257,7 @@ EOT
 			# Use default tazpkg icon since all packages displayed are
 			# installed
 			colorpkg=$pkg
-			grep -qs "^$pkg$" $LOCALSTATE/blocked-packages.list &&
+			grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list &&
 				colorpkg="<span style='color: red;'>$pkg</span>"
 			i18n_desc
 			cat << EOT
@@ -310,7 +310,7 @@ EOT
 $(table_head)
 <tbody>
 EOT
-		target=$(readlink $LOCALSTATE/fslink)
+		target=$(readlink $PKGS_DB/fslink)
 		for pkg in $(ls $target/$INSTALLED)
 		do
 			[ -s $pkg/receipt ] && continue
@@ -342,7 +342,7 @@ EOT
 		# List all available packages by category on mirror. Listing all
 		# packages is too resource intensive and not useful.
 		#
-		cd  $LOCALSTATE
+		cd  $PKGS_DB
 		repo=$(GET repo)
 		category=$(GET cat)
 		[ "$category" == "cat" ] && category="base-system"
@@ -405,7 +405,7 @@ EOT
 		#
 		pkg=$(GET search)
 		repo=$(GET repo)
-		cd  $LOCALSTATE
+		cd  $PKGS_DB
 		search_form
 		sidebar | sed "s/repo_$repo/active/"
 		LOADING_MSG="$(gettext 'Searching packages...')"
@@ -514,7 +514,7 @@ EOT
 		#
 		# Upgrade packages
 		#
-		cd $LOCALSTATE
+		cd $PKGS_DB
 		search_form
 		sidebar
 		LOADING_MSG="$(gettext 'Checking for upgrades...')"
@@ -546,8 +546,8 @@ $(table_head)
 EOT
 		for pkg in `cat packages.up`
 		do
-			grep -hs "^$pkg |" $LOCALSTATE/packages.desc \
-				$LOCALSTATE/undigest/*/packages.desc | \
+			grep -hs "^$pkg |" $PKGS_DB/packages.desc \
+				$PKGS_DB/undigest/*/packages.desc | \
 				parse_packages_desc
 		done
 		cat << EOT
@@ -576,7 +576,7 @@ EOT
 				LOADING_MSG="get-installing packages..."
 				;;
 			link)
-				opt=$(readlink $LOCALSTATE/fslink)
+				opt=$(readlink $PKGS_DB/fslink)
 				LOADING_MSG="linking packages..."
 				;;
 		esac
@@ -623,7 +623,7 @@ EOT
 			action="Remove"
 			action_i18n=$(gettext 'Remove')
 		else
-			cd  $LOCALSTATE
+			cd  $PKGS_DB
 			LOADING_MSG=$(gettext 'Getting package info...')
 			loading_msg
 			IFS='|'
@@ -654,7 +654,7 @@ EOT
 		fi
 
 		if [ -d $INSTALLED/$pkg ]; then
-			if grep -qs "^$pkg$" $LOCALSTATE/blocked-packages.list; then
+			if grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list; then
 				cat << EOT
 			<a class="button" href="$SCRIPT_NAME?do=Unblock&$pkg">$(gettext 'Unblock')</a>
 EOT
@@ -759,7 +759,7 @@ EOT
 			add-repo)
 				# Decode url
 				mirror=$(GET mirror)
-				repository=$LOCALSTATE/undigest/$(GET repository)
+				repository=$PKGS_DB/undigest/$(GET repository)
 				case "$mirror" in
 				http://*|ftp://*)
 					mkdir -p $repository
@@ -768,13 +768,13 @@ EOT
 				esac ;;
 			rm-repo=*)
 				repository=${cmd#rm-repo=}
-				rm -rf $LOCALSTATE/undigest/$repository ;;
+				rm -rf $PKGS_DB/undigest/$repository ;;
 		esac
 		[ "$cmd" == "$(gettext 'Set link')" ] &&
 			[ -d "$(GET link)/$INSTALLED" ] &&
-			ln -fs $(GET link) $LOCALSTATE/fslink
+			ln -fs $(GET link) $PKGS_DB/fslink
 		[ "$cmd" == "$(gettext 'Remove link')" ] &&
-			rm -f $LOCALSTATE/fslink
+			rm -f $PKGS_DB/fslink
 		cache_files=`find /var/cache/tazpkg -name *.tazpkg | wc -l`
 		cache_size=`du -sh /var/cache/tazpkg`
 		sidebar
@@ -848,10 +848,10 @@ EOT
 
 <h3>$(gettext 'Current mirror list')</h3>
 EOT
-		for i in $LOCALSTATE/mirrors $LOCALSTATE/undigest/*/mirrors; do
+		for i in $PKGS_DB/mirrors $PKGS_DB/undigest/*/mirrors; do
 			[ -s $i ] || continue
 			echo '<div class="box">'
-			if [ $i != $LOCALSTATE/mirrors ]; then
+			if [ $i != $PKGS_DB/mirrors ]; then
 				Repo_Name="$(repo_name $(dirname $i))"
 				echo "<h4>$(eval_gettext 'Repository: $Repo_Name')</h4>"
 			fi
@@ -871,7 +871,7 @@ EOT
 EOT
 		done
 		echo "<h3>$(gettext 'Private repositories')</h3>"
-		[ -n "$(ls $LOCALSTATE/undigest 2> /dev/null)" ] && cat << EOT
+		[ -n "$(ls $PKGS_DB/undigest 2> /dev/null)" ] && cat << EOT
 <div class="box">
 	<ul>
 		$(list_repos)
@@ -898,7 +898,7 @@ You will be able to install packages using soft links to it.")</p>
 <p>
 	<input type="hidden" name="admin" value="add-link" />
 	<input type="text" name="link"
-	 value="$(readlink $LOCALSTATE/fslink 2> /dev/null)" size="50">
+	 value="$(readlink $PKGS_DB/fslink 2> /dev/null)" size="50">
 	<input type="submit" name="admin" value="$(gettext 'Set link')" />
 	<input type="submit" name="admin" value="$(gettext 'Remove link')" />
 </p>
@@ -969,7 +969,7 @@ EOT
 	<a class="button" href="$SCRIPT_NAME?list">
 		<img src="$IMAGES/tazpkg.png" />$(gettext 'My packages')</a>
 EOT
-		fslink=$(readlink $LOCALSTATE/fslink)
+		fslink=$(readlink $PKGS_DB/fslink)
 		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] &&
 			cat << EOT
 	<a class="button" href="$SCRIPT_NAME?linkable">

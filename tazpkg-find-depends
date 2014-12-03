@@ -29,7 +29,7 @@ find_depends()
 {
 	DEFAULT_DEPENDS="glibc-base gcc-lib-base"
 
-	[ -n "$TMPLOCALSTATE" ] || TMPLOCALSTATE=$LOCALSTATE
+	[ -n "$TMPLOCALSTATE" ] || TMPLOCALSTATE=$PKGS_DB
 	[ -f $TMPLOCALSTATE/files.list.lzma ] || tazpkg recharge > /dev/null
 	for i in $TMPLOCALSTATE/files.list.lzma \
 		$TMPLOCALSTATE/undigest/*/files.list.lzma ; do

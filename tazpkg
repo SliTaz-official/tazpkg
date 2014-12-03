@@ -112,9 +112,9 @@ INSTALL_LIST=""
 SAVE_CACHE_DIR="$CACHE_DIR"
 
 # Path to tazpkg used dir and configuration files
-MIRROR=$LOCALSTATE/mirror
-BLOCKED=$LOCALSTATE/blocked-packages.list
-UP_LIST=$LOCALSTATE/packages.up
+MIRROR=$PKGS_DB/mirror
+BLOCKED=$PKGS_DB/blocked-packages.list
+UP_LIST=$PKGS_DB/packages.up
 DEFAULT_MIRROR="$ONLINE_PKGS"
 
 
@@ -225,9 +225,9 @@ check_base_dir()
 		check_dir $1$CACHE_DIR
 		check_dir $1$INSTALLED
 		check_dir $1$SLITAZ_LOGS
-		if [ ! -f "$1$LOCALSTATE/mirror" ]; then
-			echo "${DEFAULT_MIRROR%/}/" > $1$LOCALSTATE/mirror
-			[ -n "$1" ] && cp $LOCALSTATE/packages.* $1$LOCALSTATE/
+		if [ ! -f "$1$PKGS_DB/mirror" ]; then
+			echo "${DEFAULT_MIRROR%/}/" > $1$PKGS_DB/mirror
+			[ -n "$1" ] && cp $PKGS_DB/packages.* $1$PKGS_DB/
 		fi
 	fi
 }
@@ -274,25 +274,25 @@ check_for_receipt()
 }
 
 
-# Get repositories priority using $LOCALSTATE/priority.
+# Get repositories priority using $PKGS_DB/priority.
 # In this files, undigest are called by their name and main mirror
 # by main. Sort order: priority
 
 look_for_priority()
 {
-	[ -s $LOCALSTATE/priority ] && priority=$(cat $LOCALSTATE/priority)
-	for rep in main $(ls $LOCALSTATE/undigest 2>/dev/null); do
-		if [ ! -s $LOCALSTATE/priority ] || \
-			! grep -q ^$rep$ $LOCALSTATE/priority; then
+	[ -s $PKGS_DB/priority ] && priority=$(cat $PKGS_DB/priority)
+	for rep in main $(ls $PKGS_DB/undigest 2>/dev/null); do
+		if [ ! -s $PKGS_DB/priority ] || \
+			! grep -q ^$rep$ $PKGS_DB/priority; then
 			priority=$(echo -e "$priority\n$rep")
 		fi
 	done
 	priority=$(echo "$priority" | sed '/^$/d' | \
 		while read line; do
 		if [ "$line" = main ]; then
-			echo $LOCALSTATE
+			echo $PKGS_DB
 		else
-			echo $LOCALSTATE/undigest/$line
+			echo $PKGS_DB/undigest/$line
 		fi
 	done)
 }
@@ -344,7 +344,7 @@ EOT
 
 check_for_packages_list()
 {
-	list_path="$LOCALSTATE/packages.list"
+	list_path="$PKGS_DB/packages.list"
 	if [ ! -f "$list_path" ]; then
 		if test $(id -u) = 0 ; then
 			tazpkg recharge
@@ -364,7 +364,7 @@ packages available on the mirror."
 get_cache_dir()
 {
 	echo $rep > $tmp/rep
-	if [ "$rep" = "$LOCALSTATE" ]; then
+	if [ "$rep" = "$PKGS_DB" ]; then
 		CACHE_DIR="$SAVE_CACHE_DIR/$SLITAZ_RELEASE/packages"
 	elif [ "${rep%-incoming}" = "$rep" ]; then
 		CACHE_DIR="$SAVE_CACHE_DIR/${rep##*/}/packages"
@@ -381,8 +381,8 @@ get_cache_dir()
 
 equivalent_pkg()
 {
-	for i in $(grep -hs "^$1=" $LOCALSTATE/packages.equiv \
-		   $LOCALSTATE/undigest/*/packages.equiv | sed "s/^$1=//"); do
+	for i in $(grep -hs "^$1=" $PKGS_DB/packages.equiv \
+		   $PKGS_DB/undigest/*/packages.equiv | sed "s/^$1=//"); do
 		if echo $i | fgrep -q : ; then
 			# format 'alternative:newname'
 			# if alternative is installed then substitute newname
@@ -491,7 +491,7 @@ log_pkg()
 	local extra
 
 	[ "$1" = "Installed" ] && \
-	extra=" - $(fgrep $PACKAGE-$VERSION $LOCALSTATE/installed.$SUM | awk '{ print $1 }')"
+	extra=" - $(fgrep $PACKAGE-$VERSION $PKGS_DB/installed.$SUM | awk '{ print $1 }')"
 
 	[ -e $LOG ] || touch $LOG
 
@@ -624,9 +624,9 @@ install_package()
 		cp $TMP_DIR/files.list $ROOT$INSTALLED/$PACKAGE 2> /dev/null
 		rm -rf $TMP_DIR 2> /dev/null
 		sed -i "/ $(basename $PACKAGE_FILE)$/d" \
-			$ROOT$LOCALSTATE/installed.$SUM 2> /dev/null
+			$ROOT$PKGS_DB/installed.$SUM 2> /dev/null
 		cd $(dirname $PACKAGE_FILE)
-		$CHECKSUM $(basename $PACKAGE_FILE) >> $ROOT$LOCALSTATE/installed.$SUM
+		$CHECKSUM $(basename $PACKAGE_FILE) >> $ROOT$PKGS_DB/installed.$SUM
 	}
 
 	# Resolve package deps.
@@ -635,7 +635,7 @@ install_package()
 		install_deps $ROOT
 	fi
 	mkdir -p $TMP_DIR
-	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $ROOT$LOCALSTATE/$INSTALL_LIST-processed
+	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $ROOT$PKGS_DB/$INSTALL_LIST-processed
 
 	title 'Installation of: $PACKAGE'
 
@@ -1005,7 +1005,7 @@ install_deps()
 				fi
 				# Install deps from the mirror.
 				if [ $found -eq 0 ]; then
-					if [ ! -f "$LOCALSTATE/packages.list" ]; then
+					if [ ! -f "$PKGS_DB/packages.list" ]; then
 						tazpkg recharge
 					fi
 					tazpkg get-install $pkg $root
@@ -1058,11 +1058,11 @@ search_in_packages_list()
 	separator
 	num=0
 	BPATTERN="$(emsg "<b>$PATTERN</b>")"
-	for i in $LOCALSTATE/packages.list $LOCALSTATE/undigest/*/packages.list; do
+	for i in $PKGS_DB/packages.list $PKGS_DB/undigest/*/packages.list; do
 		grep -is "$PATTERN" $i | sed "s|$PATTERN|$BPATTERN|"
 		num=$(($num + `grep -is "$PATTERN" $i | wc -l`))
 	done
-	if [ ! -f "$LOCALSTATE/packages.list" ]; then
+	if [ ! -f "$PKGS_DB/packages.list" ]; then
 		newline
 		_ \
 "No 'packages.list' found to check for mirrored packages. For more results,
@@ -1088,11 +1088,11 @@ search_in_packages_txt()
 	_ 'Matching packages name with version and desc'
 	separator
 	num=0
-	for i in $LOCALSTATE/packages.txt $LOCALSTATE/undigest/*/packages.txt; do
+	for i in $PKGS_DB/packages.txt $PKGS_DB/undigest/*/packages.txt; do
 		grep -is -A 2 "^$PATTERN" $i
 		num=$(($num + `grep -is "^$PATTERN" $i | wc -l`))
 	done
-	if [ ! -f "$LOCALSTATE/packages.txt" ]; then
+	if [ ! -f "$PKGS_DB/packages.txt" ]; then
 		newline
 		_ \
 "No 'packages.txt' found to check for mirrored packages. For more results,
@@ -1206,7 +1206,7 @@ dep_scan()
 			*\ $i\ *) continue;;
 		esac
 		ALL_DEPS="$ALL_DEPS $i"
-		[ -n "$2" ] && echo "$2$i ($(fgrep -A 3 $i $LOCALSTATE/packages.txt | \
+		[ -n "$2" ] && echo "$2$i ($(fgrep -A 3 $i $PKGS_DB/packages.txt | \
 						tail -1 | sed 's/.*(\([^ ]*\).*/\1/'))"
 		[ -f $i/receipt ] || continue
 		DEPENDS=""
@@ -1250,7 +1250,7 @@ END {
 		echo -n $spc | sed 's/=/ /g'
 		echo -n $pkg
 		echo -n ' ('
-		fgrep -A 3 $pkg $LOCALSTATE/packages.txt  | tail -1 | \
+		fgrep -A 3 $pkg $PKGS_DB/packages.txt  | tail -1 | \
 			sed 's/.*(\([^ ]*\).*/\1)/'
 	done
 }
@@ -1373,10 +1373,10 @@ case "$COMMAND" in
 		check_for_packages_list
 		case $2 in
 			--diff)
-				if [ -f "$LOCALSTATE/packages.diff" ]; then
+				if [ -f "$PKGS_DB/packages.diff" ]; then
 					title 'Mirrored packages diff'
-					cat $LOCALSTATE/packages.diff
-					num=$(wc -l < $LOCALSTATE/packages.diff)
+					cat $PKGS_DB/packages.diff
+					num=$(wc -l < $PKGS_DB/packages.diff)
 					footer "$(eval_ngettext \
 						'$num new package listed on the mirror.' \
 						'$num new packages listed on the mirror.' $num)"
@@ -1388,9 +1388,9 @@ case "$COMMAND" in
 				fi; exit 0 ;;
 			--text|--txt|--raw|*)
 				title 'List of available packages on the mirror'
-				cat $LOCALSTATE/packages.txt ;;
+				cat $PKGS_DB/packages.txt ;;
 		esac
-		pkgs=$(wc -l < $LOCALSTATE/packages.list)
+		pkgs=$(wc -l < $PKGS_DB/packages.list)
 		num=$(emsg "<c 32>$pkgs</c>")
 		footer "$(eval_ngettext \
 			'$num package in the last recharged list.' \
@@ -1420,8 +1420,8 @@ case "$COMMAND" in
 		. $INSTALLED/$PACKAGE/receipt
 		title 'TazPKG information'
 		# Display localized short description
-		if [ -e "$LOCALSTATE/packages-desc.$LANG" ]; then
-			LOCDESC=$(grep -e "^$PACKAGE	" $LOCALSTATE/packages-desc.$LANG | cut -d'	' -f2)
+		if [ -e "$PKGS_DB/packages-desc.$LANG" ]; then
+			LOCDESC=$(grep -e "^$PACKAGE	" $PKGS_DB/packages-desc.$LANG | cut -d'	' -f2)
 			[ "x$LOCDESC" != "x" ] && SHORT_DESC="$LOCDESC"
 		fi
 		emsg "\
@@ -1513,8 +1513,8 @@ case "$COMMAND" in
 		if [ "$3" == "--mirror" ]; then
 
 			match=0
-			for i in $LOCALSTATE/files.list.lzma \
-				$LOCALSTATE/undigest/*/files.list.lzma; do
+			for i in $PKGS_DB/files.list.lzma \
+				$PKGS_DB/undigest/*/files.list.lzma; do
 				[ -f $i ] || continue
 				unlzma -c $i | grep -- ".*:.*$2" | awk '
 					BEGIN { last="" }
@@ -1573,8 +1573,8 @@ case "$COMMAND" in
 
 		# Search for a file on mirror and output only the package name
 		match=0
-		for i in $LOCALSTATE/files.list.lzma \
-				 $LOCALSTATE/undigest/*/files.list.lzma; do
+		for i in $PKGS_DB/files.list.lzma \
+				 $PKGS_DB/undigest/*/files.list.lzma; do
 				 [ -f $i ] || continue
 				unlzma -c $i | grep -- ".*:.*$2" | cut -d: -f1 | uniq | awk '{ print $1 }'
 				match=$(($match + `unlzma -c $i | grep -- ".*:.*$2" | cut -d: -f1 | uniq | wc -l`))
@@ -1604,7 +1604,7 @@ case "$COMMAND" in
 			if [ "$root" ]; then
 				CACHE_DIR=$root/$CACHE_DIR
 				SAVE_CACHE_DIR=$CACHE_DIR
-				LOCALSTATE=$root/$LOCALSTATE
+				PKGS_DB=$root/$PKGS_DB
 			else
 				echo "rootconfig needs --root= option used." >&2
 				exit 1
@@ -1694,7 +1694,7 @@ $LIST"
 			newline
 			exit 0
 		fi
-		rm $LOCALSTATE/mirror
+		rm $PKGS_DB/mirror
 		echo "$RELEASE" > /etc/slitaz-release
 		tazpkg recharge && tazpkg upgrade
 
@@ -1783,7 +1783,7 @@ $LIST"
 			status
 
 			sed -i "/ $PACKAGE-$VERSION$EXTRAVERSION$/d" \
-				$LOCALSTATE/installed.$SUM 2> /dev/null
+				$PKGS_DB/installed.$SUM 2> /dev/null
 
 			# Log this activity
 			log_pkg Removed
@@ -2090,21 +2090,21 @@ EOT
 
 		ARG=$2
 		if [ "$root" ]; then
-			LOCALSTATE=$root$LOCALSTATE
+			PKGS_DB=$root$PKGS_DB
 			[ "${2#--}" != "$2" ] && ARG=$3
 		fi
 		if [ "$ARG" = main ]; then
-			repository_to_recharge=$LOCALSTATE
+			repository_to_recharge=$PKGS_DB
 		elif [ "$ARG" ]; then
-			if [ -d "$LOCALSTATE/undigest/$ARG" ]; then
-				repository_to_recharge=$LOCALSTATE/undigest/$ARG
+			if [ -d "$PKGS_DB/undigest/$ARG" ]; then
+				repository_to_recharge=$PKGS_DB/undigest/$ARG
 			else
-				repo="$LOCALSTATE/undigest/$ARG"
+				repo="$PKGS_DB/undigest/$ARG"
 				_ "\$repo doesn't exist." >&2
 				exit 1
 			fi
 		else
-			repository_to_recharge="$LOCALSTATE $LOCALSTATE/undigest/*"
+			repository_to_recharge="$PKGS_DB $PKGS_DB/undigest/*"
 		fi
 		for path in $repository_to_recharge; do
 			[ -f $path/mirror ] || continue
@@ -2114,7 +2114,7 @@ EOT
 			[ -f ID ] && mv ID ID.bak
 			download_from "$(cat mirror)" ID >/dev/null 2>/dev/null
 			if [ -f ID ] && fgrep -q $(cat ID.bak 2>/dev/null || echo "null") ID; then
-				if [ "$path" = "$LOCALSTATE" ]; then
+				if [ "$path" = "$PKGS_DB" ]; then
 					repository_name=Main
 				else
 					base_path="$(basename $path)"
@@ -2133,7 +2133,7 @@ EOT
 			fi
 
 			newline
-			if [ "$path" != "$LOCALSTATE" ]; then
+			if [ "$path" != "$PKGS_DB" ]; then
 				base_path="$(basename $path)"
 				_ 'Recharging undigest $base_path:'
 			fi
@@ -2208,13 +2208,13 @@ packages.')"
 			esac
 		done
 		time=$(date +%s)
-		installed_sum=$LOCALSTATE/installed.$SUM
+		installed_sum=$PKGS_DB/installed.$SUM
 		look_for_priority
 		for repo in $priority; do
 			pkg_list=$repo/packages.list
 			mtime=$(find $pkg_list -mtime +7)
 			if [ "$mtime" ]; then
-				if [ "$repo" = "$LOCALSTATE" ]; then
+				if [ "$repo" = "$PKGS_DB" ]; then
 					repo_name=main
 				else
 					repo_name="${repo##*/}"
@@ -2245,7 +2245,7 @@ packages.')"
 
 					emsg -n "$PACKAGE<i 28> $VERSION"
 
-					# Skip pkgs listed in $LOCALSTATE/blocked-packages.list
+					# Skip pkgs listed in $PKGS_DB/blocked-packages.list
 					if $(grep -qs "^$PACKAGE" $BLOCKED); then
 						blocked_count=$(($blocked_count + 1))
 						emsg "<i 48><c 31> $(_ 'Blocked')</c>"
@@ -2482,7 +2482,7 @@ EOT
 			if [ "$root" ]; then
 				CACHE_DIR=$root/$CACHE_DIR
 				SAVE_CACHE_DIR=$CACHE_DIR
-				LOCALSTATE=$root/$LOCALSTATE
+				PKGS_DB=$root/$PKGS_DB
 			else
 				_ 'rootconfig needs --root= option used.' >&2
 				exit 1
@@ -2527,7 +2527,7 @@ EOT
 			if [ "$root" ]; then
 				CACHE_DIR=$root/$CACHE_DIR
 				SAVE_CACHE_DIR=$CACHE_DIR
-				LOCALSTATE=$root/$LOCALSTATE
+				PKGS_DB=$root/$PKGS_DB
 			else
 				_ 'rootconfig needs --root= option used.' >&2
 				exit 1
@@ -2575,7 +2575,7 @@ EOT
 			download $PACKAGE.tazpkg
 		fi
 		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
-		[ "$rootconfig" ] && LOCALSTATE=${LOCALSTATE#$root}
+		[ "$rootconfig" ] && PKGS_DB=${PKGS_DB#$root}
 		install_package $ROOT
 		[ "$AUTOEXEC" != "no" ] && $PACKAGE $ROOT
 		update_desktop_database $ROOT
@@ -2602,13 +2602,13 @@ EOT
 	list-undigest)
 		# list undigest URLs.
 		if [ "$2" = "--box" ]; then
-			for i in $LOCALSTATE/undigest/*/mirror; do
+			for i in $PKGS_DB/undigest/*/mirror; do
 				[ -f $i ] || continue
 				echo "$(basename $(dirname $i))|$(cat $i)"
 			done
 		else
 			title 'Current undigest(s)'
-			for i in $LOCALSTATE/undigest/*/mirror; do
+			for i in $PKGS_DB/undigest/*/mirror; do
 				if [ ! -f $i ]; then
 					_ 'No undigest mirror found.'
 					exit 1
@@ -2623,13 +2623,13 @@ EOT
 		# remove undigest URL.
 		check_root $@
 		undigest="$2"
-		if [ -d $LOCALSTATE/undigest/$2 ]; then
+		if [ -d $PKGS_DB/undigest/$2 ]; then
 			confirm "$(_ 'Remove $undigest undigest? (y/N)')"
 			if [ $? = 0 ]; then
 				action 'Removing $undigest undigest...'
-				rm -rf $LOCALSTATE/undigest/$2
+				rm -rf $PKGS_DB/undigest/$2
 				status
-				rmdir $LOCALSTATE/undigest 2> /dev/null
+				rmdir $PKGS_DB/undigest 2> /dev/null
 			fi
 		else
 			_ 'Undigest $undigest not found'
@@ -2640,25 +2640,25 @@ EOT
 		# Add undigest URL.
 		check_root $@
 		undigest=$2
-		[ -d $LOCALSTATE/undigest ] || mkdir $LOCALSTATE/undigest
+		[ -d $PKGS_DB/undigest ] || mkdir $PKGS_DB/undigest
 		if [ -z "$undigest" ]; then
 			i=1
-			while [ -d $LOCALSTATE/undigest/$i ]; do
+			while [ -d $PKGS_DB/undigest/$i ]; do
 				i=$(($i+1))
 			done
 			undigest=$i
 		fi
-		if [ ! -d $LOCALSTATE/undigest/$undigest ]; then
+		if [ ! -d $PKGS_DB/undigest/$undigest ]; then
 			_ 'Creating new undigest $undigest.'
-			mkdir $LOCALSTATE/undigest/$undigest
+			mkdir $PKGS_DB/undigest/$undigest
 		fi
-		setup_mirror $LOCALSTATE/undigest/$undigest $3 ;;
+		setup_mirror $PKGS_DB/undigest/$undigest $3 ;;
 
 
 	setup-mirror|-sm)
 		# Change mirror URL.
 		check_root $@
-		setup_mirror $LOCALSTATE $2 ;;
+		setup_mirror $PKGS_DB $2 ;;
 
 
 	reconfigure)
