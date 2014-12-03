@@ -531,6 +531,8 @@ download_from()
 			# Mirror URL can have a trailing slash or not.
 			http://*|ftp://*)
 				busybox wget -c ${i%/}/$@ && break ;;
+			https://*)
+				echo 'Sorry, https not supported' ;;
 			*)
 				ln -sf $i/$1 . && break ;;
 		esac
@@ -2140,19 +2142,24 @@ EOT
 				action "Creating backup of the last packages list..."
 				for i in packages.desc packages.$SUM packages.txt \
 					packages.list packages.equiv files.list.lzma \
-					extra.list mirrors
+					extra.list mirrors packages.info
 				do
 					mv -f $i $i.bak 2>/dev/null
 				done
 				status
 			fi
 
-			for i in desc md5 txt list equiv; do
+			for i in desc $SUM txt list equiv; do
 				download_from "$(cat mirror)" packages.$i
 			done
 			download_from "$(cat mirror)" files.list.lzma
 			download_from "$(cat mirror)" extra.list
-			download_from "$(sed 's|packages/.*||' < mirror)" mirrors
+			download_from "$(sed 's|packages/.*||' mirror)" mirrors
+
+			# packages.info
+			download_from "$(cat mirror)" packages.info.lzma
+			lzma d packages.info.lzma packages.info
+			rm packages.info.lzma
 
 			if [ -f "packages.list.bak" ]; then
 				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
@@ -2161,7 +2168,7 @@ EOT
 				sed -i s/+// packages.diff
 				title 'Mirrored packages diff'
 				cat packages.diff
-				new_pkgs=$(wc -l < packages.diff)
+				new_pkgs=$(wc -l packages.diff)
 				if [ "$new_pkgs" != 0 ]; then
 					num=$(emsg "<c 32>$new_pkgs</c>")
 					footer "$(eval_ngettext \
