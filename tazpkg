@@ -55,6 +55,20 @@ $(gettext "$c")	$c"
 done
 
 
+# Translate category names (must be last in line)
+
+translate_category()
+{
+	sed "s|base-system$|$(_ base-system)|g; s|x-window$|$(_ x-window)|g;
+		s|utilities$|$(_ utilities)|g; s|network$|$(_ network)|g;
+		s|graphics$|$(_ graphics)|g; s|multimedia$|$(_ multimedia)|g;
+		s|office$|$(_ office)|g; s|development$|$(_ development)|g;
+		s|system-tools$|$(_ system-tools)|g; s|security$|$(_ security)|g;
+		s|games$|$(_ games)|g; s|misc$|$(_ misc)|g; s|meta$|$(_ meta)|g;
+		s|non-free$|$(_ non-free)|g"
+}
+
+
 # If category is not one of those translated in native language, keep it
 # untranslated. This allows both native and english language support.
 # This also supports custom categories.
@@ -361,6 +375,33 @@ packages available on the mirror."
 }
 
 
+# Check for installed.info - local file with format of packages.info
+# It absent on not clean installs; check it and re-generate if needed.
+
+check_for_installed_info()
+{
+	info_path="$PKGS_DB/installed.info"
+	if [ ! -f "$info_path" ]; then
+		if [ "$(id -u)" == "0" ]; then
+			_ 'File installed.info generated. Please wait...'
+			for pkg in $PKGS_DB/installed/*/receipt; do
+				unset_receipt
+				. $pkg
+				SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
+				DEPENDS=$(echo $DEPENDS) # remove newlines from some receipts
+				cat >> $info_path << EOT
+$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS
+EOT
+			done
+		else
+			_ 'Unable to find: installed.info'
+			_ 'Please run tazpkg as root.'
+			exit 1
+		fi
+	fi
+}
+
+
 get_cache_dir()
 {
 	echo $rep > $tmp/rep
@@ -608,6 +649,7 @@ install_package()
 		mkdir -p $TMP_DIR
 		{ cd $TMP_DIR ; cpio --quiet -i receipt > /dev/null 2>&1; } < $PACKAGE_FILE
 		. $TMP_DIR/receipt
+		# FIXME: legacy?
 		if grep -q ^pre_depends $TMP_DIR/receipt; then
 			pre_depends $ROOT
 		fi
@@ -653,6 +695,7 @@ install_package()
 	. $PWD/receipt
 	cd $ROOT$INSTALLED
 
+	# FIXME: legacy?
 	if [ $SELF_INSTALL -ne 0 -a -n "$ROOT" ]; then
 		action "Checking post install dependencies..."
 		[ -f $INSTALLED/$PACKAGE/receipt ]
@@ -803,6 +846,13 @@ END {
 	if [ "$(fgrep /lib/modules $ROOT$INSTALLED/$PACKAGE/files.list)" ]; then
 		updatedepmod=yes
 	fi
+
+	# Update installed.info
+	SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
+	DEPENDS=$(echo $DEPENDS) # remove newlines from some receipts
+	cat >> $PKGS_DB/installed.info << EOT
+$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS
+EOT
 
 	cd $TOP_DIR
 	pkg_name="$PACKAGE ($VERSION$EXTRAVERSION)"
@@ -1305,67 +1355,65 @@ update_kernel_modules()
 
 case "$COMMAND" in
 	list|-l)
-		shift
-
 		# List all installed packages or a specific category.
-		if [ "$1" = "blocked" ]; then
-			title 'Blocked packages'
-			if [ -s "$BLOCKED" ];then
-				cat $BLOCKED
-			else
-				_ 'No blocked packages found.'
-			fi
-			newline; exit 0
-		fi
+		shift
+		check_for_installed_info
 
-		# Display the list of categories.
-		if [ "$1" = "cat" -o "$1" = "categories" ]; then
-			title 'Packages categories'
-			num=0
-			for i in $PKGS_CATEGORIES; do
-				_ $i
-				num=$(($num+1))
-			done
-			footer "$(eval_ngettext '$num category' '$num categories' $num)"; echo
-			exit 0
-		fi
-
-		# Check for an asked category.
-		ASKED_CATEGORY_I18N="$@"
-		if [ -n "$ASKED_CATEGORY_I18N" ]; then
-			ASKED_CATEGORY=$(reverse_translate_category "$ASKED_CATEGORY_I18N")
-			title 'Installed packages of category: $ASKED_CATEGORY_I18N'
-			for pkg in $INSTALLED/*; do
-				[ -f $pkg/receipt ] || continue
-				EXTRAVERSION=""
-				. $pkg/receipt
-				if [ "$CATEGORY" == "$ASKED_CATEGORY" ]; then
-					echo -e "$PACKAGE\033[24G $VERSION$EXTRAVERSION"
-					packages=$(($packages+1))
+		case $1 in
+			b|blocked)
+				# Display the list of blocked packages.
+				title 'Blocked packages'
+				if [ -s "$BLOCKED" ];then
+					cat $BLOCKED
+				else
+					_ 'No blocked packages found.'
 				fi
-			done
-			num="<c 32>$packages</c>"; cat_name="<c 34>$ASKED_CATEGORY_I18N</c>"
-			footer "$(emsg $(eval_ngettext \
-				'$num package installed of category $cat_name.' \
-				'$num packages installed of category $cat_name.' \
-				$packages))"; echo
-		else
+				newline; exit 0
+				;;
+			c|cat|categories)
+				# Display the list of categories.
+				title 'Packages categories'
+				echo "$PKGS_CATEGORIES" | sed 's|[^a-z-]|\n|g; /^$/d' | \
+				sed 's|\(.*\)|\1'$'\033''[15G \1|' | translate_category
+				num=$(echo -n "$PKGS_CATEGORIES" | wc -l)
+				footer "$(eval_ngettext '$num category' '$num categories' $num)"; echo
+				exit 0
+				;;
+			'')
+				# By default list all packages and versions.
+				title 'List of all installed packages'
+				TMPLIST=$(mktemp)
+				awk -F$'\t' '{print $1"\033[35G "$2"\033[53G "$3}' \
+					$PKGS_DB/installed.info | tee $TMPLIST | translate_category
 
-			# By default list all packages and versions.
-			title 'List of all installed packages'
-			for pkg in $INSTALLED/*; do
-				[ -f $pkg/receipt ] || continue
-				EXTRAVERSION=""
-				. $pkg/receipt
-				echo -e "$PACKAGE\033[35G $VERSION$EXTRAVERSION\033[53G $(_ $CATEGORY)"
-				packages=$(($packages+1))
-			done
-			num="<c 32>$packages</c>"
-			footer "$(emsg $(eval_ngettext \
-				'$num package installed.' \
-				'$num packages installed.' $packages))"
-		fi ;;
+				packages=$(wc -l $TMPLIST | awk '{print $1}'); rm $TMPLIST
+				num="<c 32>$packages</c>"
+				footer "$(emsg $(eval_ngettext \
+					'$num package installed.' \
+					'$num packages installed.' $packages))"
+				;;
+			*)
+				# Check for an asked category.
+				ASKED_CATEGORY_I18N="$@"
+				ASKED_CATEGORY=$(reverse_translate_category "$ASKED_CATEGORY_I18N")
+				title 'Installed packages of category: $ASKED_CATEGORY_I18N'
+				TMPLIST=$(mktemp)
+				awk -F$'\t' '
+				{
+					if ($3 == "'$ASKED_CATEGORY'")
+						print $1"\033[35G "$2
+				}' \
+					$PKGS_DB/installed.info | tee $TMPLIST | translate_category
 
+				packages=$(wc -l $TMPLIST | awk '{print $1}'); rm $TMPLIST
+				num="<c 32>$packages</c>"
+				cat_name="<c 34>$ASKED_CATEGORY_I18N</c>"
+				footer "$(emsg $(eval_ngettext \
+					'$num package installed of category $cat_name.' \
+					'$num packages installed of category $cat_name.' \
+					$packages))"; echo
+				;;
+		esac ;;
 
 	list-mirror|-lm)
 		# List all available packages on the mirror. Option --diff displays
@@ -1597,6 +1645,7 @@ case "$COMMAND" in
 		check_root $@
 		check_for_package_on_cmdline
 		check_for_package_file
+		check_for_installed_info
 
 		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
 		[ "$list" ] && INSTALL_LIST="$list"
@@ -1713,6 +1762,7 @@ $LIST"
 		# Remove packages.
 		check_root $@
 		check_for_package_on_cmdline
+		check_for_installed_info
 
 		[ -n "$root" ] && ROOT="$root"
 		if [ ! -f "$ROOT$INSTALLED/$PACKAGE/receipt" ]; then
@@ -1785,8 +1835,12 @@ $LIST"
 			sed -i "/ $PACKAGE-$VERSION$EXTRAVERSION$/d" \
 				$PKGS_DB/installed.$SUM 2> /dev/null
 
+			# Update installed.info
+			sed -i "/^$PACKAGE	/d" $PKGS_DB/installed.info
+
 			# Log this activity
 			log_pkg Removed
+
 			if [ "$ALTERED" ]; then
 				if [ "$auto" ]; then
 					answer=0
@@ -2168,7 +2222,7 @@ EOT
 				sed -i s/+// packages.diff
 				title 'Mirrored packages diff'
 				cat packages.diff
-				new_pkgs=$(wc -l packages.diff)
+				new_pkgs=$(wc -l < packages.diff)
 				if [ "$new_pkgs" != 0 ]; then
 					num=$(emsg "<c 32>$new_pkgs</c>")
 					footer "$(eval_ngettext \
