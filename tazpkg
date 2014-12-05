@@ -1543,8 +1543,8 @@ case "$COMMAND" in
 
 			for i in $PKGS_DB/files.list.lzma $PKGS_DB/undigest/*/files.list.lzma; do
 				[ -f $i ] || continue
-				lzcat $i | awk -F: -vP="$(gettext 'Package %s:')" '
-					BEGIN { last="" }
+				lzcat $i | awk -F: -vP="$(gettext 'Package %s:')" -vT=$TMPLIST '
+					BEGIN { last = "" }
 					$2 ~ /'$2'/ {
 						if (last != $1) {
 							last = $1;
@@ -1553,8 +1553,9 @@ case "$COMMAND" in
 							printf("\n\e[1;33m%s\e[0;39m\n", PP);
 						}
 						gsub(/'$2'/, "\e[0;32m'$2'\e[0;39m", $2);
-						print $2
-					}' | tee -a $TMPLIST
+						print $2;
+						printf "%s" 1 >> T;
+					}'
 			done
 
 		else
@@ -1566,18 +1567,19 @@ case "$COMMAND" in
 					. $pkg/receipt
 					newline
 					emsg "<c 33>$(_ 'Package %s:' $PACKAGE)</c>"
-					awk '
+					awk -vT=$TMPLIST '
 						/'$2'/ {
 							gsub(/'$2'/, "\e[0;32m'$2'\e[0;39m", $0);
-							print " "$0
+							print " "$0;
+							printf "%s" 1 >> T;
 						}
-					' $pkg/files.list | tee -a $TMPLIST
+					' $pkg/files.list
 				fi
 			done
 
 		fi
 
-		match=$(sed '/^ /!d' $TMPLIST | wc -l)
+		match=$(wc -m < $TMPLIST)
 		rm $TMPLIST
 
 		pkg=$2
@@ -1600,23 +1602,27 @@ case "$COMMAND" in
 		title 'Search result for package "%s"' $2
 
 		# Search for a file on mirror and output only the package name
-		match=0
-		for i in $PKGS_DB/files.list.lzma \
-				 $PKGS_DB/undigest/*/files.list.lzma; do
-				 [ -f $i ] || continue
-				unlzma -c $i | grep -- ".*:.*$2" | cut -d: -f1 | uniq | awk '{ print $1 }'
-				match=$(($match + `unlzma -c $i | grep -- ".*:.*$2" | cut -d: -f1 | uniq | wc -l`))
+		TMPLIST=$(mktemp)
+		for i in $PKGS_DB/files.list.lzma $PKGS_DB/undigest/*/files.list.lzma; do
+				[ -f $i ] || continue
+				lzcat $i | awk -F: -vT=$TMPLIST '
+					BEGIN { P = "" }
+					$2 ~ /'$2'/ {
+						if ($1 != P) {
+							print $1;
+							printf "%s" 1 >> T;
+							P = $1
+						}
+					}'
 		done
+		match=$(wc -m < $TMPLIST)
+		rm $TMPLIST
+
 		file=$2
-		if [ "$match" = "0" ]; then
-			_ 'No file found for: $file'
-			newline
-		else
-			num=$(emsg "<c 32>$files</c>")
-			footer "$(eval_ngettext \
-				'$num package found with file: $file' \
-				'$num packages found with file: $file' $match)"
-		fi
+		num=$(emsg "<c 32>$match</c>")
+		footer "$(eval_ngettext \
+			'$num package found with file: $file' \
+			'$num packages found with file: $file' $match)"
 		;;
 
 
@@ -1627,7 +1633,10 @@ case "$COMMAND" in
 		check_for_package_file
 		check_for_installed_info
 
-		[ "$root" ] && ROOT="$root" && check_base_dir "$root"
+		if [ -n "$root" ]; then
+			ROOT="$root";
+			check_base_dir "$root"
+		fi
 		[ "$list" ] && INSTALL_LIST="$list"
 		if [ "$rootconfig" ]; then
 			if [ "$root" ]; then
@@ -1644,14 +1653,15 @@ case "$COMMAND" in
 		look_for_priority
 
 		# Check if forced install.
-		if ! [ "$forced" ]; then
+		if [ -z "$forced" ]; then
 			check_for_installed_package $ROOT
 		fi
 		install_package $ROOT
 		update_desktop_database $ROOT
 		update_mime_database $ROOT
 		update_icon_database $ROOT
-		compile_glib_schemas $ROOT ;;
+		compile_glib_schemas $ROOT
+		;;
 
 
 	install-list|get-install-list)
@@ -1659,38 +1669,36 @@ case "$COMMAND" in
 		check_root $@
 		if [ -z "$2" ]; then
 			newline
-			_ \
-"Please change directory (cd) to the packages repository and specify the
-list of packages to install. Example: tazpkg install-list packages.list"
+			longline "$(_ \
+"Please change directory (cd) to the packages repository and specify the \
+list of packages to install.")"
+			echo "$(_ 'Example:') $(emsg '<b>tazpkg install-list</b> <c 33>packages.list</c>')"
 			exit 0
 		fi
+
 		# Check if the packages list exist.
-		list_file=$2
-		if [ ! -f "$list_file" ]; then
-			_ 'Unable to find: $list_file'
+		if [ ! -f "$2" ]; then
+			_ 'Unable to find list "%s"' "$2"
 			exit 0
-		else
-			LIST=$(cat $2)
 		fi
+
+		LIST=$(cat $2)
 
 		# Remember processed list
 		export INSTALL_LIST="$2"
 
 		# Set $COMMAND and install all packages.
-		if [ "$1" = "get-install-list" ]; then
-			COMMAND=get-install
-		else
-			COMMAND=install
-		fi
+		COMMAND=${1%-list}
+
 		touch $2-processed
 
 		# Upgrade tazpkg first. It may handle new features/formats...
 		# then upgrade essential packages early
 		for pkg in busybox-pam busybox gcc-lib-base glibc-base \
-			   slitaz-base-files tazpkg ; do
+				slitaz-base-files tazpkg ; do
 			pkg=$(egrep $pkg-[0-9] $INSTALL_LIST)
-			[ -n "$pkg" ] || continue
-			_ 'Adding implicit depends $pkg...'
+			[ -z "$pkg" ] && continue
+			_ 'Adding implicit depends "%s"...' $pkg
 			LIST="$pkg
 $LIST"
 		done
@@ -1747,7 +1755,7 @@ $LIST"
 		[ -n "$root" ] && ROOT="$root"
 		if [ ! -f "$ROOT$INSTALLED/$PACKAGE/receipt" ]; then
 			newline
-			_ '$PACKAGE is not installed.'
+			_ 'Package "%s" is not installed.' $PACKAGE
 			exit 0
 		else
 			ALTERED=""
@@ -1757,7 +1765,7 @@ $LIST"
 				DEPENDS=""
 				. $ROOT$INSTALLED/$i/receipt
 				case " $(echo $DEPENDS) " in
-				*\ $THE_PACKAGE\ *) ALTERED="$ALTERED $i";;
+					*\ $THE_PACKAGE\ *) ALTERED="$ALTERED $i";;
 				esac
 			done
 			EXTRAVERSION=""
@@ -1765,14 +1773,14 @@ $LIST"
 		fi
 		newline
 		if [ -n "$ALTERED" ]; then
-			_ 'The following packages depend on $PACKAGE:'
+			_ 'The following packages depend on package "%s":' $PACKAGE
 			for i in $ALTERED; do
 				echo "  $i"
 			done
 		fi
 		REFRESH=$(cd $ROOT$INSTALLED ; grep -sl ^$PACKAGE$ */modifiers)
 		if [ -n "$REFRESH" ]; then
-			_ 'The following packages have been modified by $PACKAGE:'
+			_ 'The following packages have been modified by package "%s":' $PACKAGE
 			for i in $REFRESH; do
 				echo "  ${i%/modifiers}"
 			done
@@ -1780,11 +1788,11 @@ $LIST"
 		if [ "$auto" ]; then
 			answer=0
 		else
-			confirm "$(_ 'Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)')"
+			confirm "$(_ 'Remove package "%s" (%s)? (y/N)' $PACKAGE $VERSION$EXTRAVERSION)"
 			answer=$?
 		fi
 		if [ $answer = 0 ]; then
-			title 'Removing: $PACKAGE'
+			title 'Removing package "%s"' $PACKAGE
 			# Pre remove commands.
 			if grep -q ^pre_remove $ROOT$INSTALLED/$PACKAGE/receipt; then
 				pre_remove $ROOT
@@ -1825,7 +1833,7 @@ $LIST"
 				if [ "$auto" ]; then
 					answer=0
 				else
-					confirm "$(_ 'Remove packages depending on $PACKAGE? (y/N)')"
+					confirm "$(_ 'Remove packages depending on package "%s"? (y/N)' $PACKAGE)"
 					answer=$?
 				fi
 				if [ $answer = 0 ]; then
@@ -1840,13 +1848,13 @@ $LIST"
 				if [ "$auto" ]; then
 					answer=0
 				else
-					confirm "$(_ 'Reinstall packages modified by $PACKAGE? (y/N)')"
+					confirm "$(_ 'Reinstall packages modified by package "%s"? (y/N)' $PACKAGE)"
 					answer=$?
 				fi
 				if [ $answer = 0 ]; then
 					for i in $REFRESH; do
 						if [ $(wc -l < $ROOT$INSTALLED/$i) -gt 1 ]; then
-							_ 'Check $INSTALLED/$i for reinstallation'
+							_ 'Check %s for reinstallation' "$INSTALLED/$i"
 							continue
 						fi
 						rm -r $ROOT$INSTALLED/$i
@@ -1856,7 +1864,7 @@ $LIST"
 			fi
 		else
 			newline
-			_ 'Uninstallation of $PACKAGE cancelled.'
+			_ 'Uninstallation of package "%s" cancelled.' $PACKAGE
 		fi
 		newline ;;
 
@@ -1865,7 +1873,7 @@ $LIST"
 		# Extract .tazpkg cpio archive into a directory.
 		check_for_package_on_cmdline
 		check_for_package_file
-		title 'Extracting: $PACKAGE'
+		title 'Extracting package "%s"' $PACKAGE
 
 		# If no directory destination is found on the cmdline
 		# we create one in the current dir using the package name.
@@ -1882,7 +1890,8 @@ $LIST"
 
 		cd $DESTDIR
 		extract_package
-		[ -e "receipt" ] && footer "$(_ '$PACKAGE is extracted to: $DESTDIR')"
+		[ -e "receipt" ] && \
+			footer "$(_ 'Package "%s" is extracted to "%s"') $PACKAGE $DESTDIR"
 		;;
 
 

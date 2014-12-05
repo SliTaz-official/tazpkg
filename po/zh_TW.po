@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-05 03:02+0200\n"
+"POT-Creation-Date: 2014-12-05 16:29+0200\n"
 "PO-Revision-Date: 2014-06-07 22:55+0800\n"
 "Last-Translator: lunglungyu <lunglungyu2004@gmail.com>\n"
 "Language-Team: \n"
@@ -285,7 +285,7 @@ msgstr "強制更新及檢查包清單"
 msgid "Check for upgrades and install them all"
 msgstr "檢查並更新所有更新"
 
-#: tazpkg:212 tazpkg:1511 tazpkg:1535 tazpkg:1596 tazpkg:1722
+#: tazpkg:212 tazpkg:1511 tazpkg:1535 tazpkg:1598 tazpkg:1675 tazpkg:1730
 msgid "Example:"
 msgstr "例子:"
 
@@ -526,7 +526,7 @@ msgid_plural "$num packages installed of category $cat_name."
 msgstr[0] "$cat_name 分類的 $num 個已安裝包"
 msgstr[1] "$cat_name 分類的 $num 個已安裝包"
 
-#: tazpkg:1401 tazpkg:2203
+#: tazpkg:1401 tazpkg:2212
 msgid "Mirrored packages diff"
 msgstr "與鏡像包的差異"
 
@@ -639,7 +639,7 @@ msgstr "請指定一個模式串或包名稱作搜索"
 msgid "Search result for \"%s\""
 msgstr "%s 的搜索結果"
 
-#: tazpkg:1534 tazpkg:1595
+#: tazpkg:1534 tazpkg:1597
 msgid "Please specify a pattern or file name to search for."
 msgstr "請指定一個模式串或文件名作搜索"
 
@@ -647,257 +647,238 @@ msgstr "請指定一個模式串或文件名作搜索"
 msgid "Search result for file \"%s\""
 msgstr "%s 文件的搜索結果"
 
-#: tazpkg:1546 tazpkg:1568
+#: tazpkg:1546 tazpkg:1569
 msgid "Package %s:"
 msgstr "包 %s:"
 
-#: tazpkg:1586
+#: tazpkg:1588
 #, sh-format
 msgid "$num file found for: $pkg"
 msgid_plural "$num files found for: $pkg"
 msgstr[0] "搜索到 $pkg 的 $num 個檔案"
 msgstr[1] "搜索到 $pkg 的 $num 個檔案"
 
-#: tazpkg:1600
+#: tazpkg:1602
 msgid "Search result for package \"%s\""
 msgstr "%s 包的搜索結果 "
 
-#: tazpkg:1612
-#, sh-format
-msgid "No file found for: $file"
-msgstr "找不到和 $file 檔案關聯的包"
-
-#: tazpkg:1617
+#: tazpkg:1624
 #, sh-format
 msgid "$num package found with file: $file"
 msgid_plural "$num packages found with file: $file"
 msgstr[0] "找到$num 個和 $file 檔案關聯的包"
 msgstr[1] "找到$num 個和 $file 檔案關聯的包"
 
-#: tazpkg:1663
+#: tazpkg:1673
 msgid ""
-"Please change directory (cd) to the packages repository and specify the\n"
-"list of packages to install. Example: tazpkg install-list packages.list"
-msgstr ""
-"請更改目錄 (cd) 到包倉庫，並指定\n"
-"要安裝的包清單.例子: tazpkg install-list packages.list"
+"Please change directory (cd) to the packages repository and specify the list "
+"of packages to install."
+msgstr "請更改目錄 (cd) 到包倉庫，並指定 要安裝的包清單."
 
-#: tazpkg:1670
-#, sh-format
-msgid "Unable to find: $list_file"
-msgstr "找不到: $list_file"
+#: tazpkg:1681
+#, fuzzy
+msgid "Unable to find list \"%s\""
+msgstr "找不到清單: %s"
 
-#: tazpkg:1693
-#, sh-format
-msgid "Adding implicit depends $pkg..."
-msgstr "正在加入隱性依賴 $pkg..."
+#: tazpkg:1701
+msgid "Adding implicit depends \"%s\"..."
+msgstr "正在加入隱性依賴 %s..."
 
-#: tazpkg:1721
+#: tazpkg:1729
 msgid "Please specify the release you want on the command line."
 msgstr "請指定你想用於命令行的版本."
 
-#: tazpkg:1750
-#, sh-format
-msgid "$PACKAGE is not installed."
-msgstr "未安裝 $PACKAGE."
+#: tazpkg:1758
+msgid "Package \"%s\" is not installed."
+msgstr "未安裝 %s."
 
-#: tazpkg:1768
-#, sh-format
-msgid "The following packages depend on $PACKAGE:"
-msgstr "以下包依賴 $PACKAGE:"
-
-#: tazpkg:1775
-#, sh-format
-msgid "The following packages have been modified by $PACKAGE:"
-msgstr "以下包已被 $PACKAGE 更改:"
+#: tazpkg:1776
+msgid "The following packages depend on package \"%s\":"
+msgstr "以下包依賴 %s:"
 
 #: tazpkg:1783
-#, sh-format
-msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
-msgstr "移除 $PACKAGE ($VERSION$EXTRAVERSION)？ （是/否）"
+msgid "The following packages have been modified by package \"%s\":"
+msgstr "以下包已被 %s 更改:"
 
-#: tazpkg:1787
-#, sh-format
-msgid "Removing: $PACKAGE"
-msgstr "正在移除: $PACKAGE"
+#: tazpkg:1791
+msgid "Remove package \"%s\" (%s)? (y/N)"
+msgstr "移除 %s (%s)？ （是/否）"
 
-#: tazpkg:1792
+#: tazpkg:1795
+msgid "Removing package \"%s\""
+msgstr "正在移除: %s"
+
+#: tazpkg:1800
 msgid "Removing all files installed..."
 msgstr "正在移除所有已安裝文件"
 
-#: tazpkg:1811
+#: tazpkg:1819
 msgid "Removing package receipt..."
 msgstr "正在移除包文件清單"
 
-#: tazpkg:1828
-#, sh-format
-msgid "Remove packages depending on $PACKAGE? (y/N)"
-msgstr "移除依賴 $PACKAGE 的包？ （是/否）"
+#: tazpkg:1836
+msgid "Remove packages depending on package \"%s\"? (y/N)"
+msgstr "移除依賴 %s 的包？ （是/否）"
 
-#: tazpkg:1843
-#, sh-format
-msgid "Reinstall packages modified by $PACKAGE? (y/N)"
-msgstr "重新安裝被 $PACKAGE 更改過的包？ （是/否）"
+#: tazpkg:1851
+msgid "Reinstall packages modified by package \"%s\"? (y/N)"
+msgstr "重新安裝被 %s 更改過的包？ （是/否）"
 
-#: tazpkg:1849
-#, sh-format
-msgid "Check $INSTALLED/$i for reinstallation"
-msgstr "檢查 $INSTALLED/$i 以重新安裝"
+#: tazpkg:1857
+msgid "Check %s for reinstallation"
+msgstr "檢查 %s 以重新安裝"
 
-#: tazpkg:1859
-#, sh-format
-msgid "Uninstallation of $PACKAGE cancelled."
-msgstr "已取消卸載 $PACKAGE"
+#: tazpkg:1867
+msgid "Uninstallation of package \"%s\" cancelled."
+msgstr "已取消卸載 %s"
 
-#: tazpkg:1868
-#, sh-format
-msgid "Extracting: $PACKAGE"
-msgstr "正在解壓縮: $PACKAGE"
+#: tazpkg:1876
+msgid "Extracting package \"%s\""
+msgstr "正在解壓縮: %s"
 
-#: tazpkg:1879 tazpkg:1896
+#: tazpkg:1887 tazpkg:1905
 msgid "Copying original package..."
 msgstr "正在複製原來包"
 
-#: tazpkg:1885
-#, sh-format
-msgid "$PACKAGE is extracted to: $DESTDIR"
-msgstr "$PACKAGE 已解壓縮到: $DESTDIR"
+#: tazpkg:1894
+msgid "Package \"%s\" is extracted to \"%s\""
+msgstr "%s 已解壓縮到: %s"
 
-#: tazpkg:1893
+#: tazpkg:1902
 #, sh-format
 msgid "Recompressing: $PACKAGE"
 msgstr "正在重新壓縮: $PACKAGE"
 
-#: tazpkg:1903
+#: tazpkg:1912
 msgid "Recompressing the fs..."
 msgstr "正在重新壓縮文件系統..."
 
-#: tazpkg:1908
+#: tazpkg:1917
 msgid "Creating new package..."
 msgstr "創建新包..."
 
-#: tazpkg:1930
+#: tazpkg:1939
 msgid "File lost"
 msgstr "已遺失文件"
 
-#: tazpkg:1943 pkgs.cgi:807
+#: tazpkg:1952 pkgs.cgi:807
 msgid "Configuration files"
 msgstr "配置文件"
 
-#: tazpkg:1981
+#: tazpkg:1990
 #, sh-format
 msgid "User configuration backup on $pkg_date"
 msgstr "$pkg_date 的用戶配置備分"
 
-#: tazpkg:1998
+#: tazpkg:2007
 #, sh-format
 msgid "Repacking: $PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
 msgstr "正在重新打包: $PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
 
-#: tazpkg:2000
+#: tazpkg:2009
 #, sh-format
 msgid "Can't repack $PACKAGE"
 msgstr "無法重新打包 $PACKAGE"
 
-#: tazpkg:2004
+#: tazpkg:2013
 #, sh-format
 msgid "Can't repack, $PACKAGE files have been modified by:"
 msgstr "無法重新打包, $PACKAGE 的文件已被以下程式更改:"
 
-#: tazpkg:2016
+#: tazpkg:2025
 msgid "Can't repack, the following files are lost:"
 msgstr "無法重新打包, 以下文件已遺失:"
 
-#: tazpkg:2043
+#: tazpkg:2052
 #, sh-format
 msgid "Can't repack, $CHECKSUM error."
 msgstr "無法重新打包, $CHECKSUM 錯誤."
 
-#: tazpkg:2054
+#: tazpkg:2063
 #, sh-format
 msgid "Package $PACKAGE repacked successfully."
 msgstr "成功重新打包 $PACKAGE 包"
 
-#: tazpkg:2056 tazpkg:2112
+#: tazpkg:2065 tazpkg:2121
 #, sh-format
 msgid "Size: $pkg_size"
 msgstr "大小: $pkg_size"
 
-#: tazpkg:2066
+#: tazpkg:2075
 msgid "Receipt is missing. Please read the documentation."
 msgstr "找不到安裝清單. 請參閱文檔."
 
-#: tazpkg:2069
+#: tazpkg:2078
 #, sh-format
 msgid "Packing: $PACKAGE"
 msgstr "正在打包: $PACKAGE"
 
-#: tazpkg:2071
+#: tazpkg:2080
 msgid "Creating the list of files..."
 msgstr "正在創建文件清單..."
 
-#: tazpkg:2077
+#: tazpkg:2086
 #, sh-format
 msgid "Creating $CHECKSUM of files..."
 msgstr "正在創建文件校驗和 $CHECKSUM..."
 
-#: tazpkg:2091
+#: tazpkg:2100
 msgid "Compressing the fs..."
 msgstr "正在壓縮文件系統"
 
-#: tazpkg:2098
+#: tazpkg:2107
 msgid "Updating receipt sizes..."
 msgstr "正在更新安裝清單大小..."
 
-#: tazpkg:2103
+#: tazpkg:2112
 msgid "Creating full cpio archive..."
 msgstr "正在創建完棑一cpio壓縮檔..."
 
-#: tazpkg:2106
+#: tazpkg:2115
 msgid "Restoring original package tree..."
 msgstr "正在恢復原來的包樹"
 
-#: tazpkg:2110
+#: tazpkg:2119
 #, sh-format
 msgid "Package $PACKAGE compressed successfully."
 msgstr "成功壓縮 $PACKAGE 包"
 
-#: tazpkg:2137
+#: tazpkg:2146
 #, sh-format
 msgid "$repo doesn't exist."
 msgstr "$repo 不存在."
 
-#: tazpkg:2155
+#: tazpkg:2164
 #, sh-format
 msgid "Undigest $base_path"
 msgstr ""
 
-#: tazpkg:2157
+#: tazpkg:2166
 #, sh-format
 msgid "$repository_name is up to date."
 msgstr "$repository_name 已是最新."
 
-#: tazpkg:2172
+#: tazpkg:2181
 #, sh-format
 msgid "Recharging undigest $base_path:"
 msgstr ""
 
-#: tazpkg:2176
+#: tazpkg:2185
 msgid "Creating backup of the last packages list..."
 msgstr "正在創建最新包清單的備份"
 
-#: tazpkg:2209
+#: tazpkg:2218
 #, sh-format
 msgid "$num new package on the mirror."
 msgid_plural "$num new packages on the mirror."
 msgstr[0] "鏡像上有 $num 個新包."
 msgstr[1] "鏡像上有 $num 個新包."
 
-#: tazpkg:2212
+#: tazpkg:2221
 msgid "No new packages on the mirror."
 msgstr "鏡像上沒有新包."
 
-#: tazpkg:2217
+#: tazpkg:2226
 msgid ""
 "Last packages.list is ready to use. Note that next time you recharge the\n"
 "list, a list of differences will be displayed to show new and upgradeable\n"
@@ -907,252 +888,252 @@ msgstr ""
 "清單時, 程式會列差異清單以顯示最新和可更新的\n"
 "包."
 
-#: tazpkg:2256
+#: tazpkg:2265
 #, sh-format
 msgid "$pkg_list is older than one week... recharging"
 msgstr "$pkg_list 已是一周前的版本... 正在更新"
 
-#: tazpkg:2260 pkgs.cgi:440
+#: tazpkg:2269 pkgs.cgi:440
 msgid "Package"
 msgstr "包"
 
-#: tazpkg:2260 pkgs.cgi:146
+#: tazpkg:2269 pkgs.cgi:146
 msgid "Version"
 msgstr "版本"
 
-#: tazpkg:2260
+#: tazpkg:2269
 msgid "Status"
 msgstr "狀態"
 
-#: tazpkg:2285
+#: tazpkg:2294
 msgid "Blocked"
 msgstr "已封鎖"
 
-#: tazpkg:2292
+#: tazpkg:2301
 msgid "New build"
 msgstr "新建構"
 
-#: tazpkg:2294
+#: tazpkg:2303
 #, sh-format
 msgid "New version $new"
 msgstr "新版本 $new"
 
-#: tazpkg:2307
+#: tazpkg:2316
 msgid "System is up-to-date..."
 msgstr "系統已是最新版本..."
 
-#: tazpkg:2311
+#: tazpkg:2320
 #, sh-format
 msgid "$num installed package scanned in ${time}s"
 msgid_plural "$num installed packages scanned in ${time}s"
 msgstr[0] "已用 ${time}s 掃描 $num 個已安裝包"
 msgstr[1] "已用 ${time}s 掃描 $num 個已安裝包"
 
-#: tazpkg:2316
+#: tazpkg:2325
 #, sh-format
 msgid "$num blocked"
 msgid_plural "$num blocked"
 msgstr[0] "$num 個已封鎖"
 msgstr[1] "$num 個已封鎖"
 
-#: tazpkg:2319
+#: tazpkg:2328
 msgid "0 blocked"
 msgstr "0 個已封鎖"
 
-#: tazpkg:2323
+#: tazpkg:2332
 #, sh-format
 msgid "You have $num available upgrade ($blocked)"
 msgid_plural "You have $num available upgrades ($blocked)"
 msgstr[0] "你有 $num 個可用更新 ($blocked)"
 msgstr[1] "你有 $num 個可用更新 ($blocked)"
 
-#: tazpkg:2333
+#: tazpkg:2342
 msgid "Do you wish to install them now: y/n ? "
 msgstr "你想現在就安裝嗎: y/n ? "
 
-#: tazpkg:2345
+#: tazpkg:2354
 msgid "Leaving without any upgrades installed."
 msgstr "不安裝任何更新就離開."
 
-#: tazpkg:2359
+#: tazpkg:2368
 msgid "No known bugs."
 msgstr "沒有已知bugs."
 
-#: tazpkg:2365
+#: tazpkg:2374
 msgid "Bug list completed"
 msgstr "已知 Bug 清單"
 
-#: tazpkg:2367
+#: tazpkg:2376
 #, sh-format
 msgid "Bugs in package $PACKAGE version $VERSION$EXTRAVERSION:"
 msgstr "$PACKAGE 包 $VERSION$EXTRAVERSION 版本的Bugs"
 
-#: tazpkg:2386
+#: tazpkg:2395
 #, sh-format
 msgid "The package $PACKAGE installation has not completed"
 msgstr "未完成 $PACKAGE 包的安裝"
 
-#: tazpkg:2393
+#: tazpkg:2402
 #, sh-format
 msgid "The package $PACKAGE-$VERSION$EXTRAVERSION has been modified by:"
 msgstr "$PACKAGE-$VERSION$EXTRAVERSION 包已被以下程式更改:"
 
-#: tazpkg:2398
+#: tazpkg:2407
 #, sh-format
 msgid "Files lost from $PACKAGE-$VERSION$EXTRAVERSION:"
 msgstr "$PACKAGE-$VERSION$EXTRAVERSION 已遺失以下文件:"
 
-#: tazpkg:2402
+#: tazpkg:2411
 msgid "target of symlink"
 msgstr "軟鏈接(symlink)對象"
 
-#: tazpkg:2407
+#: tazpkg:2416
 #, sh-format
 msgid "Missing dependencies for $PACKAGE-$VERSION$EXTRAVERSION:"
 msgstr "$PACKAGE-$VERSION$EXTRAVERSION 欠缺以下依賴:"
 
-#: tazpkg:2414
+#: tazpkg:2423
 #, sh-format
 msgid "Dependencies loop between $PACKAGE and:"
 msgstr "$PACKAGE 與以下程式有依賴循環"
 
-#: tazpkg:2419
+#: tazpkg:2428
 msgid "Looking for known bugs..."
 msgstr "正在查找已知bugs..."
 
-#: tazpkg:2445
+#: tazpkg:2454
 #, sh-format
 msgid "The following packages provide $file:"
 msgstr "以下包提供文件:"
 
-#: tazpkg:2451
+#: tazpkg:2460
 #, sh-format
 msgid "(overridden by $pkg_list)"
 msgstr ""
 
-#: tazpkg:2459
+#: tazpkg:2468
 msgid "No package has installed the following files:"
 msgstr "沒有包安裝以下文件:"
 
-#: tazpkg:2468
+#: tazpkg:2477
 msgid "Check completed."
 msgstr "已完成檢查"
 
-#: tazpkg:2477
+#: tazpkg:2486
 #, sh-format
 msgid "$PACKAGE is already in the blocked packages list."
 msgstr "$PACKAGE 已在封鎖包清單內"
 
-#: tazpkg:2479
+#: tazpkg:2488
 #, sh-format
 msgid "Add $PACKAGE to: $BLOCKED..."
 msgstr "將 $PACKAGE 加入到: $BLOCKED..."
 
-#: tazpkg:2495
+#: tazpkg:2504
 #, sh-format
 msgid "Removing $PACKAGE from: $BLOCKED..."
 msgstr "由 $BLOCKED 移除 $PACKAGE..."
 
-#: tazpkg:2503
+#: tazpkg:2512
 #, sh-format
 msgid "$PACKAGE is not in the blocked packages list."
 msgstr "$PACKAGE 並不在已封鎖包清單"
 
-#: tazpkg:2521 tazpkg:2566
+#: tazpkg:2530 tazpkg:2575
 msgid "rootconfig needs --root= option used."
 msgstr "rootconfig 需要使用 --root= 選項."
 
-#: tazpkg:2533
+#: tazpkg:2542
 #, fuzzy, sh-format
 msgid "$PACKAGE already in the cache"
 msgstr "$PACKAGE 已在緩存內: $CACHE_DIR"
 
-#: tazpkg:2536 tazpkg:2600
+#: tazpkg:2545 tazpkg:2609
 #, sh-format
 msgid "Continuing $PACKAGE download"
 msgstr "繼續 $PACKAGE 的下載"
 
-#: tazpkg:2597
+#: tazpkg:2606
 #, sh-format
 msgid "$PACKAGE already in the cache: $CACHE_DIR"
 msgstr "$PACKAGE 已在緩存內: $CACHE_DIR"
 
-#: tazpkg:2623
+#: tazpkg:2632
 #, sh-format
 msgid "Path: $CACHE_DIR"
 msgstr "路徑: $CACHE_DIR"
 
-#: tazpkg:2624
+#: tazpkg:2633
 msgid "Cleaning cache directory..."
 msgstr "正在清除緩存目錄..."
 
-#: tazpkg:2630
+#: tazpkg:2639
 #, fuzzy, sh-format
 msgid "$num file removed from cache."
 msgid_plural "$num files removed from cache."
 msgstr[0] "$num 個文件已在緩存中被刪除"
 msgstr[1] "$num 個文件已在緩存中被刪除"
 
-#: tazpkg:2644
+#: tazpkg:2653
 msgid "Current undigest(s)"
 msgstr ""
 
-#: tazpkg:2647
+#: tazpkg:2656
 msgid "No undigest mirror found."
 msgstr ""
 
-#: tazpkg:2661
+#: tazpkg:2670
 #, sh-format
 msgid "Remove $undigest undigest? (y/N)"
 msgstr ""
 
-#: tazpkg:2663
+#: tazpkg:2672
 #, sh-format
 msgid "Removing $undigest undigest..."
 msgstr ""
 
-#: tazpkg:2669
+#: tazpkg:2678
 #, sh-format
 msgid "Undigest $undigest not found"
 msgstr ""
 
-#: tazpkg:2686
+#: tazpkg:2695
 #, sh-format
 msgid "Creating new undigest $undigest."
 msgstr ""
 
-#: tazpkg:2711
+#: tazpkg:2720
 #, sh-format
 msgid "Unknown option $u_opt."
 msgstr "未知選項 $u_opt."
 
-#: tazpkg:2726
+#: tazpkg:2735
 #, sh-format
 msgid "Nothing to do for $PACKAGE."
 msgstr "對 $PACKAGE 沒有可進行動作"
 
-#: tazpkg:2730
+#: tazpkg:2739
 #, sh-format
 msgid "Package $PACKAGE is not installed."
 msgstr "$PACKAGE 包未被安裝"
 
-#: tazpkg:2731
+#: tazpkg:2740
 msgid "Install package with 'tazpkg install' or 'tazpkg get-install'"
 msgstr "以'tazpkg install' 或 'tazpkg get-install' 安裝包"
 
-#: tazpkg:2745
+#: tazpkg:2754
 msgid "TazPKG SHell."
 msgstr "TazPKG SHell."
 
-#: tazpkg:2746
+#: tazpkg:2755
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr "鍵入 'usage' 以列出所有可用命令或 'quit' 或 'q' 以退出"
 
-#: tazpkg:2755
+#: tazpkg:2764
 msgid "You are already running a TazPKG SHell."
 msgstr "你已經在運行 TazPKG SHell."
 
-#: tazpkg:2796
+#: tazpkg:2805
 msgid ""
 "\n"
 "usage:   tazpkg link package_name slitaz_root\n"
@@ -1164,26 +1145,26 @@ msgstr ""
 "例子: 'tazpkg link openoffice /mnt' 會使用少於 100k \n"
 "         的系統記憶體.\n"
 
-#: tazpkg:2804
+#: tazpkg:2813
 #, sh-format
 msgid "$PACKAGE is already installed."
 msgstr "$PACKAGE 已被安裝."
 
-#: tazpkg:2813
+#: tazpkg:2822
 #, sh-format
 msgid "Missing: $i"
 msgstr "欠缺: $i"
 
-#: tazpkg:2817
+#: tazpkg:2826
 msgid "Link all missing dependencies? (y/N)"
 msgstr "鏈接所有欠缺的依賴？ （是/否）"
 
-#: tazpkg:2826
+#: tazpkg:2835
 #, sh-format
 msgid "Leaving dependencies unresolved for: $PACKAGE"
 msgstr "$PACKAGE 的依賴未被解決"
 
-#: tazpkg:2827
+#: tazpkg:2836
 msgid "The package is installed but probably will not work."
 msgstr "包已安裝但可能不會正常工作"
 
@@ -1708,6 +1689,12 @@ msgstr[1] "有 $num 個包可更新"
 #, sh-format
 msgid "System is up to date - $text"
 msgstr "系統已更新到最新 - $text"
+
+#~ msgid "No file found for: $file"
+#~ msgstr "找不到和 $file 檔案關聯的包"
+
+#~ msgid "Unable to find \"%s\""
+#~ msgstr "找不到: %s"
 
 #, fuzzy
 #~ msgid "0 files found for: $pkg"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-05 03:02+0200\n"
+"POT-Creation-Date: 2014-12-05 16:29+0200\n"
 "PO-Revision-Date: 2012-12-23 14:08+0200\n"
 "Last-Translator: Constantine Mousafiris <kvisitor@gnugr.org>\n"
 "Language-Team: Kostis Mousafiris\n"
@@ -318,7 +318,7 @@ msgstr "Αναγκαστική επαναφόρτωση της λίστας με
 msgid "Check for upgrades and install them all"
 msgstr "Έλεγχος για αναβαθμίσεις και εγκατάσταση όλων"
 
-#: tazpkg:212 tazpkg:1511 tazpkg:1535 tazpkg:1596 tazpkg:1722
+#: tazpkg:212 tazpkg:1511 tazpkg:1535 tazpkg:1598 tazpkg:1675 tazpkg:1730
 msgid "Example:"
 msgstr "Παράδειγμα:"
 
@@ -577,7 +577,7 @@ msgid_plural "$num packages installed of category $cat_name."
 msgstr[0] "$num πακέτο εγκατεστημένο στην κατηγορία $cat_name."
 msgstr[1] "$num πακέτα εγκατεστημένα στην κατηγορία $cat_name."
 
-#: tazpkg:1401 tazpkg:2203
+#: tazpkg:1401 tazpkg:2212
 msgid "Mirrored packages diff"
 msgstr "Διαφορές μεταξύ των εγκατεστημένων πακέτων"
 
@@ -694,7 +694,7 @@ msgstr ""
 msgid "Search result for \"%s\""
 msgstr "Να γίνει αναζήτηση για το: %s"
 
-#: tazpkg:1534 tazpkg:1595
+#: tazpkg:1534 tazpkg:1597
 msgid "Please specify a pattern or file name to search for."
 msgstr ""
 "Παρακαλώ καθορίστε ένα pattern ή ένα όνομα αρχείου για να γίνει αναζήτηση."
@@ -703,259 +703,241 @@ msgstr ""
 msgid "Search result for file \"%s\""
 msgstr "Να γίνει αναζήτηση για το αρχείο %s"
 
-#: tazpkg:1546 tazpkg:1568
+#: tazpkg:1546 tazpkg:1569
 #, fuzzy
 msgid "Package %s:"
 msgstr "Πακέτο"
 
-#: tazpkg:1586
+#: tazpkg:1588
 #, sh-format
 msgid "$num file found for: $pkg"
 msgid_plural "$num files found for: $pkg"
 msgstr[0] "$num αρχείο βρέθηκε για το: $pkg"
 msgstr[1] "$num αρχεία βρέθηκαν για το: $pkg"
 
-#: tazpkg:1600
+#: tazpkg:1602
 msgid "Search result for package \"%s\""
 msgstr "Αναζήτηση για το πακέτο %s"
 
-#: tazpkg:1612
-#, sh-format
-msgid "No file found for: $file"
-msgstr "Δεν βρέθηκε κανένα αρχείο για το: $file"
-
-#: tazpkg:1617
+#: tazpkg:1624
 #, sh-format
 msgid "$num package found with file: $file"
 msgid_plural "$num packages found with file: $file"
 msgstr[0] "$num πακέτο που βρέθηκε με το αρχείο: $file"
 msgstr[1] "$num πακέτα που βρέθηκαν με το αρχείο: $file"
 
-#: tazpkg:1663
+#: tazpkg:1673
 msgid ""
-"Please change directory (cd) to the packages repository and specify the\n"
-"list of packages to install. Example: tazpkg install-list packages.list"
+"Please change directory (cd) to the packages repository and specify the list "
+"of packages to install."
 msgstr ""
-"Παρακαλώ αλλάξτε κατάλογο (cd) στο αποθετήριο πακέτων και ορίστε την\n"
-"λίστα των πακέτων προς εγκατάσταση. Π.χ.: tazpkg install-list packages.list"
+"Παρακαλώ αλλάξτε κατάλογο (cd) στο αποθετήριο πακέτων και ορίστε την λίστα "
+"των πακέτων προς εγκατάσταση."
 
-#: tazpkg:1670
-#, sh-format
-msgid "Unable to find: $list_file"
-msgstr "Αδύνατη η ανεύρεση του: $list_file"
+#: tazpkg:1681
+msgid "Unable to find list \"%s\""
+msgstr "Αδύνατη η ανεύρεση του: %s"
 
-#: tazpkg:1693
-#, sh-format
-msgid "Adding implicit depends $pkg..."
-msgstr "Γίνεται προσθήκη δεδηλωμένων εξαρτήσεων στο $pkg..."
+#: tazpkg:1701
+msgid "Adding implicit depends \"%s\"..."
+msgstr "Γίνεται προσθήκη δεδηλωμένων εξαρτήσεων στο %s..."
 
-#: tazpkg:1721
+#: tazpkg:1729
 msgid "Please specify the release you want on the command line."
 msgstr "Παρακαλώ καθορίστε την έκδοση που θέλετε στη γραμμή εντολών."
 
-#: tazpkg:1750
-#, sh-format
-msgid "$PACKAGE is not installed."
-msgstr "Το $PACKAGE δεν εγκαταστάθηκε."
+#: tazpkg:1758
+msgid "Package \"%s\" is not installed."
+msgstr "Το %s δεν εγκαταστάθηκε."
 
-#: tazpkg:1768
-#, sh-format
-msgid "The following packages depend on $PACKAGE:"
-msgstr "Τα ακόλουθα πακέτα εξαρτώνται από το $PACKAGE:"
-
-#: tazpkg:1775
-#, sh-format
-msgid "The following packages have been modified by $PACKAGE:"
-msgstr "Τα ακόλουθα πακέτα τροποποιήθηκαν από το $PACKAGE:"
+#: tazpkg:1776
+msgid "The following packages depend on package \"%s\":"
+msgstr "Τα ακόλουθα πακέτα εξαρτώνται από το %s:"
 
 #: tazpkg:1783
-#, sh-format
-msgid "Remove $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
-msgstr "Να γίνει απομάκρυνση του $PACKAGE ($VERSION$EXTRAVERSION)? (y/N)"
+msgid "The following packages have been modified by package \"%s\":"
+msgstr "Τα ακόλουθα πακέτα τροποποιήθηκαν από το %s:"
 
-#: tazpkg:1787
-#, sh-format
-msgid "Removing: $PACKAGE"
-msgstr "Γίνεται απομάκρυνση του: $PACKAGE"
+#: tazpkg:1791
+msgid "Remove package \"%s\" (%s)? (y/N)"
+msgstr "Να γίνει απομάκρυνση του %s (%s)? (y/N)"
 
-#: tazpkg:1792
+#: tazpkg:1795
+msgid "Removing package \"%s\""
+msgstr "Γίνεται απομάκρυνση του: %s"
+
+#: tazpkg:1800
 msgid "Removing all files installed..."
 msgstr "Γίνεται απομάκρυνση όλων των εγκατεστημένων πακέτων..."
 
-#: tazpkg:1811
+#: tazpkg:1819
 msgid "Removing package receipt..."
 msgstr "Γίνεται απομάκρυνση των αποδείξεων πακέτου..."
 
-#: tazpkg:1828
-#, sh-format
-msgid "Remove packages depending on $PACKAGE? (y/N)"
-msgstr "Να γίνει απομάκρυνση των πακέτων που εξαρτώνται από το $PACKAGE? (y/N)"
+#: tazpkg:1836
+msgid "Remove packages depending on package \"%s\"? (y/N)"
+msgstr "Να γίνει απομάκρυνση των πακέτων που εξαρτώνται από το %s? (y/N)"
 
-#: tazpkg:1843
-#, sh-format
-msgid "Reinstall packages modified by $PACKAGE? (y/N)"
-msgstr "Να επανεγκατασταθούν τα πακέτα που εξαρτώνται από το $PACKAGE? (y/N)"
+#: tazpkg:1851
+msgid "Reinstall packages modified by package \"%s\"? (y/N)"
+msgstr "Να επανεγκατασταθούν τα πακέτα που εξαρτώνται από το %s? (y/N)"
 
-#: tazpkg:1849
-#, sh-format
-msgid "Check $INSTALLED/$i for reinstallation"
-msgstr "Ελέγξτε τα $INSTALLED/$i για επανεγκατάσταση"
+#: tazpkg:1857
+msgid "Check %s for reinstallation"
+msgstr "Ελέγξτε τα %s για επανεγκατάσταση"
 
-#: tazpkg:1859
-#, sh-format
-msgid "Uninstallation of $PACKAGE cancelled."
-msgstr "Απεγκατάσταση του $PACKAGE έχει διαγραφεί."
+#: tazpkg:1867
+msgid "Uninstallation of package \"%s\" cancelled."
+msgstr "Απεγκατάσταση του %s έχει διαγραφεί."
 
-#: tazpkg:1868
-#, sh-format
-msgid "Extracting: $PACKAGE"
-msgstr "Γίνεται εξαγωγή του: $PACKAGE"
+#: tazpkg:1876
+msgid "Extracting package \"%s\""
+msgstr "Γίνεται εξαγωγή του: %s"
 
-#: tazpkg:1879 tazpkg:1896
+#: tazpkg:1887 tazpkg:1905
 msgid "Copying original package..."
 msgstr "Γίνεται αντιγραφή του πρωτότυπου πακέτου..."
 
-#: tazpkg:1885
-#, sh-format
-msgid "$PACKAGE is extracted to: $DESTDIR"
-msgstr "Γίνεται εξαγωγή του $PACKAGE στο: $DESTDIR"
+#: tazpkg:1894
+msgid "Package \"%s\" is extracted to \"%s\""
+msgstr "Γίνεται εξαγωγή του %s στο: %s"
 
-#: tazpkg:1893
+#: tazpkg:1902
 #, sh-format
 msgid "Recompressing: $PACKAGE"
 msgstr "Γίνεται επανασυμπίεση του: $PACKAGE"
 
-#: tazpkg:1903
+#: tazpkg:1912
 msgid "Recompressing the fs..."
 msgstr "Γίνεται επανασυμπίεση του fs..."
 
-#: tazpkg:1908
+#: tazpkg:1917
 msgid "Creating new package..."
 msgstr "Δημιουργείται νέο πακέτο..."
 
-#: tazpkg:1930
+#: tazpkg:1939
 msgid "File lost"
 msgstr "Το αρχείο χάθηκε"
 
-#: tazpkg:1943 pkgs.cgi:807
+#: tazpkg:1952 pkgs.cgi:807
 msgid "Configuration files"
 msgstr "Αρχεία ρυθμίσεων"
 
-#: tazpkg:1981
+#: tazpkg:1990
 #, sh-format
 msgid "User configuration backup on $pkg_date"
 msgstr "Ανττίγραφο ασφαλείας με τις ρυθμίσεις χρήστη στο $pkg_date"
 
-#: tazpkg:1998
+#: tazpkg:2007
 #, sh-format
 msgid "Repacking: $PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
 msgstr "Γίνεται ξαναπακετάρισμα στο: $PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
 
-#: tazpkg:2000
+#: tazpkg:2009
 #, sh-format
 msgid "Can't repack $PACKAGE"
 msgstr "Αδύνατο το ξαναπακετάρισμα $PACKAGE"
 
-#: tazpkg:2004
+#: tazpkg:2013
 #, sh-format
 msgid "Can't repack, $PACKAGE files have been modified by:"
 msgstr "Αδύνατο το ξαναπακετάρισμα, $PACKAGE τα αρχεία τροποποιήθηκαν από:"
 
-#: tazpkg:2016
+#: tazpkg:2025
 msgid "Can't repack, the following files are lost:"
 msgstr "Αδύνατο το ξαναπακετάρισμα, χάθηκαν τα εξής αρχεία:"
 
-#: tazpkg:2043
+#: tazpkg:2052
 #, sh-format
 msgid "Can't repack, $CHECKSUM error."
 msgstr "Αδύνατο το ξαναπακετάρισμα, σφάλμα στο $CHECKSUM."
 
-#: tazpkg:2054
+#: tazpkg:2063
 #, sh-format
 msgid "Package $PACKAGE repacked successfully."
 msgstr "Το πακέτο $PACKAGE ξαναπακεταρίστηκε επιτυχώς."
 
-#: tazpkg:2056 tazpkg:2112
+#: tazpkg:2065 tazpkg:2121
 #, sh-format
 msgid "Size: $pkg_size"
 msgstr "Μέγεθος: $pkg_size"
 
-#: tazpkg:2066
+#: tazpkg:2075
 msgid "Receipt is missing. Please read the documentation."
 msgstr "Λείπει η απόδειξη. Παρακαλώ διαβάστε την τεκμηρίωση."
 
-#: tazpkg:2069
+#: tazpkg:2078
 #, sh-format
 msgid "Packing: $PACKAGE"
 msgstr "Γίνεται πακετάρισμα: $PACKAGE"
 
-#: tazpkg:2071
+#: tazpkg:2080
 msgid "Creating the list of files..."
 msgstr "Δημιουργείται ο κατάλογος αρχείων..."
 
-#: tazpkg:2077
+#: tazpkg:2086
 #, sh-format
 msgid "Creating $CHECKSUM of files..."
 msgstr "Δημιουργείται το $CHECKSUM των αρχείων..."
 
-#: tazpkg:2091
+#: tazpkg:2100
 msgid "Compressing the fs..."
 msgstr "Γίνεται συμπίεση του fs..."
 
-#: tazpkg:2098
+#: tazpkg:2107
 msgid "Updating receipt sizes..."
 msgstr "Γίνεται ενημέρωση του μεγέθους των αποδείξεων..."
 
-#: tazpkg:2103
+#: tazpkg:2112
 msgid "Creating full cpio archive..."
 msgstr "Δημιουργείται ένα πλήρες αρχείο cpio..."
 
-#: tazpkg:2106
+#: tazpkg:2115
 msgid "Restoring original package tree..."
 msgstr "Γίνεται ανάκτηση του αρχικού δένδρου πακέτων..."
 
-#: tazpkg:2110
+#: tazpkg:2119
 #, sh-format
 msgid "Package $PACKAGE compressed successfully."
 msgstr "Το πακέτο $PACKAGE συμπιέσθηκε επιτυχώς."
 
-#: tazpkg:2137
+#: tazpkg:2146
 #, sh-format
 msgid "$repo doesn't exist."
 msgstr "Το $repo δεν υπάρχει."
 
-#: tazpkg:2155
+#: tazpkg:2164
 #, sh-format
 msgid "Undigest $base_path"
 msgstr "Πειραματικό (undigest) $base_path"
 
-#: tazpkg:2157
+#: tazpkg:2166
 #, sh-format
 msgid "$repository_name is up to date."
 msgstr "Το $repository_name είναι ενημερωμένο."
 
-#: tazpkg:2172
+#: tazpkg:2181
 #, sh-format
 msgid "Recharging undigest $base_path:"
 msgstr "Γίνεται επαναφόρτωση του πειραματικού (undigest) $base_path:"
 
-#: tazpkg:2176
+#: tazpkg:2185
 msgid "Creating backup of the last packages list..."
 msgstr ""
 "Γίνεται λήψη αντιγράφου ασφαλείας του καταλόγου με τα τελευταία πακέτα..."
 
-#: tazpkg:2209
+#: tazpkg:2218
 #, sh-format
 msgid "$num new package on the mirror."
 msgid_plural "$num new packages on the mirror."
 msgstr[0] "$num νέο πακέτο στο mirror."
 msgstr[1] "$num νέα πακέτα στο mirror."
 
-#: tazpkg:2212
+#: tazpkg:2221
 msgid "No new packages on the mirror."
 msgstr "Δεν υπάρχουν νέα πακέτα στον mirror."
 
-#: tazpkg:2217
+#: tazpkg:2226
 msgid ""
 "Last packages.list is ready to use. Note that next time you recharge the\n"
 "list, a list of differences will be displayed to show new and upgradeable\n"
@@ -966,262 +948,262 @@ msgstr ""
 "επόμενη φορά που θα ξαναφορτώσετε τον κατάλογο, θα εμφανιστεί μια λίστα\n"
 "με διαφορές, για να δείξει τα νέα και ενημερώσιμα πακέτα."
 
-#: tazpkg:2256
+#: tazpkg:2265
 #, sh-format
 msgid "$pkg_list is older than one week... recharging"
 msgstr ""
 "Ο κατάλογος $pkg_list είναι παλιότερος από μια εβδομάδα... γίνεται "
 "επαναφόρτωση"
 
-#: tazpkg:2260 pkgs.cgi:440
+#: tazpkg:2269 pkgs.cgi:440
 msgid "Package"
 msgstr "Πακέτο"
 
-#: tazpkg:2260 pkgs.cgi:146
+#: tazpkg:2269 pkgs.cgi:146
 msgid "Version"
 msgstr "Έκδοση"
 
-#: tazpkg:2260
+#: tazpkg:2269
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: tazpkg:2285
+#: tazpkg:2294
 msgid "Blocked"
 msgstr "Μπλοκαρίστηκε"
 
-#: tazpkg:2292
+#: tazpkg:2301
 msgid "New build"
 msgstr "Νέο build"
 
-#: tazpkg:2294
+#: tazpkg:2303
 #, sh-format
 msgid "New version $new"
 msgstr "Νέα έκδοση $new"
 
-#: tazpkg:2307
+#: tazpkg:2316
 msgid "System is up-to-date..."
 msgstr "Το σύστημα είναι ενημερωμένο..."
 
-#: tazpkg:2311
+#: tazpkg:2320
 #, sh-format
 msgid "$num installed package scanned in ${time}s"
 msgid_plural "$num installed packages scanned in ${time}s"
 msgstr[0] "$num το εγκατεστημένο πακέτο σαρώθηκε σε $time δευτερόλεπτα"
 msgstr[1] "$num τα εγκατεστημένα πακέτα σαρώθηκαν σε $time δευτερόλεπτα"
 
-#: tazpkg:2316
+#: tazpkg:2325
 #, sh-format
 msgid "$num blocked"
 msgid_plural "$num blocked"
 msgstr[0] "$num μπλοκαρίστηκε"
 msgstr[1] "$num μπλοκαρίστηκαν"
 
-#: tazpkg:2319
+#: tazpkg:2328
 #, fuzzy
 msgid "0 blocked"
 msgstr "$num μπλοκαρίστηκε"
 
-#: tazpkg:2323
+#: tazpkg:2332
 #, sh-format
 msgid "You have $num available upgrade ($blocked)"
 msgid_plural "You have $num available upgrades ($blocked)"
 msgstr[0] "Έχετε $num διαθέσιμη ενημέρωσ ($blocked)"
 msgstr[1] "Έχετε $num διαθέσιμες ενημερώσεις ($blocked)"
 
-#: tazpkg:2333
+#: tazpkg:2342
 msgid "Do you wish to install them now: y/n ? "
 msgstr "Θέλετε να τα εγκαταστήσετε τώρα: y/n ?"
 
-#: tazpkg:2345
+#: tazpkg:2354
 msgid "Leaving without any upgrades installed."
 msgstr "Το αφήνετε χωρίς να έχουν εγκατασταθεί καθόλου ενημερώσεις."
 
-#: tazpkg:2359
+#: tazpkg:2368
 msgid "No known bugs."
 msgstr "Δεν υπάρχουν γνωστά σφάλματα."
 
-#: tazpkg:2365
+#: tazpkg:2374
 msgid "Bug list completed"
 msgstr "Ο κατάλογος σφαλμάτων ολοκληρώθηκε"
 
-#: tazpkg:2367
+#: tazpkg:2376
 #, sh-format
 msgid "Bugs in package $PACKAGE version $VERSION$EXTRAVERSION:"
 msgstr "Υπάρχουν σφάλματα στην $PACKAGE έκδοση $VERSION$EXTRAVERSION:"
 
-#: tazpkg:2386
+#: tazpkg:2395
 #, sh-format
 msgid "The package $PACKAGE installation has not completed"
 msgstr "Η εγκατάσταση του πακέτου $PACKAGE δεν ολοκληρώθηκε"
 
-#: tazpkg:2393
+#: tazpkg:2402
 #, sh-format
 msgid "The package $PACKAGE-$VERSION$EXTRAVERSION has been modified by:"
 msgstr "Το πακέτο $PACKAGE-$VERSION$EXTRAVERSION τροποποιήθηκε από:"
 
-#: tazpkg:2398
+#: tazpkg:2407
 #, sh-format
 msgid "Files lost from $PACKAGE-$VERSION$EXTRAVERSION:"
 msgstr "Χάθηκαν αρχεία από το $PACKAGE-$VERSION$EXTRAVERSION:"
 
-#: tazpkg:2402
+#: tazpkg:2411
 msgid "target of symlink"
 msgstr "στόχος του συμβολικού δεσμού symlink"
 
-#: tazpkg:2407
+#: tazpkg:2416
 #, sh-format
 msgid "Missing dependencies for $PACKAGE-$VERSION$EXTRAVERSION:"
 msgstr "Εξαρτήσεις που λείπουν για το $PACKAGE-$VERSION$EXTRAVERSION:"
 
-#: tazpkg:2414
+#: tazpkg:2423
 #, sh-format
 msgid "Dependencies loop between $PACKAGE and:"
 msgstr "Υπάρχει βρόχος (loop) εξαρτήσεων ανάμεσα στο $PACKAGE και το:"
 
-#: tazpkg:2419
+#: tazpkg:2428
 msgid "Looking for known bugs..."
 msgstr "Γίνεται αναζήτηση για γνωστά σφάλματα..."
 
-#: tazpkg:2445
+#: tazpkg:2454
 #, sh-format
 msgid "The following packages provide $file:"
 msgstr "Τα ακόλουθα πακέτα παρέχουν το $file:"
 
-#: tazpkg:2451
+#: tazpkg:2460
 #, sh-format
 msgid "(overridden by $pkg_list)"
 msgstr "(παρακάμπτεται απο το $pkg_list)"
 
-#: tazpkg:2459
+#: tazpkg:2468
 msgid "No package has installed the following files:"
 msgstr "Κανένα πακεο δεν εγκατέστησε τα εξής αρχεία:"
 
-#: tazpkg:2468
+#: tazpkg:2477
 msgid "Check completed."
 msgstr "Ο έλεγχος ολοκληρώθηκε."
 
-#: tazpkg:2477
+#: tazpkg:2486
 #, sh-format
 msgid "$PACKAGE is already in the blocked packages list."
 msgstr ""
 "Το $PACKAGE συμπεριλαμβάνεται ήδη στη λίστα των μπλοκαρισμένων πακέτων."
 
-#: tazpkg:2479
+#: tazpkg:2488
 #, sh-format
 msgid "Add $PACKAGE to: $BLOCKED..."
 msgstr "Προσθήκη του $PACKAGE στα: $BLOCKED..."
 
-#: tazpkg:2495
+#: tazpkg:2504
 #, sh-format
 msgid "Removing $PACKAGE from: $BLOCKED..."
 msgstr "Γίνεται απομάκρυνση του $PACKAGE από τα: $BLOCKED..."
 
-#: tazpkg:2503
+#: tazpkg:2512
 #, sh-format
 msgid "$PACKAGE is not in the blocked packages list."
 msgstr "Το $PACKAGE δεν ανήκει στη λίστα μπλοκαρισμένων πακέτων."
 
-#: tazpkg:2521 tazpkg:2566
+#: tazpkg:2530 tazpkg:2575
 msgid "rootconfig needs --root= option used."
 msgstr "Το rootconfig πρέπει να χρησιμοποιήσει την επιλογή --root= option"
 
-#: tazpkg:2533
+#: tazpkg:2542
 #, fuzzy, sh-format
 msgid "$PACKAGE already in the cache"
 msgstr "$PACKAGE βρίκεται ήδη στη μνήμη cache: $CACHE_DIR"
 
-#: tazpkg:2536 tazpkg:2600
+#: tazpkg:2545 tazpkg:2609
 #, sh-format
 msgid "Continuing $PACKAGE download"
 msgstr "Συνεχίζεται η μεταφόρτωση του $PACKAGE"
 
-#: tazpkg:2597
+#: tazpkg:2606
 #, sh-format
 msgid "$PACKAGE already in the cache: $CACHE_DIR"
 msgstr "$PACKAGE βρίκεται ήδη στη μνήμη cache: $CACHE_DIR"
 
-#: tazpkg:2623
+#: tazpkg:2632
 #, fuzzy, sh-format
 msgid "Path: $CACHE_DIR"
 msgstr "Καθαρισμός της μνήμης cache: $CACHE_DIR"
 
-#: tazpkg:2624
+#: tazpkg:2633
 msgid "Cleaning cache directory..."
 msgstr "Γίνεται καθαρισμός του καταλόγου της μνήμης cache..."
 
-#: tazpkg:2630
+#: tazpkg:2639
 #, fuzzy, sh-format
 msgid "$num file removed from cache."
 msgid_plural "$num files removed from cache."
 msgstr[0] "$num το αρχείο έχει διαγραφεί από τη μνήμη cache."
 msgstr[1] "$num το αρχείο έχει διαγραφεί από τη μνήμη cache."
 
-#: tazpkg:2644
+#: tazpkg:2653
 msgid "Current undigest(s)"
 msgstr "Τρέχοντα πειραματικά undigest(s)"
 
-#: tazpkg:2647
+#: tazpkg:2656
 msgid "No undigest mirror found."
 msgstr "Δεν βρέθηκε πειραματικός (undigest) mirror."
 
-#: tazpkg:2661
+#: tazpkg:2670
 #, sh-format
 msgid "Remove $undigest undigest? (y/N)"
 msgstr "Απομάκρυνση $undigest πειραματικού (undigest)? (y/N)"
 
-#: tazpkg:2663
+#: tazpkg:2672
 #, sh-format
 msgid "Removing $undigest undigest..."
 msgstr "Γίνεται απομάκρυνση $undigest πειραματικού..."
 
-#: tazpkg:2669
+#: tazpkg:2678
 #, sh-format
 msgid "Undigest $undigest not found"
 msgstr "Το πειραματικό (undigest) $undigest δεν βρέθηκε"
 
-#: tazpkg:2686
+#: tazpkg:2695
 #, sh-format
 msgid "Creating new undigest $undigest."
 msgstr "Δημιουργείται νέο πειραματικό (undigest) $undigest."
 
-#: tazpkg:2711
+#: tazpkg:2720
 #, sh-format
 msgid "Unknown option $u_opt."
 msgstr "Άγνωστη επιλογή $u_opt."
 
-#: tazpkg:2726
+#: tazpkg:2735
 #, sh-format
 msgid "Nothing to do for $PACKAGE."
 msgstr "Δεν μπορεί να γίνει τίποτε για το $PACKAGE."
 
-#: tazpkg:2730
+#: tazpkg:2739
 #, sh-format
 msgid "Package $PACKAGE is not installed."
 msgstr "Το πακέτο $PACKAGE δεν έχει εγκατασταθεί."
 
-#: tazpkg:2731
+#: tazpkg:2740
 msgid "Install package with 'tazpkg install' or 'tazpkg get-install'"
 msgstr ""
 "Εγκαταστήστε το πακέτο με το 'tazpkg install' ή το 'tazpkg get-install'"
 
-#: tazpkg:2745
+#: tazpkg:2754
 #, fuzzy
 msgid "TazPKG SHell."
 msgstr "Κέλυφος του TazPkg"
 
-#: tazpkg:2746
+#: tazpkg:2755
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr ""
 "Πληκτρολογήστε την εντολή 'usage' για να εμφανισθεί ένας κατάλογος με όλες "
 "τις\n"
 "διαθέσιμες εντολές, ή δώστε την εντολή 'quit', ή απλώς 'q' για να βγείτε."
 
-#: tazpkg:2755
+#: tazpkg:2764
 #, fuzzy
 msgid "You are already running a TazPKG SHell."
 msgstr "Τρέχετε ήδη ένα κέλυφος TazPkg"
 
-#: tazpkg:2796
+#: tazpkg:2805
 msgid ""
 "\n"
 "usage:   tazpkg link package_name slitaz_root\n"
@@ -1233,26 +1215,26 @@ msgstr ""
 "παράδειγμα: Το 'tazpkg link openoffice /mnt' θα χρησιμοποιήσει λιγώτερα από\n"
 "            100KB στο σύστημα που τρέχετε.\n"
 
-#: tazpkg:2804
+#: tazpkg:2813
 #, sh-format
 msgid "$PACKAGE is already installed."
 msgstr "Το $PACKAGE είναι ήδη εγκατεστημένο."
 
-#: tazpkg:2813
+#: tazpkg:2822
 #, sh-format
 msgid "Missing: $i"
 msgstr "Λείπουν: $i"
 
-#: tazpkg:2817
+#: tazpkg:2826
 msgid "Link all missing dependencies? (y/N)"
 msgstr "Σύνδεση όλων των εξαρτήσεων που λείπουν? (y/N)"
 
-#: tazpkg:2826
+#: tazpkg:2835
 #, sh-format
 msgid "Leaving dependencies unresolved for: $PACKAGE"
 msgstr "Έχουν μείνει ανεπίλυτες εξαρτήσεις για το: $PACKAGE"
 
-#: tazpkg:2827
+#: tazpkg:2836
 msgid "The package is installed but probably will not work."
 msgstr "Το πακέτο εγκαταστάθηκε, αλλά μάλλον δε θα δουλέψει."
 
@@ -1790,6 +1772,9 @@ msgstr[1] "Υπάρχουν $num αναβαθμίσιμα πακέτα"
 #, sh-format
 msgid "System is up to date - $text"
 msgstr "Το σύστημα είναι ενημερωμένο - $text"
+
+#~ msgid "No file found for: $file"
+#~ msgstr "Δεν βρέθηκε κανένα αρχείο για το: $file"
 
 #~ msgid "Package $PACKAGE:"
 #~ msgstr "Πακέτο $PACKAGE:"
