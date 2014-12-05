@@ -88,7 +88,7 @@ reverse_translate_category()
 
 # Print localized title
 
-title() { newline; boldify "$(eval_gettext "$1")"; separator; }
+title() { newline; boldify "$(_ "$@")"; separator; }
 
 
 # Print footer
@@ -100,8 +100,8 @@ footer() { separator; echo "$1"; [ -n "$1" ] && newline; }
 
 action() {
 	case $output in
-		raw|gtk|html) eval_gettext "$@" ;;
-		*) echo -ne "\033[0;33m"$(eval_gettext "$@")"\033[0m" ;;
+		raw|gtk|html) _ "$@" ;;
+		*) echo -ne "\033[0;33m"$(_ "$@")"\033[0m" ;;
 	esac
 }
 
@@ -144,7 +144,7 @@ DEFAULT_MIRROR="$ONLINE_PKGS"
 usage () {
 	cat << EOT
 
-$(_ 'SliTaz package manager - Version:') $(colorize 34 $VERSION)
+$(_ 'SliTaz package manager - Version: %s' $(colorize 34 $VERSION))
 
 $(boldify "$(_ 'Usage:')")
   $(_ 'tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]')
@@ -170,7 +170,7 @@ $(boldify "$(_ 'Commands:')")
   extract|-e       $(_ 'Extract a (*.tazpkg) package into a directory')
   pack             $(_ 'Pack an unpacked or prepared package tree')
   recharge         $(_ 'Recharge your packages.list from the mirror')
-  up|help-up       $(_ 'Check packages $CHECKSUM to list and install latest upgrades')
+  up|help-up       $(_ 'Check packages %s to list and install latest upgrades' $CHECKSUM)
   repack           $(_ 'Create a package archive from an installed package')
   repack-config    $(_ 'Create a package archive with configuration files')
   recompress       $(_ 'Rebuild a package with a better compression ratio')
@@ -185,7 +185,7 @@ $(boldify "$(_ 'Commands:')")
   clean-cache|-cc  $(_ 'Clean all packages downloaded in cache directory')
   depends          $(_ 'Display dependencies tree')
   rdepends         $(_ 'Display reverse dependencies tree')
-  convert          $(_ 'Convert deb/rpm/tgz/pet/sfs/sb/arch/ipk package to tazpkg)')
+  convert          $(_ 'Convert alien package to tazpkg')
   link             $(_ 'Link a package from another slitaz installation')
   setup-mirror|-sm $(_ 'Change the mirror url configuration')
   list-undigest    $(_ 'List undigest mirrors')
@@ -222,7 +222,7 @@ check_dir()
 {
 	if ! [ -d "$1" ]; then
 		FOLDER=$1
-		action 'Creating $FOLDER...'
+		action 'Creating folder "%s"...' $FOLDER
 		mkdir -p "$FOLDER"
 		status
 		return 1
@@ -267,7 +267,7 @@ check_for_package_file()
 {
 	if [ ! -f "$PACKAGE_FILE" ]; then
 		newline
-		_ 'Unable to find: $PACKAGE_FILE'
+		_ 'Unable to find file "%s"' $PACKAGE_FILE
 		newline
 		exit 0
 	fi
@@ -281,7 +281,7 @@ check_for_receipt()
 	receipt_path="$1$INSTALLED/$PACKAGE/receipt"
 	if [ ! -f $receipt_path ]; then
 		newline
-		_ 'Unable to find the receipt: $receipt_path'
+		_ 'Unable to find the receipt "%s"' $receipt_path
 		newline
 		exit 0
 	fi
@@ -343,11 +343,8 @@ check_for_installed_package()
 {
 	if [ -n "$(get_installed_package_pathname $PACKAGE $1)" ]; then
 		newline
-		# FIXME
-		cat << EOT
-$(colorize 34 $PACKAGE) $(_ "package is already installed.
-You can use the --forced option to force installation.")
-EOT
+		_ '"%s" package is already installed.' $(colorize 34 $PACKAGE)
+		_ 'You can use the --forced option to force installation.'
 		newline
 		exit 0
 	fi
@@ -364,7 +361,7 @@ check_for_packages_list()
 			tazpkg recharge
 		else
 			newline
-			_ 'Unable to find the list: $list_path'
+			_ 'Unable to find the list "%s"' $list_path
 			_ \
 "You must probably run 'tazpkg recharge' as root to get the latest list of
 packages available on the mirror."
@@ -383,7 +380,7 @@ check_for_installed_info()
 	info_path="$PKGS_DB/installed.info"
 	if [ ! -f "$info_path" ]; then
 		if [ "$(id -u)" == "0" ]; then
-			_ 'File installed.info generated. Please wait...'
+			_ 'File "%s" generated. Please wait...' installed.info
 			for pkg in $PKGS_DB/installed/*/receipt; do
 				unset_receipt
 				. $pkg
@@ -394,7 +391,7 @@ $PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEP
 EOT
 			done
 		else
-			_ 'Unable to find: installed.info'
+			_ 'Unable to find file "%s"' installed.info
 			_ 'Please run tazpkg as root.'
 			exit 1
 		fi
@@ -516,7 +513,7 @@ check_for_package_in_list()
 		rm -f $tmp/rep $tmp/cachedir
 	else
 		newline
-		_ 'Unable to find: $PACKAGE in the mirrored packages list.'
+		_ 'Unable to find package "%s" in the mirrored packages list.' $PACKAGE
 		newline
 		[ -n "$check_only" ] && return 1
 		exit 0
@@ -603,7 +600,7 @@ download()
 
 extract_package()
 {
-	action 'Extracting $PACKAGE...'
+	action 'Extracting package...'
 	cpio -idm --quiet < ${PACKAGE_FILE##*/} && rm -f ${PACKAGE_FILE##*/}
 	status
 	if [ -f fs.cpio.lzma ]; then
@@ -679,9 +676,9 @@ install_package()
 	mkdir -p $TMP_DIR
 	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $ROOT$PKGS_DB/$INSTALL_LIST-processed
 
-	title 'Installation of: $PACKAGE'
+	title 'Installation of package "%s"' $PACKAGE
 
-	action 'Copying $PACKAGE...'
+	action 'Copying package...'
 	cp $PACKAGE_FILE $TMP_DIR
 	status
 
@@ -700,8 +697,7 @@ install_package()
 		action "Checking post install dependencies..."
 		[ -f $INSTALLED/$PACKAGE/receipt ]
 		if ! status; then
-			command="tazpkg install $PACKAGE_FILE"
-			_ "Please run '\$command' in / and retry."
+			_ 'Please run "%s" in / and retry.' "tazpkg install $PACKAGE_FILE"
 			rm -rf $TMP_DIR
 			exit 1
 		fi
@@ -783,7 +779,7 @@ END {
 	fi
 	if [ -n "$CONFIG_FILES" ]; then
 		# save 'official' configuration files
-		action 'Saving configuration files for $PACKAGE...'
+		action 'Saving configuration files...'
 		for i in $CONFIG_FILES; do
 			{ cd fs ; find ${i#/} -type f 2> /dev/null; cd ..; }
 		done | { cd fs ; cpio -o -H newc --quiet | gzip -9; cd ..; } > \
@@ -799,12 +795,12 @@ END {
 		status
 	fi
 
-	action 'Installing $PACKAGE...'
+	action 'Installing package...'
 	[ "$(busybox ls fs/* 2> /dev/null)" ] && cp -a fs/* $ROOT/
 	status
 
 	if [ -s files2remove.list ]; then
-		action 'Removing old $PACKAGE...'
+		action 'Removing old package...'
 		while read file; do
 			remove_with_path $ROOT$file
 		done < files2remove.list
@@ -855,8 +851,7 @@ $PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEP
 EOT
 
 	cd $TOP_DIR
-	pkg_name="$PACKAGE ($VERSION$EXTRAVERSION)"
-	footer "$(_ '$pkg_name is installed.')"
+	footer "$(_ 'Package "%s" (%s) is installed.' $PACKAGE $VERSION$EXTRAVERSION)"
 
 	# Log this activity
 	[ -n "$ROOT" ] || log_pkg Installed
@@ -895,8 +890,8 @@ install_package_from_get_script()
 	set +e
 	cd $TMP_DIR
 	[ -d $PACKAGE-$VERSION ] || abort_package \
-	  "Could not download ${TARBALL:-$PACKAGE} from ${WGET_URL:-$WEB_SITE}. Exiting."
-	
+		"$(_ 'Could not download "%s" from "%s". Exiting.' ${TARBALL:-$PACKAGE} ${WGET_URL:-$WEB_SITE})"
+
 	if [ ! -s $PACKAGE-$VERSION/receipt ]; then
 		cat > $PACKAGE-$VERSION/receipt <<EOT
 # SliTaz package receipt.
@@ -954,8 +949,8 @@ check_for_deps_loop()
 	# Filter out already processed deps
 	for i in $@; do
 		case " $ALL_DEPS" in
-		*\ $i\ *);;
-		*) list="$list $i";;
+			*\ $i\ *) ;;
+			*) list="$list $i";;
 		esac
 	done
 	ALL_DEPS="$ALL_DEPS$list "
@@ -963,8 +958,8 @@ check_for_deps_loop()
 		[ -f $i/receipt ] || continue
 		deps="$(DEPENDS=""; . $i/receipt; echo $DEPENDS)"
 		case " $deps " in
-		*\ $pkg\ *) echo -e "$MSG  $i"; MSG="";;
-		*) check_for_deps_loop $pkg $deps;;
+			*\ $pkg\ *) echo -e "$MSG  $i"; MSG="";;
+			*) check_for_deps_loop $pkg $deps;;
 		esac
 	done
 }
@@ -989,23 +984,22 @@ check_for_deps()
 			MISSING_PACKAGE=$i
 			num=$(($num+1))
 		elif [ ! -f "$1$INSTALLED/$i/receipt" ]; then
-			_ 'WARNING Dependency loop between $PACKAGE and $i.'
+			_ 'WARNING! Dependency loop between "%s" and "%s".' $PACKAGE $i
 		fi
 	done
 
 	if [ ! "$MISSING_PACKAGE" = "" ]; then
-		title "$(_ 'Tracking dependencies for: $PACKAGE')"
+		title "$(_ 'Tracking dependencies for package "%s"' $PACKAGE)"
 		for pkgorg in $DEPENDS; do
 			i=$(equivalent_pkg $pkgorg $1)
 			if [ ! -d "$1$INSTALLED/$i" ]; then
 				MISSING_PACKAGE=$i
-				_ 'Missing: $MISSING_PACKAGE'
+				_ 'Missing package "%s"' $MISSING_PACKAGE
 			fi
 		done
-		separator
-		eval_ngettext \
+		footer "$(eval_ngettext \
 			'$num missing package to install.' \
-			'$num missing packages to install.' $num; echo
+			'$num missing packages to install.' $num)"
 	fi
 }
 
@@ -1038,7 +1032,7 @@ install_deps()
 				# the TAZPKG_BASENAME in the local packages.list.
 				found=0
 				if [ -f "$list" ]; then
-					_ 'Checking if $pkg exists in local list...'
+					_ 'Checking if package "%s" exists in local list...' $pkg
 					mkdir $TMP_DIR
 					for i in $pkg-*.tazpkg; do
 						[ -f $i ] || continue
@@ -1064,9 +1058,8 @@ install_deps()
 		done
 	else
 		newline
-		_ \
-"Leaving dependencies for \$PACKAGE unresolved.
-The package is installed but will probably not work."
+		_ 'Leaving dependencies for package "%s" unresolved.' $PACKAGE
+		_ 'The package is installed but will probably not work.'
 		newline
 	fi
 }
@@ -1078,9 +1071,8 @@ search_in_installed_packages()
 {
 	_ 'Installed packages'
 	separator
-	list=`ls -1 $INSTALLED | grep -i "$PATTERN"`
 	num=0
-	for pkg in $list; do
+	for pkg in $(ls -1 $INSTALLED | grep -i "$PATTERN"); do
 		EXTRAVERSION=""
 		[ -f $INSTALLED/$pkg/receipt ] || continue
 		. $INSTALLED/$pkg/receipt
@@ -1088,15 +1080,9 @@ search_in_installed_packages()
 		num=$(($num+1))
 	done
 
-	# Set correct ending messages.
-	if [ x$num == x ]; then
-		_ 'No installed packages found for: $PATTERN'
-		newline
-	else
-		footer "$(eval_ngettext \
-			'$num installed package found for: $PATTERN' \
-			'$num installed packages found for: $PATTERN' $num)"
-	fi
+	footer "$(eval_ngettext \
+		'$num installed package found for: $PATTERN' \
+		'$num installed packages found for: $PATTERN' $num)"
 }
 
 
@@ -1119,14 +1105,9 @@ search_in_packages_list()
 please run 'tazpkg recharge' once as root before searching."
 		newline
 	fi
-	if [ "$num" = "0" ]; then
-		_ 'No available packages found for: $PATTERN'
-		newline
-	else
-		footer "$(eval_ngettext \
-			'$num available package found for: $PATTERN' \
-			'$num available packages found for: $PATTERN' $packages)"
-	fi
+	footer "$(eval_ngettext \
+		'$num available package found for: $PATTERN' \
+		'$num available packages found for: $PATTERN' $packages)"
 }
 
 
@@ -1149,14 +1130,9 @@ search_in_packages_txt()
 please run 'tazpkg recharge' once as root before searching."
 		newline
 	fi
-	if [ "$num" = "0" ]; then
-		_ 'No available packages found for: $PATTERN'
-		newline
-	else
-		footer "$(eval_ngettext \
-			'$num available package found for: $PATTERN' \
-			'$num available packages found for: $PATTERN' $packages)"
-	fi
+	footer "$(eval_ngettext \
+		'$num available package found for: $PATTERN' \
+		'$num available packages found for: $PATTERN' $packages)"
 }
 
 
@@ -1206,7 +1182,7 @@ install_flavor()
 			tazpkg remove $PACKAGE
 		done
 	else
-		_ "Can't find flavor \$FLAVOR. Abort."
+		_ "Can't find flavor \"%s\". Abort." $FLAVOR
 	fi
 	cd $TOP_DIR
 	rm -rf $TMP_DIR
@@ -1237,7 +1213,7 @@ the complete address to the directory of the packages and packages.list file."
 	if [ "$NEW_MIRROR_URL" = "" ]; then
 		_ 'Nothing has been changed.'
 	else
-		_ 'Setting mirror(s) to: $NEW_MIRROR_URL'
+		_ 'Setting mirror(s) to: "%s"' $NEW_MIRROR_URL
 		rm -f $1/mirror
 		for i in $NEW_MIRROR_URL; do
 			echo "${i%/}/" >> $1/mirror
@@ -1396,7 +1372,7 @@ case "$COMMAND" in
 				# Check for an asked category.
 				ASKED_CATEGORY_I18N="$@"
 				ASKED_CATEGORY=$(reverse_translate_category "$ASKED_CATEGORY_I18N")
-				title 'Installed packages of category: $ASKED_CATEGORY_I18N'
+				title 'Installed packages of category "%s"' $ASKED_CATEGORY_I18N
 				TMPLIST=$(mktemp)
 				awk -F$'\t' '
 				{
@@ -1450,7 +1426,7 @@ case "$COMMAND" in
 		# List files installed with the package.
 		check_for_package_on_cmdline
 		check_for_receipt
-		title 'Installed files by: $PACKAGE'
+		title 'Installed files by "%s"' $PACKAGE
 		sort < $INSTALLED/$PACKAGE/files.list
 		files=$(wc -l < $INSTALLED/$PACKAGE/files.list)
 		num=$(emsg "<c 32>$files</c>")
@@ -1468,29 +1444,34 @@ case "$COMMAND" in
 		. $INSTALLED/$PACKAGE/receipt
 		title 'TazPKG information'
 		# Display localized short description
-		if [ -e "$PKGS_DB/packages-desc.$LANG" ]; then
-			LOCDESC=$(grep -e "^$PACKAGE	" $PKGS_DB/packages-desc.$LANG | cut -d'	' -f2)
-			[ "x$LOCDESC" != "x" ] && SHORT_DESC="$LOCDESC"
-		fi
-		emsg "\
-<b>$(_ 'Package    :')</b> $PACKAGE
-<b>$(_ 'Version    :')</b> $VERSION$EXTRAVERSION
-<b>$(_ 'Category   :')</b> $(_ $CATEGORY)
-<b>$(_ 'Short desc :')</b> $SHORT_DESC
-<b>$(_ 'Maintainer :')</b> $MAINTAINER"
-		[ -n "$LICENSE" ]       && emsg "<b>$(_ 'License    :')</b> $LICENSE"
-		[ -n "$DEPENDS" ]       && emsg "<b>$(_ 'Depends    :')</b> $DEPENDS"
-		[ -n "$SUGGESTED" ]     && emsg "<b>$(_ 'Suggested  :')</b> $SUGGESTED"
-		[ -n "$BUILD_DEPENDS" ] && emsg "<b>$(_ 'Build deps :')</b> $BUILD_DEPENDS"
-		[ -n "$WANTED" ]        && emsg "<b>$(_ 'Wanted src :')</b> $WANTED"
-		[ -n "$WEB_SITE" ]      && emsg "<b>$(_ 'Web site   :')</b> $WEB_SITE"
+		for LC in $LANG ${LANG%_*}; do
+			if [ -e "$PKGS_DB/packages-desc.$LC" ]; then
+				LOCDESC=$(grep -e "^$PACKAGE	" $PKGS_DB/packages-desc.$LC | cut -d'	' -f2)
+				[ -n "$LOCDESC" ] && SHORT_DESC="$LOCDESC"
+			fi
+		done
+		emsg "$(
+		{
+			_ 'Package    : %s' "$PACKAGE"
+			_ 'Version    : %s' "$VERSION$EXTRAVERSION"
+			_ 'Category   : %s' "$(_ $CATEGORY)"
+			_ 'Short desc : %s' "$SHORT_DESC"
+			_ 'Maintainer : %s' "$MAINTAINER"
+			_ 'License    : %s' "$LICENSE"
+			_ 'Depends    : %s' "$DEPENDS"
+			_ 'Suggested  : %s' "$SUGGESTED"
+			_ 'Build deps : %s' "$BUILD_DEPENDS"
+			_ 'Wanted src : %s' "$WANTED"
+			_ 'Web site   : %s' "$WEB_SITE"
+			_ 'Tags       : %s' "$TAGS"
+		} | sed '/: $/d; s|^\([^:]*\):|<b>\1:</b>|')"
 		footer ;;
 
 
 	desc)
 		# Display package description.txt if available.
 		if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
-			title 'Description of: $PACKAGE'
+			title 'Description of package "%s"' $PACKAGE
 			cat $INSTALLED/$PACKAGE/description.txt
 			footer
 		else
@@ -1531,7 +1512,7 @@ case "$COMMAND" in
 			newline
 			exit 0
 		fi
-		title 'Search result for: $PATTERN'
+		title 'Search result for "%s"' $PATTERN
 		# Default is to search in installed pkgs and the raw list.
 		case "$3" in
 			-i|--installed)
@@ -1555,27 +1536,25 @@ case "$COMMAND" in
 			newline
 			exit 0
 		fi
-		s_file="$2"
-		title 'Search result for file $s_file'
+		title 'Search result for file "%s"' $2
 
+		TMPLIST=$(mktemp)
 		if [ "$3" == "--mirror" ]; then
 
-			match=0
-			for i in $PKGS_DB/files.list.lzma \
-				$PKGS_DB/undigest/*/files.list.lzma; do
+			for i in $PKGS_DB/files.list.lzma $PKGS_DB/undigest/*/files.list.lzma; do
 				[ -f $i ] || continue
-				unlzma -c $i | grep -- ".*:.*$2" | awk '
+				lzcat $i | awk -F: -vP="$(gettext 'Package %s:')" '
 					BEGIN { last="" }
-					{
-						pkg=substr($0,0,index($0,":")-1);
-						file=substr($0,index($0,":")+2);
-						if (last != pkg) {
-							last = pkg;
-							printf("\n%c[1mPackage %s:%c[0m\n",27,pkg,27);
+					$2 ~ /'$2'/ {
+						if (last != $1) {
+							last = $1;
+							PP = P;
+							sub(/%s/, $1, PP);
+							printf("\n\e[1;33m%s\e[0;39m\n", PP);
 						}
-						printf("%s\n",file);
-					}'
-				match=$(($match + `unlzma -c $i | grep -- ".*:.*$2" | wc -l`))
+						gsub(/'$2'/, "\e[0;32m'$2'\e[0;39m", $2);
+						print $2
+					}' | tee -a $TMPLIST
 			done
 
 		else
@@ -1586,24 +1565,26 @@ case "$COMMAND" in
 				if grep -qs "$2" $pkg/files.list; then
 					. $pkg/receipt
 					newline
-					boldify "$(_ 'Package $PACKAGE:')"
-					grep "$2" $pkg/files.list
-					files=`grep $2 $pkg/files.list | wc -l`
-					match=$(($match+$files))
+					emsg "<c 33>$(_ 'Package %s:' $PACKAGE)</c>"
+					awk '
+						/'$2'/ {
+							gsub(/'$2'/, "\e[0;32m'$2'\e[0;39m", $0);
+							print " "$0
+						}
+					' $pkg/files.list | tee -a $TMPLIST
 				fi
 			done
 
 		fi
+
+		match=$(sed '/^ /!d' $TMPLIST | wc -l)
+		rm $TMPLIST
+
 		pkg=$2
-		if [ "$match" = "" ]; then
-			# FIXME
-			_ '0 files found for: $pkg'
-		else
-			num=$(emsg "<c 32>$files</c>")
-			footer "$(eval_ngettext \
-				'$num file found for: $pkg' \
-				'$num files found for: $pkg' $match)"
-		fi
+		num=$(emsg "<c 32>$match</c>")
+		footer "$(eval_ngettext \
+			'$num file found for: $pkg' \
+			'$num files found for: $pkg' $match)"
 		;;
 
 
@@ -1616,8 +1597,7 @@ case "$COMMAND" in
 			newline
 			exit 0
 		fi
-		s_pkg="$2"
-		title 'Search result for package $s_pkg'
+		title 'Search result for package "%s"' $2
 
 		# Search for a file on mirror and output only the package name
 		match=0
