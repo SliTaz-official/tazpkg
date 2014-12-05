@@ -332,11 +332,11 @@ msgstr ""
 
 #: tazpkg:383
 msgid "File \"%s\" generated. Please wait..."
-msgstr ""
+msgstr "Ficher \"%s\" généré. Veuillez patienter..."
 
 #: tazpkg:395
 msgid "Please run tazpkg as root."
-msgstr ""
+msgstr "Veuillez lancer tazpkg en tant que root."
 
 #: tazpkg:516
 msgid "Unable to find package \"%s\" in the mirrored packages list."
@@ -384,7 +384,7 @@ msgstr "Le paquet %s (%s) n'est pas installé."
 
 #: tazpkg:893
 msgid "Could not download \"%s\" from \"%s\". Exiting."
-msgstr ""
+msgstr "Impossible de télécharger \"%s\" depuis \"%s\". Abandon."
 
 #: tazpkg:987
 msgid "WARNING! Dependency loop between \"%s\" and \"%s\"."
