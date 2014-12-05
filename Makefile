@@ -49,6 +49,7 @@ install: msgfmt
 	# TazPkg command line interface
 	install -m 0755 -d                  $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg              $(DESTDIR)$(PREFIX)/bin
+	-[ "$(VERSION)" ] && sed -i 's/^VERSION=[0-9].*/VERSION=$(VERSION)/' $(DESTDIR)$(PREFIX)/bin/tazpkg
 	install -m 0777 tazpkg-convert      $(DESTDIR)$(PREFIX)/bin
 	install -m 0755 -d                  $(DESTDIR)$(PREFIX)/lib/tazpkg
 	install -m 0777 tazpkg-find-depends $(DESTDIR)$(PREFIX)/lib/tazpkg
