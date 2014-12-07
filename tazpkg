@@ -373,7 +373,7 @@ packages available on the mirror."
 
 
 # Check for installed.info - local file with format of packages.info
-# It absent on not clean installs; check it and re-generate if needed.
+# If absent on not clean installs; check it and re-generate if needed.
 
 check_for_installed_info()
 {
