@@ -97,7 +97,7 @@ footer() { separator; echo "$1"; [ -n "$1" ] && newline; }
 
 action() {
 	case $output in
-		raw|gtk|html) _ "$@" ;;
+		raw|gtk|html) _n "$@" ;;
 		*) echo -ne "\033[0;33m"$(_ "$@")"\033[0m" ;;
 	esac
 }
