@@ -19,7 +19,7 @@ all: msgfmt
 pot:
 	xgettext -o po/tazpkg.pot -L Shell \
 		--package-name=TazPkg \
-		--package-version="$(VERSION)" -kaction -ktitle -k_ -k_n \
+		--package-version="$(VERSION)" -kaction -ktitle -k_ -k_n -k_p:1,2 \
 		./tazpkg ./tazpkg-convert ./tazpkg-find-depends ./tazpkg-box \
 		./pkgs ./pkgs.cgi ./tazpkg-notify
 

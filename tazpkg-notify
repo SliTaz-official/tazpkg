@@ -7,13 +7,13 @@
 # be run by the WM autostart script or ~/.xsession and needs a systray to
 # sit in like in LXpanel or Tint2.
 #
-# Copyright (C) 2012 SliTaz GNU/Linux - GNU GPL v2
+# Copyright (C) 2012-2014 SliTaz GNU/Linux - GNU GPL v2
 #
 # Authors : Christophe Lincoln <pankso@slitaz.org>
 #
 
 # I18n
-. /usr/bin/gettext.sh
+. /lib/libtaz.sh
 export TEXTDOMAIN='tazpkg'
 
 fifo=/tmp/$(basename $0).fifo
@@ -22,15 +22,17 @@ db="/var/lib/tazpkg"
 doc="file:///usr/share/doc/tazpkg/tazpkg.html"
 
 installed=$(ls $db/installed | wc -l)
-num="<b>$installed</b>"
-text="$(eval_ngettext \
-		'$num installed package' \
-		'$num installed packages' $installed)"
+text="$(_p \
+		'%s installed package' \
+		'%s installed packages' $installed \
+		"<b>$installed</b>")"
 icon="/usr/share/pixmaps/tazpkg.png"
 [ -f "$db/packages.list" ] && mtime=$(find $db/packages.list -mtime +10;)
 [ -f "$db/packages.up" ] && up=$(cat $db/packages.up | wc -l)
 
+
 # Notification icon
+
 listen() {
 	# Manage the I/O redirection from SHell
 	rm -f $fifo && mkfifo $fifo
@@ -38,27 +40,31 @@ listen() {
 	exec 3<> $fifo
 	# Notification icon
 	yad --notification --listen --image=$icon \
-		--text="$(eval_gettext 'Checking packages lists - $text')" <&3
+		--text="$(_ 'Checking packages lists - %s' $text)" <&3
 	# Clean-up
 	rm -f $fifo
 }
 
+
 # Notification menu (right click)
+
 menu() {
 	cat << EOT
 menu:\
-$(gettext "My packages")!tazweb $panel?list!tazpkg|\
-$(gettext "Recharge lists")!tazweb $panel?recharge!tazpkg-up|\
-$(gettext "Check upgrade")!tazweb $panel?up!tazpkg-up|\
-$(gettext "TazPkg SHell")!terminal -e tazpkg shell!xterm|\
-$(gettext "TazPkg manual")!tazweb $doc!text-html|\
-$(gettext "Close notification")!quit!gtk-close
+$(_ 'My packages'       )!tazweb $panel?list!tazpkg|\
+$(_ 'Recharge lists'    )!tazweb $panel?recharge!tazpkg-up|\
+$(_ 'Check upgrade'     )!tazweb $panel?up!tazpkg-up|\
+$(_ 'TazPkg SHell'      )!terminal -e tazpkg shell!xterm|\
+$(_ 'TazPkg manual'     )!tazweb $doc!text-html|\
+$(_ 'Close notification')!quit!gtk-close
 EOT
 }
 
+
 case $1 in
 	usage|help|*-h)
-		gettext "Usage:"; echo " $(basename $0)" ;;
+		_ "Usage:"; echo " $(basename $0)"
+		;;
 	*)
 		# Sleep before displaying the notification icon and
 		# sleep to let user read the tooltips.
@@ -69,32 +75,36 @@ case $1 in
 		sleep 6
 		# Missing packages list
 		if [ ! -f $db/packages.list ]; then
-			tooltip=$(eval_gettext 'No packages list found - $text')
+			tooltip="$(_ 'No packages list found - %s' $text)"
 			echo "action:tazweb $panel?recharge" > $fifo
 			echo "tooltip:$tooltip" > $fifo
-			echo "icon:tazpkg-up" > $fifo && exit 0
+			echo "icon:tazpkg-up" > $fifo
+			exit 0
 		fi
 		# Too old packages list
 		if [ "$mtime" ]; then
-			tooltip=$(gettext "Your packages list is older than 10 days")
+			tooltip="$(_ 'Your packages list is older than 10 days')"
 			echo "action:tazweb $panel?recharge" > $fifo
 			echo "tooltip:$tooltip" > $fifo
-			echo "icon:tazpkg-up" > $fifo && exit 0
+			echo "icon:tazpkg-up" > $fifo
+			exit 0
 		fi
 		# Available upgrades
 		if [ "$up" -gt 0 ]; then
-			num="<b>$up</b>"
-			tooltip=$(eval_ngettext \
-				'There is $num upgradeable package' \
-				'There are $num upgradeable packages' $up)
+			tooltip="$(_p \
+				'There is %s upgradeable package' \
+				'There are %s upgradeable packages' $up \
+				"<b>$up</b>")"
 			echo "action:tazweb $panel?up" > $fifo
 			echo "tooltip:$tooltip" > $fifo
-			echo "icon:tazpkg-up" > $fifo && exit 0
+			echo "icon:tazpkg-up" > $fifo
+			exit 0
 		fi
 		# Nothing to do, close notification
-		tooltip=$(eval_gettext 'System is up to date - $text')
+		tooltip="$(_ 'System is up to date - %s' $text)"
 		echo "tooltip:$tooltip" > $fifo
 		sleep 10
-		echo "quit" > $fifo ;;
+		echo "quit" > $fifo
+		;;
 esac
 exit 0

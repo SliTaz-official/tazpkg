@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Small GTK boxes to TazPkg for deep desktop integration. PcmanFM 0.5.x has a
+# Small GTK boxes to TazPkg for deep desktop integration. PCManFM 0.5.x has a
 # patch to extract a TazPkg file but not Thunar and other FM. TazPkgBox tries
 # to follow freedesktop standards.
 #
@@ -9,44 +9,52 @@
 # Authors: Christophe Lincoln <pankso@slitaz.org>
 #
 
+
 # Internationalization.
-. /usr/bin/gettext.sh
+
+. /lib/libtaz.sh
 TEXTDOMAIN='tazpkg'
 export TEXTDOMAIN
 
-title=$(gettext "TazPKG")
-text=$(gettext "SliTaz Package Action")
+title="$(_ 'TazPkg')"
+text="$(_ 'SliTaz Package Action')"
 icon="/usr/share/pixmaps/tazpkg.png"
 opts="--image=tazpkg --image-on-top --center --on-top"
 
+
 usage() {
 	cat << EOT
-$(gettext 'Usage:') $(basename $0) [actions|URL] [$(gettext 'package')]
+$(_ 'Usage:') $(basename $0) [actions|URL] [$(_ 'package')]
 EOT
 }
 
+
 # Nice GTK output for install and extract.
+
 output() {
 	yad --text-info $opts --title="$title" --text="<b>$text</b>" \
 		--height=260 --width=520  --window-icon=$icon \
 		--tail --margins=4 --button="gtk-close:0"
 }
 
+
 pkginfo() {
 	tmp=/tmp/$(basename $0)/$$
-	mkdir -p $tmp && cd $tmp
+	mkdir -p $tmp; cd $tmp
 	{ cpio --quiet -i receipt > /dev/null 2>&1; } < ${dir}/$pkg
 	. $tmp/receipt
 	#rm -rf /tmp/$(basename $0)
 	size=$(du -sh ${dir}/$pkg | awk '{print $1}')
-	echo -e "Package\n$PACKAGE
-Version\n$VERSION
-Short desc\n$SHORT_DESC
-Unpacked size\n$UNPACKED_SIZE
-Depends\n$DEPENDS"
+	echo -e "$(_ 'Package')\n$PACKAGE
+$(_ 'Version')\n$VERSION
+$(_ 'Short desc')\n$SHORT_DESC
+$(_ 'Unpacked size')\n$UNPACKED_SIZE
+$(_ 'Depends')\n$DEPENDS"
 }
 
+
 # Main GUI box function with pure Yad spec
+
 actions_main() {
 	pkgname=${pkg%.tazpkg}
 	pkginfo | yad $opts --title="$title" \
@@ -54,13 +62,15 @@ actions_main() {
 		--height=260 --width=520 \
 		--text="<b>$text</b>" \
 		--window-icon=$icon \
-		--column "Name" --column "" \
-		--button="$(gettext 'Install'):3" \
-		--button="$(gettext 'Extract'):2" \
+		--column "" --column "" \
+		--button="$(_ 'Install'):3" \
+		--button="$(_ 'Extract'):2" \
 		--button="gtk-cancel:1"
 }
 
+
 # Actions user can do when clicking on a package.
+
 actions() {
 	# Store box results
 	main=$(actions_main)
@@ -73,14 +83,18 @@ actions() {
 	esac
 }
 
+
 # TazPkg URL Handler.
+
 dl_inst() {
 	pkg=$(basename $url) 
-	eval_gettext "Downloading: \$pkg"; echo -e "\n"
-	cd /tmp && wget $url 2>&1
+	_ 'Downloading: %s' $pkg; newline
+	cd /tmp; wget $url 2>&1
 	tazpkg -i $pkg --forced --output="raw" 2>&1
 	rm -f $pkg
 }
+
+
 
 #
 # Script commands

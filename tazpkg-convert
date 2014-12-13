@@ -26,10 +26,10 @@ export TEXTDOMAIN='tazpkg'
 show_unresolved_lib()
 {
 	if [ -s $TMP_DIR/unresolved ]; then
-		echo -e "BUGS=\"`gettext \"No dependency for\"`" >> $1
+		echo -e "BUGS=\"$(_n 'No dependency for:')" >> $1
 		sort < $TMP_DIR/unresolved | uniq | \
 		while read file; do
-			_ 'WARNING: unknown dependency for $lib'
+			_ 'WARNING: unknown dependency for %s' $lib
 			echo -n " $file" >> $1
 		done
 		echo "\"" >> $1
@@ -84,7 +84,7 @@ EOT
 		tazpkg pack $file
 		mv $TMP_DIR/$file.tazpkg $TOP_DIR
 	else
-		_ '$PACKAGE_FILE does not look like an upkg package!'
+		_ 'File "%s" does not look like %s package!' $PACKAGE_FILE 'upkg'
 	fi
 	cd $TOP_DIR
 	rm -rf $TMP_DIR
@@ -202,7 +202,7 @@ EOT
 		mv $TMP_DIR/$file.tazpkg .
 		;;
 	*)
-		_ 'Invalid target: $target (expected i386)'
+		_ 'Invalid target: %s (expected i386)' $target
 		;;
 	esac
 	rm -rf $TMP_DIR
@@ -241,7 +241,7 @@ EOT
 		tazpkg pack $file
 		mv $file.tazpkg $TOP_DIR
 	else
-		_ '$PACKAGE_FILE does not look like an Archlinux/Alpine package!'
+		_ 'File "%s" does not look like %s package!' $PACKAGE_FILE 'Archlinux/Alpine'
 	fi
 	cd $TOP_DIR
 	rm -rf $TMP_DIR
@@ -309,7 +309,7 @@ convert_sfs()
 {
 	[ -n "$(which unsquashfs)" ] || tazpkg get-install squashfs 
 	if ! unsquashfs -l $PACKAGE_FILE | grep -q squashfs-root/pet.specs$ ; then
-		_ '$PACKAGE_FILE does not look like a Puppy package!'
+		_ 'File "%s" does not look like %s package!' $PACKAGE_FILE 'Puppy'
 		return 1
 	fi
 	mkdir -p $TMP_DIR 
@@ -344,7 +344,7 @@ convert_sb()
 {
 	[ -n "$(which unsquashfs)" ] || tazpkg get-install squashfs 
 	if ! unsquashfs -l $PACKAGE_FILE | grep -q squashfs-root/var/log/removed_scripts ; then
-		_ '$PACKAGE_FILE does not look like a Slax package!'
+		_ 'File "%s" does not look like %s package!' $PACKAGE_FILE 'Slax'
 		return 1
 	fi
 	mkdir -p $TMP_DIR 
@@ -424,7 +424,7 @@ EOM
 		tazpkg pack $file
 		mv $file.tazpkg $TOP_DIR
 	else
-		_ '$PACKAGE_FILE does not look like a Slackware package!'
+		_ 'File "%s" does not look like %s package!' $PACKAGE_FILE 'Slackware'
 	fi
 	cd $TOP_DIR
 	rm -rf $TMP_DIR
@@ -479,7 +479,7 @@ EOT
 		mv $file.tazpkg $TOP_DIR
 		;;
 	*)
-		_ 'Invalid target: $target (expected i386)'
+		_ 'Invalid target: %s (expected i386)' $target
 		;;
 	esac
 	cd $TOP_DIR
@@ -530,8 +530,8 @@ BEGIN { show=0 }
 	# rpm2cpio can't extract some new RPMs
 	if [ $? == 1 ]; then
 		if [ ! -e $INSTALLED/p7zip-full/receipt ]; then
-			boldify $(_ 'Unable to extract the RPM using standard tools (rpm2cpio).')
-			_n "Do you want to install 'p7zip-full' package"; confirm
+			boldify "$(_ 'Unable to extract the RPM using standard tools (rpm2cpio).')"
+			confirm "$(_n 'Do you want to install "%s" package? (y/N)' 'p7zip-full')"
 			if [ $? = 0 ]; then
 				tazpkg -gi p7zip-full
 			else
@@ -570,7 +570,7 @@ convert_xbps()
 	HOST_ARCH="$(xbpstag architecture)"
 	case "$HOST_ARCH" in
 	i686)	HOST_ARCH="i486" ;;
-	*)	echo "Arch $HOST_ARCH not supported."
+	*)	_ 'Arch "%s" not supported.' $HOST_ARCH
 		HOST_ARCH=
 	esac
 
