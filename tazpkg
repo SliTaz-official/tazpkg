@@ -785,7 +785,7 @@ END {
 	if grep -q ^pre_install $ROOT$INSTALLED/$PACKAGE/receipt; then
 		pre_install $ROOT
 	fi
-	if [ -n "$CONFIG_FILES" ]; then
+	if [ -n "$CONFIG_FILES" ] && ! [ "$newconf" ]; then
 		# save 'official' configuration files
 		action 'Saving configuration files...'
 		for i in $CONFIG_FILES; do
@@ -1034,7 +1034,7 @@ install_deps()
 		answer=$?
 		newline
 	fi
-	if [ $answer = 0 ]; then
+	if [ $answer = 0 ] && ! [ "$nodeps" ]; then
 		for pkgorg in $DEPENDS; do
 			pkg=$(equivalent_pkg $pkgorg $1)
 			if [ ! -d "$1$INSTALLED/$pkg" ]; then
