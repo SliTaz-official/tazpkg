@@ -1487,15 +1487,18 @@ case "$COMMAND" in
 
 	desc)
 		# Display package description.txt if available.
-		if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
+		if [ -n "$(grep -e "^$PACKAGE	" $PKGS_DB/installed.info)" ]; then
 			title 'Description of package "%s"' $PACKAGE
-			cat $INSTALLED/$PACKAGE/description.txt
+			if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
+				cat $INSTALLED/$PACKAGE/description.txt
+			else
+				awk -F$'\t' '{if ($1 == "'$PACKAGE'") print $4}' $PKGS_DB/installed.info
+			fi
 			footer
 		else
-			newline
-			_ 'Sorry, no description available for this package.'
-			newline
-		fi ;;
+			_ 'Package "%s" is not installed.' "$PACKAGE"
+		fi
+		;;
 
 
 	activity|log|-a)
