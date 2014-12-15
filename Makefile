@@ -7,6 +7,7 @@ DESTDIR?=
 LINGUAS?=el es fr pl pt_BR ru sv zh_CN zh_TW
 
 VERSION:=$(shell grep ^VERSION=[0-9] tazpkg | cut -d '=' -f 2)
+ICONS = $(DESTDIR)$(PREFIX)/share/icons/hicolor/32x32
 
 tmpdir = tar-install/tazpkg-$(VERSION)
 tarball = tazpkg-$(VERSION).tar.gz
@@ -79,7 +80,15 @@ install: msgfmt
 	mkdir -p           $(DESTDIR)$(PREFIX)/share
 	cp -a applications $(DESTDIR)$(PREFIX)/share
 	#cp -a mime         $(DESTDIR)$(PREFIX)/share # moved to shared-mime-info package
-	cp -a pixmaps      $(DESTDIR)$(PREFIX)/share
+
+	# Default icons
+	install -m 0755 -d $(ICONS)/apps
+	install -m 0644 pixmaps/tazpkg.png $(ICONS)/apps
+	ln -fs tazpkg.png $(ICONS)/apps/TazPkg.png # icon for Yad
+	install -m 0755 -d $(ICONS)/actions
+	install -m 0644 pixmaps/tazpkg-up.png $(ICONS)/actions
+	install -m 0755 -d $(ICONS)/status
+	install -m 0644 pixmaps/tazpkg-installed.png $(ICONS)/status
 
 	# TazPkg Notify XDG autostart
 	mkdir -p            $(DESTDIR)/etc/xdg
@@ -108,7 +117,9 @@ uninstall:
 	rm -f  $(DESTDIR)$(PREFIX)/share/applications/tazpkg-*.desktop
 	rm -f  $(DESTDIR)$(PREFIX)/share/applications/tazpanel-pkgs.desktop
 
-	rm -f  $(DESTDIR)$(PREFIX)/share/pixmaps/tazpkg*.png
+	rm -f  $(ICONS)/apps/tazpkg.png
+	rm -f  $(ICONS)/actions/tazpkg-up.png
+	rm -f  $(ICONS)/status/tazpkg-installed.png
 
 	rm -f  $(DESTDIR)/etc/xdg/autostart/tazpkg-notify.desktop
 

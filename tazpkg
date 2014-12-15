@@ -2241,7 +2241,7 @@ EOT
 			else
 				footer "$(longline "$(_ "Last %s is ready to use. Note that \
 next time you recharge the list, a list of differences will be displayed to \
-show new and upgradeable packages.") packages.list")"
+show new and upgradeable packages." packages.list)")"
 			fi
 		done ;;
 
