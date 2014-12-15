@@ -785,7 +785,8 @@ END {
 	if grep -q ^pre_install $ROOT$INSTALLED/$PACKAGE/receipt; then
 		pre_install $ROOT
 	fi
-	if [ -n "$CONFIG_FILES" ] && ! [ "$newconf" ]; then
+
+	if [ -n "$CONFIG_FILES" ]; then
 		# save 'official' configuration files
 		action 'Saving configuration files...'
 		for i in $CONFIG_FILES; do
@@ -793,13 +794,15 @@ END {
 		done | { cd fs ; cpio -o -H newc --quiet | gzip -9; cd ..; } > \
 			$ROOT$INSTALLED/$PACKAGE/volatile.cpio.gz
 
-		# keep user configuration files
-		for i in $CONFIG_FILES; do
-			{ cd fs ; find ${i#/} -type f 2> /dev/null; cd ..; }
-		done | while read i; do
-			[ -e $ROOT/$i ] || continue
-			cp -a $ROOT/$i fs/$i
-		done
+		if [ -z "$newconf" ]; then
+			# keep user configuration files
+			for i in $CONFIG_FILES; do
+				{ cd fs ; find ${i#/} -type f 2> /dev/null; cd ..; }
+			done | while read i; do
+				[ -e $ROOT/$i ] || continue
+				cp -a $ROOT/$i fs/$i
+			done
+		fi
 		status
 	fi
 
