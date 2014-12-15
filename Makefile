@@ -51,9 +51,9 @@ install: msgfmt
 	install -m 0755 -d                  $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg              $(DESTDIR)$(PREFIX)/bin
 	-[ "$(VERSION)" ] && sed -i 's/^VERSION=[0-9].*/VERSION=$(VERSION)/' $(DESTDIR)$(PREFIX)/bin/tazpkg
-	install -m 0777 tazpkg-convert      $(DESTDIR)$(PREFIX)/bin
-	install -m 0755 -d                  $(DESTDIR)$(PREFIX)/lib/tazpkg
-	install -m 0777 tazpkg-find-depends $(DESTDIR)$(PREFIX)/lib/tazpkg
+	install -m 0777 modules/tazpkg-convert      $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 -d                          $(DESTDIR)$(PREFIX)/lib/tazpkg
+	install -m 0777 modules/tazpkg-find-depends $(DESTDIR)$(PREFIX)/lib/tazpkg
 
 	# TazPkg-box GUI
 	install -m 0777 tazpkg-notify $(DESTDIR)$(PREFIX)/bin
@@ -68,9 +68,9 @@ install: msgfmt
 	cp -a doc/*        $(DESTDIR)$(DOCDIR)/tazpkg
 
 	# TazPanel files
-	install -m 0755 -d $(DESTDIR)/var/www/tazpanel/menu.d
-	cp -a pkgs.cgi     $(DESTDIR)/var/www/tazpanel
-	cp -a pkgs         $(DESTDIR)/var/www/tazpanel/menu.d
+	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/menu.d
+	cp -a tazpanel/pkgs.cgi $(DESTDIR)/var/www/tazpanel
+	cp -a tazpanel/pkgs     $(DESTDIR)/var/www/tazpanel/menu.d
 
 	# The i18n files
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/share/locale
