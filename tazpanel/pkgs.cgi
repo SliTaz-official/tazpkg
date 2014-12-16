@@ -30,10 +30,15 @@ pkg_info_link()
 
 i18n_desc() {
 	# Display localized short description
-	if [ -e "$PKGS_DB/packages-desc.$LANG" ]; then
-		LOCDESC=$(grep -e "^$pkg	" $PKGS_DB/packages-desc.$LANG | cut -d'	' -f2)
-	[ "x$LOCDESC" != "x" ] && SHORT_DESC="$LOCDESC"
-	fi
+	for L in $LANG ${LANG%%_*}; do
+		if [ -e "$PKGS_DB/packages-desc.$L" ]; then
+			LOCDESC=$(awk -F$'\t' -vp=$pkg '{if ($1 == p) print $2}' $PKGS_DB/packages-desc.$L)
+			if [ -n "$LOCDESC" ]; then
+				SHORT_DESC="$LOCDESC"
+				break
+			fi
+		fi
+	done
 }
 
 
@@ -736,10 +741,14 @@ EOT
 			cat << EOT
 </tbody>
 </table>
+EOT
+			DESC="$(tazpkg desc $pkg)"
+			[ -n "$DESC" ] && echo "<pre>$DESC</pre>"
 
+			cat << EOT
 <p>$(_ 'Installed files: %s' $I_FILES)</p>
 
-<pre>$(cat $INSTALLED/$pkg/files.list)</pre>
+<pre>$(sort $INSTALLED/$pkg/files.list)</pre>
 EOT
 		else
 			cat << EOT
@@ -751,8 +760,8 @@ EOT
 <p>$(_ 'Installed files:')</p>
 
 <pre>
-`unlzma -c files.list.lzma undigest/*/files.list.lzma 2> /dev/null | \
- sed "/^$pkg: /!d;s/^$pkg: //"`
+$(lzcat files.list.lzma undigest/*/files.list.lzma 2> /dev/null | \
+ sed "/^$pkg: /!d;s/^$pkg: //" | sort)
 </pre>
 EOT
 		fi

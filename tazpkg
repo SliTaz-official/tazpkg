@@ -136,6 +136,11 @@ DEFAULT_MIRROR="$ONLINE_PKGS"
 ####################
 
 
+# Interactive mode
+
+im() { tty -s; }
+
+
 # Print the usage.
 
 usage () {
@@ -1463,7 +1468,7 @@ case "$COMMAND" in
 		check_for_receipt
 		EXTRAVERSION=""
 		. $INSTALLED/$PACKAGE/receipt
-		title 'TazPKG information'
+		im && title 'TazPKG information'
 		# Display localized short description
 		for LC in $LANG ${LANG%_*}; do
 			if [ -e "$PKGS_DB/packages-desc.$LC" ]; then
@@ -1486,21 +1491,22 @@ case "$COMMAND" in
 			_ 'Web site   : %s' "$WEB_SITE"
 			_ 'Tags       : %s' "$TAGS"
 		} | sed '/: $/d; s|^\([^:]*\):|<b>\1:</b>|')"
-		footer ;;
+		im && footer
+		;;
 
 
 	desc)
-		# Display package description.txt if available.
+		# Display package description
 		if [ -n "$(grep -e "^$PACKAGE	" $PKGS_DB/installed.info)" ]; then
-			title 'Description of package "%s"' $PACKAGE
+			im && title 'Description of package "%s"' $PACKAGE
 			if [ -f "$INSTALLED/$PACKAGE/description.txt" ]; then
 				cat $INSTALLED/$PACKAGE/description.txt
 			else
-				awk -F$'\t' '{if ($1 == "'$PACKAGE'") print $4}' $PKGS_DB/installed.info
+				im && awk -F$'\t' '{if ($1 == "'$PACKAGE'") print $4}' $PKGS_DB/installed.info
 			fi
-			footer
+			im && footer
 		else
-			_ 'Package "%s" is not installed.' "$PACKAGE"
+			im && _ 'Package "%s" is not installed.' "$PACKAGE"
 		fi
 		;;
 
