@@ -2821,6 +2821,24 @@ EOT
 		fi ;;
 
 
+	list-suggested)
+		for i in $(ls -d $INSTALLED/*); do
+			. $i/receipt
+			if [ "$SUGGESTED" ]; then
+				if [ -z "$all" ]; then
+				for s in $SUGGESTED; do
+					[ -d $INSTALLED/$s ] && \
+					SUGGESTED=$(echo -n $SUGGESTED | sed "s/$s//")
+				done
+				fi
+				cat << EOT
+$(boldify $(echo $PACKAGE):) $SUGGESTED
+EOT
+			fi
+		SUGGESTED=""
+		done ;;
+
+
 	convert|-c)
 		# convert misc package format to .tazpkg
 		check_for_package_file
