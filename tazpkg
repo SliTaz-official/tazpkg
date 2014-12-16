@@ -855,6 +855,7 @@ END {
 	fi
 
 	# Update installed.info
+	check_for_installed_info
 	SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
 	DEPENDS=$(echo $DEPENDS) # remove newlines from some receipts
 	II=$PKGS_DB/installed.info

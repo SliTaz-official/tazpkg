@@ -20,7 +20,7 @@ TITLE=$(TEXTDOMAIN='tazpkg'; _ 'TazPanel - Packages')
 xhtml_header | sed 's/id="content"/id="content-sidebar"/'
 
 export TEXTDOMAIN='tazpkg'
-
+PKGS_DB="$LOCALSTATE"
 
 pkg_info_link()
 {
