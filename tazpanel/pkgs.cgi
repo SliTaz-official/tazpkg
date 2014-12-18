@@ -24,15 +24,16 @@ PKGS_DB="$LOCALSTATE"
 
 pkg_info_link()
 {
-	echo "$SCRIPT_NAME?info=$1" | sed 's/+/%2B/g'
+	echo "<a class=\"$2\" href=\"?info=${1//+/%2B}\">$1</a>" | sed 's| class=""||'
 }
 
 
+# Display localized short description
+
 i18n_desc() {
-	# Display localized short description
 	for L in $LANG ${LANG%%_*}; do
 		if [ -e "$PKGS_DB/packages-desc.$L" ]; then
-			LOCDESC=$(awk -F$'\t' -vp=$pkg '{if ($1 == p) print $2}' $PKGS_DB/packages-desc.$L)
+			LOCDESC=$(awk -F$'\t' -vp=$1 '{if ($1 == p) print $2}' $PKGS_DB/packages-desc.$L)
 			if [ -n "$LOCDESC" ]; then
 				SHORT_DESC="$LOCDESC"
 				break
@@ -48,17 +49,32 @@ parse_packages_desc() {
 	IFS="|"
 	cut -f 1,2,3,5 -d "|" | while read PACKAGE VERSION SHORT_DESC WEB_SITE
 	do
-		image=tazpkg-installed.png
-		[ -d $INSTALLED/${PACKAGE% } ] || image=tazpkg.png
-		i18n_desc
+		class=pkg; [ -d $INSTALLED/${PACKAGE% } ] && class=pkgi
+		i18n_desc $PACKAGE
 		cat << EOT
 <tr>
-<td><input type="checkbox" name="pkg" value="$PACKAGE">
-	<a href="$(pkg_info_link $PACKAGE)"><img
-		src="$IMAGES/$image"/>$PACKAGE</a></td>
+<td class="pkg"><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 <td>$VERSION</td>
 <td class="desc">$SHORT_DESC</td>
-<td><a href="$WEB_SITE"><img src="$IMAGES/browser.png"/></a></td>
+<td><a class="w" href="$WEB_SITE"></a></td>
+</tr>
+EOT
+	done
+	unset IFS
+}
+
+
+parse_packages_info() {
+	IFS=$'\t'
+	while read PACKAGE VERSION CATEGORY SHORT_DESC WEB_SITE TAGS SIZES DEPENDS; do
+		class=pkg; [ -d $INSTALLED/${PACKAGE% } ] && class=pkgi
+		i18n_desc $PACKAGE
+		cat << EOT
+<tr>
+<td class="pkg"><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
+<td>$VERSION</td>
+<td class="desc">$SHORT_DESC</td>
+<td><a class="w" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 	done
@@ -279,8 +295,7 @@ case " $(GET) " in
 			<img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
 	</div>
 </div>
-EOT
-		cat << EOT
+
 <table class="zebra outbox">
 $(table_head)
 <tbody>
@@ -290,18 +305,14 @@ EOT
 			echo '<tr>'
 			# Use default tazpkg icon since all packages displayed are
 			# installed
-			colorpkg=$pkg
-			grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list &&
-				colorpkg="<span style='color: red;'>$pkg</span>"
-			i18n_desc
+			blocked=
+			grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list && blocked="b"
+			i18n_desc $pkg
 			cat << EOT
-<td class="pkg">
-	<input type="checkbox" name="pkg" value="$pkg" />
-		<a href="$(pkg_info_link $pkg)"><img
-			src="$IMAGES/tazpkg-installed.png"/>$colorpkg</a></td>
+<td class="pkg"><input type="checkbox" name="pkg" value="$pkg" />$(pkg_info_link $pkg pkgi$blocked)</td>
 <td>$VERSION</td>
 <td class="desc">$SHORT_DESC</td>
-<td><a href="$WEB_SITE"><img src="$IMAGES/browser.png"/></a></td>
+<td><a class="w" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 		done
@@ -349,17 +360,13 @@ EOT
 		for pkg in $(ls $target/$INSTALLED); do
 			[ -s $pkg/receipt ] && continue
 			. $target/$INSTALLED/$pkg/receipt
-			i18n_desc
+			i18n_desc $pkg
 			cat << EOT
 <tr>
-	<td class="pkg">
-		<input type="checkbox" name="pkg" value="$pkg" />
-			<a href="$(pkg_info_link $pkg)"><img
-				src="$IMAGES/tazpkg.png"/>$pkg</a>
-	</td>
+	<td class="pkg"><input type="checkbox" name="pkg" value="$pkg" />$(pkg_info_link $pkg pkg)</td>
 	<td>$VERSION</td>
 	<td class="desc">$SHORT_DESC</td>
-	<td><a href="$WEB_SITE"><img src="$IMAGES/browser.png"/></a></td>
+	<td><a class="w" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 		done
@@ -380,8 +387,8 @@ EOT
 		repo=$(GET repo)
 		category=$(GET cat)
 		[ "$category" == "cat" ] && category="base-system"
-		grep_category=$category
-		[ "$grep_category" == "all" ] && grep_category=".*"
+		#grep_category=$category
+		#[ "$grep_category" == "all" ] && grep_category="*"
 		search_form
 		sidebar | sed "s/active_$category/active/;s/repo_$repo/active/"
 		LOADING_MSG="$(_ 'Listing packages...')"
@@ -414,16 +421,23 @@ EOT
 <h3>$(_ 'Repository: %s' $Repo_Name)</h3>
 EOT
 			fi
-			cat << EOT
-<table class="zebra outbox">
-$(table_head)
-<tbody>
-EOT
-			if [ "$category" == "extra" ]; then
-				sed 's,.*,&|--|--|--|http://mirror.slitaz.org/packages/get/&,' $i/extra.list
-			else
-				grep "| $grep_category |" $i/packages.desc
-			fi | parse_packages_desc
+			echo '<table class="zebra outbox">'
+			table_head
+			echo '<tbody>'
+
+			case $category in
+				extra)
+					sed 's|.*|&	--	-	--	http://mirror.slitaz.org/packages/get/&	-	-	-|' \
+					$i/extra.list | parse_packages_info
+					;;
+				all)
+					parse_packages_info < $i/packages.info
+					;;
+				*)
+					awk -F$'\t' -vc=$category '{if ($3 == c) print $0}' \
+					$i/packages.info | parse_packages_info
+					;;
+			esac
 			cat << EOT
 </tbody>
 </table>
@@ -439,7 +453,7 @@ EOT
 		#
 		pkg=$(GET search)
 		repo=$(GET repo)
-		cd  $PKGS_DB
+		cd $PKGS_DB
 		search_form
 		sidebar | sed "s/repo_$repo/active/"
 		LOADING_MSG="$(_ 'Searching packages...')"
@@ -477,27 +491,22 @@ EOT
 	<thead>
 	<tbody>
 EOT
-			unlzma -c $(repo_list /files.list.lzma) \
-				| grep -Ei ": .*$(GET search)" | \
-				while read PACKAGE FILE; do
-					PACKAGE=${PACKAGE%:}
-					image=tazpkg-installed.png
-					[ -d $INSTALLED/$PACKAGE ] || image=tazpkg.png
-					cat << EOT
+			lzcat $(repo_list /files.list.lzma) | grep -Ei ": .*$(GET search)" | \
+			while read PACKAGE FILE; do
+				PACKAGE=${PACKAGE%:}
+				class=pkg; [ -d $INSTALLED/$PACKAGE ] && class=pkgi
+				cat << EOT
 <tr>
-	<td><input type="checkbox" name="pkg" value="$PACKAGE">
-		<a href="$(pkg_info_link $PACKAGE)"><img src="$IMAGES/$image" />$PACKAGE</a></td>
+	<td class="pkg"><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 	<td>$FILE</td>
 </tr>
 EOT
-				done
+			done
 		else
-			cat << EOT
-$(table_head)
-	<tbody>
-EOT
-			grep -ih $pkg $(repo_list /packages.desc) | \
-				parse_packages_desc
+			table_head
+			echo "	<tbody>"
+			awk -F$'\t' 'BEGIN{IGNORECASE = 1}
+			$1 $4 ~ /'$pkg'/{print $0}' $(repo_list /packages.info) | parse_packages_info
 		fi
 		cat << EOT
 	</tbody>
@@ -651,11 +660,11 @@ EOT
 		sidebar
 		if [ -d $INSTALLED/$pkg ]; then
 			. $INSTALLED/$pkg/receipt
-			files=$(cat $INSTALLED/$pkg/files.list | wc -l)
+			files=$(wc -l < $INSTALLED/$pkg/files.list)
 			action="Remove"
 			action_i18n=$(_ 'Remove')
 		else
-			cd  $PKGS_DB
+			cd $PKGS_DB
 			LOADING_MSG=$(_ 'Getting package info...')
 			loading_msg
 			IFS='|'
@@ -668,7 +677,7 @@ EOT
 			WEB_SITE="$(echo $5)"
 			action="Install"
 			action_i18n=$(_ 'Install')
-			temp="$(echo $pkg | sed 's/get-//g')"
+			temp="${pkg#get-}"
 		fi
 		cat << EOT
 <h2>$(_ 'Package %s' $PACKAGE)</h2>
@@ -698,7 +707,7 @@ EOT
 			<a class="button" href='$SCRIPT_NAME?do=Repack&$pkg'>$(_ 'Repack')</a>
 EOT
 		fi
-		i18n_desc
+		i18n_desc $pkg
 		cat << EOT
 		</p>
 	</div>
@@ -725,14 +734,14 @@ EOT
 			if [ -n "$DEPENDS" ]; then
 				echo "<tr><td><b>$(_ 'Depends')</b></td><td>"
 				for i in $DEPENDS; do
-					echo -n "<a href="$(pkg_info_link $i)">$i</a> "
+					pkg_info_link $i
 				done
 				echo "</td></tr>"
 			fi
 			if [ -n "$SUGGESTED" ]; then
 				echo "<tr><td><b>$(_ 'Suggested')</b></td><td>"
 				for i in $SUGGESTED; do
-					echo -n "<a href="$(pkg_info_link $i)">$i</a> "
+					pkg_info_link $i
 				done
 				echo "</td></tr>"
 			fi

@@ -1,0 +1,30 @@
+/* links classes:
+ *   pkg   - package (not installed);
+ *   pkgi  - package (installed);
+ *   pkgib - package (installed and blocked);
+ *   w     - web site
+ *
+ * you can style links using icons and/or color
+ */
+
+a.pkg {
+	background: url(images/tazpkg.png) no-repeat left; }
+a.pkgi, a.pkgib {
+	background: url(images/tazpkg-installed.png) no-repeat left; }
+/*
+a.pkgi {
+	color: green; }
+*/
+a.pkgib {
+	color: red; }
+a.w {
+	background: url(images/browser.png) no-repeat left; }
+
+a.pkg, a.pkgi, a.pkgib, a.w {
+	margin: 0; padding: 0 0 0 17px;
+	min-height: 16px; min-width: 16px;
+	display: inline-block; }
+
+
+td.pkg {
+	white-space: nowrap; }

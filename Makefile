@@ -71,6 +71,8 @@ install: msgfmt
 	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/menu.d
 	cp -a tazpanel/pkgs.cgi $(DESTDIR)/var/www/tazpanel
 	cp -a tazpanel/pkgs     $(DESTDIR)/var/www/tazpanel/menu.d
+	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/styles/default
+	cp -a tazpanel/pkgs.css $(DESTDIR)/var/www/tazpanel/styles/default
 
 	# The i18n files
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/share/locale
