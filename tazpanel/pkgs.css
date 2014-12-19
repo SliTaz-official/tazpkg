@@ -26,5 +26,21 @@ a.pkg, a.pkgi, a.pkgib, a.w {
 	display: inline-block; }
 
 
-td.pkg {
-	white-space: nowrap; }
+.pkglist td:nth-child(1) {
+	white-space: nowrap;
+	}
+
+.pkglist td:nth-child(1) a {
+	max-width: 12em;
+	}
+
+.pkglist td:nth-child(2) {
+	max-width: 7em;
+	}
+
+.pkglist td:nth-child(1) a, .pkglist td:nth-child(2) {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis; -o-text-overflow: ellipsis;
+	}
+

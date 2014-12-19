@@ -53,9 +53,9 @@ parse_packages_desc() {
 		i18n_desc $PACKAGE
 		cat << EOT
 <tr>
-<td class="pkg"><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
+<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 <td>$VERSION</td>
-<td class="desc">$SHORT_DESC</td>
+<td>$SHORT_DESC</td>
 <td><a class="w" href="$WEB_SITE"></a></td>
 </tr>
 EOT
@@ -71,9 +71,9 @@ parse_packages_info() {
 		i18n_desc $PACKAGE
 		cat << EOT
 <tr>
-<td class="pkg"><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
+<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 <td>$VERSION</td>
-<td class="desc">$SHORT_DESC</td>
+<td>$SHORT_DESC</td>
 <td><a class="w" href="$WEB_SITE"></a></td>
 </tr>
 EOT
@@ -296,7 +296,7 @@ case " $(GET) " in
 	</div>
 </div>
 
-<table class="zebra outbox">
+<table class="zebra outbox pkglist">
 $(table_head)
 <tbody>
 EOT
@@ -309,9 +309,9 @@ EOT
 			grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list && blocked="b"
 			i18n_desc $pkg
 			cat << EOT
-<td class="pkg"><input type="checkbox" name="pkg" value="$pkg" />$(pkg_info_link $pkg pkgi$blocked)</td>
+<td><input type="checkbox" name="pkg" value="$pkg" />$(pkg_info_link $pkg pkgi$blocked)</td>
 <td>$VERSION</td>
-<td class="desc">$SHORT_DESC</td>
+<td>$SHORT_DESC</td>
 <td><a class="w" href="$WEB_SITE"></a></td>
 </tr>
 EOT
@@ -352,7 +352,7 @@ EOT
 </div>
 EOT
 		cat << EOT
-<table class="zebra outbox">
+<table class="zebra outbox pkglist">
 $(table_head)
 <tbody>
 EOT
@@ -363,9 +363,9 @@ EOT
 			i18n_desc $pkg
 			cat << EOT
 <tr>
-	<td class="pkg"><input type="checkbox" name="pkg" value="$pkg" />$(pkg_info_link $pkg pkg)</td>
+	<td><input type="checkbox" name="pkg" value="$pkg" />$(pkg_info_link $pkg pkg)</td>
 	<td>$VERSION</td>
-	<td class="desc">$SHORT_DESC</td>
+	<td>$SHORT_DESC</td>
 	<td><a class="w" href="$WEB_SITE"></a></td>
 </tr>
 EOT
@@ -421,7 +421,7 @@ EOT
 <h3>$(_ 'Repository: %s' $Repo_Name)</h3>
 EOT
 			fi
-			echo '<table class="zebra outbox">'
+			echo '<table class="zebra outbox pkglist">'
 			table_head
 			echo '<tbody>'
 
@@ -431,11 +431,56 @@ EOT
 					$i/extra.list | parse_packages_info
 					;;
 				all)
+					# test awk speed (sorry, no i18n_desc, no blocked now)
+					# http://tazpanel:82/pkgs.cgi?cat=all&repo=Any&awk
+					if [ $(GET awk) == "awk" ]; then
+						sort $i/packages.info $i/installed.info | \
+						awk -F$'\t' '
+						function outrow(pkg, cls, ver, dsc, web,   pkge) {
+							pkge=pkg; gsub(/\+/, "%2B", pkge)
+							printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a class=\"w\" href=\"%s\"></a></td></tr>", pkg, cls, pkge, pkg, ver, dsc, web }
+						{
+							if ($1==PKG) {
+								outrow($1, "pkgi", $2, $4, $5)
+								INS=$1
+							} else {
+								if (PKG!=INS) {
+									outrow(PKG, "pkg", VER, DSC, WEB)
+								}
+							}
+							PKG=$1; VER=$2; DSC=$4; WEB=$5
+						}'
+					else
+						# old slow method
 					parse_packages_info < $i/packages.info
+					fi
 					;;
 				*)
+					# test awk speed (sorry, no i18n_desc, no blocked now)
+					# http://tazpanel:82/pkgs.cgi?cat=base-system&repo=Any&awk
+					if [ $(GET awk) == "awk" ]; then
+						sort $i/packages.info $i/installed.info | \
+						awk -F$'\t' -vc="$category" '
+						function outrow(pkg, cls, ver, dsc, web,   pkge) {
+							pkge=pkg; gsub(/\+/, "%2B", pkge)
+							printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a class=\"w\" href=\"%s\"></a></td></tr>", pkg, cls, pkge, pkg, ver, dsc, web }
+						{
+						if ($3==c) {
+							if ($1==PKG) {
+								outrow($1, "pkgi", $2, $4, $5)
+								INS=$1
+							} else {
+								if (PKG!=INS) {
+									outrow(PKG, "pkg", VER, DSC, WEB)
+								}
+							}
+							PKG=$1; VER=$2; DSC=$4; WEB=$5
+						}}'
+					else
+						# old slow method
 					awk -F$'\t' -vc=$category '{if ($3 == c) print $0}' \
 					$i/packages.info | parse_packages_info
+					fi
 					;;
 			esac
 			cat << EOT
@@ -497,7 +542,7 @@ EOT
 				class=pkg; [ -d $INSTALLED/$PACKAGE ] && class=pkgi
 				cat << EOT
 <tr>
-	<td class="pkg"><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
+	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 	<td>$FILE</td>
 </tr>
 EOT
@@ -586,10 +631,8 @@ EOT
 $(table_head)
 <tbody>
 EOT
-		for pkg in `cat packages.up`
-		do
-			grep -hs "^$pkg |" $PKGS_DB/packages.desc \
-				$PKGS_DB/undigest/*/packages.desc | \
+		for pkg in $(cat packages.up); do
+			grep -hs "^$pkg |" $PKGS_DB/packages.desc $PKGS_DB/undigest/*/packages.desc | \
 				parse_packages_desc
 		done
 		cat << EOT
