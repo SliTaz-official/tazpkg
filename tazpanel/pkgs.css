@@ -17,10 +17,10 @@ a.pkgi {
 */
 a.pkgib {
 	color: red; }
-a.w {
+a.w, .pkglist td:nth-child(4) a {
 	background: url(images/browser.png) no-repeat left; }
 
-a.pkg, a.pkgi, a.pkgib, a.w {
+a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
 	margin: 0; padding: 0 0 0 17px;
 	min-height: 16px; min-width: 16px;
 	display: inline-block; }

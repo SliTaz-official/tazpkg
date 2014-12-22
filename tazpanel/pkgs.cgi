@@ -383,7 +383,7 @@ EOT
 		# List all available packages by category on mirror. Listing all
 		# packages is too resource intensive and not useful.
 		#
-		cd  $PKGS_DB
+		cd $PKGS_DB
 		repo=$(GET repo)
 		category=$(GET cat)
 		[ "$category" == "cat" ] && category="base-system"
@@ -456,31 +456,58 @@ EOT
 					fi
 					;;
 				*)
-					# test awk speed (sorry, no i18n_desc, no blocked now)
-					# http://tazpanel:82/pkgs.cgi?cat=base-system&repo=Any&awk
-					if [ $(GET awk) == "awk" ]; then
-						sort $i/packages.info $i/installed.info | \
-						awk -F$'\t' -vc="$category" '
-						function outrow(pkg, cls, ver, dsc, web,   pkge) {
-							pkge=pkg; gsub(/\+/, "%2B", pkge)
-							printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a class=\"w\" href=\"%s\"></a></td></tr>", pkg, cls, pkge, pkg, ver, dsc, web }
-						{
-						if ($3==c) {
-							if ($1==PKG) {
-								outrow($1, "pkgi", $2, $4, $5)
-								INS=$1
-							} else {
-								if (PKG!=INS) {
-									outrow(PKG, "pkg", VER, DSC, WEB)
-								}
-							}
-							PKG=$1; VER=$2; DSC=$4; WEB=$5
-						}}'
-					else
-						# old slow method
-					awk -F$'\t' -vc=$category '{if ($3 == c) print $0}' \
-					$i/packages.info | parse_packages_info
-					fi
+					{
+						for L in $LANG ${LANG%%_*}; do
+							if [ -e "$PKGS_DB/packages-desc.$L" ]; then
+								sed '/^#/d' $PKGS_DB/packages-desc.$L
+								break
+							fi
+						done
+
+						[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
+
+						sed 's|.*|&\ti|' $i/installed.info
+
+						cat $i/packages.info
+					} | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
+function outrow(pkg, ins, blk, ver, dsc, web,   pkge) {
+	pkge=pkg; gsub(/\+/, "%2B", pkge)
+	printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", pkg, ins, blk, pkge, pkg, ver, dsc, web }
+
+{
+	if (PKG != "" && PKG != $1) {
+		if (CAT == c) {
+			if (1 in i) {
+				PKG = i[1]; VER = i[2]; DSC = i[4]; WEB = i[5];
+			} else if (1 in m) {
+				PKG = m[1]; VER = m[2]; DSC = m[4]; WEB = m[5];
+			}
+			if (DSCL != "") { DSC = DSCL }
+
+			outrow(PKG, INS, BLK, VER, DSC, WEB)
+		}
+
+		VER  = ""; DSC  = ""; WEB  = ""
+		delete m; delete i
+		DSCL = ""; INS  = ""; BLK  = ""; CAT = ""
+	}
+
+	PKG = $1
+	if (NF == 1) {
+		BLK = "b"
+	} else if (NF == 2) {
+		DSCL = $2
+	} else {
+		if ($3 == c) {
+			CAT = c
+			if ($9 == "i") {
+				i[1] = $1; i[2] = $2; i[4] = $4; i[5] = $5; INS = "i"
+			} else {
+				m[1] = $1; m[2] = $2; m[4] = $4; m[5] = $5
+			}
+		}
+	}
+}'
 					;;
 			esac
 			cat << EOT
