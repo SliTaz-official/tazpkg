@@ -437,8 +437,15 @@ EOT
 
 			case $category in
 				extra)
-					sed 's|.*|&	--	-	--	http://mirror.slitaz.org/packages/get/&	-	-	-|' \
-					$i/extra.list | parse_packages_info
+					NA="$(_n 'n/a')"
+					for pkg in $(cat $i/extra.list); do
+						PKG="$(grep ^$pkg$'\t' $i/installed.info)"
+						if [ -n "$PKG" ]; then
+							echo "$PKG"
+						else
+							echo "$pkg	$NA	-	$NA	http://mirror.slitaz.org/packages/get/$pkg	-	-	-"
+						fi
+					done | parse_packages_info
 					;;
 				all)
 					make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' '
@@ -518,11 +525,10 @@ EOT
 </div>
 </div>
 	<input type="hidden" name="repo" value="$repo" />
-
-	<table class="zebra outbox">
 EOT
 		if [ "$(GET files)" ]; then
 			cat <<EOT
+	<table class="zebra outbox filelist">
 	<thead>
 		<tr>
 			<td>$(_ 'Package')</td>
@@ -538,11 +544,12 @@ EOT
 				cat << EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
-	<td>$FILE</td>
+	<td>$(echo "$FILE" | sed "s|$pkg|<span class=\"diff-add\">$pkg</span>|g")</td>
 </tr>
 EOT
 			done
 		else
+			echo '	<table class="zebra outbox pkglist">'
 			table_head
 			echo "	<tbody>"
 			awk -F$'\t' 'BEGIN{IGNORECASE = 1}

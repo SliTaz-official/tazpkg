@@ -26,11 +26,11 @@ a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
 	display: inline-block; }
 
 
-.pkglist td:nth-child(1) {
+.pkglist td:nth-child(1), .filelist td:nth-child(1) {
 	white-space: nowrap;
 	}
 
-.pkglist td:nth-child(1) a {
+.pkglist td:nth-child(1) a, .filelist td:nth-child(1) a {
 	max-width: 12em;
 	}
 
@@ -38,9 +38,14 @@ a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
 	max-width: 7em;
 	}
 
-.pkglist td:nth-child(1) a, .pkglist td:nth-child(2) {
+.pkglist  td:nth-child(1) a, .pkglist  td:nth-child(2),
+.filelist td:nth-child(1) a, .filelist td:nth-child(2) {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis; -o-text-overflow: ellipsis;
+	}
+
+.filelist td:nth-child(2) {
+	max-width: 30em;
 	}
 
