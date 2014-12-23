@@ -387,8 +387,6 @@ EOT
 		repo=$(GET repo)
 		category=$(GET cat)
 		[ "$category" == "cat" ] && category="base-system"
-		#grep_category=$category
-		#[ "$grep_category" == "all" ] && grep_category="*"
 		search_form
 		sidebar | sed "s/active_$category/active/;s/repo_$repo/active/"
 		LOADING_MSG="$(_ 'Listing packages...')"
@@ -405,12 +403,9 @@ EOT
 	<input type="hidden" name="repo" value="$repo" />
 </div>
 <div class="float-right">
-	<a class="button" href="$SCRIPT_NAME?recharge">
-		<img src="$IMAGES/recharge.png" />$(_ 'Recharge list')</a>
-	<a class="button" href="$SCRIPT_NAME?up">
-		<img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
-	<a class="button" href='$SCRIPT_NAME?list'>
-		<img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
+	<a class="button" href="?recharge"><img src="$IMAGES/recharge.png" />$(_ 'Recharge list')</a>
+	<a class="button" href="?up"><img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
+	<a class="button" href="?list"><img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
 </div>
 </div>
 EOT
@@ -431,29 +426,33 @@ EOT
 					$i/extra.list | parse_packages_info
 					;;
 				all)
-					# test awk speed (sorry, no i18n_desc, no blocked now)
-					# http://tazpanel:82/pkgs.cgi?cat=all&repo=Any&awk
-					if [ $(GET awk) == "awk" ]; then
-						sort $i/packages.info $i/installed.info | \
-						awk -F$'\t' '
-						function outrow(pkg, cls, ver, dsc, web,   pkge) {
-							pkge=pkg; gsub(/\+/, "%2B", pkge)
-							printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a class=\"w\" href=\"%s\"></a></td></tr>", pkg, cls, pkge, pkg, ver, dsc, web }
-						{
-							if ($1==PKG) {
-								outrow($1, "pkgi", $2, $4, $5)
-								INS=$1
-							} else {
-								if (PKG!=INS) {
-									outrow(PKG, "pkg", VER, DSC, WEB)
-								}
-							}
-							PKG=$1; VER=$2; DSC=$4; WEB=$5
-						}'
-					else
-						# old slow method
-					parse_packages_info < $i/packages.info
-					fi
+					{
+						for L in $LANG ${LANG%%_*}; do
+							if [ -e "$PKGS_DB/packages-desc.$L" ]; then
+								sed '/^#/d' $PKGS_DB/packages-desc.$L
+								break
+							fi
+						done
+
+						[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
+
+						sed 's|.*|&\ti|' $i/installed.info
+
+						cat $i/packages.info
+					} | sort -t$'\t' -k1,1 | awk -F$'\t' '
+{
+	if (PKG && PKG != $1) {
+		if (DSCL) DSC = DSCL
+		printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
+		VER = DSC = WEB = DSCL = INS = BLK = ""
+	}
+
+	PKG = $1
+	if (NF == 1)   { BLK = "b"; next }
+	if (NF == 2)   { DSCL = $2; next }
+	if ($9 == "i") { PKG = $1; VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
+	if (! INS)     { PKG = $1; VER = $2; DSC = $4; WEB = $5 }
+}'
 					;;
 				*)
 					{
@@ -470,42 +469,22 @@ EOT
 
 						cat $i/packages.info
 					} | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
-function outrow(pkg, ins, blk, ver, dsc, web,   pkge) {
-	pkge=pkg; gsub(/\+/, "%2B", pkge)
-	printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", pkg, ins, blk, pkge, pkg, ver, dsc, web }
-
 {
-	if (PKG != "" && PKG != $1) {
-		if (CAT == c) {
-			if (1 in i) {
-				PKG = i[1]; VER = i[2]; DSC = i[4]; WEB = i[5];
-			} else if (1 in m) {
-				PKG = m[1]; VER = m[2]; DSC = m[4]; WEB = m[5];
-			}
-			if (DSCL != "") { DSC = DSCL }
-
-			outrow(PKG, INS, BLK, VER, DSC, WEB)
+	if (PKG && PKG != $1) {
+		if (CAT) {
+			if (DSCL) DSC = DSCL
+			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
 		}
-
-		VER  = ""; DSC  = ""; WEB  = ""
-		delete m; delete i
-		DSCL = ""; INS  = ""; BLK  = ""; CAT = ""
+		VER = DSC = WEB = DSCL = INS = BLK = CAT = ""
 	}
 
 	PKG = $1
-	if (NF == 1) {
-		BLK = "b"
-	} else if (NF == 2) {
-		DSCL = $2
-	} else {
-		if ($3 == c) {
-			CAT = c
-			if ($9 == "i") {
-				i[1] = $1; i[2] = $2; i[4] = $4; i[5] = $5; INS = "i"
-			} else {
-				m[1] = $1; m[2] = $2; m[4] = $4; m[5] = $5
-			}
-		}
+	if (NF == 1) { BLK = "b"; next }
+	if (NF == 2) { DSCL = $2; next }
+	if ($3 == c) {
+		CAT = c
+		if ($9 == "i") { PKG = $1; VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
+		if (! INS)     { PKG = $1; VER = $2; DSC = $4; WEB = $5 }
 	}
 }'
 					;;
