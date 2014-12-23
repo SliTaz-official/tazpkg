@@ -261,6 +261,21 @@ repo_name() {
 	esac
 }
 
+make_mixed_list() {
+	for L in $LANG ${LANG%%_*}; do
+		if [ -e "$PKGS_DB/packages-desc.$L" ]; then
+			sed '/^#/d' $PKGS_DB/packages-desc.$L
+			break
+		fi
+	done
+
+	[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
+
+	sed 's|.*|&\ti|' $i/installed.info
+
+	cat $i/packages.info
+}
+
 
 
 #
@@ -426,20 +441,7 @@ EOT
 					$i/extra.list | parse_packages_info
 					;;
 				all)
-					{
-						for L in $LANG ${LANG%%_*}; do
-							if [ -e "$PKGS_DB/packages-desc.$L" ]; then
-								sed '/^#/d' $PKGS_DB/packages-desc.$L
-								break
-							fi
-						done
-
-						[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
-
-						sed 's|.*|&\ti|' $i/installed.info
-
-						cat $i/packages.info
-					} | sort -t$'\t' -k1,1 | awk -F$'\t' '
+					make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' '
 {
 	if (PKG && PKG != $1) {
 		if (DSCL) DSC = DSCL
@@ -455,20 +457,7 @@ EOT
 }'
 					;;
 				*)
-					{
-						for L in $LANG ${LANG%%_*}; do
-							if [ -e "$PKGS_DB/packages-desc.$L" ]; then
-								sed '/^#/d' $PKGS_DB/packages-desc.$L
-								break
-							fi
-						done
-
-						[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
-
-						sed 's|.*|&\ti|' $i/installed.info
-
-						cat $i/packages.info
-					} | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
+					make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
 {
 	if (PKG && PKG != $1) {
 		if (CAT) {
