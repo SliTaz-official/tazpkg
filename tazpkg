@@ -1954,7 +1954,7 @@ $LIST"
 
 	list-config)
 		# List configuration files installed.
-		if [ "$2" = "--box" ]; then
+		if [ -n "$box" ]; then
 			mkdir -p $TMP_DIR; cd $TMP_DIR
 			FILES="$INSTALLED/*/volatile.cpio.gz"
 			[ -n "$3" ] && FILES="$INSTALLED/$3/volatile.cpio.gz"
@@ -1975,14 +1975,13 @@ $LIST"
 			cd $TOP_DIR
 			rm -rf $TMP_DIR
 		else
-			title 'Configuration files'
+			im && title 'Configuration files'
 			for i in $INSTALLED/*/volatile.cpio.gz; do
 				[ -n "$2" -a "$i" != "$INSTALLED/$2/volatile.cpio.gz" ] && continue
 				[ -f "$i" ] || continue
 				zcat $i | cpio -t --quiet
 			done | sed 's|^|/|' | sort
-			separator
-			newline
+			im && footer
 		fi ;;
 
 

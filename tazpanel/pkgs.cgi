@@ -88,13 +88,10 @@ packages_summary() {
 	cat << EOT
 <table class="zebra outbox">
 <tbody>
-<tr><td>$(_ 'Last recharge:')</td>
+<tr><td>$(_ 'Last recharge:')</td><td>
 EOT
-	stat=$(stat -c %y $PKGS_DB/packages.list | \
-		sed 's/\(:..\):.*/\1/' | awk '{print $1}')
-	mtime=$(find $PKGS_DB/packages.list -mtime +10)
-	echo -n "<td>$stat "
-	if [ "$mtime" ]; then
+	ls -l $PKGS_DB/packages.list | awk '{print $6, $7, $8}'
+	if [ -n "$(find $PKGS_DB/packages.list -mtime +10)" ]; then
 		_ '(Older than 10 days)'
 	else
 		_ '(Not older than 10 days)'
@@ -102,7 +99,7 @@ EOT
 	cat << EOT
 </td></tr>
 <tr><td>$(_ 'Installed packages:')</td>
-	<td>$(ls $INSTALLED | wc -l)</td></tr>
+	<td>$(cat $PKGS_DB/installed.info | wc -l)</td></tr>
 <tr><td>$(_ 'Mirrored packages:')</td>
 	<td>$(cat $PKGS_DB/packages.list | wc -l)</td></tr>
 <tr><td>$(_ 'Upgradeable packages:')</td>
@@ -146,6 +143,28 @@ list_repos() {
 		<img src="$IMAGES/clear.png">$repo</a></li>
 EOT
 	done
+}
+
+
+# Show button
+show_button() {
+	case $1 in
+		recharge)     img='recharge'; label="$(_ 'Recharge list')" ;;
+		up)           img='update';   label="$(_ 'Check upgrades')" ;;
+		list)         img='tazpkg';   label="$(_ 'My packages')" ;;
+		linkable)     img='tazpkg';   label="$(_ 'Linkable packages')" ;;
+		admin)        img='edit';     label="$(_ 'Administration')" ;;
+		*Block*)      img='';         label="$(_ 'Block')" ;;
+		*Unblock*)    img='';         label="$(_ 'Unblock')" ;;
+		*Repack*)     img='';         label="$(_ 'Repack')" ;;
+		*saveconf*)   img='tazpkg';   label="$(_ 'Save configuration')" ;;
+		*listconf*)   img='edit';     label="$(_ 'List configuration files')" ;;
+		*quickcheck*) img='recharge'; label="$(_ 'Quick check')" ;;
+		*fullcheck*)  img='recharge'; label="$(_ 'Full check')" ;;
+	esac
+	echo -n "<a class=\"button\" href=\"?$1\">"
+	[ -n "$img" ] && echo -n "<img src=\"$IMAGES/$img.png\" />"
+	echo "$label</a>"
 }
 
 
@@ -304,10 +323,8 @@ case " $(GET) " in
 		<input type="submit" value="$(_ 'Remove')" />
 	</div>
 	<div class="float-right">
-		<a class="button" href="$SCRIPT_NAME?recharge">
-			<img src="$IMAGES/recharge.png" />$(_ 'Recharge list')</a>
-		<a class="button" href='$SCRIPT_NAME?up'>
-			<img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
+		$(show_button recharge)
+		$(show_button up)
 	</div>
 </div>
 
@@ -359,10 +376,8 @@ EOT
 		<input type="submit" value="$(_ 'Link')" />
 	</div>
 	<div class="float-right">
-		<a class="button" href="$SCRIPT_NAME?recharge">
-			<img src="$IMAGES/recharge.png" />$(_ 'Recharge list')</a>
-		<a class="button" href="$SCRIPT_NAME?up">
-			<img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
+		$(show_button recharge)
+		$(show_button up)
 	</div>
 </div>
 EOT
@@ -418,9 +433,9 @@ EOT
 	<input type="hidden" name="repo" value="$repo" />
 </div>
 <div class="float-right">
-	<a class="button" href="?recharge"><img src="$IMAGES/recharge.png" />$(_ 'Recharge list')</a>
-	<a class="button" href="?up"><img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
-	<a class="button" href="?list"><img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
+	$(show_button recharge)
+	$(show_button up)
+	$(show_button list)
 </div>
 </div>
 EOT
@@ -516,12 +531,9 @@ EOT
 	<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
 </div>
 <div class="float-right">
-	<a class="button" href="$SCRIPT_NAME?recharge">
-		<img src="$IMAGES/recharge.png" />$(_ 'Recharge list')</a>
-	<a class="button" href="$SCRIPT_NAME?up">
-		<img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
-	<a class="button" href='$SCRIPT_NAME?list'>
-		<img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
+	$(show_button recharge)
+	$(show_button up)
+	$(show_button list)
 </div>
 </div>
 	<input type="hidden" name="repo" value="$repo" />
@@ -580,10 +592,8 @@ EOT
 		<p>$(_ 'Recharge checks for new or updated packages')</p>
 	</div>
 	<div class="float-right">
-		<a class="button" href='$SCRIPT_NAME?up'>
-			<img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
-		<a class="button" href='$SCRIPT_NAME?list'>
-			<img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
+		$(show_button up)
+		$(show_button list)
 	</div>
 </div>
 <div class="wrapper">
@@ -620,10 +630,8 @@ EOT
 		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
 	</div>
 	<div class="float-right">
-		<a class="button" href="$SCRIPT_NAME?recharge">
-			<img src="$IMAGES/recharge.png" />$(_ 'Recharge list')</a>
-		<a class="button" href="$SCRIPT_NAME?list">
-			<img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
+		$(show_button recharge)
+		$(show_button list)
 	</div>
 </div>
 EOT
@@ -679,10 +687,7 @@ EOT
 		<p>$(_ 'Performing tasks on packages')</p>
 	</div>
 	<div class="float-right">
-		<p>
-			<a class="button" href="$SCRIPT_NAME?list">
-				<img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
-		</p>
+		$(show_button list)
 	</div>
 </div>
 <div class="box">
@@ -740,27 +745,18 @@ EOT
 
 		if [ -d $INSTALLED/$pkg ]; then
 			if grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list; then
-				cat << EOT
-			<a class="button" href="$SCRIPT_NAME?do=Unblock&$pkg">$(_ 'Unblock')</a>
-EOT
+				show_button "do=Unblock&$pkg"
 			else
-				cat << EOT
-			<a class="button" href='$SCRIPT_NAME?do=Block&$pkg'>$(_ 'Block')</a>
-EOT
+				show_button "do=Block&$pkg"
 			fi
-			cat << EOT
-			<a class="button" href='$SCRIPT_NAME?do=Repack&$pkg'>$(_ 'Repack')</a>
-EOT
+			show_button "do=Repack&$pkg"
 		fi
 		i18n_desc $pkg
 		cat << EOT
 		</p>
 	</div>
 	<div class="float-right">
-		<p>
-			<a class="button" href='$SCRIPT_NAME?list'>
-				<img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
-		</p>
+		$(show_button list)
 	</div>
 </div>
 <table class="zebra outbox">
@@ -860,10 +856,8 @@ EOT
 				rm -rf $PKGS_DB/undigest/$repository ;;
 		esac
 		[ "$cmd" == "$(_n 'Set link')" ] &&
-			[ -d "$(GET link)/$INSTALLED" ] &&
-			ln -fs $(GET link) $PKGS_DB/fslink
-		[ "$cmd" == "$(_n 'Remove link')" ] &&
-			rm -f $PKGS_DB/fslink
+			[ -d "$(GET link)/$INSTALLED" ] && ln -fs $(GET link) $PKGS_DB/fslink
+		[ "$cmd" == "$(_n 'Remove link')" ] && rm -f $PKGS_DB/fslink
 		cache_files=$(find /var/cache/tazpkg -name *.tazpkg | wc -l)
 		cache_size=$(du -sh /var/cache/tazpkg | cut -f1 | sed 's|\.0||')
 		sidebar
@@ -873,14 +867,10 @@ EOT
 	<p>$(_ 'TazPkg administration and settings')</p>
 </div>
 <div id="actions">
-	<a class="button" href='$SCRIPT_NAME?admin=&action=saveconf'>
-		<img src="$IMAGES/tazpkg.png" />$(_ 'Save configuration')</a>
-	<a class="button" href='$SCRIPT_NAME?admin=&action=listconf'>
-		<img src="$IMAGES/edit.png" />$(_ 'List configuration files')</a>
-	<a class="button" href='$SCRIPT_NAME?admin=&action=quickcheck'>
-		<img src="$IMAGES/recharge.png" />$(_ 'Quick check')</a>
-	<a class="button" href='$SCRIPT_NAME?admin=&action=fullcheck'>
-		<img src="$IMAGES/recharge.png" />$(_ 'Full check')</a>
+	$(show_button 'admin=&action=saveconf')
+	$(show_button 'admin=&action=listconf')
+	$(show_button 'admin=&action=quickcheck')
+	$(show_button 'admin=&action=fullcheck')
 </div>
 EOT
 		case "$(GET action)" in
@@ -896,7 +886,6 @@ EOT
 					echo "<h4>$(_ 'Configuration files')</h4>"
 					echo "<ul>"
 					tazpkg list-config | while read file; do
-						[ "${file:0:1}" == "/" ] || continue
 						if [ -e $file ]; then
 							echo "<li><a href=\"index.cgi?file=$file\">$file</a></li>"
 						else
@@ -904,7 +893,7 @@ EOT
 						fi
 					done
 					echo "</ul>"
-					echo "</pre>" ;;
+					;;
 				quickcheck)
 					LOADING_MSG=$(_ 'Checking packages consistency...')
 					loading_msg
@@ -1055,22 +1044,14 @@ EOT
 <h2>$(_ 'Summary')</h2>
 
 <div id="actions">
-	<a class="button" href="$SCRIPT_NAME?list">
-		<img src="$IMAGES/tazpkg.png" />$(_ 'My packages')</a>
+	$(show_button list)
 EOT
 		fslink=$(readlink $PKGS_DB/fslink)
-		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] &&
-			cat << EOT
-	<a class="button" href="$SCRIPT_NAME?linkable">
-		<img src="$IMAGES/tazpkg.png" />$(_ 'Linkable packages')</a>
-EOT
+		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] && show_button linkable
+		show_button recharge
+		show_button up
+		show_button admin
 		cat << EOT
-	<a class="button" href="$SCRIPT_NAME?recharge">
-		<img src="$IMAGES/recharge.png" />$(_ 'Recharge list')</a>
-	<a class="button" href="$SCRIPT_NAME?up">
-		<img src="$IMAGES/update.png" />$(_ 'Check upgrades')</a>
-	<a class="button" href="$SCRIPT_NAME?admin">
-		<img src="$IMAGES/edit.png" />$(_ 'Administration')</a>
 </div>
 
 $(packages_summary)
