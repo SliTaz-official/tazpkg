@@ -11,6 +11,10 @@
 
 . /lib/libtaz.sh
 . lib/libtazpanel
+
+. /etc/slitaz/slitaz.conf
+. /etc/slitaz/tazpkg.conf
+
 get_config
 header
 
@@ -20,7 +24,6 @@ TITLE=$(TEXTDOMAIN='tazpkg'; _ 'TazPanel - Packages')
 xhtml_header | sed 's/id="content"/id="content-sidebar"/'
 
 export TEXTDOMAIN='tazpkg'
-PKGS_DB="$LOCALSTATE"
 
 pkg_info_link()
 {
@@ -67,7 +70,7 @@ EOT
 parse_packages_info() {
 	IFS=$'\t'
 	while read PACKAGE VERSION CATEGORY SHORT_DESC WEB_SITE TAGS SIZES DEPENDS; do
-		class=pkg; [ -d $INSTALLED/${PACKAGE% } ] && class=pkgi
+		class=pkg; grep -q "^$PACKAGE$'\t'" $PKGS_DB/installed.info && class=pkgi
 		i18n_desc $PACKAGE
 		cat << EOT
 <tr>
@@ -177,8 +180,8 @@ show_button() {
 # ENTER will search but user may search for a button, so put one.
 
 search_form() {
-	[ -n "$repo" ] || repo="$(GET repo)"
-	[ -n "$repo" ] || repo=Any
+	[ -z "$repo" ] && repo="$(GET repo)"
+	[ -z "$repo" ] && repo="Any"
 	cat << EOT
 <div class="search">
 	<form method="get" action="$SCRIPT_NAME">
@@ -416,7 +419,7 @@ EOT
 		cd $PKGS_DB
 		repo=$(GET repo)
 		category=$(GET cat)
-		[ "$category" == "cat" ] && category="base-system"
+		[ -z "$category" ] && category="base-system"
 		search_form
 		sidebar | sed "s/active_$category/active/;s/repo_$repo/active/"
 		LOADING_MSG="$(_ 'Listing packages...')"
@@ -462,22 +465,6 @@ EOT
 						fi
 					done | parse_packages_info
 					;;
-				all)
-					make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' '
-{
-	if (PKG && PKG != $1) {
-		if (DSCL) DSC = DSCL
-		printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
-		VER = DSC = WEB = DSCL = INS = BLK = ""
-	}
-
-	PKG = $1
-	if (NF == 1)   { BLK = "b"; next }
-	if (NF == 2)   { DSCL = $2; next }
-	if ($9 == "i") { PKG = $1; VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
-	if (! INS)     { PKG = $1; VER = $2; DSC = $4; WEB = $5 }
-}'
-					;;
 				*)
 					make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
 {
@@ -492,7 +479,7 @@ EOT
 	PKG = $1
 	if (NF == 1) { BLK = "b"; next }
 	if (NF == 2) { DSCL = $2; next }
-	if ($3 == c) {
+	if (c == "all" || $3 == c) {
 		CAT = c
 		if ($9 == "i") { PKG = $1; VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
 		if (! INS)     { PKG = $1; VER = $2; DSC = $4; WEB = $5 }
@@ -513,7 +500,7 @@ EOT
 		# Search for packages. Here default is to search in packages.desc
 		# and so get result including packages names and descriptions
 		#
-		pkg=$(GET search)
+		pkg=$(GET search); [ -z "$pkg" ] && xhtml_footer && exit
 		repo=$(GET repo)
 		cd $PKGS_DB
 		search_form
@@ -538,7 +525,7 @@ EOT
 </div>
 	<input type="hidden" name="repo" value="$repo" />
 EOT
-		if [ "$(GET files)" ]; then
+		if [ -n "$(GET files)" ]; then
 			cat <<EOT
 	<table class="zebra outbox filelist">
 	<thead>
@@ -825,7 +812,7 @@ EOT
 		cmd=$(GET admin)
 		case "$cmd" in
 			clean)
-				rm -rf /var/cache/tazpkg/* ;;
+				rm -rf $CACHE_DIR/* ;;
 			add-mirror)
 				# Decode url
 				mirror=$(GET mirror)
@@ -858,8 +845,8 @@ EOT
 		[ "$cmd" == "$(_n 'Set link')" ] &&
 			[ -d "$(GET link)/$INSTALLED" ] && ln -fs $(GET link) $PKGS_DB/fslink
 		[ "$cmd" == "$(_n 'Remove link')" ] && rm -f $PKGS_DB/fslink
-		cache_files=$(find /var/cache/tazpkg -name *.tazpkg | wc -l)
-		cache_size=$(du -sh /var/cache/tazpkg | cut -f1 | sed 's|\.0||')
+		cache_files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
+		cache_size=$(du -sh $CACHE_DIR | cut -f1 | sed 's|\.0||')
 		sidebar
 		cat << EOT
 <h2>$(_ 'Administration')</h2>
@@ -922,7 +909,7 @@ EOT
 
 <h3>$(_ 'Default mirror')</h3>
 
-<pre>$(cat /var/lib/tazpkg/mirror)</pre>
+<pre>$(cat $PKGS_DB/mirror)</pre>
 
 <h3>$(_ 'Current mirror list')</h3>
 EOT
@@ -1060,8 +1047,7 @@ $(packages_summary)
 <h3>$(_ 'Latest log entries')</h3>
 
 <pre>
-$(tail -n 5 /var/log/slitaz/tazpkg.log | fgrep "-" | \
-	awk '{print $1, $2, $3, $4, $5, $6, $7}')
+$(tail -n 5 $LOG | fgrep "-" | awk '{print $1, $2, $3, $4, $5, $6, $7}')
 </pre>
 EOT
 		;;
