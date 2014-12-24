@@ -49,3 +49,24 @@ a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
 	max-width: 30em;
 	}
 
+#actions { overflow: auto; }
+
+a.pages {
+	padding: 0.5ex;
+	margin: 0.5ex 0;
+	border: 1px solid #AAA;
+	width: 3ex;
+	display: inline-block;
+	text-align: center;
+	}
+a.pages:hover {
+	border: 1px solid #F94;
+	background: #F94;
+	color: black;
+	}
+a.pages.current, a.pages.current:hover {
+	font-weight: bold;
+	border: 1px solid #07F;
+	background: #07F;
+	color: #eee;
+	}

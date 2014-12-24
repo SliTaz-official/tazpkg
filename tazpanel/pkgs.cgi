@@ -157,6 +157,9 @@ show_button() {
 		list)         img='tazpkg';   label="$(_ 'My packages')" ;;
 		linkable)     img='tazpkg';   label="$(_ 'Linkable packages')" ;;
 		admin)        img='edit';     label="$(_ 'Administration')" ;;
+		*Install*nf*) img='';         label="$(_ 'Install (Non Free)')" ;;
+		*Install*)    img='';         label="$(_ 'Install')" ;;
+		*Remove*)     img='stop';     label="$(_ 'Remove')" ;;
 		*Block*)      img='';         label="$(_ 'Block')" ;;
 		*Unblock*)    img='';         label="$(_ 'Unblock')" ;;
 		*Repack*)     img='';         label="$(_ 'Repack')" ;;
@@ -283,6 +286,7 @@ repo_name() {
 	esac
 }
 
+
 make_mixed_list() {
 	for L in $LANG ${LANG%%_*}; do
 		if [ -e "$PKGS_DB/packages-desc.$L" ]; then
@@ -296,6 +300,30 @@ make_mixed_list() {
 	sed 's|.*|&\ti|' $i/installed.info
 
 	cat $i/packages.info
+}
+
+
+# Print links to the pages
+
+pager() {
+	awk -F'"' -vpage="$page" -vcached="$1" -vnum_lines="$(wc -l < $1)" -vtext="$(_ 'Pages:') " -vurl="cat=$category&amp;repo=$repo&amp;page=" '
+BEGIN{
+	num_pages = int(num_lines / 100) + (num_lines % 100 != 0)
+	if (num_pages != 1) printf "<p>%s", text
+}
+{
+	if (num_pages == 1) exit
+	p = int(NR/100) + 1
+	if (p != page) current = ""; else current=" current"
+
+	if (NR%100 == 1) printf "<a class=\"pages%s\" href=\"?%s%s\" title=\"%s\n···\n", current, url, p, $6
+	if (NR%100 == 0) printf "%s\">%s</a> ", $6, p - 1
+}
+END{
+	if (num_pages == 1) exit
+	if (NR%100 != 0) printf "%s\">%s</a>", $6, p
+	print "</p>"
+}' $1
 }
 
 
@@ -449,12 +477,12 @@ EOT
 <h3>$(_ 'Repository: %s' $Repo_Name)</h3>
 EOT
 			fi
-			echo '<table class="zebra outbox pkglist">'
-			table_head
-			echo '<tbody>'
 
 			case $category in
 				extra)
+					echo '<table class="zebra outbox pkglist">'
+					table_head
+					echo '<tbody>'
 					NA="$(_n 'n/a')"
 					for pkg in $(cat $i/extra.list); do
 						PKG="$(grep ^$pkg$'\t' $i/installed.info)"
@@ -464,8 +492,10 @@ EOT
 							echo "$pkg	$NA	-	$NA	http://mirror.slitaz.org/packages/get/$pkg	-	-	-"
 						fi
 					done | parse_packages_info
+					echo "</tbody></table>"
 					;;
 				*)
+					cached="$CACHE_DIR/$repo-$category"
 					make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
 {
 	if (PKG && PKG != $1) {
@@ -484,13 +514,20 @@ EOT
 		if ($9 == "i") { PKG = $1; VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
 		if (! INS)     { PKG = $1; VER = $2; DSC = $4; WEB = $5 }
 	}
-}'
+}' > $cached
+					page=$(GET page); [ -z "$page" ] && page=1
+					pager="$(pager $cached)"
+
+					echo "$pager"
+					echo '<table class="zebra outbox pkglist">'
+					table_head
+					echo '<tbody>'
+					tail -n+$((($page-1)*100+1)) $cached | head -n100
+					echo "</tbody></table>"
+					echo "$pager"
+					rm -f $cached
 					;;
 			esac
-			cat << EOT
-</tbody>
-</table>
-EOT
 		done
 		echo '</form>' ;;
 
@@ -699,7 +736,6 @@ EOT
 			. $INSTALLED/$pkg/receipt
 			files=$(wc -l < $INSTALLED/$pkg/files.list)
 			action="Remove"
-			action_i18n=$(_ 'Remove')
 		else
 			cd $PKGS_DB
 			LOADING_MSG=$(_ 'Getting package info...')
@@ -713,7 +749,6 @@ EOT
 			CATEGORY="$(echo $4)"
 			WEB_SITE="$(echo $5)"
 			action="Install"
-			action_i18n=$(_ 'Install')
 			temp="${pkg#get-}"
 		fi
 		cat << EOT
@@ -725,9 +760,9 @@ EOT
 EOT
 		if [ "$temp" != "$pkg" -a "$action" == "Install" ]; then
 			temp="$(echo $pkg | sed 's/get-//g')"
-			echo "<a class='button' href='$SCRIPT_NAME?do=Install&$temp'>$(_ 'Install (Non Free)')</a>"
+			show_button "do=Install&$temp&nf"
 		else
-			echo "<a class='button' href='$SCRIPT_NAME?do=$action&$pkg'>$action_i18n</a>"
+			show_button "do=$action&$pkg"
 		fi
 
 		if [ -d $INSTALLED/$pkg ]; then
