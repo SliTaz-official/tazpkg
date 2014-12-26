@@ -314,9 +314,8 @@ BEGIN{
 {
 	if (num_pages == 1) exit
 	p = int(NR/100) + 1
-	if (p != page) current = ""; else current=" current"
 
-	if (NR%100 == 1) printf "<a class=\"pages%s\" href=\"?%s%s\" title=\"%s\n···\n", current, url, p, $6
+	if (NR%100 == 1) printf "<a class=\"pages%s\" href=\"?%s%s\" title=\"%s\n···\n", p==page?" current":"", url, p, $6
 	if (NR%100 == 0) printf "%s\">%s</a> ", $6, p - 1
 }
 END{
@@ -324,6 +323,19 @@ END{
 	if (NR%100 != 0) printf "%s\">%s</a>", $6, p
 	print "</p>"
 }' $1
+}
+
+
+# Show links for "info" page
+
+show_info_links() {
+	if [ -n "$1" ]; then
+		echo -n "<tr><td><b>$2</b></td><td>"
+		echo $1 | tr ' ' $'\n' | awk -vt="$3" '{
+			printf "<a href=\"%s%s\">%s</a> ", t?("?"t"="):"", gensub(/\+/, "%2B", "g", $1), $1
+		}'
+		echo "</td></tr>"
+	fi
 }
 
 
@@ -740,14 +752,15 @@ EOT
 			cd $PKGS_DB
 			LOADING_MSG=$(_ 'Getting package info...')
 			loading_msg
-			IFS='|'
-			set -- $(grep -hs "^$pkg |" packages.desc undigest/*/packages.desc)
-			unset IFS
-			PACKAGE=$1
-			VERSION="$(echo $2)"
-			SHORT_DESC="$(echo $3)"
-			CATEGORY="$(echo $4)"
-			WEB_SITE="$(echo $5)"
+			eval "$(awk -F$'\t' -vp=$pkg '
+			$1==p{
+				printf "PACKAGE=\"%s\"; VERSION=\"%s\"; CATEGORY=\"%s\"; ", $1, $2, $3
+				printf "SHORT_DESC=\"%s\"; WEB_SITE=\"%s\"; TAGS=\"%s\"; ", $4, $5, $6
+				printf "SIZES=\"%s\"; DEPENDS=\"%s\"", $7, $8
+			}' packages.info undigest/*/packages.info)"
+			PACKED_SIZE=${SIZES% *}
+			UNPACKED_SIZE=${SIZES#* }
+
 			action="Install"
 			temp="${pkg#get-}"
 		fi
@@ -759,7 +772,6 @@ EOT
 		<p>
 EOT
 		if [ "$temp" != "$pkg" -a "$action" == "Install" ]; then
-			temp="$(echo $pkg | sed 's/get-//g')"
 			show_button "do=Install&$temp&nf"
 		else
 			show_button "do=$action&$pkg"
@@ -785,55 +797,33 @@ EOT
 <tbody>
 	<tr><td><b>$(_ 'Name')</b></td><td>$PACKAGE</td></tr>
 	<tr><td><b>$(_ 'Version')</b></td><td>$VERSION</td></tr>
+	<tr><td><b>$(_ 'Category')</b></td><td><a href="?cat=$CATEGORY">$CATEGORY</a></td></tr>
 	<tr><td><b>$(_ 'Description')</b></td><td>$SHORT_DESC</td></tr>
-	<tr><td><b>$(_ 'Category')</b></td><td>$CATEGORY</td></tr>
-EOT
-		if [ -d $INSTALLED/$pkg ]; then
-			cat << EOT
-	<tr><td><b>$(_ 'Maintainer')</b></td><td>$MAINTAINER</td></tr>
+	$([ -n "$MAINTAINER" ] && echo "<tr><td><b>$(_ 'Maintainer')</b></td><td>$MAINTAINER</td></tr>")
+	$([ -n "$LICENSE" ] && echo "<tr><td><b>$(_ 'License')</b></td><td><a href=\"?license=$pkg\">$LICENSE</a></td></tr>")
 	<tr><td><b>$(_ 'Website')</b></td><td><a href="$WEB_SITE">$WEB_SITE</a></td></tr>
+	$(show_info_links "$TAGS" "$(_ 'Tags')" 'tag')
 	<tr><td><b>$(_ 'Sizes')</b></td><td>$PACKED_SIZE/$UNPACKED_SIZE</td></tr>
-EOT
-			if [ -n "$DEPENDS" ]; then
-				echo "<tr><td><b>$(_ 'Depends')</b></td><td>"
-				for i in $DEPENDS; do
-					pkg_info_link $i
-				done
-				echo "</td></tr>"
-			fi
-			if [ -n "$SUGGESTED" ]; then
-				echo "<tr><td><b>$(_ 'Suggested')</b></td><td>"
-				for i in $SUGGESTED; do
-					pkg_info_link $i
-				done
-				echo "</td></tr>"
-			fi
-			[ -n "$TAGS" ] && echo "<tr><td><b>$(_ 'Tags')</b></td><td>$TAGS</td></tr>"
-			I_FILES=$(cat $INSTALLED/$pkg/files.list | wc -l)
-			cat << EOT
+	$(show_info_links "$DEPENDS" "$(_ 'Depends')" 'info')
+	$(show_info_links "$SUGGESTED" "$(_ 'Suggested')" 'info')
 </tbody>
 </table>
 EOT
-			DESC="$(tazpkg desc $pkg)"
-			[ -n "$DESC" ] && echo "<pre>$DESC</pre>"
+		DESC="$(tazpkg desc $pkg)"
+		[ -n "$DESC" ] && echo "<pre>$DESC</pre>"
 
+		if [ -d $INSTALLED/$pkg ]; then
 			cat << EOT
-<p>$(_ 'Installed files: %s' $I_FILES)</p>
+<p>$(_ 'Installed files: %s' $(wc -l < $INSTALLED/$pkg/files.list))</p>
 
 <pre>$(sort $INSTALLED/$pkg/files.list)</pre>
 EOT
 		else
 			cat << EOT
-<tr><td><b>$(_ 'Website')</b></td><td><a href="$WEB_SITE">$WEB_SITE</a></td></tr>
-<tr><td><b>$(_ 'Sizes')</b></td><td>$(grep -hsA 3 ^$pkg$ packages.txt undigest/*/packages.txt | \
-		tail -n 1 | sed 's/ *//')</td></tr>
-</table>
-
-<p>$(_ 'Installed files:')</p>
+<p>$(_ 'Installed files: %s' ' ')</p>
 
 <pre>
-$(lzcat files.list.lzma undigest/*/files.list.lzma 2> /dev/null | \
- sed "/^$pkg: /!d;s/^$pkg: //" | sort)
+$(lzcat files.list.lzma undigest/*/files.list.lzma 2> /dev/null | awk -vp="$pkg:" '$1==p{print $2}' | sort)
 </pre>
 EOT
 		fi
@@ -1053,8 +1043,95 @@ EOT
 				break
 			done
 		fi
-		 ;;
-	*)
+		;;
+
+
+	*\ license\ *)
+		#
+		# Show licenses for installed packages
+		#
+		search_form
+		sidebar
+		pkg=$(GET license)
+		case $pkg in
+			/*)
+				[ -e $pkg ] && {
+				echo "<h2>${pkg#/usr/share/licenses/}</h2>"
+				case $pkg in
+					*.htm*)
+						cat $pkg ;;
+					*)
+						echo "<pre style=\"white-space: pre-wrap\">"
+						cat $pkg | htmlize | sed 's|\([hf]t*t*ps*://[a-zA-Z0-9./_-]*[a-zA-Z0-9/_-]\)|<a href="\1">\1</a>|'
+						echo "</pre>"
+						;;
+				esac
+				} ;;
+			*)
+				echo "<h2>$(_ 'Licenses for package %s' $pkg)</h2>"
+				ONLINE=''; OFFLINE=''
+
+				if [ -e "$PKGS_DB/installed/$pkg" ]; then
+					for license in $(. $PKGS_DB/installed/$pkg/receipt; echo "$LICENSE"); do
+						OSL=''; GNU=''; USR=''; LIC=''
+						case $license in
+							Apache)			OSL='Apache-2.0'; URL='http://www.apache.org/licenses/' ;;
+							Artistic)		OSL='Artistic-2.0' ;;
+							BSD)			OSL='BSD-2-Clause' ;;
+							BSD3)			OSL='BSD-3-Clause' ;;
+
+							CC-BY-SA*|CC-SA*)	CCO='by-sa/4.0/' ;;
+							CC-BY-ND*)		CCO='by-nd/4.0/' ;;
+							CC-BY-NC-SA*)	CCO='by-nc-sa/4.0/' ;;
+							CC-BY-NC-ND*)	CCO='by-nc-nd/4.0/' ;;
+							CC-BY-NC*)		CCO='by-nc/4.0/' ;;
+							CC-BY*)			CCO='by/4.0/' ;;
+
+							cc-pd)			URL='http://creativecommons.org/publicdomain/' ;;
+							CCPL)			;;
+							CDDL*)			OSL='CDDL-1.0' ;;
+							CECILL*)		OSL='CECILL-2.1' ;;
+							Eclipse|EPL*)	OSL='EPL-1.0' ;;
+							FDL)			GNU='fdl' ;;
+							GPL)			GNU='gpl'; OSL='gpl-license'; LIC='gpl.txt' ;;
+							GPL2)			GNU='old-licenses/gpl-2.0'; OSL='GPL-2.0' ;;
+							GPL3)			GNU='gpl'; OSL='GPL-3.0'; LIC='gpl.txt' ;;
+							ISC)			OSL='ISC' ;;
+							LGPL)			GNU='lgpl'; OSL='lgpl-license' ;;
+							LGPL2)			GNU='old-licenses/lgpl-2.0' ;;
+							LGPL2.1)		GNU='old-licenses/lgpl-2.1'; OSL='LGPL-2.1'; LIC='lgpl.txt' ;;
+							LGPL3)			GNU='lgpl'; OSL='LGPL-3.0' ;;
+							LPPL*)			OSL='LPPL-1.3c' ;;
+							MIT)			OSL='MIT'; LIC='mit.txt' ;;
+							MPL)			OSL='MPL-2.0'; LIC='mozilla.txt' ;;
+							MPL2)			OSL='MPL-2.0' ;;
+							FL)				OSL='Fair' ;; # ?
+							PSL)			;;
+							PublicDomain)	;;
+							QPL*)			OSL='QPL-1.0' ;;
+							SIL_OFL*)		OSL='OFL-1.1' ;;
+							zlib/libpng)	OSL='Zlib' ;;
+						esac
+
+						[ -n "$OSL" ] && ONLINE="$ONLINE	<li><a href=\"http://opensource.org/licenses/$OSL\">$(_ '%s license on %s website' "<b>$OSL</b>" "OSL")</a></li>\n"
+						[ -n "$GNU" ] && ONLINE="$ONLINE	<li><a href=\"https://www.gnu.org/licenses/$GNU.html\">$(_ '%s license on %s website' "<b>${GNU#*/}</b>" "GNU")</a></li>\n"
+						[ -n "$CCO" ] && ONLINE="$ONLINE	<li><a href=\"http://creativecommons.org/licenses/$CCO\">$(_ '%s license on %s website' "<b>${CCO%%/*}</b>" "Creative Commons")</a></li>\n"
+						[ -n "$URL" ] && ONLINE="$ONLINE	<li><a href=\"$URL\">$URL</a></li>\n"
+						[ -n "$LIC" ] && OFFLINE="$OFFLINE	<li><a href=\"?license=/usr/share/licenses/$LIC\">licenses/<b>$LIC</b></a></li>\n"
+					done
+
+					for lic in $(grep /usr/share/licenses/ $PKGS_DB/installed/$pkg/files.list); do
+						OFFLINE="$OFFLINE	<li><a href=\"?license=$lic\">licenses/<b>${lic#/usr/share/licenses/}</b></a></li>\n"
+					done
+				fi
+				[ -n "$ONLINE" ] && echo -e "<p>$(_ 'Read online:')</p>\n<ul>\n$ONLINE</ul>\n"
+				[ -n "$OFFLINE" ] && echo -e "<p>$(_ 'Read local:')</p>\n<ul>\n$OFFLINE</ul>\n"
+				;;
+		esac
+		;;
+
+
+		*)
 		#
 		# Default to summary
 		#
