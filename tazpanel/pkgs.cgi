@@ -531,9 +531,9 @@ EOT
 						;;
 					*)
 						cached="$CACHE_DIR/$repo-$category"
-						make_mixed_list | sort -t$'\t' -k1,1 | tee /tmp/mixed_list | awk -F$'\t' -vc="$category" '
+						make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
 {
-	if (PKG && (PKG != $1)) {
+	if (PKG && PKG != $1) {
 		if (CAT) {
 			if (DSCL) DSC = DSCL
 			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
