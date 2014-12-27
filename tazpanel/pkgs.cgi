@@ -306,21 +306,23 @@ make_mixed_list() {
 # Print links to the pages
 
 pager() {
-	awk -F'"' -vpage="$page" -vcached="$1" -vnum_lines="$(wc -l < $1)" -vtext="$(_ 'Pages:') " -vurl="cat=$category&amp;repo=$repo&amp;page=" '
+	awk -F'"' -vpage="$page" -vnum_lines="$(wc -l < $1)" -vtext="$(_ 'Pages:') " -vurl="?cat=$category&amp;repo=$repo&amp;page=" '
 BEGIN{
 	num_pages = int(num_lines / 100) + (num_lines % 100 != 0)
 	if (num_pages != 1) printf "<p>%s", text
 }
 {
 	if (num_pages == 1) exit
-	p = int(NR/100) + 1
-
-	if (NR%100 == 1) printf "<a class=\"pages%s\" href=\"?%s%s\" title=\"%s\n···\n", p==page?" current":"", url, p, $6
-	if (NR%100 == 0) printf "%s\">%s</a> ", $6, p - 1
+	r = NR % 100
+	if (r == 1) {
+		p = int(NR / 100) + 1
+		printf "<a class=\"pages%s\" href=\"%s%s\" title=\"%s\n···\n", p==page?" current":"", url, p, $6
+	} else if (r == 0)
+		printf "%s\">%s</a> ", $6, int(NR / 100)
 }
 END{
 	if (num_pages == 1) exit
-	if (NR%100 != 0) printf "%s\">%s</a>", $6, p
+	if (r != 0) printf "%s\">%s</a>", $6, int(NR / 100) + 1
 	print "</p>"
 }' $1
 }
@@ -332,7 +334,7 @@ show_info_links() {
 	if [ -n "$1" ]; then
 		echo -n "<tr><td><b>$2</b></td><td>"
 		echo $1 | tr ' ' $'\n' | awk -vt="$3" '{
-			printf "<a href=\"%s%s\">%s</a> ", t?("?"t"="):"", gensub(/\+/, "%2B", "g", $1), $1
+			printf "<a href=\"?%s=%s\">%s</a> ", t, gensub(/\+/, "%2B", "g", $1), $1
 		}'
 		echo "</td></tr>"
 	fi
@@ -453,18 +455,39 @@ EOT
 
 	*\ cat\ *)
 		#
-		# List all available packages by category on mirror. Listing all
-		# packages is too resource intensive and not useful.
+		# List all available packages by category on mirror.
 		#
 		cd $PKGS_DB
 		repo=$(GET repo)
 		category=$(GET cat)
-		[ -z "$category" ] && category="base-system"
 		search_form
 		sidebar | sed "s/active_$category/active/;s/repo_$repo/active/"
-		LOADING_MSG="$(_ 'Listing packages...')"
-		loading_msg
-		cat << EOT
+		if [ -z "$category" ] || [ "$category" == 'cat' ]; then
+			cat << EOT
+<h2>$(_ 'Categories list')</h2>
+<table class="zebra outbox">
+<thead>
+<tr><td>$(_ 'Category')</td><td>$(_ 'Repository')</td><td>$(_ 'Installed')</td></tr>
+</thead><tbody>
+EOT
+			{
+				awk -F$'\t' '{print $3}' $PKGS_DB/packages.info | sort | uniq -c
+				awk -F$'\t' '{print $3}' $PKGS_DB/installed.info | sed 's|.*|& i|' | sort | uniq -c
+			} | sort -k2,2 | awk '
+			{
+				c [$2] = "."
+				if ($3) { i[$2] = $1; } else { m[$2] = $1; }
+			}
+			END {
+				for (n in c) print n, m[n], i[n]
+			}' | sort | awk '{
+			printf "<tr><td><a href=\"?cat=%s\">%s</a></td><td>%d</td><td>%d</td></tr>", $1, $1, $2, $3
+			}'
+			echo '</tbody></table>'
+		else
+			LOADING_MSG="$(_ 'Listing packages...')"
+			loading_msg
+			cat << EOT
 <h2>$(_ 'Category: %s' $category)</h2>
 
 <form method='get' action='$SCRIPT_NAME'>
@@ -482,35 +505,35 @@ EOT
 </div>
 </div>
 EOT
-		for i in $(repo_list ""); do
-			if [ "$repo" != "Public" ]; then
-				Repo_Name="$(repo_name $i)"
-				cat << EOT
+			for i in $(repo_list ""); do
+				if [ "$repo" != "Public" ]; then
+					Repo_Name="$(repo_name $i)"
+					cat << EOT
 <h3>$(_ 'Repository: %s' $Repo_Name)</h3>
 EOT
-			fi
+				fi
 
-			case $category in
-				extra)
-					echo '<table class="zebra outbox pkglist">'
-					table_head
-					echo '<tbody>'
-					NA="$(_n 'n/a')"
-					for pkg in $(cat $i/extra.list); do
-						PKG="$(grep ^$pkg$'\t' $i/installed.info)"
-						if [ -n "$PKG" ]; then
-							echo "$PKG"
-						else
-							echo "$pkg	$NA	-	$NA	http://mirror.slitaz.org/packages/get/$pkg	-	-	-"
-						fi
-					done | parse_packages_info
-					echo "</tbody></table>"
-					;;
-				*)
-					cached="$CACHE_DIR/$repo-$category"
-					make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
+				case $category in
+					extra)
+						echo '<table class="zebra outbox pkglist">'
+						table_head
+						echo '<tbody>'
+						NA="$(_n 'n/a')"
+						for pkg in $(cat $i/extra.list); do
+							PKG="$(grep ^$pkg$'\t' $i/installed.info)"
+							if [ -n "$PKG" ]; then
+								echo "$PKG"
+							else
+								echo "$pkg	$NA	-	$NA	http://mirror.slitaz.org/packages/get/$pkg	-	-	-"
+							fi
+						done | parse_packages_info
+						echo "</tbody></table>"
+						;;
+					*)
+						cached="$CACHE_DIR/$repo-$category"
+						make_mixed_list | sort -t$'\t' -k1,1 | tee /tmp/mixed_list | awk -F$'\t' -vc="$category" '
 {
-	if (PKG && PKG != $1) {
+	if (PKG && (PKG != $1)) {
 		if (CAT) {
 			if (DSCL) DSC = DSCL
 			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
@@ -527,21 +550,23 @@ EOT
 		if (! INS)     { PKG = $1; VER = $2; DSC = $4; WEB = $5 }
 	}
 }' > $cached
-					page=$(GET page); [ -z "$page" ] && page=1
-					pager="$(pager $cached)"
+						page=$(GET page); [ -z "$page" ] && page=1
+						pager="$(pager $cached)"
 
-					echo "$pager"
-					echo '<table class="zebra outbox pkglist">'
-					table_head
-					echo '<tbody>'
-					tail -n+$((($page-1)*100+1)) $cached | head -n100
-					echo "</tbody></table>"
-					echo "$pager"
-					rm -f $cached
-					;;
-			esac
-		done
-		echo '</form>' ;;
+						echo "$pager"
+						echo '<table class="zebra outbox pkglist">'
+						table_head
+						echo '<tbody>'
+						tail -n+$((($page-1)*100+1)) $cached | head -n100
+						echo "</tbody></table>"
+						echo "$pager"
+						rm -f $cached
+						;;
+				esac
+			done
+			echo '</form>'
+		fi
+		;;
 
 
 	*\ search\ *)
@@ -1128,6 +1153,31 @@ EOT
 				[ -n "$OFFLINE" ] && echo -e "<p>$(_ 'Read local:')</p>\n<ul>\n$OFFLINE</ul>\n"
 				;;
 		esac
+		;;
+
+
+	*\ tag\ *)
+		#
+		# Show packages with matching tag; show tag cloud
+		#
+		search_form
+		sidebar
+		tag=$(GET tag)
+		if [ -n "$tag" ]; then
+			echo "<h2>$(_ 'Tag "%s"' $tag)</h2>"
+			echo '<table class="zebra outbox pkglist">'
+			table_head
+			echo '<tbody>'
+			awk -F$'\t' '$6 ~ /(^| )'$tag'( |$)/{
+				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", $1, INS, BLK, gensub(/\+/, "%2B", "g", $1), $1, $2, $4, $5
+			}' $PKGS_DB/packages.info
+			echo "</tbody></table>"
+		else
+			echo "<h2>$(_ 'Tags list')</h2>"
+			echo "<p>"
+			awk -F$'\t' '{if($6){print $6}}' $PKGS_DB/packages.info | tr ' ' $'\n' | sort -u | sed 's|.*|<a href="?tag=&">&</a> |'
+			echo "</p>"
+		fi
 		;;
 
 
