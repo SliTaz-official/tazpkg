@@ -124,10 +124,10 @@ list_mirrors() {
 	do
 		cat << EOT
 <li>
-	<a href="$SCRIPT_NAME?admin=rm-mirror=$line&amp;file=$(httpd -e $1)">
+	<a href="?admin=rm-mirror=$line&amp;file=$(httpd -e $1)">
 		<img src="$IMAGES/clear.png" title="$(_ 'Delete')" />
 	</a>
-	<a href="$SCRIPT_NAME?admin=select-mirror&amp;mirror=$line">
+	<a href="?admin=select-mirror&amp;mirror=$line">
 		<img src="$IMAGES/start.png" title="$(_ 'Use as default')" />
 	</a>
 	<a href="$line">$line</a>
@@ -142,7 +142,7 @@ EOT
 list_repos() {
 	ls $PKGS_DB/undigest 2> /dev/null | while read repo ; do
 		cat <<EOT
-	<li><a href="$SCRIPT_NAME?admin=rm-repo=$repo">
+	<li><a href="?admin=rm-repo=$repo">
 		<img src="$IMAGES/clear.png">$repo</a></li>
 EOT
 	done
@@ -216,43 +216,43 @@ EOT
 
 
 sidebar() {
-	[ -n "$repo" ] || repo=Public
+	[ -z "$repo" ] && repo=Public
 	cat << EOT
 <div id="sidebar">
-	<h4>$(_ 'Categories')</h4>
-	<a class="active_base-system"  href="$SCRIPT_NAME?cat=base-system&repo=$repo" >$(_ 'base-system')</a>
-	<a class="active_x-window"     href="$SCRIPT_NAME?cat=x-window&repo=$repo"    >$(_ 'x-window')</a>
-	<a class="active_utilities"    href="$SCRIPT_NAME?cat=utilities&repo=$repo"   >$(_ 'utilities')</a>
-	<a class="active_network"      href="$SCRIPT_NAME?cat=network&repo=$repo"     >$(_ 'network')</a>
-	<a class="active_games"        href="$SCRIPT_NAME?cat=games&repo=$repo"       >$(_ 'games')</a>
-	<a class="active_graphics"     href="$SCRIPT_NAME?cat=graphics&repo=$repo"    >$(_ 'graphics')</a>
-	<a class="active_office"       href="$SCRIPT_NAME?cat=office&repo=$repo"      >$(_ 'office')</a>
-	<a class="active_multimedia"   href="$SCRIPT_NAME?cat=multimedia&repo=$repo"  >$(_ 'multimedia')</a>
-	<a class="active_development"  href="$SCRIPT_NAME?cat=development&repo=$repo" >$(_ 'development')</a>
-	<a class="active_system-tools" href="$SCRIPT_NAME?cat=system-tools&repo=$repo">$(_ 'system-tools')</a>
-	<a class="active_security"     href="$SCRIPT_NAME?cat=security&repo=$repo"    >$(_ 'security')</a>
-	<a class="active_misc"         href="$SCRIPT_NAME?cat=misc&repo=$repo"        >$(_ 'misc')</a>
-	<a class="active_meta"         href="$SCRIPT_NAME?cat=meta&repo=$repo"        >$(_ 'meta')</a>
-	<a class="active_non-free"     href="$SCRIPT_NAME?cat=non-free&repo=$repo"    >$(_ 'non-free')</a>
-	<a class="active_all"          href="$SCRIPT_NAME?cat=all&repo=$repo"         >$(_ 'all')</a>
-	<a class="active_extra"        href="$SCRIPT_NAME?cat=extra&repo=$repo"       >$(_ 'extra')</a>
+	<h4><a href="?cat">$(_ 'Categories')</a></h4>
+	<a class="active_base-system"  href="?cat=base-system&amp;repo=$repo" >$(_ 'base-system')</a>
+	<a class="active_x-window"     href="?cat=x-window&amp;repo=$repo"    >$(_ 'x-window')</a>
+	<a class="active_utilities"    href="?cat=utilities&amp;repo=$repo"   >$(_ 'utilities')</a>
+	<a class="active_network"      href="?cat=network&amp;repo=$repo"     >$(_ 'network')</a>
+	<a class="active_games"        href="?cat=games&amp;repo=$repo"       >$(_ 'games')</a>
+	<a class="active_graphics"     href="?cat=graphics&amp;repo=$repo"    >$(_ 'graphics')</a>
+	<a class="active_office"       href="?cat=office&amp;repo=$repo"      >$(_ 'office')</a>
+	<a class="active_multimedia"   href="?cat=multimedia&amp;repo=$repo"  >$(_ 'multimedia')</a>
+	<a class="active_development"  href="?cat=development&amp;repo=$repo" >$(_ 'development')</a>
+	<a class="active_system-tools" href="?cat=system-tools&amp;repo=$repo">$(_ 'system-tools')</a>
+	<a class="active_security"     href="?cat=security&amp;repo=$repo"    >$(_ 'security')</a>
+	<a class="active_misc"         href="?cat=misc&amp;repo=$repo"        >$(_ 'misc')</a>
+	<a class="active_meta"         href="?cat=meta&amp;repo=$repo"        >$(_ 'meta')</a>
+	<a class="active_non-free"     href="?cat=non-free&amp;repo=$repo"    >$(_ 'non-free')</a>
+	<a class="active_all"          href="?cat=all&amp;repo=$repo"         >$(_ 'all')</a>
+	<a class="active_extra"        href="?cat=extra&amp;repo=$repo"       >$(_ 'extra')</a>
 EOT
 
 	if [ -d $PKGS_DB/undigest ]; then
-		[ -n "$category" ] || category="base-system"
+		[ -z "$category" ] && category="base-system"
 		cat << EOT
 	<h4>$(_ 'Repositories')</h4>
-	<a class="repo_Public" href="$SCRIPT_NAME?repo=Public&cat=$category">$(_ 'Public')</a>
+	<a class="repo_Public" href="?cat=$category&amp;repo=Public">$(_ 'Public')</a>
 EOT
 
 		for i in $(ls $PKGS_DB/undigest); do
 			cat << EOT
-	<a class="repo_$i" href="$SCRIPT_NAME?repo=$i&cat=$category">$i</a>
+	<a class="repo_$i" href="?cat=$category&amp;repo=$i">$i</a>
 EOT
 		done
 
 		cat << EOT
-	<a class="repo_Any" href="$SCRIPT_NAME?repo=Any&cat=$category">$(_ 'Any')</a>
+	<a class="repo_Any" href="?cat=$category&amp;repo=Any">$(_ 'Any')</a>
 EOT
 	fi
 	echo "</div>"
@@ -797,18 +797,18 @@ EOT
 		<p>
 EOT
 		if [ "$temp" != "$pkg" -a "$action" == "Install" ]; then
-			show_button "do=Install&$temp&nf"
+			show_button "do=Install&amp;$temp&amp;nf"
 		else
-			show_button "do=$action&$pkg"
+			show_button "do=$action&amp;$pkg"
 		fi
 
 		if [ -d $INSTALLED/$pkg ]; then
 			if grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list; then
-				show_button "do=Unblock&$pkg"
+				show_button "do=Unblock&amp;$pkg"
 			else
-				show_button "do=Block&$pkg"
+				show_button "do=Block&amp;$pkg"
 			fi
-			show_button "do=Repack&$pkg"
+			show_button "do=Repack&amp;$pkg"
 		fi
 		i18n_desc $pkg
 		cat << EOT
@@ -904,10 +904,10 @@ EOT
 	<p>$(_ 'TazPkg administration and settings')</p>
 </div>
 <div id="actions">
-	$(show_button 'admin=&action=saveconf')
-	$(show_button 'admin=&action=listconf')
-	$(show_button 'admin=&action=quickcheck')
-	$(show_button 'admin=&action=fullcheck')
+	$(show_button 'admin=&amp;action=saveconf')
+	$(show_button 'admin=&amp;action=listconf')
+	$(show_button 'admin=&amp;action=quickcheck')
+	$(show_button 'admin=&amp;action=fullcheck')
 </div>
 EOT
 		case "$(GET action)" in
@@ -1030,12 +1030,12 @@ without an internet connection. This image can be installed on a DVD or a USB \
 key." $version)</p>
 
 <div>
-	<form method="post" action='$SCRIPT_NAME?admin&action=dvdimage#dvd'>
+	<form method="post" action='?admin&amp;action=dvdimage#dvd'>
 	<p>
 		<a class="button"
 			href='http://mirror.slitaz.org/iso/$version/packages-$version.iso'>
 			<img src="$IMAGES/tazpkg.png" />$(_ 'Download DVD image')</a>
-		<a class="button" href='$SCRIPT_NAME?admin&action=dvdusbkey#dvd'>
+		<a class="button" href='?admin&amp;action=dvdusbkey#dvd'>
 			<img src="$IMAGES/tazpkg.png" />$(_ 'Install from DVD/USB key')</a>
 	</p>
 	<div class="box">
