@@ -70,3 +70,21 @@ a.pages.current, a.pages.current:hover {
 	background: #07F;
 	color: #eee;
 	}
+
+a.tag1 { font-size: 0.9em; color: #678; }
+a.tag2 { font-size: 1.0em; color: #444; }
+a.tag3 { font-size: 1.1em; color: #16A; }
+a.tag4 { font-size: 1.3em; color: #282; }
+a.tag5 { font-size: 1.5em; color: #828; }
+a.tag6 { font-size: 1.8em; color: #862; }
+a.tag7 { font-size: 2.1em; color: #FA0; }
+a.tag8 { font-size: 2.4em; color: #F00; }
+a.tag1, a.tag2, a.tag3, a.tag4, a.tag5, a.tag6, a.tag7, a.tag8 {
+	display: inline-block;
+	white-space: nowrap;
+	vertical-align: middle;
+	padding: 0.2em 0.5em;
+}
+a.tag1:hover, a.tag2:hover, a.tag3:hover, a.tag4:hover, a.tag5:hover, a.tag6:hover, a.tag7:hover, a.tag8:hover {
+	outline: 1.5pt solid #FC8; }
+

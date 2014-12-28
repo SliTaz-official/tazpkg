@@ -1175,7 +1175,11 @@ EOT
 		else
 			echo "<h2>$(_ 'Tags list')</h2>"
 			echo "<p>"
-			awk -F$'\t' '{if($6){print $6}}' $PKGS_DB/packages.info | tr ' ' $'\n' | sort -u | sed 's|.*|<a href="?tag=&">&</a> |'
+			TAGS="$(awk -F$'\t' '{if($6){print $6}}' $PKGS_DB/packages.info | tr ' ' $'\n' | sort | uniq -c)"
+			MAX="$(echo "$TAGS" | awk '{if ($1 > MAX) MAX = $1} END{print MAX}')"
+			echo "$TAGS" | awk -vMAX=$MAX '{
+				printf "<a class=\"tag%s\" href=\"?tag=%s\" title=\"%s\">%s</a> ", int($1 * 7 / MAX + 1), $2, $1, $2
+			}'
 			echo "</p>"
 		fi
 		;;
