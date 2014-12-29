@@ -498,20 +498,20 @@ EOT
 						make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
 {
 	if (PKG && PKG != $1) {
-		if (CAT) {
+		if (SEL) {
 			if (DSCL) DSC = DSCL
 			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
 		}
-		VER = DSC = WEB = DSCL = INS = BLK = CAT = ""
+		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
 	}
 
 	PKG = $1
 	if (NF == 1) { BLK = "b"; next }
 	if (NF == 2) { DSCL = $2; next }
 	if (c == "all" || $3 == c) {
-		CAT = c
-		if ($9 == "i") { PKG = $1; VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
-		if (! INS)     { PKG = $1; VER = $2; DSC = $4; WEB = $5 }
+		SEL = $1
+		if ($9 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
+		if (! INS)     { VER = $2; DSC = $4; WEB = $5 }
 	}
 }' > $cached
 						page=$(GET page); [ -z "$page" ] && page=1
@@ -1154,18 +1154,18 @@ EOT
 				make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vt="$tag" '
 {
 	if (PKG && PKG != $1) {
-		if (TAG) {
+		if (SEL) {
 			if (DSCL) DSC = DSCL
 			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
 		}
-		VER = DSC = WEB = DSCL = INS = BLK = TAG = ""
+		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
 	}
 
 	PKG = $1
 	if (NF == 1) { BLK = "b"; next }
 	if (NF == 2) { DSCL = $2; next }
 	if (index(" "$6" ", " "t" ")) {
-		TAG = t
+		SEL = $1
 		if ($9 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
 		if (! INS)     { VER = $2; DSC = $4; WEB = $5 }
 	}
