@@ -85,38 +85,6 @@ EOT
 }
 
 
-# Display a full summary of packages stats
-
-packages_summary() {
-	cat << EOT
-<table class="zebra outbox">
-<tbody>
-<tr><td>$(_ 'Last recharge:')</td><td>
-EOT
-	ls -l $PKGS_DB/packages.list | awk '{print $6, $7, $8}'
-	if [ -n "$(find $PKGS_DB/packages.list -mtime +10)" ]; then
-		_ '(Older than 10 days)'
-	else
-		_ '(Not older than 10 days)'
-	fi
-	cat << EOT
-</td></tr>
-<tr><td>$(_ 'Installed packages:')</td>
-	<td>$(cat $PKGS_DB/installed.info | wc -l)</td></tr>
-<tr><td>$(_ 'Mirrored packages:')</td>
-	<td>$(cat $PKGS_DB/packages.list | wc -l)</td></tr>
-<tr><td>$(_ 'Upgradeable packages:')</td>
-	<td>$(cat $PKGS_DB/packages.up | wc -l)</td></tr>
-<tr><td>$(_ 'Installed files:')</td>
-	<td>$(cat $INSTALLED/*/files.list | wc -l)</td></tr>
-<tr><td>$(_ 'Blocked packages:')</td>
-	<td>$(cat $PKGS_DB/blocked-packages.list | wc -l)</td></tr>
-</tbody>
-</table>
-EOT
-}
-
-
 # Parse mirrors list to be able to have an icon and remove link
 
 list_mirrors() {
@@ -155,6 +123,7 @@ show_button() {
 		recharge)     img='recharge'; label="$(_ 'Recharge list')" ;;
 		up)           img='update';   label="$(_ 'Check upgrades')" ;;
 		list)         img='tazpkg';   label="$(_ 'My packages')" ;;
+		tag=)         img='';         label="$(_ 'Tags')" ;;
 		linkable)     img='tazpkg';   label="$(_ 'Linkable packages')" ;;
 		admin)        img='edit';     label="$(_ 'Administration')" ;;
 		*Install*nf*) img='';         label="$(_ 'Install (Non Free)')" ;;
@@ -506,12 +475,7 @@ EOT
 </div>
 EOT
 			for i in $(repo_list ""); do
-				if [ "$repo" != "Public" ]; then
-					Repo_Name="$(repo_name $i)"
-					cat << EOT
-<h3>$(_ 'Repository: %s' $Repo_Name)</h3>
-EOT
-				fi
+				[ "$repo" != "Public" ] && echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
 
 				case $category in
 					extra)
@@ -1162,16 +1126,54 @@ EOT
 		#
 		search_form
 		sidebar
-		tag=$(GET tag)
+		tag=$(GET tag); repo=$(GET repo)
 		if [ -n "$tag" ]; then
-			echo "<h2>$(_ 'Tag "%s"' $tag)</h2>"
-			echo '<table class="zebra outbox pkglist">'
-			table_head
-			echo '<tbody>'
-			awk -F$'\t' '$6 ~ /(^| )'$tag'( |$)/{
-				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", $1, INS, BLK, gensub(/\+/, "%2B", "g", $1), $1, $2, $4, $5
-			}' $PKGS_DB/packages.info
-			echo "</tbody></table>"
+			cat << EOT
+<h2>$(_ 'Tag "%s"' $tag)</h2>
+
+<form method='get' action='$SCRIPT_NAME'>
+<div id="actions">
+	<div class="float-left">
+		$(_ 'Selection:')
+		<input type="submit" name="do" value="Install" />
+		<input type="submit" name="do" value="Remove" />
+		<input type="hidden" name="repo" value="$repo" />
+	</div>
+	<div class="float-right">
+		$(show_button tag=)
+		$(show_button list)
+	</div>
+</div>
+EOT
+			for i in $(repo_list ""); do
+				[ "$repo" != "Public" ] && echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
+
+				echo '<table class="zebra outbox pkglist">'
+				table_head
+				echo '<tbody>'
+				make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vt="$tag" '
+{
+	if (PKG && PKG != $1) {
+		if (TAG) {
+			if (DSCL) DSC = DSCL
+			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
+		}
+		VER = DSC = WEB = DSCL = INS = BLK = TAG = ""
+	}
+
+	PKG = $1
+	if (NF == 1) { BLK = "b"; next }
+	if (NF == 2) { DSCL = $2; next }
+	if (index(" "$6" ", " "t" ")) {
+		TAG = t
+		if ($9 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
+		if (! INS)     { VER = $2; DSC = $4; WEB = $5 }
+	}
+}'
+				echo "</tbody></table>"
+			done
+			echo '</form>'
+
 		else
 			echo "<h2>$(_ 'Tags list')</h2>"
 			echo "<p>"
@@ -1197,8 +1199,8 @@ EOT
 <h2>$(_ 'Summary')</h2>
 
 <div id="actions">
-	$(show_button list)
 EOT
+		show_button list
 		fslink=$(readlink $PKGS_DB/fslink)
 		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] && show_button linkable
 		show_button recharge
@@ -1207,8 +1209,30 @@ EOT
 		cat << EOT
 </div>
 
-$(packages_summary)
-
+<table class="zebra outbox">
+<tbody>
+<tr><td>$(_ 'Last recharge:')</td><td>
+EOT
+		ls -l $PKGS_DB/packages.list | awk '{print $6, $7, $8}'
+		if [ -n "$(find $PKGS_DB/packages.list -mtime +10)" ]; then
+			_ '(Older than 10 days)'
+		else
+			_ '(Not older than 10 days)'
+		fi
+		cat << EOT
+</td></tr>
+<tr><td>$(_ 'Installed packages:')</td>
+	<td>$(cat $PKGS_DB/installed.info | wc -l)</td></tr>
+<tr><td>$(_ 'Mirrored packages:')</td>
+	<td>$(cat $PKGS_DB/packages.list | wc -l)</td></tr>
+<tr><td>$(_ 'Upgradeable packages:')</td>
+	<td>$(cat $PKGS_DB/packages.up | wc -l)</td></tr>
+<tr><td>$(_ 'Installed files:')</td>
+	<td>$(cat $INSTALLED/*/files.list | wc -l)</td></tr>
+<tr><td>$(_ 'Blocked packages:')</td>
+	<td>$(cat $PKGS_DB/blocked-packages.list | wc -l)</td></tr>
+</tbody>
+</table>
 
 <h3>$(_ 'Latest log entries')</h3>
 
