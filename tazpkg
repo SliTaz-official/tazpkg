@@ -1731,7 +1731,7 @@ $LIST"
 
 		for pkg in $LIST; do
 			grep -qs ^$pkg$ $2-processed && continue
-			[ -d "$root/var/lib/tazpkg/installed" ] && continue
+			[ -d "$root/var/lib/tazpkg/installed" ] && 
 			tazpkg $COMMAND $pkg --list="$2" "$3" "$4" "$5"
 		done
 		rm -f $2-processed ;;
