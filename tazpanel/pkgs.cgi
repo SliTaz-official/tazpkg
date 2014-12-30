@@ -156,7 +156,7 @@ search_form() {
 	[ -z "$repo" ] && repo="Any"
 	cat << EOT
 <div class="search">
-	<form method="get" action="$SCRIPT_NAME">
+	<form method="get" action="">
 		<p>
 			<input type="text" name="search" size="20">
 			<input type="submit" value="$(gettext 'Search')">
@@ -172,14 +172,16 @@ EOT
 
 table_head() {
 	cat << EOT
-		<thead>
+<table class="zebra outbox pkglist">
+	<thead>
 		<tr>
 			<td>$(_ 'Name')</td>
 			<td>$(_ 'Version')</td>
 			<td>$(_ 'Description')</td>
 			<td>$(_ 'Web')</td>
 		</tr>
-		</thead>
+	</thead>
+	<tbody>
 EOT
 }
 
@@ -256,22 +258,6 @@ repo_name() {
 }
 
 
-make_mixed_list() {
-	for L in $LANG ${LANG%%_*}; do
-		if [ -e "$PKGS_DB/packages-desc.$L" ]; then
-			sed '/^#/d' $PKGS_DB/packages-desc.$L
-			break
-		fi
-	done
-
-	[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
-
-	sed 's|.*|&\ti|' $i/installed.info
-
-	cat $i/packages.info
-}
-
-
 # Print links to the pages
 
 pager() {
@@ -297,6 +283,53 @@ END{
 }
 
 
+# Show packages list by category or tag
+
+show_list() {
+	cached=$(mktemp)
+	{
+		for L in $LANG ${LANG%%_*}; do
+			if [ -e "$PKGS_DB/packages-desc.$L" ]; then
+				sed '/^#/d' $PKGS_DB/packages-desc.$L; break
+			fi
+		done
+		[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
+		sed 's|.*|&\ti|' $i/installed.info
+		[ $1 == 'extra' ] || [ $1 == 'my' ] || cat $i/packages.info
+		[ $1 == 'extra' ] && sed 's|.*|&\t-\textra\t-\thttp://mirror.slitaz.org/packages/get/&\t-\t-\t-|' $PKGS_DB/extra.list
+	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${category:--}" -vt="${tag:--}" '
+{
+	if (PKG && PKG != $1) {
+		if (SEL) {
+			if (DSCL) DSC = DSCL
+			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
+		}
+		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
+	}
+
+	PKG = $1
+	if (NF == 1) { BLK = "b"; next }
+	if (NF == 2) { DSCL = $2; next }
+	if (c == "all" || $3 == c || index(" "$6" ", " "t" ")) { SEL = 1 }
+	if (SEL) {
+		if ($9 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
+		if (! INS)     { VER = $2; DSC = $4; WEB = $5 }
+	}
+}' > $cached
+	page=$(GET page); [ -z "$page" ] && page=1
+
+	pager="$(pager $cached)"
+	echo "$pager"
+
+	table_head
+	tail -n+$((($page-1)*100+1)) $cached | head -n100
+	echo "</tbody></table>"
+
+	echo "$pager"
+	rm -f $cached
+}
+
+
 # Show links for "info" page
 
 show_info_links() {
@@ -319,52 +352,29 @@ show_info_links() {
 case " $(GET) " in
 	*\ list\ *)
 		#
-		# List installed packages. This is the default because parsing
-		# the full packages.desc can be long and take up some resources
+		# List installed packages.
 		#
-		cd $INSTALLED
+		category=$(GET category)
 		search_form
 		sidebar
 		LOADING_MSG="$(_ 'Listing packages...')"
 		loading_msg
 		cat << EOT
 <h2>$(_ 'My packages')</h2>
-<form method='get' action='$SCRIPT_NAME'>
-	<input type="hidden" name="do" value="Remove" />
-<div id="actions">
-	<div class="float-left">
-		$(_ 'Selection:')
-		<input type="submit" value="$(_ 'Remove')" />
-	</div>
-	<div class="float-right">
-		$(show_button recharge)
-		$(show_button up)
-	</div>
-</div>
 
-<table class="zebra outbox pkglist">
-$(table_head)
-<tbody>
-EOT
-		for pkg in *; do
-			. $pkg/receipt
-			echo '<tr>'
-			# Use default tazpkg icon since all packages displayed are
-			# installed
-			blocked=
-			grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list && blocked="b"
-			i18n_desc $pkg
-			cat << EOT
-<td><input type="checkbox" name="pkg" value="$pkg" />$(pkg_info_link $pkg pkgi$blocked)</td>
-<td>$VERSION</td>
-<td>$SHORT_DESC</td>
-<td><a class="w" href="$WEB_SITE"></a></td>
-</tr>
-EOT
-		done
-		cat << EOT
-</tbody>
-</table>
+<form method="get" action="">
+	<input type="hidden" name="do" value="Remove" />
+	<div id="actions">
+		<div class="float-left">
+			$(_ 'Selection:')
+			<input type="submit" value="$(_ 'Remove')" />
+		</div>
+		<div class="float-right">
+			$(show_button recharge)
+			$(show_button up)
+		</div>
+	</div>
+	$(i=$PKGS_DB; category=${category:-all}; show_list my)
 </form>
 EOT
 		;;
@@ -374,7 +384,6 @@ EOT
 		#
 		# List linkable packages.
 		#
-		cd $INSTALLED
 		search_form
 		sidebar
 		LOADING_MSG=$(_ 'Listing linkable packages...')
@@ -382,24 +391,20 @@ EOT
 		cat << EOT
 <h2>$(_ 'Linkable packages')</h2>
 
-<form method='get' action='$SCRIPT_NAME'>
+<form method="get" action="">
 	<input type="hidden" name="do" value="Link" />
-<div id="actions">
-	<div class="float-left">
-		$(_ 'Selection:')
-		<input type="submit" value="$(_ 'Link')" />
+	<div id="actions">
+		<div class="float-left">
+			$(_ 'Selection:')
+			<input type="submit" value="$(_ 'Link')" />
+		</div>
+		<div class="float-right">
+			$(show_button recharge)
+			$(show_button up)
+		</div>
 	</div>
-	<div class="float-right">
-		$(show_button recharge)
-		$(show_button up)
-	</div>
-</div>
 EOT
-		cat << EOT
-<table class="zebra outbox pkglist">
-$(table_head)
-<tbody>
-EOT
+		table_head
 		target=$(readlink $PKGS_DB/fslink)
 		for pkg in $(ls $target/$INSTALLED); do
 			[ -s $pkg/receipt ] && continue
@@ -407,7 +412,7 @@ EOT
 			i18n_desc $pkg
 			cat << EOT
 <tr>
-	<td><input type="checkbox" name="pkg" value="$pkg" />$(pkg_info_link $pkg pkg)</td>
+	<td><input type="checkbox" name="pkg" value="$pkg" /><a class="pkg" href="?info=${pkg//+/%2B}">$pkg</a></td>
 	<td>$VERSION</td>
 	<td>$SHORT_DESC</td>
 	<td><a class="w" href="$WEB_SITE"></a></td>
@@ -415,8 +420,8 @@ EOT
 EOT
 		done
 		cat << EOT
-</tbody>
-</table>
+		</tbody>
+	</table>
 </form>
 EOT
 		;;
@@ -426,7 +431,6 @@ EOT
 		#
 		# List all available packages by category on mirror.
 		#
-		cd $PKGS_DB
 		repo=$(GET repo)
 		category=$(GET cat)
 		search_form
@@ -434,10 +438,24 @@ EOT
 		if [ -z "$category" ] || [ "$category" == 'cat' ]; then
 			cat << EOT
 <h2>$(_ 'Categories list')</h2>
+
+<form method="get" action="">
+	<div id="actions">
+		<div class="float-right">
+			$(show_button tag=)
+			$(show_button list)
+		</div>
+	</div>
+
 <table class="zebra outbox">
-<thead>
-<tr><td>$(_ 'Category')</td><td>$(_ 'Repository')</td><td>$(_ 'Installed')</td></tr>
-</thead><tbody>
+	<thead>
+		<tr>
+			<td>$(_ 'Category')</td>
+			<td>$(_ 'Repository')</td>
+			<td>$(_ 'Installed')</td>
+		</tr>
+	</thead>
+	<tbody>
 EOT
 			{
 				awk -F$'\t' '{print $3}' $PKGS_DB/packages.info | sort | uniq -c
@@ -459,74 +477,24 @@ EOT
 			cat << EOT
 <h2>$(_ 'Category: %s' $category)</h2>
 
-<form method='get' action='$SCRIPT_NAME'>
-<div id="actions">
-<div class="float-left">
-	$(_ 'Selection:')
-	<input type="submit" name="do" value="Install" />
-	<input type="submit" name="do" value="Remove" />
-	<input type="hidden" name="repo" value="$repo" />
-</div>
-<div class="float-right">
-	$(show_button recharge)
-	$(show_button up)
-	$(show_button list)
-</div>
-</div>
+<form method="get" action="">
+	<div id="actions">
+		<div class="float-left">
+			$(_ 'Selection:')
+			<input type="submit" name="do" value="Install" />
+			<input type="submit" name="do" value="Remove" />
+			<input type="hidden" name="repo" value="$repo" />
+		</div>
+		<div class="float-right">
+			$(show_button recharge)
+			$(show_button up)
+			$(show_button list)
+		</div>
+	</div>
 EOT
 			for i in $(repo_list ""); do
 				[ "$repo" != "Public" ] && echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
-
-				case $category in
-					extra)
-						echo '<table class="zebra outbox pkglist">'
-						table_head
-						echo '<tbody>'
-						NA="$(_n 'n/a')"
-						for pkg in $(cat $i/extra.list); do
-							PKG="$(grep ^$pkg$'\t' $i/installed.info)"
-							if [ -n "$PKG" ]; then
-								echo "$PKG"
-							else
-								echo "$pkg	$NA	-	$NA	http://mirror.slitaz.org/packages/get/$pkg	-	-	-"
-							fi
-						done | parse_packages_info
-						echo "</tbody></table>"
-						;;
-					*)
-						cached="$CACHE_DIR/$repo-$category"
-						make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vc="$category" '
-{
-	if (PKG && PKG != $1) {
-		if (SEL) {
-			if (DSCL) DSC = DSCL
-			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
-		}
-		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
-	}
-
-	PKG = $1
-	if (NF == 1) { BLK = "b"; next }
-	if (NF == 2) { DSCL = $2; next }
-	if (c == "all" || $3 == c) {
-		SEL = $1
-		if ($9 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
-		if (! INS)     { VER = $2; DSC = $4; WEB = $5 }
-	}
-}' > $cached
-						page=$(GET page); [ -z "$page" ] && page=1
-						pager="$(pager $cached)"
-
-						echo "$pager"
-						echo '<table class="zebra outbox pkglist">'
-						table_head
-						echo '<tbody>'
-						tail -n+$((($page-1)*100+1)) $cached | head -n100
-						echo "</tbody></table>"
-						echo "$pager"
-						rm -f $cached
-						;;
-				esac
+				show_list $category
 			done
 			echo '</form>'
 		fi
@@ -547,20 +515,21 @@ EOT
 		loading_msg
 		cat << EOT
 <h2>$(_ 'Search packages')</h2>
-<form method="get" action="$SCRIPT_NAME">
-<div id="actions">
-<div class="float-left">
-	$(_ 'Selection:')
-	<input type="submit" name="do" value="Install" />
-	<input type="submit" name="do" value="Remove" />
-	<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
-</div>
-<div class="float-right">
-	$(show_button recharge)
-	$(show_button up)
-	$(show_button list)
-</div>
-</div>
+
+<form method="get" action="">
+	<div id="actions">
+		<div class="float-left">
+			$(_ 'Selection:')
+			<input type="submit" name="do" value="Install" />
+			<input type="submit" name="do" value="Remove" />
+			<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
+		</div>
+		<div class="float-right">
+			$(show_button recharge)
+			$(show_button up)
+			$(show_button list)
+		</div>
+	</div>
 	<input type="hidden" name="repo" value="$repo" />
 EOT
 		if [ -n "$(GET files)" ]; then
@@ -586,9 +555,7 @@ EOT
 EOT
 			done
 		else
-			echo '	<table class="zebra outbox pkglist">'
 			table_head
-			echo "	<tbody>"
 			awk -F$'\t' 'BEGIN{IGNORECASE = 1}
 			$1 $4 ~ /'$pkg'/{print $0}' $(repo_list /packages.info) | parse_packages_info
 		fi
@@ -611,7 +578,7 @@ EOT
 		cat << EOT
 <h2>$(_ 'Recharge')</h2>
 
-<form method='get' action='$SCRIPT_NAME'>
+<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		<p>$(_ 'Recharge checks for new or updated packages')</p>
@@ -646,26 +613,22 @@ EOT
 		cat << EOT
 <h2>$(_ 'Up packages')</h2>
 
-<form method="get" action="$SCRIPT_NAME">
-<div id="actions">
-	<div class="float-left">
-		$(_ 'Selection:')
-		<input type="submit" name="do" value="Install" />
-		<input type="submit" name="do" value="Remove" />
-		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
+<form method="get" action="">
+	<div id="actions">
+		<div class="float-left">
+			$(_ 'Selection:')
+			<input type="submit" name="do" value="Install" />
+			<input type="submit" name="do" value="Remove" />
+			<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
+		</div>
+		<div class="float-right">
+			$(show_button recharge)
+			$(show_button list)
+		</div>
 	</div>
-	<div class="float-right">
-		$(show_button recharge)
-		$(show_button list)
-	</div>
-</div>
 EOT
 		tazpkg up --check >/dev/null
-		cat << EOT
-<table class="zebra outbox">
-$(table_head)
-<tbody>
-EOT
+		table_head
 		for pkg in $(cat packages.up); do
 			grep -hs "^$pkg |" $PKGS_DB/packages.desc $PKGS_DB/undigest/*/packages.desc | \
 				parse_packages_desc
@@ -706,18 +669,18 @@ EOT
 		cat << EOT
 <h2>TazPkg: $cmd</h2>
 
-<form method="get" action="$SCRIPT_NAME">
-<div id="actions">
-	<div class="float-left">
-		<p>$(_ 'Performing tasks on packages')</p>
+<form method="get" action="">
+	<div id="actions">
+		<div class="float-left">
+			<p>$(_ 'Performing tasks on packages')</p>
+		</div>
+		<div class="float-right">
+			$(show_button list)
+		</div>
 	</div>
-	<div class="float-right">
-		$(show_button list)
+	<div class="box">
+		$(_ 'Executing %s for: %s' $cmd $pkgs)
 	</div>
-</div>
-<div class="box">
-$(_ 'Executing %s for: %s' $cmd $pkgs)
-</div>
 EOT
 		for pkg in $pkgs; do
 			echo '<pre>'
@@ -859,6 +822,7 @@ EOT
 		[ "$cmd" == "$(_n 'Set link')" ] &&
 			[ -d "$(GET link)/$INSTALLED" ] && ln -fs $(GET link) $PKGS_DB/fslink
 		[ "$cmd" == "$(_n 'Remove link')" ] && rm -f $PKGS_DB/fslink
+
 		cache_files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
 		cache_size=$(du -sh $CACHE_DIR | cut -f1 | sed 's|\.0||')
 		sidebar
@@ -912,11 +876,10 @@ EOT
 <h3>$(_ 'Packages cache')</h3>
 
 <div>
-	<form method="get" action="$SCRIPT_NAME">
-		<p>
-			$(_ 'Packages in the cache: %s (%s)' $cache_files $cache_size)
+	<form method="get" action="">
+		<p>$(_ 'Packages in the cache: %s (%s)' $cache_files $cache_size)
 			<input type="hidden" name="admin" value="clean" />
-			<input type="submit" value="Clean" />
+			<input type="submit" value="$(_n 'Clean')" />
 		</p>
 	</form>
 </div>
@@ -939,12 +902,12 @@ EOT
 			echo "</ul>"
 			cat << EOT
 </div>
-<form method="get" action="$SCRIPT_NAME">
+<form method="get" action="">
 	<p>
 		<input type="hidden" name="admin" value="add-mirror" />
 		<input type="hidden" name="file" value="$i" />
 		<input type="text" name="mirror" size="60">
-		<input type="submit" value="Add mirror" />
+		<input type="submit" value="$(_n 'Add mirror')" />
 	</p>
 </form>
 EOT
@@ -958,13 +921,13 @@ EOT
 </div>
 EOT
 		cat << EOT
-<form method="get" action="$SCRIPT_NAME">
+<form method="get" action="">
 	<p>
 		<input type="hidden" name="admin" value="add-repo" />
 		$(_ 'Name') <input type="text" name="repository" size="10">
 		$(_ 'mirror')
 		<input type="text" name="mirror" value="http://" size="50">
-		<input type="submit" value="Add repository" />
+		<input type="submit" value="$(_n 'Add repository')" />
 	</p>
 </form>
 
@@ -973,11 +936,9 @@ EOT
 <p>$(_ "This link points to the root of another SliTaz installation. \
 You will be able to install packages using soft links to it.")</p>
 
-<form method="get" action="$SCRIPT_NAME">
+<form method="get" action="">
 <p>
-	<input type="hidden" name="admin" value="add-link" />
-	<input type="text" name="link"
-	 value="$(readlink $PKGS_DB/fslink 2> /dev/null)" size="50">
+	<input type="text" name="link" value="$(readlink $PKGS_DB/fslink 2> /dev/null)" size="50">
 	<input type="submit" name="admin" value="$(_ 'Set link')" />
 	<input type="submit" name="admin" value="$(_ 'Remove link')" />
 </p>
@@ -1131,7 +1092,7 @@ EOT
 			cat << EOT
 <h2>$(_ 'Tag "%s"' $tag)</h2>
 
-<form method='get' action='$SCRIPT_NAME'>
+<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		$(_ 'Selection:')
@@ -1147,30 +1108,7 @@ EOT
 EOT
 			for i in $(repo_list ""); do
 				[ "$repo" != "Public" ] && echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
-
-				echo '<table class="zebra outbox pkglist">'
-				table_head
-				echo '<tbody>'
-				make_mixed_list | sort -t$'\t' -k1,1 | awk -F$'\t' -vt="$tag" '
-{
-	if (PKG && PKG != $1) {
-		if (SEL) {
-			if (DSCL) DSC = DSCL
-			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
-		}
-		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
-	}
-
-	PKG = $1
-	if (NF == 1) { BLK = "b"; next }
-	if (NF == 2) { DSCL = $2; next }
-	if (index(" "$6" ", " "t" ")) {
-		SEL = $1
-		if ($9 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
-		if (! INS)     { VER = $2; DSC = $4; WEB = $5 }
-	}
-}'
-				echo "</tbody></table>"
+				show_list all
 			done
 			echo '</form>'
 
