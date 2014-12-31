@@ -160,9 +160,7 @@ search_form() {
 		<p>
 			<input type="text" name="search" size="20">
 			<input type="submit" value="$(gettext 'Search')">
-			<input class="radius" type="submit" name="files"
-				value="$(_n 'Files')">
-			<input type="hidden" name="repo" value="$repo" />
+			<input class="radius" type="submit" name="files" value="$(_n 'Files')">
 		</p>
 	</form>
 </div>
@@ -187,43 +185,57 @@ EOT
 
 
 sidebar() {
-	[ -z "$repo" ] && repo=Public
+	[ -z "$repo" ] && repo='Public'
+	my=$(GET my); cat=$(GET cat)
+	row='<tr><td><input type="submit" name="cat" value="'
+
 	cat << EOT
+<form method="get" action="">
+
 <div id="sidebar">
-	<h4><a href="?cat">$(_ 'Categories')</a></h4>
-	<a class="active_base-system"  href="?cat=base-system&amp;repo=$repo" >$(_ 'base-system')</a>
-	<a class="active_x-window"     href="?cat=x-window&amp;repo=$repo"    >$(_ 'x-window')</a>
-	<a class="active_utilities"    href="?cat=utilities&amp;repo=$repo"   >$(_ 'utilities')</a>
-	<a class="active_network"      href="?cat=network&amp;repo=$repo"     >$(_ 'network')</a>
-	<a class="active_games"        href="?cat=games&amp;repo=$repo"       >$(_ 'games')</a>
-	<a class="active_graphics"     href="?cat=graphics&amp;repo=$repo"    >$(_ 'graphics')</a>
-	<a class="active_office"       href="?cat=office&amp;repo=$repo"      >$(_ 'office')</a>
-	<a class="active_multimedia"   href="?cat=multimedia&amp;repo=$repo"  >$(_ 'multimedia')</a>
-	<a class="active_development"  href="?cat=development&amp;repo=$repo" >$(_ 'development')</a>
-	<a class="active_system-tools" href="?cat=system-tools&amp;repo=$repo">$(_ 'system-tools')</a>
-	<a class="active_security"     href="?cat=security&amp;repo=$repo"    >$(_ 'security')</a>
-	<a class="active_misc"         href="?cat=misc&amp;repo=$repo"        >$(_ 'misc')</a>
-	<a class="active_meta"         href="?cat=meta&amp;repo=$repo"        >$(_ 'meta')</a>
-	<a class="active_non-free"     href="?cat=non-free&amp;repo=$repo"    >$(_ 'non-free')</a>
-	<a class="active_all"          href="?cat=all&amp;repo=$repo"         >$(_ 'all')</a>
-	<a class="active_extra"        href="?cat=extra&amp;repo=$repo"       >$(_ 'extra')</a>
+	<select name="my" value="$my">
+		<option value="my" $([ "$my" ] && echo -n "selected")>$(_ 'My packages')</option>
+		<option value="" $([ ! "$my" ] && echo -n "selected")>$(_ 'All packages')</option>
+	</select>
+
+	<h4>$(_ 'Categories')</h4>
+
+	<table class="side">
+${row}base-system"  id="cat1"/><label for="cat1" class="a_base-system" >$(_ 'base-system')</label></td></tr>
+${row}x-window"     id="cat2"/><label for="cat2" class="a_x-window"    >$(_ 'x-window')</label></td></tr>
+${row}utilities"    id="cat3"/><label for="cat3" class="a_utilities"   >$(_ 'utilities')</label></td></tr>
+${row}network"      id="cat4"/><label for="cat4" class="a_network"     >$(_ 'network')</label></td></tr>
+${row}games"        id="cat5"/><label for="cat5" class="a_games"       >$(_ 'games')</label></td></tr>
+${row}graphics"     id="cat6"/><label for="cat6" class="a_graphics"    >$(_ 'graphics')</label></td></tr>
+${row}office"       id="cat7"/><label for="cat7" class="a_office"      >$(_ 'office')</label></td></tr>
+${row}multimedia"   id="cat8"/><label for="cat8" class="a_multimedia"  >$(_ 'multimedia')</label></td></tr>
+${row}development"  id="cat9"/><label for="cat9" class="a_development" >$(_ 'development')</label></td></tr>
+${row}system-tools" id="cata"/><label for="cata" class="a_system-tools">$(_ 'system-tools')</label></td></tr>
+${row}security"     id="catb"/><label for="catb" class="a_security"    >$(_ 'security')</label></td></tr>
+${row}misc"         id="catc"/><label for="catc" class="a_misc"        >$(_ 'misc')</label></td></tr>
+${row}meta"         id="catd"/><label for="catd" class="a_meta"        >$(_ 'meta')</label></td></tr>
+${row}non-free"     id="cate"/><label for="cate" class="a_non-free"    >$(_ 'non-free')</label></td></tr>
+${row}all"          id="catf"/><label for="catf" class="a_all"         >$(_ 'all')</label></td></tr>
+${row}extra"        id="catg"/><label for="catg" class="a_extra"       >$(_ 'extra')</label></td></tr>
+	</table>
 EOT
 
 	if [ -d $PKGS_DB/undigest ]; then
-		[ -z "$category" ] && category="base-system"
 		cat << EOT
-	<h4>$(_ 'Repositories')</h4>
-	<a class="repo_Public" href="?cat=$category&amp;repo=Public">$(_ 'Public')</a>
-EOT
+	<h4>$(_ 'Repository')</h4>
 
-		for i in $(ls $PKGS_DB/undigest); do
-			cat << EOT
-	<a class="repo_$i" href="?cat=$category&amp;repo=$i">$i</a>
-EOT
-		done
+	<select name="repo" value="$repo">
+		<option value="Public" $([ "$repo" == "Public" ] && echo -n "selected")>$(_ 'Public')</option>
+		$(for i in $(ls $PKGS_DB/undigest); do
+			echo -n "<option value=\"$i\""
+			[ "$repo" == "$i" ] && echo -n " selected"
+			echo ">$i</option>"
+		done)
+		<option value="Any" $([ "$repo" == "Any" ] && echo -n "selected")>$(_ 'Any')</option>
+	</select>
 
-		cat << EOT
-	<a class="repo_Any" href="?cat=$category&amp;repo=Any">$(_ 'Any')</a>
+	<input type="submit" name="tag" value="" id="tags"><label for="tags">$(_ 'All tags...')</label>
+	<input type="submit" name="cat" value="" id="cats"><label for="cats">$(_ 'All categories...')</label>
 EOT
 	fi
 	echo "</div>"
@@ -295,8 +307,8 @@ show_list() {
 		done
 		[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
 		sed 's|.*|&\ti|' $i/installed.info
-		[ $1 == 'extra' ] || [ $1 == 'my' ] || cat $i/packages.info
-		[ $1 == 'extra' ] && sed 's|.*|&\t-\textra\t-\thttp://mirror.slitaz.org/packages/get/&\t-\t-\t-|' $PKGS_DB/extra.list
+		[ "$category" == 'extra' ] || [ $1 == 'my' ] || cat $i/packages.info
+		[ "$category" == 'extra' ] && sed 's|.*|&\t-\textra\t-\thttp://mirror.slitaz.org/packages/get/&\t-\t-\t-|' $PKGS_DB/extra.list
 	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${category:--}" -vt="${tag:--}" '
 {
 	if (PKG && PKG != $1) {
@@ -319,13 +331,16 @@ show_list() {
 	page=$(GET page); [ -z "$page" ] && page=1
 
 	pager="$(pager $cached)"
-	echo "$pager"
+	if [ "$pager" != "<p>$(_ 'Pages:') </p>" ]; then
+		[ "$repo" != "Public" ] && echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
+		echo "$pager"
 
-	table_head
-	tail -n+$((($page-1)*100+1)) $cached | head -n100
-	echo "</tbody></table>"
+		table_head
+		tail -n+$((($page-1)*100+1)) $cached | head -n100
+		echo "</tbody></table>"
 
-	echo "$pager"
+		echo "$pager"
+	fi
 	rm -f $cached
 }
 
@@ -350,36 +365,6 @@ show_info_links() {
 
 
 case " $(GET) " in
-	*\ list\ *)
-		#
-		# List installed packages.
-		#
-		category=$(GET category)
-		search_form
-		sidebar
-		LOADING_MSG="$(_ 'Listing packages...')"
-		loading_msg
-		cat << EOT
-<h2>$(_ 'My packages')</h2>
-
-<form method="get" action="">
-	<input type="hidden" name="do" value="Remove" />
-	<div id="actions">
-		<div class="float-left">
-			$(_ 'Selection:')
-			<input type="submit" value="$(_ 'Remove')" />
-		</div>
-		<div class="float-right">
-			$(show_button recharge)
-			$(show_button up)
-		</div>
-	</div>
-	$(i=$PKGS_DB; category=${category:-all}; show_list my)
-</form>
-EOT
-		;;
-
-
 	*\ linkable\ *)
 		#
 		# List linkable packages.
@@ -391,18 +376,17 @@ EOT
 		cat << EOT
 <h2>$(_ 'Linkable packages')</h2>
 
-<form method="get" action="">
-	<input type="hidden" name="do" value="Link" />
-	<div id="actions">
-		<div class="float-left">
-			$(_ 'Selection:')
-			<input type="submit" value="$(_ 'Link')" />
-		</div>
-		<div class="float-right">
-			$(show_button recharge)
-			$(show_button up)
-		</div>
+<input type="hidden" name="do" value="Link" />
+<div id="actions">
+	<div class="float-left">
+		$(_ 'Selection:')
+		<input type="submit" value="$(_ 'Link')" />
 	</div>
+	<div class="float-right">
+		$(show_button recharge)
+		$(show_button up)
+	</div>
+</div>
 EOT
 		table_head
 		target=$(readlink $PKGS_DB/fslink)
@@ -429,23 +413,14 @@ EOT
 
 	*\ cat\ *)
 		#
-		# List all available packages by category on mirror.
+		# List all packages by category.
 		#
-		repo=$(GET repo)
-		category=$(GET cat)
+		my=$(GET my); category=$(GET cat); repo=$(GET repo)
 		search_form
-		sidebar | sed "s/active_$category/active/;s/repo_$repo/active/"
+		sidebar | sed "s/a_$category/active/;s/repo_$repo/active/"
 		if [ -z "$category" ] || [ "$category" == 'cat' ]; then
 			cat << EOT
 <h2>$(_ 'Categories list')</h2>
-
-<form method="get" action="">
-	<div id="actions">
-		<div class="float-right">
-			$(show_button tag=)
-			$(show_button list)
-		</div>
-	</div>
 
 <table class="zebra outbox">
 	<thead>
@@ -457,6 +432,7 @@ EOT
 	</thead>
 	<tbody>
 EOT
+			params="&amp;my=$my&amp;repo=$repo" # don't forget it unexpectedly
 			{
 				awk -F$'\t' '{print $3}' $PKGS_DB/packages.info | sort | uniq -c
 				awk -F$'\t' '{print $3}' $PKGS_DB/installed.info | sed 's|.*|& i|' | sort | uniq -c
@@ -467,8 +443,8 @@ EOT
 			}
 			END {
 				for (n in c) print n, m[n], i[n]
-			}' | sort | awk '{
-			printf "<tr><td><a href=\"?cat=%s\">%s</a></td><td>%d</td><td>%d</td></tr>", $1, $1, $2, $3
+			}' | sort | awk -vp="$params" '{
+			printf "<tr><td><a href=\"?cat=%s%s\">%s</a></td><td>%d</td><td>%d</td></tr>", $1, p, $1, $2, $3
 			}'
 			echo '</tbody></table>'
 		else
@@ -477,24 +453,20 @@ EOT
 			cat << EOT
 <h2>$(_ 'Category: %s' $category)</h2>
 
-<form method="get" action="">
-	<div id="actions">
-		<div class="float-left">
-			$(_ 'Selection:')
-			<input type="submit" name="do" value="Install" />
-			<input type="submit" name="do" value="Remove" />
-			<input type="hidden" name="repo" value="$repo" />
-		</div>
-		<div class="float-right">
-			$(show_button recharge)
-			$(show_button up)
-			$(show_button list)
-		</div>
+<div id="actions">
+	<div class="float-left">
+		$(_ 'Selection:')
+		<input type="submit" name="do" value="Install" />
+		<input type="submit" name="do" value="Remove" />
 	</div>
+	<div class="float-right">
+		$(show_button recharge)
+		$(show_button up)
+	</div>
+</div>
 EOT
 			for i in $(repo_list ""); do
-				[ "$repo" != "Public" ] && echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
-				show_list $category
+				show_list $my
 			done
 			echo '</form>'
 		fi
@@ -516,21 +488,19 @@ EOT
 		cat << EOT
 <h2>$(_ 'Search packages')</h2>
 
-<form method="get" action="">
-	<div id="actions">
-		<div class="float-left">
-			$(_ 'Selection:')
-			<input type="submit" name="do" value="Install" />
-			<input type="submit" name="do" value="Remove" />
-			<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
-		</div>
-		<div class="float-right">
-			$(show_button recharge)
-			$(show_button up)
-			$(show_button list)
-		</div>
+<div id="actions">
+	<div class="float-left">
+		$(_ 'Selection:')
+		<input type="submit" name="do" value="Install" />
+		<input type="submit" name="do" value="Remove" />
+		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
 	</div>
-	<input type="hidden" name="repo" value="$repo" />
+	<div class="float-right">
+		$(show_button recharge)
+		$(show_button up)
+	</div>
+</div>
+<input type="hidden" name="repo" value="$repo" />
 EOT
 		if [ -n "$(GET files)" ]; then
 			cat <<EOT
@@ -578,14 +548,12 @@ EOT
 		cat << EOT
 <h2>$(_ 'Recharge')</h2>
 
-<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		<p>$(_ 'Recharge checks for new or updated packages')</p>
 	</div>
 	<div class="float-right">
 		$(show_button up)
-		$(show_button list)
 	</div>
 </div>
 <div class="wrapper">
@@ -613,19 +581,17 @@ EOT
 		cat << EOT
 <h2>$(_ 'Up packages')</h2>
 
-<form method="get" action="">
-	<div id="actions">
-		<div class="float-left">
-			$(_ 'Selection:')
-			<input type="submit" name="do" value="Install" />
-			<input type="submit" name="do" value="Remove" />
-			<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
-		</div>
-		<div class="float-right">
-			$(show_button recharge)
-			$(show_button list)
-		</div>
+<div id="actions">
+	<div class="float-left">
+		$(_ 'Selection:')
+		<input type="submit" name="do" value="Install" />
+		<input type="submit" name="do" value="Remove" />
+		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
 	</div>
+	<div class="float-right">
+		$(show_button recharge)
+	</div>
+</div>
 EOT
 		tazpkg up --check >/dev/null
 		table_head
@@ -669,18 +635,14 @@ EOT
 		cat << EOT
 <h2>TazPkg: $cmd</h2>
 
-<form method="get" action="">
-	<div id="actions">
-		<div class="float-left">
-			<p>$(_ 'Performing tasks on packages')</p>
-		</div>
-		<div class="float-right">
-			$(show_button list)
-		</div>
+<div id="actions">
+	<div class="float-left">
+		<p>$(_ 'Performing tasks on packages')</p>
 	</div>
-	<div class="box">
-		$(_ 'Executing %s for: %s' $cmd $pkgs)
-	</div>
+</div>
+<div class="box">
+	$(_ 'Executing %s for: %s' $cmd $pkgs)
+</div>
 EOT
 		for pkg in $pkgs; do
 			echo '<pre>'
@@ -741,9 +703,6 @@ EOT
 		cat << EOT
 		</p>
 	</div>
-	<div class="float-right">
-		$(show_button list)
-	</div>
 </div>
 <table class="zebra outbox">
 <tbody>
@@ -786,6 +745,7 @@ EOT
 		#
 		# TazPkg configuration page
 		#
+		echo '</form>'
 		cmd=$(GET admin)
 		case "$cmd" in
 			clean)
@@ -1087,38 +1047,33 @@ EOT
 		#
 		search_form
 		sidebar
-		tag=$(GET tag); repo=$(GET repo)
+		tag=$(GET tag); repo=$(GET repo); my=$(GET my)
+		[ -z "$repo" ] && repo='Any'
 		if [ -n "$tag" ]; then
 			cat << EOT
 <h2>$(_ 'Tag "%s"' $tag)</h2>
 
-<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		$(_ 'Selection:')
 		<input type="submit" name="do" value="Install" />
 		<input type="submit" name="do" value="Remove" />
-		<input type="hidden" name="repo" value="$repo" />
-	</div>
-	<div class="float-right">
-		$(show_button tag=)
-		$(show_button list)
 	</div>
 </div>
 EOT
 			for i in $(repo_list ""); do
-				[ "$repo" != "Public" ] && echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
 				show_list all
 			done
 			echo '</form>'
 
 		else
+			params="&amp;my=$my&amp;repo=$repo" # don't forget it unexpectedly
 			echo "<h2>$(_ 'Tags list')</h2>"
 			echo "<p>"
 			TAGS="$(awk -F$'\t' '{if($6){print $6}}' $PKGS_DB/packages.info | tr ' ' $'\n' | sort | uniq -c)"
 			MAX="$(echo "$TAGS" | awk '{if ($1 > MAX) MAX = $1} END{print MAX}')"
-			echo "$TAGS" | awk -vMAX=$MAX '{
-				printf "<a class=\"tag%s\" href=\"?tag=%s\" title=\"%s\">%s</a> ", int($1 * 7 / MAX + 1), $2, $1, $2
+			echo "$TAGS" | awk -vMAX="$MAX" -vp="$params" '{
+				printf "<a class=\"tag%s\" href=\"?tag=%s%s\" title=\"%s\">%s</a> ", int($1 * 7 / MAX + 1), $2, p, $1, $2
 			}'
 			echo "</p>"
 		fi
@@ -1138,7 +1093,6 @@ EOT
 
 <div id="actions">
 EOT
-		show_button list
 		fslink=$(readlink $PKGS_DB/fslink)
 		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] && show_button linkable
 		show_button recharge

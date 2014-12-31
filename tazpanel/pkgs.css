@@ -1,3 +1,68 @@
+
+/* Sidebar menus */
+
+#content-sidebar { margin: 20px 144px 20px 20px; }
+
+#sidebar {
+	/*background-color: #FFF;*/
+	/*border: 1pt solid #888;*/
+	position: fixed;
+	top: 80px;
+	right: 5px;
+	width: 132px;
+}
+
+#sidebar > a {
+	display: block;
+	padding: 0;
+	margin: 0 0 0 0.5em;
+}
+
+#sidebar .active {
+	color: #000;
+	font-weight: bold;
+}
+
+#sidebar h4 {
+	margin: 0;
+	font-size: 16px; color: #222;
+	text-align: center;
+}
+
+#sidebar input[type=submit] { display: none; }
+
+#sidebar label {
+	display: inline-block;
+	padding: 0 0 0 0.5em; margin: 0;
+	color: #666;
+	font-size: small;
+	width: 100%;
+}
+
+#sidebar label:hover { color: #000; }
+
+table.side {
+	background-color: #f8f8f8;
+	border: none; border-collapse: collapse;
+	padding: 0; margin: 0;
+	
+	border: 1pt solid #888;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+table.side tr:nth-child(even) {
+	background-color: rgba(0,0,0,0.05);
+}
+
+#sidebar select {
+	margin: 0; padding: 0 0.5em;
+	width: 100%;
+	font-size: small;
+}
+
+
+
 /* links classes:
  *   pkg   - package (not installed);
  *   pkgi  - package (installed);
