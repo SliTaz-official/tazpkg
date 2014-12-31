@@ -239,8 +239,8 @@ EOT
 	</select>
 	<script type="text/javascript">document.getElementById('repo').value="$repo"</script>
 
-	<input type="submit" name="tag" value="" id="tags"><label for="tags">$(_ 'All tags...')</label>
-	<input type="submit" name="cat" value="" id="cats"><label for="cats">$(_ 'All categories...')</label>
+	<a href="?tag=&amp;my=$my&amp;repo=$repo">$(_ 'All tags...')</a>
+	<a href="?cat=&amp;my=$my&amp;repo=$repo">$(_ 'All categories...')</a>
 EOT
 	fi
 	echo "</div>"

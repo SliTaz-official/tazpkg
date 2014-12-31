@@ -33,17 +33,13 @@ select option:nth-child(even) {
 	background-color: rgba(0,0,0,0.05);
 }
 
-#sidebar input[type=submit] { display: none; }
-
-#sidebar label {
+#sidebar a {
 	display: inline-block;
 	padding: 0 0 0 0.5em; margin: 0;
 	color: #666;
 	font-size: small;
 	width: 100%;
 }
-
-#sidebar label:hover { color: #000; }
 
 
 
