@@ -193,46 +193,51 @@ sidebar() {
 <form method="get" action="">
 
 <div id="sidebar">
-	<select name="my" value="$my">
-		<option value="my" $([ "$my" ] && echo -n "selected")>$(_ 'My packages')</option>
-		<option value="" $([ ! "$my" ] && echo -n "selected")>$(_ 'All packages')</option>
+	<select id="my" name="my" onchange="this.form.submit()">
+		<option value="my">$(_ 'My packages')</option>
+		<option value=""  >$(_ 'All packages')</option>
 	</select>
 
 	<h4>$(_ 'Categories')</h4>
 
-	<table class="side">
-${row}base-system"  id="cat1"/><label for="cat1" class="a_base-system" >$(_ 'base-system')</label></td></tr>
-${row}x-window"     id="cat2"/><label for="cat2" class="a_x-window"    >$(_ 'x-window')</label></td></tr>
-${row}utilities"    id="cat3"/><label for="cat3" class="a_utilities"   >$(_ 'utilities')</label></td></tr>
-${row}network"      id="cat4"/><label for="cat4" class="a_network"     >$(_ 'network')</label></td></tr>
-${row}games"        id="cat5"/><label for="cat5" class="a_games"       >$(_ 'games')</label></td></tr>
-${row}graphics"     id="cat6"/><label for="cat6" class="a_graphics"    >$(_ 'graphics')</label></td></tr>
-${row}office"       id="cat7"/><label for="cat7" class="a_office"      >$(_ 'office')</label></td></tr>
-${row}multimedia"   id="cat8"/><label for="cat8" class="a_multimedia"  >$(_ 'multimedia')</label></td></tr>
-${row}development"  id="cat9"/><label for="cat9" class="a_development" >$(_ 'development')</label></td></tr>
-${row}system-tools" id="cata"/><label for="cata" class="a_system-tools">$(_ 'system-tools')</label></td></tr>
-${row}security"     id="catb"/><label for="catb" class="a_security"    >$(_ 'security')</label></td></tr>
-${row}misc"         id="catc"/><label for="catc" class="a_misc"        >$(_ 'misc')</label></td></tr>
-${row}meta"         id="catd"/><label for="catd" class="a_meta"        >$(_ 'meta')</label></td></tr>
-${row}non-free"     id="cate"/><label for="cate" class="a_non-free"    >$(_ 'non-free')</label></td></tr>
-${row}all"          id="catf"/><label for="catf" class="a_all"         >$(_ 'all')</label></td></tr>
-${row}extra"        id="catg"/><label for="catg" class="a_extra"       >$(_ 'extra')</label></td></tr>
-	</table>
+	<div class="select_wrap">
+	<select id="cat" name="cat" size="16" onchange="this.form.submit()">
+		<option value="base-system" >$(_ 'base-system')</option>
+		<option value="x-window"    >$(_ 'x-window')</option>
+		<option value="utilities"   >$(_ 'utilities')</option>
+		<option value="network"     >$(_ 'network')</option>
+		<option value="games"       >$(_ 'games')</option>
+		<option value="graphics"    >$(_ 'graphics')</option>
+		<option value="office"      >$(_ 'office')</option>
+		<option value="multimedia"  >$(_ 'multimedia')</option>
+		<option value="development" >$(_ 'development')</option>
+		<option value="system-tools">$(_ 'system-tools')</option>
+		<option value="security"    >$(_ 'security')</option>
+		<option value="misc"        >$(_ 'misc')</option>
+		<option value="meta"        >$(_ 'meta')</option>
+		<option value="non-free"    >$(_ 'non-free')</option>
+		<option value="all"         >$(_ 'all')</option>
+		<option value="extra"       >$(_ 'extra')</option>
+	</select>
+	<script type="text/javascript">
+		document.getElementById('my').value="$my"
+		document.getElementById('cat').value="$cat"
+	</script>
+	</div>
 EOT
 
 	if [ -d $PKGS_DB/undigest ]; then
 		cat << EOT
 	<h4>$(_ 'Repository')</h4>
 
-	<select name="repo" value="$repo">
-		<option value="Public" $([ "$repo" == "Public" ] && echo -n "selected")>$(_ 'Public')</option>
+	<select id="repo" name="repo" onchange="this.form.submit()">
+		<option value="Public">$(_ 'Public')</option>
 		$(for i in $(ls $PKGS_DB/undigest); do
-			echo -n "<option value=\"$i\""
-			[ "$repo" == "$i" ] && echo -n " selected"
-			echo ">$i</option>"
+			echo "<option value=\"$i\">$i</option>"
 		done)
-		<option value="Any" $([ "$repo" == "Any" ] && echo -n "selected")>$(_ 'Any')</option>
+		<option value="Any">$(_ 'Any')</option>
 	</select>
+	<script type="text/javascript">document.getElementById('repo').value="$repo"</script>
 
 	<input type="submit" name="tag" value="" id="tags"><label for="tags">$(_ 'All tags...')</label>
 	<input type="submit" name="cat" value="" id="cats"><label for="cats">$(_ 'All categories...')</label>
