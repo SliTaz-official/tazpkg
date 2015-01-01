@@ -18,6 +18,12 @@
 get_config
 header
 
+_()  { local T="$1"; shift; printf "$(gettext "$T")" "$@"; echo; }
+_n() { local T="$1"; shift; printf "$(gettext "$T")" "$@"; }
+_p() {
+	local S="$1" P="$2" N="$3"; shift; shift; shift;
+	printf "$(ngettext "$S" "$P" "$N")" "$@"; }
+
 
 # xHTML 5 header with special side bar for categories.
 TITLE=$(TEXTDOMAIN='tazpkg'; _ 'TazPanel - Packages')
@@ -185,17 +191,17 @@ EOT
 
 
 sidebar() {
-	[ -z "$repo" ] && repo='Public'
-	my=$(GET my); cat=$(GET cat)
-	row='<tr><td><input type="submit" name="cat" value="'
+	repo=$(GET repo); repo=${repo:-Public}
+	my=$(GET my); my=${my:-my}
+	cat=$(GET cat); cat=${cat:-all}
 
 	cat << EOT
 <form method="get" action="">
 
 <div id="sidebar">
-	<select id="my" name="my" onchange="this.form.submit()">
+	<select id="my" name="my" value="$my" onchange="this.form.submit()">
 		<option value="my">$(_ 'My packages')</option>
-		<option value=""  >$(_ 'All packages')</option>
+		<option value="no">$(_ 'All packages')</option>
 	</select>
 
 	<h4>$(_ 'Categories')</h4>
@@ -238,12 +244,13 @@ EOT
 		<option value="Any">$(_ 'Any')</option>
 	</select>
 	<script type="text/javascript">document.getElementById('repo').value="$repo"</script>
-
-	<a href="?tag=&amp;my=$my&amp;repo=$repo">$(_ 'All tags...')</a>
-	<a href="?cat=&amp;my=$my&amp;repo=$repo">$(_ 'All categories...')</a>
 EOT
 	fi
-	echo "</div>"
+	cat << EOT
+	<a href="?tag=&amp;my=$my&amp;repo=$repo">$(_ 'All tags...')</a>
+	<a href="?cat=&amp;my=$my&amp;repo=$repo">$(_ 'All categories...')</a>
+</div>
+EOT
 }
 
 
@@ -337,7 +344,8 @@ show_list() {
 
 	pager="$(pager $cached)"
 	if [ "$pager" != "<p>$(_ 'Pages:') </p>" ]; then
-		[ "$repo" != "Public" ] && echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
+		[ -d $PKGS_DB/undigest ] && [ "$repo" != "Public" ] && \
+			echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
 		echo "$pager"
 
 		table_head
@@ -370,6 +378,8 @@ show_info_links() {
 
 
 case " $(GET) " in
+
+
 	*\ linkable\ *)
 		#
 		# List linkable packages.
@@ -471,7 +481,7 @@ EOT
 </div>
 EOT
 			for i in $(repo_list ""); do
-				show_list $my
+				show_list ${my#no}
 			done
 			echo '</form>'
 		fi
@@ -584,8 +594,10 @@ EOT
 		LOADING_MSG="$(_ 'Checking for upgrades...')"
 		loading_msg
 		cat << EOT
+</form>
 <h2>$(_ 'Up packages')</h2>
 
+<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		$(_ 'Selection:')
@@ -637,6 +649,7 @@ EOT
 		search_form
 		sidebar
 		loading_msg
+		pkgs=$pkgs
 		cat << EOT
 <h2>TazPkg: $cmd</h2>
 
@@ -646,7 +659,7 @@ EOT
 	</div>
 </div>
 <div class="box">
-	$(_ 'Executing %s for: %s' $cmd $pkgs)
+	$(_ 'Executing %s for: %s' $cmd "$pkgs")
 </div>
 EOT
 		for pkg in $pkgs; do
@@ -1075,7 +1088,8 @@ EOT
 			params="&amp;my=$my&amp;repo=$repo" # don't forget it unexpectedly
 			echo "<h2>$(_ 'Tags list')</h2>"
 			echo "<p>"
-			TAGS="$(awk -F$'\t' '{if($6){print $6}}' $PKGS_DB/packages.info | tr ' ' $'\n' | sort | uniq -c)"
+			if [ ! -e $PKGS_DB/packages.info ]; then list=installed; else list=packages; fi
+			TAGS="$(awk -F$'\t' '{if($6){print $6}}' $PKGS_DB/$list.info | tr ' ' $'\n' | sort | uniq -c)"
 			MAX="$(echo "$TAGS" | awk '{if ($1 > MAX) MAX = $1} END{print MAX}')"
 			echo "$TAGS" | awk -vMAX="$MAX" -vp="$params" '{
 				printf "<a class=\"tag%s\" href=\"?tag=%s%s\" title=\"%s\">%s</a> ", int($1 * 7 / MAX + 1), $2, p, $1, $2
@@ -1110,11 +1124,16 @@ EOT
 <tbody>
 <tr><td>$(_ 'Last recharge:')</td><td>
 EOT
-		ls -l $PKGS_DB/packages.list | awk '{print $6, $7, $8}'
-		if [ -n "$(find $PKGS_DB/packages.list -mtime +10)" ]; then
-			_ '(Older than 10 days)'
+		recharged="$(ls -l $PKGS_DB/packages.list | awk '{print $6, $7, $8}')"
+		if [ -z "$recharged" ]; then
+			_ 'never'
 		else
-			_ '(Not older than 10 days)'
+			echo $recharged
+			if [ -n "$(find $PKGS_DB/packages.list -mtime +10)" ]; then
+				_ '(Older than 10 days)'
+			else
+				_ '(Not older than 10 days)'
+			fi
 		fi
 		cat << EOT
 </td></tr>
