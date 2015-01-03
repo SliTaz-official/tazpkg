@@ -644,11 +644,19 @@ EOT
 			install)
 				cmd=get-install opt=--forced
 				LOADING_MSG="get-installing packages..."
-				;;
+				MSG="$(_ 'Installing: %s' "$pkgs")" ;;
+			remove)
+				MSG="$(_ 'Removing: %s' "$pkgs")" ;;
 			link)
 				opt=$(readlink $PKGS_DB/fslink)
 				LOADING_MSG="linking packages..."
-				;;
+				MSG="$(_ 'Linking: %s' "$pkgs")" ;;
+			block)
+				MSG="$(_ 'Blocking: %s' "$pkgs")" ;;
+			unblock)
+				MSG="$(_ 'Unblocking: %s' "$pkgs")" ;;
+			repack)
+				MSG="$(_ 'Repacking: %s' "$pkgs")" ;;
 		esac
 		search_form
 		sidebar
@@ -662,9 +670,7 @@ EOT
 		<p>$(_ 'Performing tasks on packages')</p>
 	</div>
 </div>
-<div class="box">
-	$(_ 'Executing %s for: %s' $cmd "$pkgs")
-</div>
+<div class="box">$MSG</div>
 EOT
 		for pkg in $pkgs; do
 			echo '<pre>'
