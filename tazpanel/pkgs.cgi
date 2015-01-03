@@ -250,6 +250,7 @@ EOT
 	<a href="?tag=&amp;my=$my&amp;repo=$repo">$(_ 'All tags...')</a>
 	<a href="?cat=&amp;my=$my&amp;repo=$repo">$(_ 'All categories...')</a>
 </div>
+</form>
 EOT
 }
 
@@ -391,6 +392,7 @@ case " $(GET) " in
 		cat << EOT
 <h2>$(_ 'Linkable packages')</h2>
 
+<form method="get" action="">
 <input type="hidden" name="do" value="Link" />
 <div id="actions">
 	<div class="float-left">
@@ -468,6 +470,7 @@ EOT
 			cat << EOT
 <h2>$(_ 'Category: %s' $category)</h2>
 
+<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		$(_ 'Selection:')
@@ -503,6 +506,7 @@ EOT
 		cat << EOT
 <h2>$(_ 'Search packages')</h2>
 
+<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		$(_ 'Selection:')
@@ -563,6 +567,7 @@ EOT
 		cat << EOT
 <h2>$(_ 'Recharge')</h2>
 
+<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		<p>$(_ 'Recharge checks for new or updated packages')</p>
@@ -594,7 +599,6 @@ EOT
 		LOADING_MSG="$(_ 'Checking for upgrades...')"
 		loading_msg
 		cat << EOT
-</form>
 <h2>$(_ 'Up packages')</h2>
 
 <form method="get" action="">
@@ -699,6 +703,7 @@ EOT
 		cat << EOT
 <h2>$(_ 'Package %s' $PACKAGE)</h2>
 
+<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		<p>
@@ -763,7 +768,6 @@ EOT
 		#
 		# TazPkg configuration page
 		#
-		echo '</form>'
 		cmd=$(GET admin)
 		case "$cmd" in
 			clean)
@@ -806,6 +810,8 @@ EOT
 		sidebar
 		cat << EOT
 <h2>$(_ 'Administration')</h2>
+
+<form method="get" action="">
 <div>
 	<p>$(_ 'TazPkg administration and settings')</p>
 </div>
@@ -815,6 +821,7 @@ EOT
 	$(show_button 'admin=&amp;action=quickcheck')
 	$(show_button 'admin=&amp;action=fullcheck')
 </div>
+</form>
 EOT
 		case "$(GET action)" in
 				saveconf)
@@ -1071,6 +1078,7 @@ EOT
 			cat << EOT
 <h2>$(_ 'Tag "%s"' $tag)</h2>
 
+<form method="get" action="">
 <div id="actions">
 	<div class="float-left">
 		$(_ 'Selection:')
@@ -1110,6 +1118,7 @@ EOT
 		cat << EOT
 <h2>$(_ 'Summary')</h2>
 
+<form method="get" action="">
 <div id="actions">
 EOT
 		fslink=$(readlink $PKGS_DB/fslink)
@@ -1154,6 +1163,7 @@ EOT
 
 <pre>
 $(tail -n 5 $LOG | fgrep "-" | awk '{print $1, $2, $3, $4, $5, $6, $7}')
+<a href="index.cgi?file=$LOG">$(_ 'more...')</a>
 </pre>
 EOT
 		;;
