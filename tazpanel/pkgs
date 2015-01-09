@@ -4,7 +4,7 @@ export TEXTDOMAIN='tazpkg'
 cat <<EOT
 <li><a href="/pkgs.cgi">$(gettext 'Packages')</a>
 	<ul>
-		<li><a href="/pkgs.cgi?cat=all&amp;my=my&amp;repo=Public"><img
+		<li><a href="/pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any"><img
 			src="/styles/default/images/tazpkg.png" />$(gettext 'My packages')</a></li>
 		<li><a href="/pkgs.cgi?recharge"><img
 			src="/styles/default/images/update.png" />$(gettext 'Recharge list')</a></li>

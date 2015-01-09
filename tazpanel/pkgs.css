@@ -5,9 +5,13 @@
 
 #sidebar {
 	position: fixed;
-	top: 76px;
-	right: 5px;
+	top: 60px;
+	right: 0;
+	padding: 5px 5px 0 0;
 	width: 132px;
+	height: 100%;
+	border-left: 1pt solid #AAA;
+	background-color: #EEE;
 }
 
 #sidebar h4 {
@@ -94,6 +98,11 @@ a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
 	max-width: 30em;
 	}
 
+.pkglist tr { border-bottom: 1pt solid #DDD; }
+
+.pkglist, .pkglist thead { border: 1.5pt solid #BBB!important; }
+
+
 #actions { overflow: auto; }
 
 a.pages {
@@ -132,4 +141,14 @@ a.tag1, a.tag2, a.tag3, a.tag4, a.tag5, a.tag6, a.tag7, a.tag8 {
 }
 a.tag1:hover, a.tag2:hover, a.tag3:hover, a.tag4:hover, a.tag5:hover, a.tag6:hover, a.tag7:hover, a.tag8:hover {
 	outline: 1.5pt solid #FC8; }
+
+#actions {
+	background-color: #EEE;
+	margin: 0; padding: 0 0.5ex!important;
+	border: 1pt solid #DDD;
+	border-radius: 0.5ex;
+}
+.button img {
+	padding: 0 4px 0 0;
+}
 

@@ -132,20 +132,27 @@ show_button() {
 		tag=)         img='';         label="$(_ 'Tags')" ;;
 		linkable)     img='tazpkg';   label="$(_ 'Linkable packages')" ;;
 		admin)        img='edit';     label="$(_ 'Administration')" ;;
-		*Install*nf*) img='';         label="$(_ 'Install (Non Free)')" ;;
-		*Install*)    img='';         label="$(_ 'Install')" ;;
+		*Install*nf*) img='tazpkg-installed'; label="$(_ 'Install (Non Free)')" ;;
+		*Install*)    img='tazpkg-installed'; label="$(_ 'Install')" ;;
 		*Remove*)     img='stop';     label="$(_ 'Remove')" ;;
-		*Block*)      img='';         label="$(_ 'Block')" ;;
-		*Unblock*)    img='';         label="$(_ 'Unblock')" ;;
-		*Repack*)     img='';         label="$(_ 'Repack')" ;;
+		*Link*)       img='tazpkg';   label="$(_ 'Link')" ;;
+		*Block*)      img='tazpkg';   label="$(_ 'Block')" ;;
+		*Unblock*)    img='tazpkg';   label="$(_ 'Unblock')" ;;
+		*Repack*)     img='tazpkg';   label="$(_ 'Repack')" ;;
 		*saveconf*)   img='tazpkg';   label="$(_ 'Save configuration')" ;;
 		*listconf*)   img='edit';     label="$(_ 'List configuration files')" ;;
 		*quickcheck*) img='recharge'; label="$(_ 'Quick check')" ;;
 		*fullcheck*)  img='recharge'; label="$(_ 'Full check')" ;;
+		*clean*)      img='stop';     label="$(_ 'Clean')" ;;
+		*setlink*)    img='harddisk'; label="$(_ 'Set link')" ;;
+		*removelink*) img='stop';     label="$(_ 'Remove link')" ;;
 	esac
-	echo -n "<a class=\"button\" href=\"?$1\">"
-	[ -n "$img" ] && echo -n "<img src=\"$IMAGES/$img.png\" />"
-	echo "$label</a>"
+	cat << EOT
+	<button class="button" type="submit" name="${1%%=*}" value="${1#*=}">
+		<img src="$IMAGES/$img.png"/>$label
+	</button>
+EOT
+
 }
 
 
@@ -176,7 +183,7 @@ EOT
 
 table_head() {
 	cat << EOT
-<table class="zebra outbox pkglist">
+<table class="zebra pkglist">
 	<thead>
 		<tr>
 			<td>$(_ 'Name')</td>
@@ -191,15 +198,22 @@ EOT
 
 
 sidebar() {
-	repo=$(GET repo); repo=${repo:-Public}
-	my=$(GET my); my=${my:-my}
-	cat=$(GET cat); cat=${cat:-all}
+	repo=$(COOKIE repo); repo=${repo:-Public}; [ -n "$(GET repo)" ] && repo=$(GET repo)
+	  my=$(COOKIE my);     my=${my:-my};       [ -n "$(GET my)" ]   &&   my=$(GET my)
+	 cat=$(COOKIE cat);   cat=${cat:-all};     [ -n "$(GET cat)" ]  &&  cat=$(GET cat)
 
 	cat << EOT
-<form method="get" action="">
+<script type="text/javascript">
+function setCookie(name) {
+	document.cookie = name+"="+document.getElementById(name).value; }
+function setValue(name, value) {
+	document.getElementById(name).value=value;
+	setCookie(name); }
+</script>
+<form method="post" action="?list">
 
 <div id="sidebar">
-	<select id="my" name="my" value="$my" onchange="this.form.submit()">
+	<select id="my" value="$my" onchange="setCookie('my'); this.form.submit()">
 		<option value="my">$(_ 'My packages')</option>
 		<option value="no">$(_ 'All packages')</option>
 	</select>
@@ -207,7 +221,7 @@ sidebar() {
 	<h4>$(_ 'Categories')</h4>
 
 	<div class="select_wrap">
-	<select id="cat" name="cat" size="16" onchange="this.form.submit()">
+	<select id="cat" size="16" onclick="setCookie('cat'); this.form.submit()">
 		<option value="base-system" >$(_ 'base-system')</option>
 		<option value="x-window"    >$(_ 'x-window')</option>
 		<option value="utilities"   >$(_ 'utilities')</option>
@@ -226,8 +240,8 @@ sidebar() {
 		<option value="extra"       >$(_ 'extra')</option>
 	</select>
 	<script type="text/javascript">
-		document.getElementById('my').value="$my"
-		document.getElementById('cat').value="$cat"
+		setValue('my', "$my")
+		setValue('cat', "$cat")
 	</script>
 	</div>
 EOT
@@ -236,19 +250,19 @@ EOT
 		cat << EOT
 	<h4>$(_ 'Repository')</h4>
 
-	<select id="repo" name="repo" onchange="this.form.submit()">
+	<select id="repo" onchange="setCookie('repo')">
 		<option value="Public">$(_ 'Public')</option>
 		$(for i in $(ls $PKGS_DB/undigest); do
 			echo "<option value=\"$i\">$i</option>"
 		done)
 		<option value="Any">$(_ 'Any')</option>
 	</select>
-	<script type="text/javascript">document.getElementById('repo').value="$repo"</script>
+	<script type="text/javascript">setValue('repo', "$repo")</script>
 EOT
 	fi
 	cat << EOT
-	<a href="?tag=&amp;my=$my&amp;repo=$repo">$(_ 'All tags...')</a>
-	<a href="?cat=&amp;my=$my&amp;repo=$repo">$(_ 'All categories...')</a>
+	<a href="?tags">$(_ 'All tags...')</a>
+	<a href="?cats">$(_ 'All categories...')</a>
 </div>
 </form>
 EOT
@@ -283,10 +297,16 @@ repo_name() {
 }
 
 
+header_repo_name() {
+	[ -d $PKGS_DB/undigest ] && [ "$repo" != "Public" ] && \
+		echo "<h3>$(_ 'Repository: %s' $(repo_name $1))</h3>"
+}
+
+
 # Print links to the pages
 
 pager() {
-	awk -F'"' -vpage="$page" -vnum_lines="$(wc -l < $1)" -vtext="$(_ 'Pages:') " -vurl="?cat=$category&amp;repo=$repo&amp;page=" '
+	awk -F'"' -vpage="$page" -vnum_lines="$(wc -l < $1)" -vtext="$(_ 'Pages:') " -vurl="?list&amp;page=" '
 BEGIN{
 	num_pages = int(num_lines / 100) + (num_lines % 100 != 0)
 	if (num_pages != 1) printf "<p>%s", text
@@ -312,6 +332,7 @@ END{
 
 show_list() {
 	cached=$(mktemp)
+	[ -n "$tag" ] && cat=''
 	{
 		for L in $LANG ${LANG%%_*}; do
 			if [ -e "$PKGS_DB/packages-desc.$L" ]; then
@@ -320,9 +341,9 @@ show_list() {
 		done
 		[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
 		sed 's|.*|&\ti|' $i/installed.info
-		[ "$category" == 'extra' ] || [ $1 == 'my' ] || cat $i/packages.info
-		[ "$category" == 'extra' ] && sed 's|.*|&\t-\textra\t-\thttp://mirror.slitaz.org/packages/get/&\t-\t-\t-|' $PKGS_DB/extra.list
-	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${category:--}" -vt="${tag:--}" '
+		[ "$cat" == 'extra' ] || [ $1 == 'my' ] || cat $i/packages.info
+		[ "$cat" == 'extra' ] && sed 's|.*|&\t-\textra\t-\thttp://mirror.slitaz.org/packages/get/&\t-\t-\t-|' $PKGS_DB/extra.list
+	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${cat:--}" -vt="${tag:--}" '
 {
 	if (PKG && PKG != $1) {
 		if (SEL) {
@@ -344,16 +365,17 @@ show_list() {
 	page=$(GET page); [ -z "$page" ] && page=1
 
 	pager="$(pager $cached)"
-	if [ "$pager" != "<p>$(_ 'Pages:') </p>" ]; then
-		[ -d $PKGS_DB/undigest ] && [ "$repo" != "Public" ] && \
-			echo "<h3>$(_ 'Repository: %s' $(repo_name $i))</h3>"
-		echo "$pager"
-
-		table_head
-		tail -n+$((($page-1)*100+1)) $cached | head -n100
-		echo "</tbody></table>"
-
-		echo "$pager"
+	list="$(tail -n+$((($page-1)*100+1)) $cached | head -n100)"
+	list1=${list:1:1}
+	if [ "$pager" != "<p>$(_ 'Pages:') </p>" ] && [ -n "$list1" ]; then
+		cat << EOT
+$(header_repo_name $i)
+$pager
+	$(table_head)
+		$list
+	</tbody></table>
+$pager
+EOT
 	fi
 	rm -f $cached
 }
@@ -385,24 +407,16 @@ case " $(GET) " in
 		#
 		# List linkable packages.
 		#
-		search_form
-		sidebar
-		LOADING_MSG=$(_ 'Listing linkable packages...')
-		loading_msg
+		search_form; sidebar
+		LOADING_MSG=$(_ 'Listing linkable packages...'); loading_msg
+
 		cat << EOT
 <h2>$(_ 'Linkable packages')</h2>
 
 <form method="get" action="">
-<input type="hidden" name="do" value="Link" />
 <div id="actions">
-	<div class="float-left">
-		$(_ 'Selection:')
-		<input type="submit" value="$(_ 'Link')" />
-	</div>
-	<div class="float-right">
-		$(show_button recharge)
-		$(show_button up)
-	</div>
+	<div class="float-left">$(_ 'Selection:') $(show_button do=Link)</div>
+	<div class="float-right">$(show_button recharge) $(show_button up)</div>
 </div>
 EOT
 		table_head
@@ -428,17 +442,17 @@ EOT
 		;;
 
 
-	*\ cat\ *)
+	*\ cats\ *)
 		#
-		# List all packages by category.
+		# List of all categories.
 		#
-		my=$(GET my); category=$(GET cat); repo=$(GET repo)
-		search_form
-		sidebar | sed "s/a_$category/active/;s/repo_$repo/active/"
-		if [ -z "$category" ] || [ "$category" == 'cat' ]; then
-			cat << EOT
-<h2>$(_ 'Categories list')</h2>
+		search_form; sidebar
 
+		echo "<h2>$(_ 'Categories list')</h2>"
+
+		for pkgsinfo in $(repo_list /packages.info); do
+			header_repo_name $(dirname $pkgsinfo)
+			cat << EOT
 <table class="zebra outbox">
 	<thead>
 		<tr>
@@ -449,9 +463,8 @@ EOT
 	</thead>
 	<tbody>
 EOT
-			params="&amp;my=$my&amp;repo=$repo" # don't forget it unexpectedly
 			{
-				awk -F$'\t' '{print $3}' $PKGS_DB/packages.info | sort | uniq -c
+				awk -F$'\t' '{print $3}' $pkgsinfo | sort | uniq -c
 				awk -F$'\t' '{print $3}' $PKGS_DB/installed.info | sed 's|.*|& i|' | sort | uniq -c
 			} | sort -k2,2 | awk '
 			{
@@ -460,34 +473,52 @@ EOT
 			}
 			END {
 				for (n in c) print n, m[n], i[n]
-			}' | sort | awk -vp="$params" '{
-			printf "<tr><td><a href=\"?cat=%s%s\">%s</a></td><td>%d</td><td>%d</td></tr>", $1, p, $1, $2, $3
+			}' | sort | awk '{
+			printf "<tr><td><a href=\"?list&amp;cat=%s\">%s</a></td><td>%d</td><td>%d</td></tr>", $1, $1, $2, $3
 			}'
 			echo '</tbody></table>'
-		else
-			LOADING_MSG="$(_ 'Listing packages...')"
-			loading_msg
-			cat << EOT
-<h2>$(_ 'Category: %s' $category)</h2>
+		done
+		;;
+
+
+	*\ list\ *)
+		#
+		# List all packages by category.
+		#
+		search_form; sidebar
+		LOADING_MSG="$(_ 'Listing packages...')"; loading_msg
+
+		bcat="<b>$cat</b>"; brepo="<b>$repo</b>"
+		case $repo in
+			Any)
+				case $my in
+					my) title="$(_ 'Installed packages of category "%s"' "$bcat")" ;;
+					*)  title="$(_ 'All packages of category "%s"' "$bcat")" ;;
+				esac ;;
+			*)
+				case $my in
+					my) title="$(_ 'Installed packages of category "%s" in repository "%s"' "$bcat" "$brepo")" ;;
+					*)  title="$(_ 'All packages of category "%s" in repository "%s"' "$bcat" "$brepo")" ;;
+				esac ;;
+		esac
+
+		cat << EOT
+<h2>$(_ 'Packages list')</h2>
+<p>$title</p>
 
 <form method="get" action="">
 <div id="actions">
-	<div class="float-left">
-		$(_ 'Selection:')
-		<input type="submit" name="do" value="Install" />
-		<input type="submit" name="do" value="Remove" />
+	<div class="float-left">$(_ 'Selection:')
+		$([ "$my" != 'my' ] && show_button do=Install)
+		$(show_button do=Remove)
 	</div>
-	<div class="float-right">
-		$(show_button recharge)
-		$(show_button up)
-	</div>
+	<div class="float-right">$(show_button recharge; show_button up)</div>
 </div>
 EOT
-			for i in $(repo_list ""); do
-				show_list ${my#no}
-			done
-			echo '</form>'
-		fi
+		for i in $(repo_list ""); do
+			show_list ${my#no}
+		done
+		echo '</form>'
 		;;
 
 
@@ -497,29 +528,20 @@ EOT
 		# and so get result including packages names and descriptions
 		#
 		pkg=$(GET search); [ -z "$pkg" ] && xhtml_footer && exit
-		repo=$(GET repo)
 		cd $PKGS_DB
-		search_form
-		sidebar | sed "s/repo_$repo/active/"
-		LOADING_MSG="$(_ 'Searching packages...')"
-		loading_msg
+
+		search_form; sidebar
+		LOADING_MSG="$(_ 'Searching packages...')"; loading_msg
+
 		cat << EOT
 <h2>$(_ 'Search packages')</h2>
 
 <form method="get" action="">
 <div id="actions">
-	<div class="float-left">
-		$(_ 'Selection:')
-		<input type="submit" name="do" value="Install" />
-		<input type="submit" name="do" value="Remove" />
-		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
-	</div>
-	<div class="float-right">
-		$(show_button recharge)
-		$(show_button up)
-	</div>
+	<div class="float-left">$(_ 'Selection:'; show_button do=Install; show_button do=Remove)
+		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a></div>
+	<div class="float-right">$(show_button recharge; show_button up)</div>
 </div>
-<input type="hidden" name="repo" value="$repo" />
 EOT
 		if [ -n "$(GET files)" ]; then
 			cat <<EOT
@@ -560,10 +582,9 @@ EOT
 		#
 		# Lets recharge the packages list
 		#
-		search_form
-		sidebar
-		LOADING_MSG="$(_ 'Recharging lists...')"
-		loading_msg
+		search_form; sidebar
+		LOADING_MSG="$(_ 'Recharging lists...')"; loading_msg
+
 		cat << EOT
 <h2>$(_ 'Recharge')</h2>
 
@@ -572,9 +593,7 @@ EOT
 	<div class="float-left">
 		<p>$(_ 'Recharge checks for new or updated packages')</p>
 	</div>
-	<div class="float-right">
-		$(show_button up)
-	</div>
+	<div class="float-right">$(show_button up)</div>
 </div>
 <div class="wrapper">
 <pre>
@@ -593,25 +612,17 @@ EOT
 		#
 		# Upgrade packages
 		#
-		cd $PKGS_DB
-		search_form
-		sidebar
-		LOADING_MSG="$(_ 'Checking for upgrades...')"
-		loading_msg
+		search_form; sidebar
+		LOADING_MSG="$(_ 'Checking for upgrades...')"; loading_msg
+
 		cat << EOT
 <h2>$(_ 'Up packages')</h2>
 
 <form method="get" action="">
 <div id="actions">
-	<div class="float-left">
-		$(_ 'Selection:')
-		<input type="submit" name="do" value="Install" />
-		<input type="submit" name="do" value="Remove" />
-		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
-	</div>
-	<div class="float-right">
-		$(show_button recharge)
-	</div>
+	<div class="float-left">$(_ 'Selection:'; show_button do=Install; show_button do=Remove)
+		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a></div>
+	<div class="float-right">$(show_button recharge)</div>
 </div>
 EOT
 		tazpkg up --check >/dev/null
@@ -632,44 +643,25 @@ EOT
 		#
 		# Do an action on one or some packages
 		#
-		opt=""
-		pkgs=""
-		cmdline=$(echo ${QUERY_STRING#do=} | sed s'/&/ /g')
-		cmd=$(echo ${cmdline} | awk '{print $1}')
-		cmdline=${cmdline#*repo=* }
-		pkgs=$(echo $cmdline | sed -e s'/+/ /g' -e s'/pkg=//g' -e s/$cmd//)
-		pkgs="$(httpd -d "$pkgs")"
-		cmd=$(echo $cmd | tr [:upper:] [:lower:])
-		case $cmd in
-			install)
-				cmd=get-install opt=--forced
-				LOADING_MSG="get-installing packages..."
-				MSG="$(_ 'Installing: %s' "$pkgs")" ;;
-			remove)
-				MSG="$(_ 'Removing: %s' "$pkgs")" ;;
-			link)
-				opt=$(readlink $PKGS_DB/fslink)
-				LOADING_MSG="linking packages..."
-				MSG="$(_ 'Linking: %s' "$pkgs")" ;;
-			block)
-				MSG="$(_ 'Blocking: %s' "$pkgs")" ;;
-			unblock)
-				MSG="$(_ 'Unblocking: %s' "$pkgs")" ;;
-			repack)
-				MSG="$(_ 'Repacking: %s' "$pkgs")" ;;
-		esac
-		search_form
-		sidebar
-		loading_msg
-		pkgs=$pkgs
-		cat << EOT
-<h2>TazPkg: $cmd</h2>
+		search_form; sidebar
+		LOADING_MSG="$(_ 'Please wait')"; loading_msg
 
-<div id="actions">
-	<div class="float-left">
-		<p>$(_ 'Performing tasks on packages')</p>
-	</div>
-</div>
+		opt=""
+		cmd=$(echo $(GET do) | tr [:upper:] [:lower:])
+		pkgs=$(echo $QUERY_STRING | awk 'BEGIN{RS="&";FS="="}{if($1=="pkg")print $2}')
+		pkgs=$(httpd -d "$pkgs")
+		bpkgs="<b>$pkgs</b>"
+		case $cmd in
+			install) MSG="$(_ 'Installing: %s' "$bpkgs")"; opt=--forced; cmd=get-install ;;
+			remove)  MSG="$(_ 'Removing: %s'   "$bpkgs")" ;;
+			link)    MSG="$(_ 'Linking: %s'    "$bpkgs")"; opt=$(readlink $PKGS_DB/fslink) ;;
+			block)   MSG="$(_ 'Blocking: %s'   "$bpkgs")" ;;
+			unblock) MSG="$(_ 'Unblocking: %s' "$bpkgs")" ;;
+			repack)  MSG="$(_ 'Repacking: %s'  "$bpkgs")" ;;
+		esac
+		cat << EOT
+<h2>TazPkg: $(GET do)</h2>
+
 <div class="box">$MSG</div>
 EOT
 		for pkg in $pkgs; do
@@ -684,16 +676,16 @@ EOT
 		# Packages info
 		#
 		pkg=$(GET info)
-		search_form
-		sidebar
+		search_form; sidebar
+		LOADING_MSG=$(_ 'Getting package info...'); loading_msg
+
+		temp="${pkg#get-}"
 		if [ -d $INSTALLED/$pkg ]; then
 			. $INSTALLED/$pkg/receipt
 			files=$(wc -l < $INSTALLED/$pkg/files.list)
 			action="Remove"
 		else
 			cd $PKGS_DB
-			LOADING_MSG=$(_ 'Getting package info...')
-			loading_msg
 			eval "$(awk -F$'\t' -vp=$pkg '
 			$1==p{
 				printf "PACKAGE=\"%s\"; VERSION=\"%s\"; CATEGORY=\"%s\"; ", $1, $2, $3
@@ -704,34 +696,30 @@ EOT
 			UNPACKED_SIZE=${SIZES#* }
 
 			action="Install"
-			temp="${pkg#get-}"
 		fi
 		cat << EOT
 <h2>$(_ 'Package %s' $PACKAGE)</h2>
 
 <form method="get" action="">
+<input type="hidden" name="pkg" value="$temp"/>
 <div id="actions">
-	<div class="float-left">
-		<p>
 EOT
 		if [ "$temp" != "$pkg" -a "$action" == "Install" ]; then
-			show_button "do=Install&amp;$temp&amp;nf"
+			show_button "do=Install&amp;nf"
 		else
-			show_button "do=$action&amp;$pkg"
+			show_button "do=$action"
 		fi
 
 		if [ -d $INSTALLED/$pkg ]; then
 			if grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list; then
-				show_button "do=Unblock&amp;$pkg"
+				show_button do=Unblock
 			else
-				show_button "do=Block&amp;$pkg"
+				show_button do=Block
 			fi
-			show_button "do=Repack&amp;$pkg"
+			show_button do=Repack
 		fi
 		i18n_desc $pkg
 		cat << EOT
-		</p>
-	</div>
 </div>
 <table class="zebra outbox">
 <tbody>
@@ -775,6 +763,8 @@ EOT
 		# TazPkg configuration page
 		#
 		cmd=$(GET admin)
+		search_form; sidebar
+
 		case "$cmd" in
 			clean)
 				rm -rf $CACHE_DIR/* ;;
@@ -806,33 +796,32 @@ EOT
 			rm-repo=*)
 				repository=${cmd#rm-repo=}
 				rm -rf $PKGS_DB/undigest/$repository ;;
+			setlink)
+				[ -d "$(GET link)/$INSTALLED" ] && ln -fs $(GET link) $PKGS_DB/fslink ;;
+			removelink)
+				rm -f $PKGS_DB/fslink ;;
 		esac
-		[ "$cmd" == "$(_n 'Set link')" ] &&
-			[ -d "$(GET link)/$INSTALLED" ] && ln -fs $(GET link) $PKGS_DB/fslink
-		[ "$cmd" == "$(_n 'Remove link')" ] && rm -f $PKGS_DB/fslink
 
-		cache_files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
-		cache_size=$(du -sh $CACHE_DIR | cut -f1 | sed 's|\.0||')
-		sidebar
 		cat << EOT
 <h2>$(_ 'Administration')</h2>
 
 <form method="get" action="">
+<input type="hidden" name="admin" />
+
 <div>
 	<p>$(_ 'TazPkg administration and settings')</p>
 </div>
 <div id="actions">
-	$(show_button 'admin=&amp;action=saveconf')
-	$(show_button 'admin=&amp;action=listconf')
-	$(show_button 'admin=&amp;action=quickcheck')
-	$(show_button 'admin=&amp;action=fullcheck')
+	$(show_button action=saveconf)
+	$(show_button action=listconf)
+	$(show_button action=quickcheck)
+	$(show_button action=fullcheck)
 </div>
 </form>
 EOT
 		case "$(GET action)" in
 				saveconf)
-					LOADING_MSG=$(_ 'Creating the package...')
-					loading_msg
+					LOADING_MSG=$(_ 'Creating the package...'); loading_msg
 					echo "<pre>"
 					cd $HOME
 					tazpkg repack-config | filter_taztools_msgs
@@ -851,26 +840,29 @@ EOT
 					echo "</ul>"
 					;;
 				quickcheck)
-					LOADING_MSG=$(_ 'Checking packages consistency...')
-					loading_msg
+					LOADING_MSG=$(_ 'Checking packages consistency...'); loading_msg
 					echo "<pre>"
 					tazpkg check
 					echo "</pre>" ;;
 				fullcheck)
-					LOADING_MSG=$(_ 'Full packages check...')
-					loading_msg
+					LOADING_MSG=$(_ 'Full packages check...'); loading_msg
 					echo "<pre>"
 					tazpkg check --full
 					echo "</pre>" ;;
 				esac
+
+		cache_files=$(find $CACHE_DIR -name *.tazpkg | wc -l)
+		cache_size=$(du -sh $CACHE_DIR | cut -f1 | sed 's|\.0||')
+		[ "$cache_files" == 0 ] && cache_size="0K"
 		cat << EOT
 <h3>$(_ 'Packages cache')</h3>
 
 <div>
 	<form method="get" action="">
 		<p>$(_ 'Packages in the cache: %s (%s)' $cache_files $cache_size)
-			<input type="hidden" name="admin" value="clean" />
-			<input type="submit" value="$(_n 'Clean')" />
+			$(show_button admin=clean)
+			<!--input type="hidden" name="admin" value="clean" />
+			<input type="submit" value="$(_n 'Clean')" /-->
 		</p>
 	</form>
 </div>
@@ -930,8 +922,8 @@ You will be able to install packages using soft links to it.")</p>
 <form method="get" action="">
 <p>
 	<input type="text" name="link" value="$(readlink $PKGS_DB/fslink 2> /dev/null)" size="50">
-	<input type="submit" name="admin" value="$(_ 'Set link')" />
-	<input type="submit" name="admin" value="$(_ 'Remove link')" />
+	$(show_button admin=setlink)
+	$(show_button admin=removelink)
 </p>
 </form>
 EOT
@@ -991,8 +983,8 @@ EOT
 		#
 		# Show licenses for installed packages
 		#
-		search_form
-		sidebar
+		search_form; sidebar
+
 		pkg=$(GET license)
 		case $pkg in
 			/*)
@@ -1072,16 +1064,42 @@ EOT
 		;;
 
 
+	*\ tags\ *)
+		#
+		# Show tag cloud
+		#
+		search_form; sidebar
+
+		echo "<h2>$(_ 'Tags list')</h2>"
+		brepo="<b>$repo</b>"
+		case $repo in
+			Any) title="$(_ 'List of tags in all repositories')" ;;
+			*)   title="$(_ 'List of tags in repository "%s"' "$brepo")" ;;
+		esac
+		echo "<p>$title</p><p>"
+		to_read=""
+		for i in $(repo_list ""); do
+			if [ ! -e $i/packages.info ] && [ $repo == 'Public' ]; then
+				list=installed; else list=packages; fi
+			to_read="$to_read $i/$list.info"
+		done
+		TAGS="$(awk -F$'\t' '{if($6){print $6}}' $to_read | tr ' ' $'\n' | sort | uniq -c)"
+		MAX="$(echo "$TAGS" | awk '{if ($1 > MAX) MAX = $1} END{print MAX}')"
+		echo "$TAGS" | awk -vMAX="$MAX" '{
+			printf "<a class=\"tag%s\" href=\"?tag=%s\" title=\"%s\">%s</a> ", int($1 * 7 / MAX + 1), $2, $1, $2
+		}'
+		echo "</p>"
+		;;
+
+
 	*\ tag\ *)
 		#
-		# Show packages with matching tag; show tag cloud
+		# Show packages with matching tag
 		#
-		search_form
-		sidebar
-		tag=$(GET tag); repo=$(GET repo); my=$(GET my)
-		[ -z "$repo" ] && repo='Any'
-		if [ -n "$tag" ]; then
-			cat << EOT
+		search_form; sidebar
+
+		tag=$(GET tag)
+		cat << EOT
 <h2>$(_ 'Tag "%s"' $tag)</h2>
 
 <form method="get" action="">
@@ -1093,23 +1111,36 @@ EOT
 	</div>
 </div>
 EOT
-			for i in $(repo_list ""); do
-				show_list all
-			done
-			echo '</form>'
+		for i in $(repo_list ""); do
+			show_list all
+		done
+		echo '</form>'
+		;;
 
-		else
-			params="&amp;my=$my&amp;repo=$repo" # don't forget it unexpectedly
-			echo "<h2>$(_ 'Tags list')</h2>"
-			echo "<p>"
-			if [ ! -e $PKGS_DB/packages.info ]; then list=installed; else list=packages; fi
-			TAGS="$(awk -F$'\t' '{if($6){print $6}}' $PKGS_DB/$list.info | tr ' ' $'\n' | sort | uniq -c)"
-			MAX="$(echo "$TAGS" | awk '{if ($1 > MAX) MAX = $1} END{print MAX}')"
-			echo "$TAGS" | awk -vMAX="$MAX" -vp="$params" '{
-				printf "<a class=\"tag%s\" href=\"?tag=%s%s\" title=\"%s\">%s</a> ", int($1 * 7 / MAX + 1), $2, p, $1, $2
-			}'
-			echo "</p>"
-		fi
+
+	*\ blocked\ *)
+		#
+		# Show blocked packages list
+		#
+		search_form; sidebar
+
+		cat << EOT
+<h2>$(_ 'Blocked packages list')</h2>
+
+<form method="get" action="">
+<div id="actions">
+	<div class="float-left">$(_ 'Selection:'; show_button do=Unblock)
+	</div>
+</div>
+EOT
+		table_head
+		for i in $(cat $PKGS_DB/blocked-packages.list); do
+			awk -F$'\t' -vp="$i" '{
+			if ($1 == p)
+				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkgib\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", $1, gensub(/\+/, "%2B", "g", $1), $1, $2, $4, $5
+			}' $PKGS_DB/installed.info
+		done
+		echo '</tbody></table></form>'
 		;;
 
 
@@ -1117,8 +1148,8 @@ EOT
 		#
 		# Default to summary
 		#
-		search_form
-		sidebar
+		search_form; sidebar
+
 		[ -n "$(GET block)" ] && tazpkg block $(GET block)
 		[ -n "$(GET unblock)" ] && tazpkg unblock $(GET unblock)
 		cat << EOT
@@ -1139,12 +1170,12 @@ EOT
 <tbody>
 <tr><td>$(_ 'Last recharge:')</td><td>
 EOT
-		recharged="$(ls -l $PKGS_DB/packages.list | awk '{print $6, $7, $8}')"
+		recharged="$(date -r $PKGS_DB/packages.info +%c 2>/dev/null)"
 		if [ -z "$recharged" ]; then
 			_ 'never'
 		else
-			echo $recharged
-			if [ -n "$(find $PKGS_DB/packages.list -mtime +10)" ]; then
+			echo "<b>$recharged</b>"
+			if [ -n "$(find $PKGS_DB/packages.info -mtime +10)" ]; then
 				_ '(Older than 10 days)'
 			else
 				_ '(Not older than 10 days)'
@@ -1152,16 +1183,24 @@ EOT
 		fi
 		cat << EOT
 </td></tr>
-<tr><td>$(_ 'Installed packages:')</td>
-	<td>$(cat $PKGS_DB/installed.info | wc -l)</td></tr>
-<tr><td>$(_ 'Mirrored packages:')</td>
-	<td>$(cat $PKGS_DB/packages.list | wc -l)</td></tr>
-<tr><td>$(_ 'Upgradeable packages:')</td>
-	<td>$(cat $PKGS_DB/packages.up | wc -l)</td></tr>
-<tr><td>$(_ 'Installed files:')</td>
-	<td>$(cat $INSTALLED/*/files.list | wc -l)</td></tr>
-<tr><td>$(_ 'Blocked packages:')</td>
-	<td>$(cat $PKGS_DB/blocked-packages.list | wc -l)</td></tr>
+<tr>
+	<td>$(_ 'Installed packages:')</td>
+	<td><b>$(cat $PKGS_DB/installed.info | wc -l)</a></b>
+		<a href="?list&amp;my=my&amp;cat=all&amp;repo=Any">$(_ '(show)')</a></td></tr>
+<tr>
+	<td>$(_ 'Mirrored packages:')</td>
+	<td><b>$(cat $PKGS_DB/packages.list | wc -l)</b></td></tr>
+<tr>
+	<td>$(_ 'Upgradeable packages:')</td>
+	<td><b>$(cat $PKGS_DB/packages.up | wc -l)</b>
+		<a href="?up">$(_ '(show)')</a></td></tr>
+<tr>
+	<td>$(_ 'Installed files:')</td>
+	<td><b>$(cat $INSTALLED/*/files.list | wc -l)</b></td></tr>
+<tr>
+	<td>$(_ 'Blocked packages:')</td>
+	<td><b>$(cat $PKGS_DB/blocked-packages.list | wc -l)</b>
+		<a href="?blocked">$(_ '(show)')</a></td></tr>
 </tbody>
 </table>
 

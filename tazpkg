@@ -2280,13 +2280,13 @@ show new and upgradeable packages." packages.list)")"
 			esac
 		done
 		time=$(date +%s)
-		installed_sum=$PKGS_DB/installed.$SUM
+
 		look_for_priority
 		for repo in $priority; do
 			pkg_list=$repo/packages.list
 			mtime=$(find $pkg_list -mtime +7)
 			if [ "$mtime" ]; then
-				if [ "$repo" = "$PKGS_DB" ]; then
+				if [ "$repo" == "$PKGS_DB" ]; then
 					repo_name=main
 				else
 					repo_name="${repo##*/}"
@@ -2295,10 +2295,14 @@ show new and upgradeable packages." packages.list)")"
 				tazpkg recharge $repo_name
 			fi
 		done
+
 		emsg "<n>$(_ 'Package')<i 28> $(_ 'Version')<i 48> $(_ 'Status')<->"
+
 		cd $INSTALLED
 		newline > $UP_LIST
 		blocked_count=0
+		installed_sum=$PKGS_DB/installed.$SUM
+
 		for pkg in *; do
 			[ ! -d $pkg ] && continue
 			unset VERSION EXTRAVERSION
@@ -2340,7 +2344,7 @@ show new and upgradeable packages." packages.list)")"
 		upnb=$(wc -l < $UP_LIST)
 		pkgs=$(ls | wc -l)
 		time=$(($(date +%s) - $time))
-		if [ "$upnb" = 0 ]; then
+		if [ "$upnb" == 0 ]; then
 			install="n"
 			_ 'System is up-to-date...'
 		fi
@@ -2352,7 +2356,8 @@ show new and upgradeable packages." packages.list)")"
 
 		if [ "$upnb" != 0 ]; then
 			blocked="$(_p \
-				'%s blocked' '%s blocked' $blocked_count \
+				'%s blocked' \
+				'%s blocked' $blocked_count \
 				$blocked_count)"
 
 			boldify "$(_p \
