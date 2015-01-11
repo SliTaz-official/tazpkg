@@ -21,8 +21,8 @@ pot:
 	xgettext -o po/tazpkg.pot -L Shell \
 		--package-name=TazPkg \
 		--package-version="$(VERSION)" -kaction -ktitle -k_ -k_n -k_p:1,2 \
-		./tazpkg ./tazpkg-convert ./tazpkg-find-depends ./tazpkg-box \
-		./pkgs ./pkgs.cgi ./tazpkg-notify
+		./tazpkg ./modules/tazpkg-convert ./modules/tazpkg-find-depends ./tazpkg-box \
+		./tazpanel/pkgs ./tazpanel/pkgs.cgi ./tazpkg-notify
 
 msgmerge:
 	@for l in $(LINGUAS); do \

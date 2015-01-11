@@ -1166,23 +1166,28 @@ EOT
 		cat << EOT
 </div>
 
-<table class="zebra outbox">
+<table class="zebra summary">
 <tbody>
-<tr><td>$(_ 'Last recharge:')</td><td>
-EOT
-		recharged="$(date -r $PKGS_DB/packages.info +%c 2>/dev/null)"
-		if [ -z "$recharged" ]; then
-			_ 'never'
-		else
-			echo "<b>$recharged</b>"
-			if [ -n "$(find $PKGS_DB/packages.info -mtime +10)" ]; then
-				_ '(Older than 10 days)'
-			else
-				_ '(Not older than 10 days)'
-			fi
-		fi
-		cat << EOT
-</td></tr>
+<tr>
+	<td>$(_ 'Last recharge:')</td>
+	<td>$(list=$PKGS_DB/packages.info
+	if [ -e $list ]; then
+		$((days=$(date +%s)/86400-$(date -r $list +%s)/86400))
+		time=$(date -r $list +%R)
+		ago="$(_p '%d day ago.' '%d days ago.' $days $days)"
+		case $days in
+			0) _ 'Today at %s.' $time;;
+			1) _ 'Yesterday at %s.' $time;;
+			[2-9]) echo $ago;;
+			*) echo "<span style='color:red'>$ago</span>"
+				_ 'It is recommended to [recharge] the lists.' | \
+				sed 's|\[|<a href="?recharge">|;s|\]|</a>|';;
+		esac
+	else
+		_ 'never.'
+		_ 'You need to [download] the lists for further work.' | \
+		sed 's|\[|<a href="?recharge">|;s|\]|</a>|'
+	fi)</td></tr>
 <tr>
 	<td>$(_ 'Installed packages:')</td>
 	<td><b>$(cat $PKGS_DB/installed.info | wc -l)</a></b>

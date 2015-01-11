@@ -29,7 +29,7 @@
 .select_wrap select {
 	padding: 5px;
 	margin:-5px -20px -5px -5px;
-	width: 157px;
+	width: 162px;
 	font-size: small;
 }
 
@@ -100,8 +100,11 @@ a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
 
 .pkglist tr { border-bottom: 1pt solid #DDD; }
 
-.pkglist, .pkglist thead { border: 1.5pt solid #BBB!important; }
+.pkglist, .pkglist thead, .summary { border: 1.5pt solid #BBB!important; }
 
+.summary td:nth-child(1) {
+	width:10%; white-space: nowrap; /* to have minimal width of first column */
+	}
 
 #actions { overflow: auto; }
 
