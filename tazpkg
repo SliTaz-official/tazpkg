@@ -2108,53 +2108,61 @@ EOT
 		if [ ! -f "receipt" ]; then
 			_ 'Receipt is missing. Please read the documentation.'
 			exit 0
-		else
-			title 'Packing package "%s"' $PACKAGE
-			# Create files.list with redirecting find outpout.
-			action "Creating the list of files..."
-			cd fs
-			find . -type f -print > ../files.list
-			find . -type l -print >> ../files.list
-			cd .. && sed -i s/'^.'/''/ files.list
-			status
-			action 'Creating %s of files...' $CHECKSUM
-			while read file; do
-				[ -L "fs$file" ] && continue
-				[ -f "fs$file" ] || continue
-				case "$file" in
-					/lib/modules/*/modules.*|*.pyc) continue;;
-				esac
-				$CHECKSUM "fs$file" | sed 's/  fs/  /'
-			done < files.list > $CHECKSUM
-			status
-			UNPACKED_SIZE=$(du -chs fs receipt files.list $CHECKSUM \
-				description.txt 2> /dev/null | awk \
-				'{ sz=$1 } END { print sz }')
-			# Build cpio archives.
-			action "Compressing the FS..."
-			find fs | cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
-			rm -rf fs
-			status
-			PACKED_SIZE=$(du -chs fs.cpio.lzma receipt files.list \
-				$CHECKSUM description.txt 2> /dev/null | awk \
-				'{ sz=$1 } END { print sz }')
-			action "Updating receipt sizes..."
-			sed -i s/^PACKED_SIZE.*$// receipt
-			sed -i s/^UNPACKED_SIZE.*$// receipt
-			sed -i "s/^PACKAGE=/PACKED_SIZE=\"$PACKED_SIZE\"\nUNPACKED_SIZE=\"$UNPACKED_SIZE\"\nPACKAGE=/" receipt
-			status
-			action "Creating full cpio archive..."
-			find . -print | cpio -o -H newc --quiet > ../$PACKAGE.tazpkg
-			status
-			action "Restoring original package tree..."
-			unlzma -c fs.cpio.lzma | cpio -idm --quiet
-			status
-			rm fs.cpio.lzma && cd ..
-			footer "$(_ 'Package "%s" compressed successfully.' $PACKAGE)"
-			pkg_size=$(du -sh $PACKAGE.tazpkg)
-			_ 'Size: %s' $pkg_size
-			newline
-		fi ;;
+		fi
+
+		title 'Packing package "%s"' $PACKAGE
+		# Create files.list with redirecting find outpout.
+
+		action "Creating the list of files..."
+		cd fs
+		find . -type f -print > ../files.list
+		find . -type l -print >> ../files.list
+		cd .. && sed -i s/'^.'/''/ files.list
+		status
+
+		action 'Creating %s of files...' $CHECKSUM
+		while read file; do
+			[ -L "fs$file" ] && continue
+			[ -f "fs$file" ] || continue
+			case "$file" in
+				/lib/modules/*/modules.*|*.pyc) continue;;
+			esac
+			$CHECKSUM "fs$file" | sed 's/  fs/  /'
+		done < files.list > $CHECKSUM
+		status
+
+		UNPACKED_SIZE=$(du -chs fs receipt files.list $CHECKSUM \
+			description.txt 2> /dev/null | awk \
+			'{ sz=$1 } END { print sz }')
+		# Build cpio archives.
+
+		action "Compressing the FS..."
+		find fs | cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
+		rm -rf fs
+		status
+
+		PACKED_SIZE=$(du -chs fs.cpio.lzma receipt files.list \
+			$CHECKSUM description.txt 2> /dev/null | awk \
+			'{ sz=$1 } END { print sz }')
+
+		action "Updating receipt sizes..."
+		sed -i s/^PACKED_SIZE.*$// receipt
+		sed -i s/^UNPACKED_SIZE.*$// receipt
+		sed -i "s/^PACKAGE=/PACKED_SIZE=\"$PACKED_SIZE\"\nUNPACKED_SIZE=\"$UNPACKED_SIZE\"\nPACKAGE=/" receipt
+		status
+
+		action "Creating full cpio archive..."
+		find . -print | cpio -o -H newc --quiet > ../$PACKAGE.tazpkg
+		status
+
+		action "Restoring original package tree..."
+		unlzma -c fs.cpio.lzma | cpio -idm --quiet
+		status
+
+		rm fs.cpio.lzma && cd ..
+		footer "$(_ 'Package "%s" compressed successfully.' $PACKAGE)"
+		_ 'Size: %s' "$(ls -lh $PACKAGE.tazpkg | awk '{print $5}')"
+		;;
 
 
 	recharge)
@@ -2197,7 +2205,7 @@ EOT
 					base_path="$(basename $path)"
 					repository_name="$(_n 'Undigest %s' $base_path)"
 				fi
-				_ 'Repository "%s" is up to date.' $repository_name
+				_ 'Repository "%s" is up to date.' "$repository_name"
 				rm ID.bak
 				continue
 			fi
@@ -2299,7 +2307,7 @@ show new and upgradeable packages." packages.list)")"
 		emsg "<n>$(_ 'Package')<i 28> $(_ 'Version')<i 48> $(_ 'Status')<->"
 
 		cd $INSTALLED
-		newline > $UP_LIST
+		echo -n > $UP_LIST
 		blocked_count=0
 		installed_sum=$PKGS_DB/installed.$SUM
 
