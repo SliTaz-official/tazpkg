@@ -36,6 +36,8 @@ find_depends()
 		[ -f $i ] && lzma d $i -so >> $TMP_DIR/files.list
 	done
 
+	echo "Find depends..." 1>&2
+	libs_found=""
 	find ${1:-$TMP_DIR/$file/fs} -type f | \
 	while read chkfile ; do
 		is_elf $chkfile || continue
@@ -43,13 +45,17 @@ find_depends()
 			*.o|*.ko|*.ko.gz) continue;;
 		esac
 
-		ldd $chkfile | \
-		while read lib rem; do
+		for lib in $(ldd $chkfile | sed '/=>/!d;s/ =>.*//') ; do
+			case " $libs_found " in
+			*\ $lib\ *) continue
+			esac
+			libs_found="$libs_found $lib"
 			case "$lib" in
 				statically|linux-gate.so*|ld-*.so|*/ld-*.so) continue;;
 			esac
 			find ${1:-$TMP_DIR/$file/fs} | grep -q /$lib$ && continue
 
+			echo -ne "for $lib                   \r" 1>&2
 			for dep in $(fgrep $lib files.list | cut -d: -f1); do
 				case " $DEFAULT_DEPENDS " in
 					*\ $dep\ *) continue 2;;
