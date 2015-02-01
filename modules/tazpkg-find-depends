@@ -73,6 +73,7 @@ find_depends()
 	done
 
 	spc=""
+	[ -s $TMP_DIR/depends ] &&
 	sort < $TMP_DIR/depends 2> /dev/null | uniq | \
 	while read file; do
 		echo -n "$spc$file"

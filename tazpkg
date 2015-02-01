@@ -2489,7 +2489,7 @@ EOT
 						esac
 					done
 					echo "$md5  $f"
-				done < "$file" | $CHECKSUM -c - 2> /dev/null | \
+				done < "$file" | busybox $CHECKSUM -c - 2> /dev/null | \
 				  grep -v OK$ | sed "s/FAILED$/$CHECKSUM MISMATCH/"
 			done
 
