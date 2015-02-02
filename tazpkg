@@ -812,7 +812,7 @@ END {
 	fi
 
 	action 'Installing package...'
-	[ "$(busybox ls fs/* 2> /dev/null)" ] && cp -a fs/* $ROOT/
+	[ "$(busybox ls fs/* 2> /dev/null)" ] && cp -af fs/* $ROOT/
 	status
 
 	if [ -s files2remove.list ]; then
