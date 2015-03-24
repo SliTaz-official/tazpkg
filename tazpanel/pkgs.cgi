@@ -6,7 +6,7 @@
 # its own code for some tasks. Please KISS, it is important and keep speed
 # in mind. Thanks, Pankso.
 #
-# (C) 2011-2014 SliTaz GNU/Linux - BSD License
+# (C) 2011-2015 SliTaz GNU/Linux - BSD License
 #
 
 . /lib/libtaz.sh
@@ -62,10 +62,10 @@ parse_packages_desc() {
 		i18n_desc $PACKAGE
 		cat << EOT
 <tr>
-<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
-<td>$VERSION</td>
-<td>$SHORT_DESC</td>
-<td><a class="w" href="$WEB_SITE"></a></td>
+	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
+	<td>$VERSION</td>
+	<td>$SHORT_DESC</td>
+	<td><a data-img="web" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 	done
@@ -80,10 +80,10 @@ parse_packages_info() {
 		i18n_desc $PACKAGE
 		cat << EOT
 <tr>
-<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
-<td>$VERSION</td>
-<td>$SHORT_DESC</td>
-<td><a class="w" href="$WEB_SITE"></a></td>
+	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
+	<td>$VERSION</td>
+	<td>$SHORT_DESC</td>
+	<td><a data-img="web" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 	done
@@ -94,35 +94,36 @@ EOT
 # Show button
 show_button() {
 	for button in $@; do
+		class=''; img=''
 		case $button in
-		recharge)     img='tp-recharge'; label="$(_ 'Recharge list')" ;;
-		up)           img='tp-up';       label="$(_ 'Check upgrades')" ;;
-		list)         img='tp-list';     label="$(_ 'My packages')" ;;
-		tags)         img='tp-tag';      label="$(_ 'Tags')" ;;
-		linkable)     img='tp-link';     label="$(_ 'Linkable packages')" ;;
-		admin)        img='tp-admin';    label="$(_ 'Administration')" ;;
-		*Install*nf*) img='tp-pkg-ins';  label="$(_ 'Install (Non Free)')" ;;
-		*Install*)    img='tp-pkg-ins';  label="$(_ 'Install')" ;;
-		*Remove*)     img='tp-pkg-rem';  label="$(_ 'Remove')" ;;
-		*Link*)       img='tp-link';     label="$(_ 'Link')" ;;
-		*Block*)      img='tp-block';    label="$(_ 'Block')" ;;
-		*Unblock*)    img='tp-unblock';  label="$(_ 'Unblock')" ;;
-		*Repack*)     img='tp-repack';   label="$(_ 'Repack')" ;;
-		*saveconf*)   img='tp-save';     label="$(_ 'Save configuration')" ;;
-		*listconf*)   img='tp-list';     label="$(_ 'List configuration files')" ;;
-		*quickcheck*) img='tp-check';    label="$(_ 'Quick check')" ;;
-		*fullcheck*)  img='tp-check';    label="$(_ 'Full check')" ;;
-		*clean*)      img='tp-remove';   label="$(_ 'Clean')" ;;
-		*setlink*)    img='tp-link';     label="$(_ 'Set link')" ;;
-		*removelink*) img='tp-remove';   label="$(_ 'Remove link')" ;;
-		*add-mirror)  img='tp-add';      label="$(_n 'Add mirror')" ;;
-		*add-repo)    img='tp-add';      label="$(_n 'Add repository')" ;;
+		recharge)     class='refresh'; label="$(_ 'Recharge list')" ;;
+		up)           class='upgrade'; label="$(_ 'Check upgrades')" ;;
+		list)         class='list';    label="$(_ 'My packages')" ;;
+		tags)         class='tags';    label="$(_ 'Tags')" ;;
+		linkable)     class='link';    label="$(_ 'Linkable packages')" ;;
+		admin)        class='admin';   label="$(_ 'Administration')" ;;
+		*Install*nf*) class='install'; label="$(_ 'Install (Non Free)')" ;;
+		*Install*)    class='install'; label="$(_ 'Install')" ;;
+		*Remove*)     class='remove';  label="$(_ 'Remove')" ;;
+		*Link*)       class='link';    label="$(_ 'Link')" ;;
+		*Block*)      class='lock';    label="$(_ 'Block')" ;;
+		*Unblock*)    class='unlock';  label="$(_ 'Unblock')" ;;
+		*Repack*)     class='repack';  label="$(_ 'Repack')" ;;
+		*saveconf*)   class='save';    label="$(_ 'Save configuration')" ;;
+		*listconf*)   class='list';    label="$(_ 'List configuration files')" ;;
+		*quickcheck*) class='check';   label="$(_ 'Quick check')" ;;
+		*fullcheck*)  class='check';   label="$(_ 'Full check')" ;;
+		*clean*)      class='remove';  label="$(_ 'Clean')" ;;
+		*setlink*)    class='link';    label="$(_ 'Set link')" ;;
+		*removelink*) class='unlink';  label="$(_ 'Remove link')" ;;
+		*add-mirror)  class='add';     label="$(_n 'Add mirror')" ;;
+		*add-repo)    class='add';     label="$(_n 'Add repository')" ;;
 		esac
-		cat << EOT
-	<button class="button" type="submit" name="${button%%=*}" value="${button#*=}">
-		<img src="$IMAGES/$img.png"/>$label
-	</button>
-EOT
+		if [ -n "$class" ]; then
+			echo -n "<button data-icon=\"$class\" name=\"${button%%=*}\" value=\"${button#*=}\">$label</button>"
+		else
+			echo -n "<button name=\"${button%%=*}\" value=\"${button#*=}\"><img src=\"$IMAGES/$img.png\"/>$label</button>"
+		fi
 	done
 }
 
@@ -139,21 +140,19 @@ search_form() {
 	[ -z "$repo" ] && repo="$(GET repo)"
 	[ -z "$repo" ] && repo="Any"
 	cat << EOT
-<form method="get" action="">
-	<div class="search"><input
-		type="search" name="search" results="5" autosave="pkgsearch" autocomplete="on"><input
-		type="submit" value="$(_n 'Search')"><input
-		type="submit" value="$(_n 'Files')" name="files">
-	</div>
-</form>
+<form class="search"><!--
+	--><input type="search" name="search" results="5" autosave="pkgsearch" autocomplete="on"><!--
+	--><button type="submit">$(_n 'Search')</button><!--
+	--><button name="files">$(_n 'Files')</button><!--
+--></form>
 EOT
 }
 
 
 table_head() {
 	cat << EOT
-<table class="zebra pkglist">
-	<thead>
+<table class="wide zebra pkglist" id="head1">
+	<thead id="head2">
 		<tr>
 			<td>$(_ 'Name')</td>
 			<td>$(_ 'Version')</td>
@@ -230,8 +229,8 @@ EOT
 EOT
 	fi
 	cat << EOT
-	<a href="?tags">$(_ 'All tags...')</a>
-	<a href="?cats">$(_ 'All categories...')</a>
+	<a data-icon="tags" href="?tags">$(_ 'All tags...')</a><br/>
+	<a data-icon="list" href="?cats">$(_ 'All categories...')</a>
 </div>
 </form>
 EOT
@@ -268,7 +267,7 @@ repo_name() {
 
 header_repo_name() {
 	[ -d $PKGS_DB/undigest ] && [ "$repo" != "Public" ] && \
-		echo "<h3>$(_ 'Repository: %s' $(repo_name $1))</h3>"
+		_ 'Repository: %s' $(repo_name $1)
 }
 
 
@@ -344,7 +343,7 @@ show_list() {
 
 	if [ "$pager" != "<p>$(_ 'Pages:') </p>" ] && [ -n "${list:1:1}" ]; then
 		cat << EOT
-$(header_repo_name $i)
+<h3>$(header_repo_name $i)</h3>
 $pager
 	$(table_head)
 		$list
@@ -388,11 +387,8 @@ case " $(GET) " in
 		cat << EOT
 <h2>$(_ 'Linkable packages')</h2>
 
-<form method="get" action="">
-<div id="actions">
-	<div class="float-left">$(_ 'Selection:') $(show_button do=Link)</div>
-	<div class="float-right">$(show_button recharge up)</div>
-</div>
+<form class="wide">
+	$(_ 'Selection:') $(show_button do=Link)
 EOT
 		table_head
 		target=$(readlink $PKGS_DB/fslink)
@@ -426,17 +422,18 @@ EOT
 		echo "<h2>$(_ 'Categories list')</h2>"
 
 		for pkgsinfo in $(repo_list /packages.info); do
-			header_repo_name $(dirname $pkgsinfo)
 			cat << EOT
-<table class="zebra outbox">
-	<thead>
-		<tr>
-			<td>$(_ 'Category')</td>
-			<td>$(_ 'Available packages')</td>
-			<td>$(_ 'Installed packages')</td>
-		</tr>
-	</thead>
-	<tbody>
+<section>
+	<header>$(header_repo_name $(dirname $pkgsinfo))</header>
+	<table class="wide zebra center">
+		<thead>
+			<tr>
+				<td>$(_ 'Category')</td>
+				<td>$(_ 'Available packages')</td>
+				<td>$(_ 'Installed packages')</td>
+			</tr>
+		</thead>
+		<tbody>
 EOT
 			{
 				awk -F$'\t' '{print $3}' $pkgsinfo | sort | uniq -c
@@ -451,7 +448,11 @@ EOT
 			}' | sort | awk '{
 			printf "<tr><td><a href=\"?list&amp;cat=%s\">%s</a></td><td>%d</td><td>%d</td></tr>", $1, $1, $2, $3
 			}'
-			echo '</tbody></table>'
+			cat << EOT
+		</tbody>
+	</table>
+</section>
+EOT
 		done
 		;;
 
@@ -481,19 +482,18 @@ EOT
 <h2>$(_ 'Packages list')</h2>
 <p>$title</p>
 
-<form method="get" action="">
-<div id="actions">
-	<div class="float-left">$(_ 'Selection:')
-		$([ "$my" != 'my' ] && show_button do=Install)
-		$(show_button do=Remove)
-	</div>
-	<div class="float-right">$(show_button recharge up)</div>
-</div>
+<form class="wide actions">
+	$(_ 'Selection:')
+	$([ "$my" != 'my' ] && show_button do=Install)
+	$(show_button do=Remove)
 EOT
 		for i in $(repo_list ""); do
 			show_list ${my#no}
 		done
-		echo '</form>'
+		cat << EOT
+</form>
+<script type="text/javascript">window.onscroll = scrollHandler;</script>
+EOT
 		;;
 
 
@@ -511,16 +511,15 @@ EOT
 		cat << EOT
 <h2>$(_ 'Search packages')</h2>
 
-<form method="get" action="">
+<form class="wide">
 <div id="actions">
-	<div class="float-left">$(_ 'Selection:'; show_button do=Install do=Remove)
-		<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a></div>
-	<div class="float-right">$(show_button recharge up)</div>
+	$(_ 'Selection:'; show_button do=Install do=Remove)
+	<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
 </div>
 EOT
 		if [ -n "$(GET files)" ]; then
 			cat <<EOT
-	<table class="zebra outbox filelist">
+	<table class="zebra filelist">
 	<thead>
 		<tr>
 			<td>$(_ 'Package')</td>
@@ -543,7 +542,7 @@ EOT
 		else
 			table_head
 			awk -F$'\t' 'BEGIN{IGNORECASE = 1}
-			$1 $4 ~ /'$pkg'/{print $0}' $(repo_list /packages.info) | parse_packages_info
+			$1 " " $4 ~ /'$pkg'/{print $0}' $(repo_list /packages.info) | parse_packages_info
 		fi
 		cat << EOT
 	</tbody>
@@ -563,21 +562,19 @@ EOT
 		cat << EOT
 <h2>$(_ 'Recharge')</h2>
 
-<form method="get" action="">
+<form>
 <div id="actions">
-	<div class="float-left">
-		<p>$(_ 'Recharge checks for new or updated packages')</p>
-	</div>
+	<p>$(_ 'Recharge checks for new or updated packages')</p>
 	<div class="float-right">$(show_button up)</div>
 </div>
-<div class="wrapper">
+
 <pre>
 EOT
 		echo $(_ 'Recharging packages list') | log
 		tazpkg recharge | filter_taztools_msgs
 		cat << EOT
 </pre>
-</div>
+
 <p>$(_ 'Packages lists are up-to-date. You should check for upgrades now.')</p>
 EOT
 		;;
@@ -593,10 +590,10 @@ EOT
 		cat << EOT
 <h2>$(_ 'Up packages')</h2>
 
-<form method="get" action="">
+<form>
 <div id="actions">
-	<div class="float-left">$(_ 'Selection:'; show_button do=Install do=Remove)
-	<button class="button" onclick="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</button></div>
+	$(_ 'Selection:'; show_button do=Install do=Remove)
+	<button class="button" onclick="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</button>
 	<div class="float-right">$(show_button recharge)</div>
 </div>
 EOT
@@ -658,11 +655,11 @@ EOT
 		LOADING_MSG=$(_ 'Getting package info...'); loading_msg
 
 		cat << EOT
-<h2>$(_ 'Package %s' $pkg)</h2>
-
-<form method="get" action="">
-<input type="hidden" name="pkg" value="${pkg#get-}"/>
-<div id="actions">
+<section>
+	<header>
+		$(_ 'Package %s' $pkg)
+		<form>
+			<input type="hidden" name="pkg" value="${pkg#get-}"/>
 EOT
 
 		# Get receipt variables, show Install/Remove buttons
@@ -702,8 +699,11 @@ EOT
 
 		# Show info table
 		cat << EOT
-</div>
-<table class="zebra summary outbox">
+		</form>
+	</header>
+
+	<div>
+<table class="wide zebra summary">
 <tbody>
 	<tr><td><b>$(_ 'Name')</b></td><td>$PACKAGE</td></tr>
 	<tr><td><b>$(_ 'Version')</b></td><td>$VERSION</td></tr>
@@ -718,30 +718,37 @@ EOT
 	$(show_info_links "$SUGGESTED" "$(_ 'Suggested')" 'info')
 </tbody>
 </table>
+</div>
+</section>
 EOT
 
 		# Show description
 		DESC="$(tazpkg desc $pkg)"
-		[ -n "$DESC" ] && echo "<pre>$DESC</pre>"
+		[ -n "$DESC" ] && echo "<section><pre>$DESC</pre></section>"
 
 		# Show configuration files list
 		CONFIGS="$(tazpkg list-config $pkg | sed 's|\(.*\)|\1 \1|')"
-		[ -n "$CONFIGS" ] && echo "<p>$(_ 'Configuration files')</p><pre>$(printf '<a href="index.cgi?file=%s">%s</a>\n' $CONFIGS)</pre>"
+		[ -n "$CONFIGS" ] && cat << EOT
+<section>
+	<header>$(_ 'Configuration files')</header>
+	<pre>$(printf '<a href="index.cgi?file=%s">%s</a>\n' $CONFIGS)</pre>
+</section>
+EOT
 
 		# Show installed files list
 		if [ -d $INSTALLED/$pkg ]; then
 			cat << EOT
-<p>$(_ 'Installed files: %s' $(wc -l < $INSTALLED/$pkg/files.list))</p>
-
-<pre>$(sort $INSTALLED/$pkg/files.list)</pre>
+<section>
+	<header>$(_ 'Installed files: %s' $(wc -l < $INSTALLED/$pkg/files.list))</header>
+	<pre>$(sort $INSTALLED/$pkg/files.list)</pre>
+</section>
 EOT
 		else
 			cat << EOT
-<p>$(_ 'Installed files: %s' ' ')</p>
-
-<pre>
-$(lzcat files.list.lzma undigest/*/files.list.lzma 2> /dev/null | awk -vp="$pkg:" '$1==p{print $2}' | sort)
-</pre>
+<section>
+	<header>$(_ 'Installed files: %s' ' ')</header>
+	<pre>$(lzcat files.list.lzma undigest/*/files.list.lzma 2> /dev/null | awk -vp="$pkg:" '$1==p{print $2}' | sort)</pre>
+</section>
 EOT
 		fi
 		;;
@@ -792,12 +799,9 @@ EOT
 
 <p>$(_ 'TazPkg administration and settings')</p>
 
-<form method="get" action="">
-<input type="hidden" name="admin" />
-
-<div id="actions">
+<form id="actions">
+	<input type="hidden" name="admin"/>
 	$(show_button action=saveconf action=listconf action=quickcheck action=fullcheck)
-</div>
 </form>
 EOT
 		case "$(GET action)" in
@@ -858,19 +862,17 @@ EOT
 		mirror=$(cat $PKGS_DB/mirror)
 		default_mirror=${mirror%/packages/*}
 		cat << EOT
-<article>
-<h3>$(_ 'Packages cache')</h3>
-
-<form method="get" action="">
-	<p>$(_ 'Packages in the cache: %s (%s)' $cache_files $cache_size)
-		$(show_button admin=clean)
-	</p>
-</form>
-</article>
+<section>
+	<header>$(_ 'Packages cache')</header>
+	<form class="wide">
+		<div>$(_ 'Packages in the cache: %s (%s)' $cache_files $cache_size)</div>
+		<footer>$(show_button admin=clean)</footer>
+	</form>
+</section>
 
 
-<article>
-<h3>$(_ 'Current mirror list')</h3>
+<section>
+	<header>$(_ 'Current mirror list')</header>
 EOT
 
 		# List mirrors
@@ -881,103 +883,120 @@ EOT
 				echo "<h4>$(_ 'Repository: %s' "$(repo_name $(dirname $i))")</h4>"
 			fi
 			cat << EOT
-<form method="get" action="">
-<input type="hidden" name="admin" value="select-mirror"/>
-<table class="zebra">
+	<form class="wide">
+		<input type="hidden" name="admin" value="select-mirror"/>
+		<table class="wide zebra">
 EOT
 			while read line; do
 				cat << EOT
-<tr>
-	<td>
-		<input type="radio" name="mirror" id="$line" value="$line" onchange="this.form.submit()"
-			$([ "$line" == "$default_mirror/" ] && echo -n 'checked="checked"')>
-		<label for="$line"><code>$line</code></label></td>
-	<td><a class="w" href="$line" target="_blank"></a></td>
-	<td><a href="?admin=rm-mirror&amp;mirror=$line&amp;file=$i">
-			<img src="$IMAGES/tp-remove.png" title="$(_ 'Delete')"/></a></td>
-</tr>
+			<tr>
+				<td>
+					<input type="radio" name="mirror" id="$line" value="$line" onchange="this.form.submit()"
+					$([ "$line" == "$default_mirror/" ] && echo -n 'checked="checked"')>
+					<label for="$line"><code>$line</code></label></td>
+				<td><a data-img="web"    href="$line" target="_blank"></a></td>
+				<td><a data-img="remove" href="?admin=rm-mirror&amp;mirror=$line&amp;file=$i" title="$(_ 'Delete')"></a></td>
+			</tr>
 EOT
 			done < $i
 			cat << EOT
-</table>
-</form>
+		</table>
+	</form>
 
-<form method="get" action="">
-	<p>
-		<input type="hidden" name="file" value="$i" />
-		<input type="text" name="mirror" size="40" />
-		$(show_button admin=add-mirror)
-	</p>
-</form>
+	<form class="wide">
+		<footer>
+			<input type="hidden" name="file" value="$i" />
+			<input type="text" name="mirror" size="40" />
+			$(show_button admin=add-mirror)
+		</footer>
+	</form>
 EOT
 		done
-		echo "</article><article>"
-		echo "<h3>$(_ 'Private repositories')</h3>"
+		cat << EOT
+</section>
+
+
+<section>
+	<header>$(_ 'Private repositories')</header>
+EOT
 		if [ -n "$(ls $PKGS_DB/undigest 2> /dev/null)" ]; then
-			echo '<table class="zebra">'
+			cat << EOT
+	<table class="wide zebra">
+EOT
 			ls $PKGS_DB/undigest 2> /dev/null | while read repo ; do
 				cat <<EOT
-	<tr><td><a href="?admin=rm-repo&amp;repository=$repo"><img src="$IMAGES/tp-remove.png" title="$(_ 'Delete')"></a>$repo</td></tr>
+		<tr>
+			<td><code>$repo</code></td>
+			<td><a data-img="remove" href="?admin=rm-repo&amp;repository=$repo" title="$(_ 'Delete')"></a></td>
+		</tr>
 EOT
 			done
-			echo '</table>'
+			cat << EOT
+	</table>
+EOT
 		fi
 
 		cat << EOT
-<form method="get" action="">
-	<p>$(_ 'Name') <input type="text" name="repository" size="10"/>
-	$(_ 'URL:') <input type="text" name="mirror" value="http://">
-	$(show_button admin=add-repo)</p>
-</form>
-</article>
+	<form class="wide">
+		<table>
+			<tr><td>$(_ 'Name')</td><td><input type="text" name="repository" size="10"/></td></tr>
+			<tr><td>$(_ 'URL:')</td><td><input type="text" name="mirror" value="http://"></td></tr>
+		</table>
+		<footer>
+			$(show_button admin=add-repo)
+		</footer>
+	</form>
+</section>
 
 
-<article>
-<h3>$(_ 'Link to another SliTaz installation')</h3>
-
-<p>$(_ "This link points to the root of another SliTaz installation. \
-You will be able to install packages using soft links to it.")</p>
-
-<form method="get" action="">
-<p>
-	<input type="text" name="link" value="$(readlink $PKGS_DB/fslink 2> /dev/null)"/>
-	$(show_button admin=setlink admin=removelink)
-</p>
-</form>
-</article>
-
-
-<article>
-<h3 id="dvd">$(_ 'SliTaz packages DVD')</h3>
-
-<p>$(_ "A bootable DVD image of all available packages for the %s version is \
-generated every day. It also contains a copy of the website and can be used \
-without an internet connection. This image can be installed on a DVD or a USB \
-key." $version)</p>
-
-<button class="button" onclick='http://mirror.slitaz.org/iso/$version/packages-$version.iso'>
-	<img src="$IMAGES/tp-dl-dvd.png" />$(_ 'Download DVD image')</button>
-<button class="button" onclick='?admin&amp;action=dvdusbkey'>
-	<img src="$IMAGES/tp-link.png" />$(_ 'Install from DVD/USB key')</button>
-<div class="box">
-	<form method="post" action='?admin&amp;action=dvdimage'>
-	$(_ 'Install from ISO image:')
-	<input type="text" name="dvdimage" size="40" value="/root/packages-$version.iso" />
-</div>
-</form>
-</article>
+<section>
+	<header>$(_ 'Link to another SliTaz installation')</header>
+	<form class="wide">
+		<div>
+			$(_ "This link points to the root of another SliTaz installation. You will be able to install packages using soft links to it.")
+		</div>
+		<input type="text" name="link" value="$(readlink $PKGS_DB/fslink 2> /dev/null)"/>
+		<footer>
+			$(show_button admin=setlink admin=removelink)
+		</footer>
+	</form>
+</section>
 
 
-<article>
-<h3>$(_ 'Packages list')</h3>
+<section>
+	<header id="dvd">$(_ 'SliTaz packages DVD')</header>
 
-<p>$(_ 'Long list of packages is paginated. Here you can set the page size (default: 100, turning off the pager: 0).')</p>
-<form method="get" action="">
-	<input type="hidden" name="admin" value="pager" />
-	<input type="number" name="pager" value="$pager" min="0" step="10" size="4" />
-	<button class="button" type="submit">$(_ 'Set')</button>
-</form>
-</article>
+	<div>
+		$(_ "A bootable DVD image of all available packages for the %s version is generated every day. It also contains a copy of the website and can be used without an internet connection. This image can be installed on a DVD or a USB key." $version)
+
+		<form method="post" action='?admin&amp;action=dvdimage'>
+			$(_ 'Install from ISO image:')
+			<input type="text" name="dvdimage" size="40" value="/root/packages-$version.iso" />
+		</form>
+	</div>
+
+	<footer>
+		<button data-icon="download" onclick='http://mirror.slitaz.org/iso/$version/packages-$version.iso'>
+			$(_ 'Download DVD image')</button>
+		<button data-icon="link" onclick='?admin&amp;action=dvdusbkey'>
+			$(_ 'Install from DVD/USB key')</button>
+	</footer>
+</section>
+
+
+<section>
+	<header>$(_ 'Packages list')</header>
+	<form class="wide">
+		<div>
+			$(_ 'Long list of packages is paginated. Here you can set the page size (default: 100, turning off the pager: 0).')
+		</div>
+		<input type="hidden" name="admin" value="pager"/>
+		<input type="number" name="pager" value="$pager" min="0" step="10" size="4"/>
+		<footer>
+			<button data-icon="ok" type="submit">$(_ 'Set')</button>
+		</footer>
+	</form>
+</section>
 EOT
 		;;
 
@@ -1098,16 +1117,12 @@ END{
 
 		tag=$(GET tag)
 		cat << EOT
-<h2>$(_ 'Tag "%s"' $tag)</h2>
+<h2 data-icon="tag">$(_ 'Tag "%s"' $tag)</h2>
 
-<form method="get" action="">
+<form>
 <div id="actions">
-	<div class="float-left">
-		$(_ 'Selection:'; show_button do=Install do=Remove)
-	</div>
-	<div class="float-right">
-		$(show_button tags)
-	</div>
+	$(_ 'Selection:'; show_button do=Install do=Remove)
+	<div class="float-right">$(show_button tags)</div>
 </div>
 EOT
 		for i in $(repo_list ""); do
@@ -1126,10 +1141,9 @@ EOT
 		cat << EOT
 <h2>$(_ 'Blocked packages list')</h2>
 
-<form method="get" action="">
+<form>
 <div id="actions">
-	<div class="float-left">$(_ 'Selection:'; show_button do=Unblock)
-	</div>
+	$(_ 'Selection:'; show_button do=Unblock)
 </div>
 EOT
 		table_head
@@ -1150,27 +1164,26 @@ EOT
 		search_form; sidebar
 
 		cat << EOT
-<h2>$(_ 'Summary')</h2>
-
-<form method="get" action="">
-<div id="actions">
+<form id="actions2">
 EOT
 		fslink=$(readlink $PKGS_DB/fslink)
 		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] && show_button linkable
 		show_button recharge up admin
 		cat << EOT
-</div>
+</form>
 
-<article>
-<h3>$(_ 'Summary')</h3>
-<table class="zebra summary">
-<tbody>
-<tr>
-	<td>$(_ 'Last recharge:')</td>
-	<td>$(list=$PKGS_DB/ID
+<section>
+	<header>$(_ 'Summary')</header>
+
+	<table class="wide zebra">
+		<tr>
+			<td>$(_ 'Last recharge:')</td>
+			<td>$(list=$PKGS_DB/ID
 	if [ -e $list ]; then
-		ohhmm="$(date +%z)"							# '+0200' for EET (+2 hours)
-		offset=$(( 60 * (60 * ${ohhmm:0:3} + ${ohhmm:3:2}) )) # in the seconds
+		# Timezone offset as string, ex. '+0200' for EET (+2 hours)
+		ohhmm="$(date +%z)"
+		# Timezone offset in the seconds
+		offset=$(( 60 * (60 * ${ohhmm:0:3} + ${ohhmm:3:2}) ))
 		daynow=$(( ($(date          +%s) + $offset) / 86400 ))
 		dayupd=$(( ($(date -r $list +%s) + $offset) / 86400 ))
 		days=$(( $daynow - $dayupd ))
@@ -1182,47 +1195,49 @@ EOT
 			[2-9]) echo $ago;;
 			*) echo "<span style='color:red'>$ago</span>"
 				_ 'It is recommended to [recharge] the lists.' | \
-				sed 's|\[|<a href="?recharge">|;s|\]|</a>|';;
+				sed 's|\[|<a data-icon="refresh" href="?recharge">|;s|\]|</a>|';;
 		esac
 	else
 		_ 'never.'
 		_ 'You need to [download] the lists for further work.' | \
-		sed 's|\[|<a href="?recharge">|;s|\]|</a>|'
+		sed 's|\[|<a data-icon="download" href="?recharge">|;s|\]|</a>|'
 	fi)</td></tr>
-<tr>
-	<td>$(_ 'Installed packages:')</td>
-	<td><a href="?list&amp;my=my&amp;cat=all&amp;repo=Any">
-			<b>$(cat $PKGS_DB/installed.info | wc -l)</b>
-		</a></td></tr>
-<tr>
-	<td>$(_ 'Mirrored packages:')</td>
-	<td><a href="?list&amp;my=no&amp;cat=all&amp;repo=Any">
-		<b>$(cat $PKGS_DB/packages.list | wc -l)</b>
-	</a></td></tr>
-<tr>
-	<td>$(_ 'Upgradeable packages:')</td>
-	<td><a href="?up">
-			<b>$(cat $PKGS_DB/packages.up | wc -l)</b>
-		</a></td></tr>
-<tr>
-	<td>$(_ 'Installed files:')</td>
-	<td><b>$(cat $INSTALLED/*/files.list | wc -l)</b></td></tr>
-<tr>
-	<td>$(_ 'Blocked packages:')</td>
-	<td><a href="?blocked">
-			<b>$(cat $PKGS_DB/blocked-packages.list | wc -l)</b>
-		</a></td></tr>
-</tbody>
-</table></article>
+		<tr>
+			<td>$(_ 'Installed packages:')</td>
+			<td><a href="?list&amp;my=my&amp;cat=all&amp;repo=Any">
+				<b>$(cat $PKGS_DB/installed.info | wc -l)</b>
+				</a></td></tr>
+		<tr>
+			<td>$(_ 'Mirrored packages:')</td>
+			<td><a href="?list&amp;my=no&amp;cat=all&amp;repo=Any">
+				<b>$(cat $PKGS_DB/packages.list | wc -l)</b>
+				</a></td></tr>
+		<tr>
+			<td>$(_ 'Upgradeable packages:')</td>
+			<td><a href="?up">
+				<b>$(cat $PKGS_DB/packages.up | wc -l)</b>
+				</a></td></tr>
+		<tr>
+			<td>$(_ 'Installed files:')</td>
+			<td><b>$(cat $INSTALLED/*/files.list | wc -l)</b></td></tr>
+		<tr>
+			<td>$(_ 'Blocked packages:')</td>
+			<td><a href="?blocked">
+				<b>$(cat $PKGS_DB/blocked-packages.list | wc -l)</b>
+				</a></td></tr>
+	</table>
+</section>
 
-<article>
-<h3>$(_ 'Latest log entries')</h3>
 
-<pre>
-$(tail -n 5 $LOG | fgrep "-" | awk '{print $1, $2, $3, $4, $5, "<a href=\"?info=" $6 "\">" $6 "</a>", $7}')
-<a href="index.cgi?file=$LOG">$(_ 'more...')</a>
-</pre>
-</article>
+<section>
+	<header>
+		$(_ 'Latest log entries')
+		<form action="index.cgi">
+			<button name="file" value="$LOG" data-icon="view">$(_ 'Show')</button>
+		</form>
+	</header>
+	<pre>$(tail -n 5 $LOG | tac | fgrep "-" | awk '{print $1, $2, $3, $4, $5, "<a href=\"?info=" $6 "\">" $6 "</a>", $7}')</pre>
+</section>
 EOT
 		;;
 esac

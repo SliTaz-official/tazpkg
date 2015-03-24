@@ -2,18 +2,16 @@ TEXTDOMAIN_original=$TEXTDOMAIN
 export TEXTDOMAIN='tazpkg'
 
 cat <<EOT
-<li><a href="/pkgs.cgi">$(gettext 'Packages')</a>
-	<ul>
-		<li><a href="/pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any"><img
-			src="/styles/default/images/tp-list.png" />$(gettext 'My packages')</a></li>
-		<li><a href="/pkgs.cgi?recharge"><img
-			src="/styles/default/images/tp-recharge.png" />$(gettext 'Recharge list')</a></li>
-		<li><a href="/pkgs.cgi?up"><img
-			src="/styles/default/images/tp-up.png" />$(gettext 'Check updates')</a></li>
-		<li><a href="/pkgs.cgi?admin"><img
-			src="/styles/default/images/tp-admin.png" />$(gettext 'Administration')</a></li>
-	</ul>
-</li>
+  <li tabindex="0">
+   <span>$(gettext 'Packages')</span>
+   <menu>
+    <li><a data-icon="info" href="/pkgs.cgi">$(gettext 'Summary')</a></li>
+    <li><a data-icon="list"    href="/pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
+    <li><a data-icon="refresh" href="/pkgs.cgi?recharge">$(gettext 'Recharge list')</a></li>
+    <li><a data-icon="upgrade" href="/pkgs.cgi?up">$(gettext 'Check updates')</a></li>
+    <li><a data-icon="admin"   href="/pkgs.cgi?admin">$(gettext 'Administration')</a></li>
+   </menu>
+  </li>
 EOT
 
 export TEXTDOMAIN=$TEXTDOMAIN_original
