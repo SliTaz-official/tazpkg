@@ -143,7 +143,7 @@ search_form() {
 <form class="search"><!--
 	--><input type="search" name="search" results="5" autosave="pkgsearch" autocomplete="on"><!--
 	--><button type="submit">$(_n 'Search')</button><!--
-	--><button name="files">$(_n 'Files')</button><!--
+	--><button name="files" value="yes">$(_n 'Files')</button><!--
 --></form>
 EOT
 }
@@ -511,7 +511,8 @@ EOT
 		pkg=$(GET search); [ -z "$pkg" ] && xhtml_footer && exit
 		cd $PKGS_DB
 
-		search_form; sidebar
+		search_form | sed "s|name=\"search\"|& value=\"$pkg\"|"
+		sidebar
 		LOADING_MSG="$(_ 'Searching packages...')"; loading_msg
 
 		cat << EOT
@@ -526,7 +527,7 @@ EOT
 EOT
 		if [ -n "$(GET files)" ]; then
 			cat <<EOT
-	<table class="zebra filelist">
+	<table class="wide zebra filelist">
 	<thead>
 		<tr>
 			<td>$(_ 'Package')</td>
@@ -542,7 +543,7 @@ EOT
 				cat << EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
-	<td>$(echo "$FILE" | sed "s|$pkg|<span class=\"diff-add\">$pkg</span>|g")</td>
+	<td>$(echo "$FILE" | sed "s|$pkg|<span class=\"diff-add\">&</span>|gI")</td>
 </tr>
 EOT
 			done
