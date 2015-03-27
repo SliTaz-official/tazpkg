@@ -33,7 +33,7 @@ export TEXTDOMAIN='tazpkg'
 
 pkg_info_link()
 {
-	echo "<a class=\"$2\" href=\"?info=${1//+/%2B}\">$1</a>" | sed 's| class=""||'
+	echo "<a data-icon=\"$2\" href=\"?info=${1//+/%2B}\">$1</a>" | sed 's| data-icon=""||'
 }
 
 
@@ -320,7 +320,7 @@ show_list() {
 	if (PKG && PKG != $1) {
 		if (SEL) {
 			if (DSCL) DSC = DSCL
-			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
+			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a data-icon=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
 		}
 		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
 	}
@@ -398,10 +398,10 @@ EOT
 			i18n_desc $pkg
 			cat << EOT
 <tr>
-	<td><input type="checkbox" name="pkg" value="$pkg" /><a class="pkg" href="?info=${pkg//+/%2B}">$pkg</a></td>
+	<td><input type="checkbox" name="pkg" value="$pkg" /><a data-icon="pkg" href="?info=${pkg//+/%2B}">$pkg</a></td>
 	<td>$VERSION</td>
 	<td>$SHORT_DESC</td>
-	<td><a class="w" href="$WEB_SITE"></a></td>
+	<td><a data-img="web" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 		done
@@ -482,10 +482,16 @@ EOT
 <h2>$(_ 'Packages list')</h2>
 <p>$title</p>
 
-<form class="wide actions">
-	$(_ 'Selection:')
-	$([ "$my" != 'my' ] && show_button do=Install)
-	$(show_button do=Remove)
+<div>$(_ 'Selection:';
+	{
+		[ "$my" != 'my' ] && show_button do=Install
+		show_button do=Remove
+	} | sed 's|button |button form="pkglist" |g')
+	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
+	<div class="float-right">$(show_button recharge)</div>
+</div>
+
+<form id="pkglist" class="wide">
 EOT
 		for i in $(repo_list ""); do
 			show_list ${my#no}
@@ -511,11 +517,12 @@ EOT
 		cat << EOT
 <h2>$(_ 'Search packages')</h2>
 
-<form class="wide">
-<div id="actions">
-	$(_ 'Selection:'; show_button do=Install do=Remove)
-	<a href="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</a>
+<div>$(_ 'Selection:';
+	show_button do=Install do=Remove | sed 's|button |button form="pkglist" |g')
+	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
 </div>
+
+<form id="pkglist" class="wide">
 EOT
 		if [ -n "$(GET files)" ]; then
 			cat <<EOT
@@ -590,12 +597,13 @@ EOT
 		cat << EOT
 <h2>$(_ 'Up packages')</h2>
 
-<form>
-<div id="actions">
-	$(_ 'Selection:'; show_button do=Install do=Remove)
-	<button class="button" onclick="$(cat $PANEL/lib/checkbox.js)">$(_ 'Toogle all')</button>
+<div>$(_ 'Selection:';
+	show_button do=Install do=Remove | sed 's|button |button form="pkglist" |g')
+	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
 	<div class="float-right">$(show_button recharge)</div>
 </div>
+
+<form id="pkglist" class="wide">
 EOT
 		# Ask tazpkg to make "packages.up" file
 		tazpkg up --check >/dev/null
@@ -702,12 +710,11 @@ EOT
 		</form>
 	</header>
 
-	<div>
 <table class="wide zebra summary">
 <tbody>
 	<tr><td><b>$(_ 'Name')</b></td><td>$PACKAGE</td></tr>
 	<tr><td><b>$(_ 'Version')</b></td><td>$VERSION</td></tr>
-	<tr><td><b>$(_ 'Category')</b></td><td><a href="?cat=$CATEGORY">$CATEGORY</a></td></tr>
+	<tr><td><b>$(_ 'Category')</b></td><td><a href="?list&amp;cat=$CATEGORY">$CATEGORY</a></td></tr>
 	<tr><td><b>$(_ 'Description')</b></td><td>$SHORT_DESC</td></tr>
 	$([ -n "$MAINTAINER" ] && echo "<tr><td><b>$(_ 'Maintainer')</b></td><td>$MAINTAINER</td></tr>")
 	$([ -n "$LICENSE" ] && echo "<tr><td><b>$(_ 'License')</b></td><td><a href=\"?license=$pkg\">$LICENSE</a></td></tr>")
@@ -718,7 +725,6 @@ EOT
 	$(show_info_links "$SUGGESTED" "$(_ 'Suggested')" 'info')
 </tbody>
 </table>
-</div>
 </section>
 EOT
 
@@ -1119,11 +1125,13 @@ END{
 		cat << EOT
 <h2 data-icon="tag">$(_ 'Tag "%s"' $tag)</h2>
 
-<form>
-<div id="actions">
-	$(_ 'Selection:'; show_button do=Install do=Remove)
+<div>$(_ 'Selection:';
+	show_button do=Install do=Remove | sed 's|button |button form="pkglist" |g')
+	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
 	<div class="float-right">$(show_button tags)</div>
 </div>
+
+<form id="pkglist" class="wide">
 EOT
 		for i in $(repo_list ""); do
 			show_list all
@@ -1150,7 +1158,7 @@ EOT
 		for i in $(cat $PKGS_DB/blocked-packages.list); do
 			awk -F$'\t' -vp="$i" '{
 			if ($1 == p)
-				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a class=\"pkgib\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", $1, gensub(/\+/, "%2B", "g", $1), $1, $2, $4, $5
+				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a data-icon=\"pkgib\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", $1, gensub(/\+/, "%2B", "g", $1), $1, $2, $4, $5
 			}' $PKGS_DB/installed.info
 		done
 		echo '</tbody></table></form>'
