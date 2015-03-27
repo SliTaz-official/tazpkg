@@ -8,7 +8,7 @@
 # can use 'tazpkg usage' to get a list of commands with short descriptions.
 # TazPKG also resolves dependencies and can upgrade packages from a mirror.
 #
-# (C) 2007-2014 SliTaz - GNU General Public License v3.
+# (C) 2007-2015 SliTaz - GNU General Public License v3.
 #
 # Authors: See the AUTHORS files
 #
@@ -390,11 +390,11 @@ packages available on the mirror."
 
 check_for_installed_info()
 {
-	info_path="$PKGS_DB/installed.info"
+	info_path="$ROOT$PKGS_DB/installed.info"
 	if [ ! -f "$info_path" ]; then
 		if [ "$(id -u)" == "0" ]; then
 			_ 'File "%s" generated. Please wait...' installed.info
-			for pkg in $PKGS_DB/installed/*/receipt; do
+			for pkg in $ROOT$PKGS_DB/installed/*/receipt; do
 				unset_receipt
 				. $pkg
 				SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
@@ -863,7 +863,7 @@ END {
 	check_for_installed_info
 	SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
 	DEPENDS=$(echo $DEPENDS) # remove newlines from some receipts
-	II=$PKGS_DB/installed.info
+	II=$ROOT$PKGS_DB/installed.info
 	sed -i "/^$PACKAGE	/d" $II # remove old entry
 	cat >> $II << EOT
 $PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS
