@@ -314,7 +314,8 @@ show_list() {
 		[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
 		sed 's|.*|&\ti|' $i/installed.info
 		[ "$cat" == 'extra' ] || [ $1 == 'my' ] || cat $i/packages.info
-		[ "$cat" == 'extra' ] && sed 's|.*|&\t-\textra\t-\thttp://mirror.slitaz.org/packages/get/&\t-\t-\t-|' $PKGS_DB/extra.list
+		[ "$cat" == 'extra' ] &&
+		sed 's,\([^|]*\)|*\([^|]*\).*,\1\t-\textra\t\2\thttp://mirror.slitaz.org/packages/get/\1\t-\t-\t-,' $PKGS_DB/extra.list
 	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${cat:--}" -vt="${tag:--}" '
 {
 	if (PKG && PKG != $1) {

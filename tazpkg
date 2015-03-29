@@ -1117,7 +1117,8 @@ search_in_packages_list()
 	separator
 	num=0
 	BPATTERN="$(emsg "<b>$PATTERN</b>")"
-	for i in $PKGS_DB/packages.list $PKGS_DB/undigest/*/packages.list; do
+	for i in $PKGS_DB/packages.list $PKGS_DB/undigest/*/packages.list \
+		 $PKGS_DB/extra.list $PKGS_DB/undigest/*/extra.list ; do
 		grep -is "$PATTERN" $i | sed "s|$PATTERN|$BPATTERN|"
 		num=$(($num + `grep -is "$PATTERN" $i | wc -l`))
 	done
