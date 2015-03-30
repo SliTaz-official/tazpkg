@@ -154,7 +154,7 @@ a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
  * Pager
  */
 
-a.pages {
+.pages {
 	display: inline-block;
 	padding: 0.5ex;
 	margin: 0.5ex 0;
@@ -162,12 +162,12 @@ a.pages {
 	width: 3ex;
 	text-align: center;
 }
-a.pages:hover {
+.pages:hover {
 	border: 1px solid #F94;
 	background: #F94;
 	color: black;
 }
-a.pages.current, a.pages.current:hover {
+.pages.current, a.pages.current:hover {
 	font-weight: bold;
 	border: 1px solid #07F;
 	background: #07F;

@@ -31,8 +31,7 @@ xhtml_header | sed 's/id="content"/id="content-sidebar"/'
 
 export TEXTDOMAIN='tazpkg'
 
-pkg_info_link()
-{
+pkg_info_link() {
 	echo "<a data-icon=\"$2\" href=\"?info=${1//+/%2B}\">$1</a>" | sed 's| data-icon=""||'
 }
 
@@ -286,13 +285,13 @@ BEGIN{
 	r = NR % size
 	if (r == 1) {
 		p = int(NR / size) + 1
-		printf "<a class=\"pages%s\" href=\"%s%s\" title=\"%s\n···\n", p==page?" current":"", url, p, $6
+		printf "<button class=\"pages%s\" name=\"page\" value=\"%s\" title=\"%s\n···\n", p==page?" current":"", p, $6
 	} else if (r == 0)
-		printf "%s\">%s</a> ", $6, int(NR / size)
+		printf "%s\">%s</button> ", $6, int(NR / size)
 }
 END{
 	if (num_pages == 1) exit
-	if (r != 0) printf "%s\">%s</a>", $6, int(NR / size) + 1
+	if (r != 0) printf "%s\">%s</button>", $6, int(NR / size) + 1
 	print "</p>"
 }' $1
 }
@@ -321,7 +320,9 @@ show_list() {
 	if (PKG && PKG != $1) {
 		if (SEL) {
 			if (DSCL) DSC = DSCL
-			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a data-icon=\"pkg%s%s\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", PKG, INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG, VER, DSC, WEB
+			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\" id=\"%s\">", PKG, PKG
+			printf "<a data-icon=\"pkg%s%s\" href=\"?info=%s\">%s</a></td>", INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG
+			printf "<td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", VER, DSC, WEB
 		}
 		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
 	}
@@ -353,6 +354,38 @@ $pager
 EOT
 	fi
 	rm -f $cached
+
+
+	### Re-select packages when you return to the page
+
+	# Find the packages list
+	pkgs=$(echo "$QUERY_STRING&" | awk 'BEGIN{RS="&";FS="="}
+		{if ($1=="pkg") printf "\"%s\", ", $2}')
+	pkgs=$(httpd -d "${pkgs%, }")
+	# now pkgs='"pkg1", "pkg2", ... "pkgn"'
+
+	if [ -n "$pkgs" ]; then
+		cat << EOT
+<script type="text/javascript">
+var pkgs = [$pkgs];
+var theForm = document.getElementById('pkglist');
+for (index = 0; index < pkgs.length; index++) {
+	if (document.getElementById(pkgs[index])) {
+		// check existing
+		document.getElementById(pkgs[index]).checked = 'true';
+	}
+	else {
+		// add other as hidden
+		var hInput = document.createElement('input');
+		hInput.type = 'hidden';
+		hInput.name = 'pkg';
+		hInput.value = pkgs[index];
+		theForm.appendChild(hInput);
+	}
+}
+</script>
+EOT
+	fi
 }
 
 
@@ -458,7 +491,7 @@ EOT
 		;;
 
 
-	*\ list\ *)
+	*\ list\ *|*\ page\ *)
 		#
 		# List all packages by category.
 		#
@@ -489,7 +522,6 @@ EOT
 		show_button do=Remove
 	} | sed 's|button |button form="pkglist" |g')
 	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
-	<div class="float-right">$(show_button recharge)</div>
 </div>
 
 <form id="pkglist" class="wide">
