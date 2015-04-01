@@ -55,7 +55,7 @@ i18n_desc() {
 
 parse_packages_desc() {
 	IFS="|"
-	cut -f 1,2,3,5 -d "|" | while read PACKAGE VERSION SHORT_DESC WEB_SITE
+	cut -f 1,2,3 -d "|" | while read PACKAGE VERSION SHORT_DESC
 	do
 		class=pkg; [ -d $INSTALLED/${PACKAGE% } ] && class=pkgi
 		i18n_desc $PACKAGE
@@ -64,7 +64,6 @@ parse_packages_desc() {
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 	<td>$VERSION</td>
 	<td>$SHORT_DESC</td>
-	<td><a data-img="web" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 	done
@@ -82,7 +81,6 @@ parse_packages_info() {
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 	<td>$VERSION</td>
 	<td>$SHORT_DESC</td>
-	<td><a data-img="web" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 	done
@@ -107,6 +105,7 @@ show_button() {
 		*Link*)       class='link';    label="$(_ 'Link')" ;;
 		*Block*)      class='lock';    label="$(_ 'Block')" ;;
 		*Unblock*)    class='unlock';  label="$(_ 'Unblock')" ;;
+		*Chblock*)    class='chlock';  label="$(_ '(Un)block')" ;;
 		*Repack*)     class='repack';  label="$(_ 'Repack')" ;;
 		*saveconf*)   class='save';    label="$(_ 'Save configuration')" ;;
 		*listconf*)   class='list';    label="$(_ 'List configuration files')" ;;
@@ -117,11 +116,12 @@ show_button() {
 		*removelink*) class='unlink';  label="$(_ 'Remove link')" ;;
 		*add-mirror)  class='add';     label="$(_n 'Add mirror')" ;;
 		*add-repo)    class='add';     label="$(_n 'Add repository')" ;;
+		toggle)       class='toggle';  label="$(_n 'Toggle all')" ;;
 		esac
-		if [ -n "$class" ]; then
-			echo -n "<button data-icon=\"$class\" name=\"${button%%=*}\" value=\"${button#*=}\">$label</button>"
+		if [ "$button" == 'toggle' ]; then
+			echo -n "<span class=\"float-right\"><button data-icon=\"$class\" onclick=\"checkBoxes()\">$label</button></span>"
 		else
-			echo -n "<button name=\"${button%%=*}\" value=\"${button#*=}\"><img src=\"$IMAGES/$img.png\"/>$label</button>"
+			echo -n "<button data-icon=\"$class\" name=\"${button%%=*}\" value=\"${button#*=}\">$label</button>"
 		fi
 	done
 }
@@ -156,7 +156,6 @@ table_head() {
 			<td>$(_ 'Name')</td>
 			<td>$(_ 'Version')</td>
 			<td>$(_ 'Description')</td>
-			<td>$(_ 'Web')</td>
 		</tr>
 	</thead>
 	<tbody>
@@ -383,6 +382,7 @@ for (index = 0; index < pkgs.length; index++) {
 		theForm.appendChild(hInput);
 	}
 }
+document.getElementById('countSelected').innerText = pkgs.length;
 </script>
 EOT
 	fi
@@ -516,13 +516,16 @@ EOT
 <h2>$(_ 'Packages list')</h2>
 <p>$title</p>
 
-<div>$(_ 'Selection:';
-	{
-		[ "$my" != 'my' ] && show_button do=Install
-		show_button do=Remove
-	} | sed 's|button |button form="pkglist" |g')
-	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
-</div>
+<section>
+	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
+	<footer>
+		$({
+			[ "$my" != 'my' ] && show_button do=Install
+			show_button do=Chblock do=Remove
+		} | sed 's|button |button form="pkglist" |g')
+		$(show_button toggle)
+	</footer>
+</section>
 
 <form id="pkglist" class="wide">
 EOT
@@ -531,7 +534,7 @@ EOT
 		done
 		cat << EOT
 </form>
-<script type="text/javascript">window.onscroll = scrollHandler;</script>
+<script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
 EOT
 		;;
 
@@ -551,10 +554,13 @@ EOT
 		cat << EOT
 <h2>$(_ 'Search packages')</h2>
 
-<div>$(_ 'Selection:';
-	show_button do=Install do=Remove | sed 's|button |button form="pkglist" |g')
-	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
-</div>
+<section>
+	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
+	<footer>
+		$(show_button do=Install do=Chblock do=Remove | sed 's|button |button form="pkglist" |g')
+		$(show_button toggle)
+	</footer>
+</section>
 
 <form id="pkglist" class="wide">
 EOT
@@ -589,6 +595,7 @@ EOT
 	</tbody>
 	</table>
 </form>
+<script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
 EOT
 		;;
 
@@ -631,11 +638,13 @@ EOT
 		cat << EOT
 <h2>$(_ 'Up packages')</h2>
 
-<div>$(_ 'Selection:';
-	show_button do=Install do=Remove | sed 's|button |button form="pkglist" |g')
-	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
-	<div class="float-right">$(show_button recharge)</div>
-</div>
+<section>
+	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
+	<footer>
+		$(show_button do=Install do=Chblock do=Remove | sed 's|button |button form="pkglist" |g')
+		$(show_button toggle)
+	</footer>
+</section>
 
 <form id="pkglist" class="wide">
 EOT
@@ -647,7 +656,12 @@ EOT
 			grep -hs "^$pkg	" $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info | parse_packages_info
 		done
 
-		echo "</tbody></table></form>"
+		cat << EOT
+		</tbody>
+	</table>
+</form>
+<script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
+EOT
 		;;
 
 
@@ -668,12 +682,13 @@ EOT
 		# Describe the command
 		bpkgs="<b>$pkgs</b>"; opt=''
 		case $cmd in
-			install) MSG="$(_ 'Installing: %s' "$bpkgs")"; opt=--forced; cmd=get-install ;;
-			remove)  MSG="$(_ 'Removing: %s'   "$bpkgs")" ;;
-			link)    MSG="$(_ 'Linking: %s'    "$bpkgs")"; opt=$(readlink $PKGS_DB/fslink) ;;
-			block)   MSG="$(_ 'Blocking: %s'   "$bpkgs")" ;;
-			unblock) MSG="$(_ 'Unblocking: %s' "$bpkgs")" ;;
-			repack)  MSG="$(_ 'Repacking: %s'  "$bpkgs")" ;;
+			install) MSG="$(_ 'Installing: %s'   "$bpkgs")"; opt=--forced; cmd=get-install ;;
+			remove)  MSG="$(_ 'Removing: %s'     "$bpkgs")" ;;
+			link)    MSG="$(_ 'Linking: %s'      "$bpkgs")"; opt=$(readlink $PKGS_DB/fslink) ;;
+			block)   MSG="$(_ 'Blocking: %s'     "$bpkgs")" ;;
+			unblock) MSG="$(_ 'Unblocking: %s'   "$bpkgs")" ;;
+			chblock) MSG="$(_ '(Un)blocking: %s' "$bpkgs")" ;;
+			repack)  MSG="$(_ 'Repacking: %s'    "$bpkgs")" ;;
 		esac
 
 		cat << EOT
@@ -1159,18 +1174,23 @@ END{
 		cat << EOT
 <h2 data-icon="tag">$(_ 'Tag "%s"' $tag)</h2>
 
-<div>$(_ 'Selection:';
-	show_button do=Install do=Remove | sed 's|button |button form="pkglist" |g')
-	<button data-icon="toggle" onclick="checkBoxes(window)">$(_ 'Toggle all')</button>
-	<div class="float-right">$(show_button tags)</div>
-</div>
+<section>
+	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
+	<footer>
+		$(show_button do=Install do=Chblock do=Remove | sed 's|button |button form="pkglist" |g')
+		$(show_button toggle)
+	</footer>
+</section>
 
 <form id="pkglist" class="wide">
 EOT
 		for i in $(repo_list ""); do
 			show_list all
 		done
-		echo '</form>'
+		cat << EOT
+</form>
+<script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
+EOT
 		;;
 
 
@@ -1183,10 +1203,15 @@ EOT
 		cat << EOT
 <h2>$(_ 'Blocked packages list')</h2>
 
-<form>
-<div id="actions">
-	$(_ 'Selection:'; show_button do=Unblock)
-</div>
+<section>
+	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
+	<footer>
+		$(show_button do=Unblock | sed 's|button |button form="pkglist" |g')
+		$(show_button toggle)
+	</footer>
+</section>
+
+<form id="pkglist" class="wide">
 EOT
 		table_head
 		for i in $(cat $PKGS_DB/blocked-packages.list); do
@@ -1195,7 +1220,12 @@ EOT
 				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a data-icon=\"pkgib\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", $1, gensub(/\+/, "%2B", "g", $1), $1, $2, $4, $5
 			}' $PKGS_DB/installed.info
 		done
-		echo '</tbody></table></form>'
+		cat << EOT
+		</tbody>
+	</table>
+</form>
+<script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
+EOT
 		;;
 
 

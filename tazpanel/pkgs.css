@@ -1,4 +1,7 @@
-/*body { -webkit-appearance: window; }*/
+/**
+ * CSS style for TazPkg/TazPanel - (C) 2011-2015 SliTaz GNU/Linux
+ */
+
 
 /**
  * Sidebar menus
@@ -22,7 +25,16 @@
 	text-align: center;
 }
 
+
+
+
+
+/**
+ * Sidebar category selector
+ */
+
 /* hack to remove unwanted scrollbar from multiline selector */
+
 .select_wrap {
 	display: inline-block;
 	vertical-align: top;
@@ -45,64 +57,18 @@ select option:nth-child(even) {
 #sidebar a {
 	display: inline-block;
 	padding: 0 0 0 0.5em; margin: 0;
-	color: #000;
+	color: CaptionText;
 	font-size: small;
 	width: 100%;
 }
 
 
+
+
+
 /**
  * List of packages
  */
-
-/* links classes:
- *   pkg   - package (not installed);
- *   pkgi  - package (installed);
- *   pkgib - package (installed and blocked);
- *   w     - web site
- *
- * you can style links using icons and/or color
- */
-
-a.pkg   { background: url(images/tp-new.png)   no-repeat left; }
-a.pkgi  { background: url(images/tp-pkgi.png)  no-repeat left; }
-a.pkgib { background: url(images/tp-pkgib.png) no-repeat left; color: red; }
-a.w::before, .pkglist td:nth-child(4) a::before {
-	font-family: TazPanel; content: 'web';
-
-	vertical-align: baseline;
-	padding: 0 0.2rem 0 0;
-	font-size: 1rem;
-
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	display: inline-block;
-	text-decoration: none;
-	width: 1rem; text-align: center;
-
-	-webkit-text-rendering: optimizeLegibility;
-	   -moz-text-rendering: optimizeLegibility;
-	    -ms-text-rendering: optimizeLegibility;
-	     -o-text-rendering: optimizeLegibility;
-	        text-rendering: optimizeLegibility;
-
-	-webkit-font-smoothing: antialiased;
-	   -moz-font-smoothing: antialiased;
-	    -ms-font-smoothing: antialiased;
-	     -o-font-smoothing: antialiased;
-	        font-smoothing: antialiased;
-}
-
-a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
-	margin: 0; padding: 0 0 0 17px;
-	min-height: 16px; min-width: 16px;
-	display: inline-block;
-}
-
-
 
 /* not break the line */
 .pkglist td:nth-child(1),
@@ -167,7 +133,7 @@ a.pkg, a.pkgi, a.pkgib, a.w, .pkglist td:nth-child(4) a {
 	background: #F94;
 	color: black;
 }
-.pages.current, a.pages.current:hover {
+.pages.current, .pages.current:hover {
 	font-weight: bold;
 	border: 1px solid #07F;
 	background: #07F;

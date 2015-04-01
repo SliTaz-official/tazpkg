@@ -2532,15 +2532,16 @@ EOT
 		check_root $@
 		check_for_package_on_cmdline
 		newline
+		if [ ! -d $INSTALLED/$PACKAGE ]; then
+			_ 'Package "%s" is not installed.' $PACKAGE; exit
+		fi
 		if grep -qs "^$PACKAGE" $BLOCKED; then
-			_ 'Package "%s" is already in the blocked packages list.' $PACKAGE
+			_ 'Package "%s" is already blocked.' $PACKAGE
 		else
-			action 'Add package "%s" to: %s...' $PACKAGE $BLOCKED
 			echo $PACKAGE >> $BLOCKED
-			status
 			# Log this activity
-			. $INSTALLED/$PACKAGE/receipt
-			log_pkg Blocked
+			. $INSTALLED/$PACKAGE/receipt; log_pkg Blocked
+			_ 'Package "%s" blocked.' $PACKAGE
 		fi
 		newline ;;
 
@@ -2550,16 +2551,38 @@ EOT
 		check_root $@
 		check_for_package_on_cmdline
 		newline
+		if [ ! -d $INSTALLED/$PACKAGE ]; then
+			_ 'Package "%s" is not installed.' $PACKAGE; exit
+		fi
 		if grep -qs "^$PACKAGE" $BLOCKED; then
-			action 'Removing package "%s" from: %s...' $PACKAGE $BLOCKED
-			sed -i s/$PACKAGE/''/ $BLOCKED
-			sed -i '/^$/d' $BLOCKED
-			status
+			sed -i "/^$PACKAGE\$/d" $BLOCKED
 			# Log this activity
-			. $INSTALLED/$PACKAGE/receipt
-			log_pkg Unblocked
+			. $INSTALLED/$PACKAGE/receipt; log_pkg Unblocked
+			_ 'Package "%s" unblocked.' $PACKAGE
 		else
-			_ 'Package "%s" is not in the blocked packages list.' $PACKAGE
+			_ 'Package "%s" is not blocked.' $PACKAGE
+		fi
+		newline ;;
+
+
+	chblock)
+		# Change package's blocked status.
+		check_root $@
+		check_for_package_on_cmdline
+		newline
+		if [ ! -d $INSTALLED/$PACKAGE ]; then
+			_ 'Package "%s" is not installed.' $PACKAGE; exit
+		fi
+		if grep -qs "^$PACKAGE" $BLOCKED; then
+			sed -i "/^$PACKAGE\$/d" $BLOCKED
+			# Log this activity
+			. $INSTALLED/$PACKAGE/receipt; log_pkg Unblocked
+			_ 'Package "%s" unblocked.' $PACKAGE
+		else
+			echo $PACKAGE >> $BLOCKED
+			# Log this activity
+			. $INSTALLED/$PACKAGE/receipt; log_pkg Blocked
+			_ 'Package "%s" blocked.' $PACKAGE
 		fi
 		newline ;;
 
