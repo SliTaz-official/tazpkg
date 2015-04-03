@@ -8,13 +8,13 @@
  */
 
 #content-sidebar {
-	margin-right: 138px; /* sidebar width */
-	padding: 10px;
+	margin-right: 140px; /* sidebar width */
+	padding: 5px;
 }
 
-#sidebar { /* full width = width(132) + h-padding(5) + border(1) = 138px */
+#sidebar { /* full width = width(139) + h-padding(0) + border(1) = 140px */
 	position: fixed; top: 65px; bottom: 0; right: 0;
-	width: 132px; padding: 5px 5px 0 0;
+	width: 139px; padding: 0;
 	border-left: 1pt solid;
 	overflow-y: auto; overflow-x: hidden; /* for tiny screens */
 }
@@ -26,32 +26,14 @@
 }
 
 
-
-
-
 /**
  * Sidebar category selector
  */
 
-/* hack to remove unwanted scrollbar from multiline selector */
-
-.select_wrap {
-	display: inline-block;
-	vertical-align: top;
-	overflow: hidden;
-}
-.select_wrap select {
-	padding: 5px;
-	margin:-5px -20px -5px -5px;
-	width: 162px; /* sidebar:(138px) + this h-margin:(20px+5px) */
-	font-size: small;
-}
-
-/* zebra on selector */
-select option:nth-child(even) {
-	background-color: rgba(0,0,0,0.05);
-}
-
+#sidebar input[type="radio"] { display: none; }
+#sidebar label { display: block; padding-left: 5px; }
+#sidebar input+label:nth-child(4n) { background-color: hsla(0, 0%, 50%, 0.1); }
+#sidebar input:checked+label { background-color: hsla(0, 0%, 50%, 0.5); }
 
 /* sidebar links */
 #sidebar a {
@@ -71,17 +53,17 @@ select option:nth-child(even) {
  */
 
 /* not break the line */
-.pkglist td:nth-child(1),
+.pkglist  td:nth-child(1),
 .filelist td:nth-child(1) { white-space: nowrap; }
 
-.pkglist td:nth-child(1) a,
+.pkglist  td:nth-child(1) a,
 .filelist td:nth-child(1) a { max-width: 12em; }
-.pkglist td:nth-child(2)   { max-width:  7em; }
+.pkglist  td:nth-child(2)   { max-width:  7em; }
 /*.filelist td:nth-child(2)   { white-space: pre-wrap; }*/
 
 /* ellipsize content of 1st and 2nd columns */
-.pkglist td:nth-child(1) a,
-.pkglist td:nth-child(2),
+.pkglist  td:nth-child(1) a,
+.pkglist  td:nth-child(2),
 .filelist td:nth-child(1) a,
 .filelist td:nth-child(2) {
 	white-space: nowrap;
@@ -104,6 +86,9 @@ select option:nth-child(even) {
 #head1h { display: none; position: fixed; }
 
 
+
+
+
 /**
  * Summary table
  */
@@ -111,8 +96,7 @@ select option:nth-child(even) {
 /* to have minimal width of first column */
 .summary td:nth-child(1) { width:10%; white-space: nowrap; }
 
-/* light blue links on summary table */
-.summary a { color: #248; }
+
 
 
 
@@ -124,14 +108,17 @@ select option:nth-child(even) {
 	display: inline-block;
 	padding: 0.5ex;
 	margin: 0.5ex 0;
-	border: 1px solid #AAA;
+	border: 1px solid hsla(0, 0%, 0%, 0.5);
 	width: 3ex;
 	text-align: center;
 }
+.dark  .pages { background-color: #222; }
+.light .pages { background-color: #CCC; }
 .pages:hover {
-	border: 1px solid #F94;
-	background: #F94;
-	color: black;
+	//border: 1px solid #F94;
+	//background: #F94;
+	//color: black;
+	box-shadow: 0 0 2pt 0 hsl(0, 0%, 50%);
 }
 .pages.current, .pages.current:hover {
 	font-weight: bold;
@@ -139,6 +126,8 @@ select option:nth-child(even) {
 	background: #07F;
 	color: #eee;
 }
+
+
 
 
 
@@ -167,15 +156,7 @@ a.tag8 { font-size: 2.4em; color: #F00; }
 
 
 
-.button img {
-	padding: 0 4px 0 0;
-}
 
 
 /* Disable too much borders */
 section .hborders thead tr { border-top: none; border-bottom: 1pt solid #DDD; }
-
-
-
-
-/* •‣⁕←↑→↓↔↕↥↯↶↷↺↻⇄⇅⇈⌫⏏█▶▷▸▹►▻▪▫◯●◻◼◽◾☐☑☒♺♻⚙⚠⚡⚪⚫✉✎✏✐✓✔✕✖✗✘❖➤➜➝➛⟲⟳⧎ */

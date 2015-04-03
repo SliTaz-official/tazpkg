@@ -1477,6 +1477,8 @@ case "$COMMAND" in
 				[ -n "$LOCDESC" ] && SHORT_DESC="$LOCDESC"
 			fi
 		done
+		SIZES=$(echo $PACKED_SIZE/$UNPACKED_SIZE | sed 's|\.0||g' | sed 's|^/$||')
+
 		emsg "$(
 		{
 			_ 'Package    : %s' "$PACKAGE"
@@ -1490,6 +1492,7 @@ case "$COMMAND" in
 			_ 'Build deps : %s' "$BUILD_DEPENDS"
 			_ 'Wanted src : %s' "$WANTED"
 			_ 'Web site   : %s' "$WEB_SITE"
+			_ 'Size       : %s' "$SIZES"
 			_ 'Tags       : %s' "$TAGS"
 		} | sed '/: $/d; s|^\([^:]*\):|<b>\1:</b>|')"
 		im && footer

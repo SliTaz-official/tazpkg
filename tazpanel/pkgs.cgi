@@ -21,7 +21,7 @@ header
 _()  { local T="$1"; shift; printf "$(gettext "$T")" "$@"; echo; }
 _n() { local T="$1"; shift; printf "$(gettext "$T")" "$@"; }
 _p() {
-	local S="$1" P="$2" N="$3"; shift; shift; shift;
+	local S="$1" P="$2" N="$3"; shift 3;
 	printf "$(ngettext "$S" "$P" "$N")" "$@"; }
 
 
@@ -74,7 +74,11 @@ EOT
 parse_packages_info() {
 	IFS=$'\t'
 	while read PACKAGE VERSION CATEGORY SHORT_DESC WEB_SITE TAGS SIZES DEPENDS; do
-		class=pkg; grep -q "^$PACKAGE$'\t'" $PKGS_DB/installed.info && class=pkgi
+		class='pkg'
+		if grep -q "^$PACKAGE"$'\t' $PKGS_DB/installed.info; then
+			class='pkgi'
+			grep -q "^$PACKAGE$" $PKGS_DB/blocked-packages.list && class='pkgib'
+		fi
 		i18n_desc $PACKAGE
 		cat << EOT
 <tr>
@@ -136,8 +140,6 @@ show_button() {
 # ENTER will search but user may search for a button, so put one.
 
 search_form() {
-	[ -z "$repo" ] && repo="$(GET repo)"
-	[ -z "$repo" ] && repo="Any"
 	cat << EOT
 <form class="search"><!--
 	--><input type="search" name="search" results="5" autosave="pkgsearch" autocomplete="on"><!--
@@ -171,10 +173,22 @@ sidebar() {
 	cat << EOT
 <script type="text/javascript">
 function setCookie(name) {
-	document.cookie = name+"="+document.getElementById(name).value; }
+	if (name=='cat') {
+		var cats = document.getElementsByName('cat');
+		for (var i = 0; i < cats.length; i++) {
+			if (cats[i].checked) {
+				document.cookie = name + "=" + cats[i].value;
+				break;
+			}
+		}
+	} else {
+		document.cookie = name+"="+document.getElementById(name).value;
+	}
+}
 function setValue(name, value) {
 	document.getElementById(name).value=value;
-	setCookie(name); }
+	setCookie(name);
+}
 </script>
 <form method="post" action="?list">
 
@@ -183,32 +197,21 @@ function setValue(name, value) {
 		<option value="my">$(_ 'My packages')</option>
 		<option value="no">$(_ 'All packages')</option>
 	</select>
+	<script type="text/javascript">setValue('my', "$my")</script>
 
 	<h4>$(_ 'Categories')</h4>
 
-	<div class="select_wrap">
-	<select id="cat" size="16" onclick="setCookie('cat'); this.form.submit()">
-		<option value="base-system" >$(_ 'base-system')</option>
-		<option value="x-window"    >$(_ 'x-window')</option>
-		<option value="utilities"   >$(_ 'utilities')</option>
-		<option value="network"     >$(_ 'network')</option>
-		<option value="games"       >$(_ 'games')</option>
-		<option value="graphics"    >$(_ 'graphics')</option>
-		<option value="office"      >$(_ 'office')</option>
-		<option value="multimedia"  >$(_ 'multimedia')</option>
-		<option value="development" >$(_ 'development')</option>
-		<option value="system-tools">$(_ 'system-tools')</option>
-		<option value="security"    >$(_ 'security')</option>
-		<option value="misc"        >$(_ 'misc')</option>
-		<option value="meta"        >$(_ 'meta')</option>
-		<option value="non-free"    >$(_ 'non-free')</option>
-		<option value="all"         >$(_ 'all')</option>
-		<option value="extra"       >$(_ 'extra')</option>
-	</select>
-	<script type="text/javascript">
-		setValue('my', "$my")
-		setValue('cat', "$cat")
-	</script>
+	<div class="wide zebra">
+		$(echo 'base-system x-window utilities network games graphics office
+		multimedia development system-tools security misc meta non-free all
+		extra' | tr ' ' '\n' | awk -vcat="$cat" -vn="1" '{
+			system("gettext " $1 | getline tr)
+			printf "<input type=\"radio\" name=\"cat\" id=\"c%s\" ", n
+			printf "value=\"%s\"%s ", $1, $1==cat?" checked":""
+			printf "onclick=\"setCookie(&#39;cat&#39;); this.form.submit()\">"
+			printf "<label for=\"c%s\">%s</label>\n", n, tr
+			n++
+		}')
 	</div>
 EOT
 
@@ -564,7 +567,7 @@ EOT
 
 <form id="pkglist" class="wide">
 EOT
-		if [ -n "$(GET files)" ]; then
+		if [ -n "$(GET files)" -o -n "$(echo $pkg | grep '/')" ]; then
 			cat <<EOT
 	<table class="wide zebra filelist">
 	<thead>
@@ -578,7 +581,11 @@ EOT
 			lzcat $(repo_list /files.list.lzma) | grep -Ei ": .*$(GET search)" | \
 			while read PACKAGE FILE; do
 				PACKAGE=${PACKAGE%:}
-				class=pkg; [ -d $INSTALLED/$PACKAGE ] && class=pkgi
+				class='pkg'
+				if [ -d $INSTALLED/$PACKAGE ]; then
+					class='pkgi'
+					grep -q "^$PACKAGE$" $PKGS_DB/blocked-packages.list && class='pkgib'
+				fi
 				cat << EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
