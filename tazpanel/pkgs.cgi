@@ -1345,13 +1345,9 @@ EOT
 <section>
 	<header>
 		$(_ 'Latest log entries')
-EOT
-		[ "$REMOTE_USER" == "root" ] && cat << EOT
 		<form action="index.cgi">
 			<button name="file" value="$LOG" data-icon="view">$(_ 'Show')</button>
 		</form>
-EOT
-		cat << EOT
 	</header>
 	<pre>$(tail -n 5 $LOG | tac | fgrep "-" | awk '{print $1, $2, $3, $4, $5, "<a href=\"?info=" $6 "\">" $6 "</a>", $7}')</pre>
 </section>
