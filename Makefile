@@ -22,7 +22,7 @@ pot:
 		--package-name=TazPkg \
 		--package-version="$(VERSION)" -kaction -ktitle -k_ -k_n -k_p:1,2 \
 		./tazpkg ./modules/tazpkg-convert ./modules/tazpkg-find-depends ./tazpkg-box \
-		./tazpanel/pkgs ./tazpanel/pkgs.cgi ./tazpkg-notify
+		./tazpanel/pkgs.cgi ./tazpkg-notify
 
 msgmerge:
 	@for l in $(LINGUAS); do \
@@ -70,7 +70,7 @@ install: msgfmt
 	# TazPanel files
 	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/menu.d
 	cp -a tazpanel/pkgs.cgi $(DESTDIR)/var/www/tazpanel
-	cp -a tazpanel/pkgs     $(DESTDIR)/var/www/tazpanel/menu.d
+	ln -s ../pkgs.cgi       $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
 	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/styles/default
 	cp -a tazpanel/pkgs.css $(DESTDIR)/var/www/tazpanel/styles/default
 	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/styles/default/images

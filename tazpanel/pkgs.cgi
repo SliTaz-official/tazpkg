@@ -16,7 +16,6 @@
 . /etc/slitaz/tazpkg.conf
 
 get_config
-header
 
 _()  { local T="$1"; shift; printf "$(gettext "$T")" "$@"; echo; }
 _n() { local T="$1"; shift; printf "$(gettext "$T")" "$@"; }
@@ -24,6 +23,35 @@ _p() {
 	local S="$1" P="$2" N="$3"; shift 3;
 	printf "$(ngettext "$S" "$P" "$N")" "$@"; }
 
+#------
+# menu
+#------
+case "$1" in
+	menu)
+		TEXTDOMAIN_original=$TEXTDOMAIN
+		export TEXTDOMAIN='tazpkg'
+
+		cat <<EOT
+  <li tabindex="0">
+   <span>$(gettext 'Packages')</span>
+   <menu>
+    <li><a data-icon="info" href="/pkgs.cgi">$(gettext 'Summary')</a></li>
+    <li><a data-icon="list"    href="/pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
+EOT
+		[ "$REMOTE_USER" == "root" ] && cat << EOT
+    <li><a data-icon="refresh" href="/pkgs.cgi?recharge">$(gettext 'Recharge list')</a></li>
+    <li><a data-icon="upgrade" href="/pkgs.cgi?up">$(gettext 'Check updates')</a></li>
+    <li><a data-icon="admin"   href="/pkgs.cgi?admin">$(gettext 'Administration')</a></li>
+EOT
+		cat <<EOT
+   </menu>
+  </li>
+EOT
+		export TEXTDOMAIN=$TEXTDOMAIN_original
+		exit
+esac
+
+header
 
 # xHTML 5 header with special side bar for categories.
 TITLE=$(TEXTDOMAIN='tazpkg'; _ 'TazPanel - Packages')
@@ -519,6 +547,8 @@ EOT
 <h2>$(_ 'Packages list')</h2>
 <p>$title</p>
 
+EOT
+		[ "$REMOTE_USER" == "root" ] && cat << EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -529,6 +559,8 @@ EOT
 		$(show_button toggle)
 	</footer>
 </section>
+EOT
+		cat << EOT
 
 <form id="pkglist" class="wide">
 EOT
@@ -1247,6 +1279,7 @@ EOT
 EOT
 		fslink=$(readlink $PKGS_DB/fslink)
 		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] && show_button linkable
+		[ "$REMOTE_USER" == "root" ] &&
 		show_button recharge up admin
 		cat << EOT
 </form>
@@ -1278,6 +1311,7 @@ EOT
 		esac
 	else
 		_ 'never.'
+		[ "$REMOTE_USER" == "root" ] &&
 		_ 'You need to [download] the lists for further work.' | \
 		sed 's|\[|<a data-icon="download" href="?recharge">|;s|\]|</a>|'
 	fi)</td></tr>
