@@ -37,13 +37,9 @@ case "$1" in
    <menu>
     <li><a data-icon="info" href="/pkgs.cgi">$(gettext 'Summary')</a></li>
     <li><a data-icon="list"    href="/pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
-EOT
-		[ "$REMOTE_USER" == "root" ] && cat << EOT
-    <li><a data-icon="refresh" href="/pkgs.cgi?recharge">$(gettext 'Recharge list')</a></li>
-    <li><a data-icon="upgrade" href="/pkgs.cgi?up">$(gettext 'Check updates')</a></li>
-    <li><a data-icon="admin"   href="/pkgs.cgi?admin">$(gettext 'Administration')</a></li>
-EOT
-		cat <<EOT
+    <li><a data-icon="refresh" href="/pkgs.cgi?recharge" data-root>$(gettext 'Recharge list')</a></li>
+    <li><a data-icon="upgrade" href="/pkgs.cgi?up" data-root>$(gettext 'Check updates')</a></li>
+    <li><a data-icon="admin"   href="/pkgs.cgi?admin" data-root>$(gettext 'Administration')</a></li>
    </menu>
   </li>
 EOT
@@ -123,14 +119,14 @@ EOT
 # Show button
 show_button() {
 	for button in $@; do
-		class=''; img=''
+		class=''; misc=''
 		case $button in
-		recharge)     class='refresh'; label="$(_ 'Recharge list')" ;;
-		up)           class='upgrade'; label="$(_ 'Check upgrades')" ;;
+		recharge)     class='refresh'; label="$(_ 'Recharge list')"; misc=' data-root' ;;
+		up)           class='upgrade'; label="$(_ 'Check upgrades')"; misc=' data-root' ;;
 		list)         class='list';    label="$(_ 'My packages')" ;;
 		tags)         class='tags';    label="$(_ 'Tags')" ;;
 		linkable)     class='link';    label="$(_ 'Linkable packages')" ;;
-		admin)        class='admin';   label="$(_ 'Administration')" ;;
+		admin)        class='admin';   label="$(_ 'Administration')"; misc=' data-root' ;;
 		*Install*nf*) class='install'; label="$(_ 'Install (Non Free)')" ;;
 		*Install*)    class='install'; label="$(_ 'Install')" ;;
 		*Remove*)     class='remove';  label="$(_ 'Remove')" ;;
@@ -153,7 +149,7 @@ show_button() {
 		if [ "$button" == 'toggle' ]; then
 			echo -n "<span class=\"float-right\"><button data-icon=\"$class\" onclick=\"checkBoxes()\">$label</button></span>"
 		else
-			echo -n "<button data-icon=\"$class\" name=\"${button%%=*}\" value=\"${button#*=}\">$label</button>"
+			echo -n "<button data-icon=\"$class\" name=\"${button%%=*}\" value=\"${button#*=}\"$misc>$label</button>"
 		fi
 	done
 }
@@ -1282,7 +1278,6 @@ EOT
 EOT
 		fslink=$(readlink $PKGS_DB/fslink)
 		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] && show_button linkable
-		[ "$REMOTE_USER" == "root" ] &&
 		show_button recharge up admin
 		cat << EOT
 </form>
@@ -1314,9 +1309,8 @@ EOT
 		esac
 	else
 		_ 'never.'
-		[ "$REMOTE_USER" == "root" ] &&
 		_ 'You need to [download] the lists for further work.' | \
-		sed 's|\[|<a data-icon="download" href="?recharge">|;s|\]|</a>|'
+		sed 's|\[|<a data-icon="download" href="?recharge" data-root>|;s|\]|</a>|'
 	fi)</td></tr>
 		<tr>
 			<td>$(_ 'Installed packages:')</td>
