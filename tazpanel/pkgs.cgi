@@ -762,6 +762,7 @@ EOT
 		if [ -d $INSTALLED/$pkg ]; then
 			. $INSTALLED/$pkg/receipt
 			files=$(wc -l < $INSTALLED/$pkg/files.list)
+			[ "$REMOTE_USER" == "root" ] &&
 			show_button do=Remove
 		else
 			cd $PKGS_DB
@@ -773,6 +774,7 @@ EOT
 			}' packages.info undigest/*/packages.info)"
 			PACKED_SIZE=${SIZES% *}
 			UNPACKED_SIZE=${SIZES#* }
+			[ "$REMOTE_USER" == "root" ] &&
 			if [ "${pkg#get-}" != "$pkg" ]; then
 				show_button "do=Install&amp;nf"
 			else
@@ -781,6 +783,7 @@ EOT
 		fi
 
 		# Show Block/Unblock, and Repack buttons
+		[ "$REMOTE_USER" == "root" ] &&
 		if [ -d $INSTALLED/$pkg ]; then
 			if grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list; then
 				show_button do=Unblock
