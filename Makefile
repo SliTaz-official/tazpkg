@@ -70,11 +70,9 @@ install: msgfmt
 	# TazPanel files
 	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/menu.d
 	cp -a tazpanel/pkgs.cgi $(DESTDIR)/var/www/tazpanel
-	ln -s ../pkgs.cgi       $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
+	ln -fs ../pkgs.cgi      $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
 	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/styles/default
 	cp -a tazpanel/pkgs.css $(DESTDIR)/var/www/tazpanel/styles/default
-	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/styles/default/images
-	cp -a tazpanel/icons/*  $(DESTDIR)/var/www/tazpanel/styles/default/images
 
 	# The i18n files
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/share/locale
@@ -115,7 +113,6 @@ uninstall:
 
 	rm -f  $(DESTDIR)/var/www/tazpanel/pkgs.cgi
 	rm -f  $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
-	rm -rf $(DESTDIR)/var/www/tazpanel/styles/default/images/tp-*.png
 
 	rm -rf $(DESTDIR)$(PREFIX)/share/locale/*/LC_MESSAGES/tazpkg.mo
 
