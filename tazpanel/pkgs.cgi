@@ -1211,7 +1211,8 @@ END{
 		tag=$(GET tag)
 		cat << EOT
 <h2 data-icon="tag">$(_ 'Tag "%s"' $tag)</h2>
-
+EOT
+		[ "$REMOTE_USER" == "root" ] && cat << EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -1219,7 +1220,8 @@ END{
 		$(show_button toggle)
 	</footer>
 </section>
-
+EOT
+		cat << EOT
 <form id="pkglist" class="wide">
 EOT
 		for i in $(repo_list ""); do
