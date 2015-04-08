@@ -35,11 +35,11 @@ case "$1" in
   <li tabindex="0">
    <span>$(gettext 'Packages')</span>
    <menu>
-    <li><a data-icon="info" href="/pkgs.cgi">$(gettext 'Summary')</a></li>
-    <li><a data-icon="list"    href="/pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
-    <li><a data-icon="refresh" href="/pkgs.cgi?recharge" data-root>$(gettext 'Recharge list')</a></li>
-    <li><a data-icon="upgrade" href="/pkgs.cgi?up" data-root>$(gettext 'Check updates')</a></li>
-    <li><a data-icon="admin"   href="/pkgs.cgi?admin" data-root>$(gettext 'Administration')</a></li>
+    <li><a data-icon="info" href="pkgs.cgi">$(gettext 'Summary')</a></li>
+    <li><a data-icon="list"    href="pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
+    <li><a data-icon="refresh" href="pkgs.cgi?recharge" data-root>$(gettext 'Recharge list')</a></li>
+    <li><a data-icon="upgrade" href="pkgs.cgi?up" data-root>$(gettext 'Check updates')</a></li>
+    <li><a data-icon="admin"   href="pkgs.cgi?admin" data-root>$(gettext 'Administration')</a></li>
    </menu>
   </li>
 EOT
