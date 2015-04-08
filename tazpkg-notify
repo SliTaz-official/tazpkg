@@ -25,7 +25,8 @@ _p() {
 
 
 fifo=/tmp/$(basename $0).fifo
-panel="http://tazpanel:82/pkgs.cgi"
+panelbase="http://tazpanel:82/pkgs.cgi"
+panel="http://tazpanel:82/user/pkgs.cgi"
 doc="file:///usr/share/doc/tazpkg/tazpkg.html"
 
 installed=$(wc -l < $PKGS_DB/installed.info)
@@ -61,7 +62,7 @@ listen() {
 menu() {
 	cat << EOT
 menu:\
-$(_n 'My packages'       )!tazweb $panel?list!TazPkg|\
+$(_n 'My packages'       )!tazweb $panelbase?list!TazPkg|\
 $(_n 'Recharge lists'    )!tazweb $panel?recharge!tazpkg-up|\
 $(_n 'Check upgrade'     )!tazweb $panel?up!tazpkg-up|\
 $(_n 'TazPkg SHell'      )!terminal -e tazpkg shell!utilities-terminal|\
