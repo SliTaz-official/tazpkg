@@ -25,6 +25,7 @@ _p() {
 
 
 fifo=/tmp/$(basename $0).fifo
+tazweb="tazweb --notoolbar"
 panelbase="http://tazpanel:82/pkgs.cgi"
 panel="http://tazpanel:82/user/pkgs.cgi"
 doc="file:///usr/share/doc/tazpkg/tazpkg.html"
@@ -62,11 +63,11 @@ listen() {
 menu() {
 	cat << EOT
 menu:\
-$(_n 'My packages'       )!tazweb $panelbase?list!TazPkg|\
-$(_n 'Recharge lists'    )!tazweb $panel?recharge!tazpkg-up|\
-$(_n 'Check upgrade'     )!tazweb $panel?up!tazpkg-up|\
+$(_n 'My packages'       )!$tazweb $panelbase?list!TazPkg|\
+$(_n 'Recharge lists'    )!$tazweb $panel?recharge!tazpkg-up|\
+$(_n 'Check upgrade'     )!$tazweb $panel?up!tazpkg-up|\
 $(_n 'TazPkg SHell'      )!terminal -e tazpkg shell!utilities-terminal|\
-$(_n 'TazPkg manual'     )!tazweb $doc!slitaz-doc|\
+$(_n 'TazPkg manual'     )!$tazweb $doc!slitaz-doc|\
 $(_n 'Close notification')!quit!gtk-close
 EOT
 }
@@ -88,7 +89,7 @@ case $1 in
 		# Missing packages list
 		if [ ! -f $PKGS_DB/packages.list ]; then
 			tooltip="$(_ 'No packages list found - %s' "$text")"
-			(echo "action:tazweb $panel?recharge"
+			(echo "action:$tazweb $panel?recharge"
 			 echo "tooltip:$tooltip"
 			 echo "icon:tazpkg-up") > $fifo
 			exit 0
@@ -97,7 +98,7 @@ case $1 in
 		# Too old packages list
 		if [ "$mtime" ]; then
 			tooltip="$(_ 'Your packages list is older than 10 days')"
-			(echo "action:tazweb $panel?recharge"
+			(echo "action:$tazweb $panel?recharge"
 			 echo "tooltip:$tooltip"
 			 echo "icon:tazpkg-up") > $fifo
 			exit 0
@@ -109,7 +110,7 @@ case $1 in
 				'There is %s upgradeable package' \
 				'There are %s upgradeable packages' $up \
 				"<b>$up</b>")"
-			(echo "action:tazweb $panel?up"
+			(echo "action:$tazweb $panel?up"
 			 echo "tooltip:$tooltip"
 			 echo "icon:tazpkg-up") > $fifo
 			exit 0
