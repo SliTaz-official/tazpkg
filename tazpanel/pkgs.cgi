@@ -731,6 +731,7 @@ EOT
 <p>$MSG</p>
 EOT
 		# Do the command for all asked packages
+		cd /tmp
 		for pkg in $pkgs; do
 			echo '<pre>'
 			echo $(_n 'y') | tazpkg $cmd $pkg $opt 2>/dev/null | filter_taztools_msgs
