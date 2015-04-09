@@ -1,5 +1,5 @@
 # Russian translations for TazPkg package
-# Copyright (C) 2011-12 www.slitaz.org
+# Copyright (C) 2011-2015 www.slitaz.org
 # This file is distributed under the same license as the TazPkg package.
 # Aleksej Bobylev <al.bobylev@gmail.com>, 2012.
 #
@@ -8,17 +8,16 @@ msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-04-09 21:14+0200\n"
-"PO-Revision-Date: 2013-07-23 03:24+0300\n"
+"PO-Revision-Date: 2015-04-10 00:42+0300\n"
 "Last-Translator: Aleksej Bobylev <al.bobylev@gmail.com>\n"
 "Language-Team: Russian\n"
-"Language: \n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Poedit-Language: Russian\n"
-"X-Poedit-Basepath: ../../\n"
+"X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: tazpkg:59
@@ -81,15 +80,15 @@ msgstr "несвободные"
 msgid "SliTaz package manager - Version: %s"
 msgstr "Менеджер пакетов SliTaz, версия %s"
 
-#: tazpkg:151 tazpkg-box:27 tazpkg-notify:78
+#: tazpkg:151
+#: tazpkg-box:27
+#: tazpkg-notify:78
 msgid "Usage:"
 msgstr "Использование:"
 
 #: tazpkg:152
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
-msgstr ""
-"tazpkg [команда] [пакет|папка|шаблон|список|категория|--опции] [папка|--"
-"опции]"
+msgstr "tazpkg [команда] [пакет|папка|шаблон|список|категория|--опции] [папка|--опции]"
 
 #: tazpkg:154
 msgid "SHell:"
@@ -164,7 +163,6 @@ msgid "Install a local package"
 msgstr "Установить локальный пакет"
 
 #: tazpkg:176
-#, fuzzy
 msgid "Install all packages from a list of packages"
 msgstr "Установить все пакеты из списка пакетов"
 
@@ -274,8 +272,7 @@ msgstr "параметр"
 
 #: tazpkg:218
 msgid "Without options run in interactive mode and ask before install"
-msgstr ""
-"Без параметров запускается в интерактивном режиме с подтверждением установки"
+msgstr "Без параметров запускается в интерактивном режиме с подтверждением установки"
 
 #: tazpkg:220
 msgid "Where options are:"
@@ -293,7 +290,12 @@ msgstr "Принудительно перезагрузить список па�
 msgid "Check for upgrades and install them all"
 msgstr "Проверить обновления и установить их все"
 
-#: tazpkg:227 tazpkg:1545 tazpkg:1569 tazpkg:1630 tazpkg:1705 tazpkg:1760
+#: tazpkg:227
+#: tazpkg:1545
+#: tazpkg:1569
+#: tazpkg:1630
+#: tazpkg:1705
+#: tazpkg:1760
 #: tazpkg:2901
 msgid "Example:"
 msgstr "Пример:"
@@ -306,7 +308,8 @@ msgstr "Создание папки «%s»…"
 msgid "Please specify a package name on the command line."
 msgstr "Укажите название пакета в командной строке."
 
-#: tazpkg:284 tazpkg:407
+#: tazpkg:284
+#: tazpkg:407
 msgid "Unable to find file \"%s\""
 msgstr "Не удалось найти файл «%s»"
 
@@ -320,9 +323,7 @@ msgstr "Пакет «%s» уже был установлен."
 
 #: tazpkg:360
 msgid "You can use the --forced option to force installation."
-msgstr ""
-"Используйте опцию --forced, чтобы принудительно установить пакет, либо "
-"удалите и установите заново этот пакет."
+msgstr "Используйте опцию --forced, чтобы принудительно установить пакет, либо удалите и установите заново этот пакет."
 
 #: tazpkg:377
 msgid "Unable to find the list \"%s\""
@@ -407,9 +408,9 @@ msgstr "Отсутствует пакет «%s»"
 #: tazpkg:1022
 msgid "%s missing package to install."
 msgid_plural "%s missing packages to install."
-msgstr[0] "Отсутствует %s пакет для установки."
-msgstr[1] "Отсутствуют %s пакета для установки."
-msgstr[2] "Отсутствуют %s пакетов для установки."
+msgstr[0] "Требуется установить %s отсутствующий пакет."
+msgstr[1] "Требуется установить %s отсутствующих пакета."
+msgstr[2] "Требуется установить %s отсутствующих пакетов."
 
 #: tazpkg:1042
 msgid "Install all missing dependencies? (y/N)"
@@ -427,7 +428,8 @@ msgstr "Зависимости пакета «%s» оставлены нереш
 msgid "The package is installed but will probably not work."
 msgstr "Пакет установлен, но, возможно, не будет работать."
 
-#: tazpkg:1094 tazpanel/pkgs.cgi:494
+#: tazpkg:1094
+#: tazpanel/pkgs.cgi:494
 msgid "Installed packages"
 msgstr "Установленные пакеты"
 
@@ -438,20 +440,18 @@ msgstr[0] "Найден %s установленный пакет по шабло
 msgstr[1] "Найдены %s установленных пакета по шаблону «%s»"
 msgstr[2] "Найдено %s установленных пакетов по шаблону «%s»"
 
-#: tazpkg:1116 tazpanel/pkgs.cgi:493
+#: tazpkg:1116
+#: tazpanel/pkgs.cgi:493
 msgid "Available packages"
 msgstr "Доступные пакеты"
 
-#: tazpkg:1128 tazpkg:1154
-msgid ""
-"No \"%s\" found to check for mirrored packages. For more results, please run "
-"\"%s\" once as root before searching."
-msgstr ""
-"Не обнаружен «%s», поэтому невозможно проверить пакеты в репозитории. Чтобы "
-"получить больше информации, запустите «%s» от имени root перед тем как "
-"искать."
+#: tazpkg:1128
+#: tazpkg:1154
+msgid "No \"%s\" found to check for mirrored packages. For more results, please run \"%s\" once as root before searching."
+msgstr "Не обнаружен «%s», поэтому невозможно проверить пакеты в репозитории. Чтобы получить больше информации, запустите «%s» от имени root перед тем как искать."
 
-#: tazpkg:1133 tazpkg:1159
+#: tazpkg:1133
+#: tazpkg:1159
 msgid "%s available package found for \"%s\""
 msgid_plural "%s available packages found for \"%s\""
 msgstr[0] "Найден %s доступный пакет по шаблону «%s»"
@@ -471,13 +471,8 @@ msgid "Current mirror(s)"
 msgstr "Текущие зеркала"
 
 #: tazpkg:1229
-msgid ""
-"Please enter URL of the new mirror (http, ftp or local path). You must "
-"specify the complete address to the directory of the packages and packages."
-"list file."
-msgstr ""
-"Укажите адрес нового зеркала (http, ftp или локальный путь). Вы должны "
-"указать полный адрес к папке, содержащей пакеты и файл «packages.list»."
+msgid "Please enter URL of the new mirror (http, ftp or local path). You must specify the complete address to the directory of the packages and packages.list file."
+msgstr "Укажите адрес нового зеркала (http, ftp или локальный путь). Вы должны указать полный адрес к папке, содержащей пакеты и файл «packages.list»."
 
 #: tazpkg:1232
 msgid "New mirror(s) URL: "
@@ -521,7 +516,8 @@ msgstr[0] "Установлен %s пакет."
 msgstr[1] "Установлены %s пакета."
 msgstr[2] "Установлено %s пакетов."
 
-#: tazpkg:1404 tazpanel/pkgs.cgi:532
+#: tazpkg:1404
+#: tazpanel/pkgs.cgi:532
 msgid "Installed packages of category \"%s\""
 msgstr "Установленные пакеты категории «%s»"
 
@@ -532,7 +528,8 @@ msgstr[0] "%s пакет установлен в категории «%s»."
 msgstr[1] "%s пакета установлены в категории «%s»."
 msgstr[2] "%s пакетов установлено в категории «%s»."
 
-#: tazpkg:1428 tazpkg:2258
+#: tazpkg:1428
+#: tazpkg:2258
 msgid "Mirrored packages diff"
 msgstr "Обновления в пакетах зеркала"
 
@@ -566,7 +563,8 @@ msgstr[2] "Последний обновленный список содержи
 msgid "Installed files by \"%s\""
 msgstr "Файлы, устанавливаемые пакетом «%s»"
 
-#: tazpkg:1461 tazpkg:1620
+#: tazpkg:1461
+#: tazpkg:1620
 msgid "%s file"
 msgid_plural "%s files"
 msgstr[0] "%s файл"
@@ -622,9 +620,8 @@ msgid "Web site   : %s"
 msgstr "Веб-сайт   : %s"
 
 #: tazpkg:1495
-#, fuzzy
 msgid "Size       : %s"
-msgstr "Ярлыки     : %s"
+msgstr "Размер     : %s"
 
 #: tazpkg:1496
 msgid "Tags       : %s"
@@ -634,7 +631,12 @@ msgstr "Ярлыки     : %s"
 msgid "Description of package \"%s\""
 msgstr "Описание пакета «%s»"
 
-#: tazpkg:1513 tazpkg:1788 tazpkg:2539 tazpkg:2558 tazpkg:2577 tazpkg:2815
+#: tazpkg:1513
+#: tazpkg:1788
+#: tazpkg:2539
+#: tazpkg:2558
+#: tazpkg:2577
+#: tazpkg:2815
 msgid "Package \"%s\" is not installed."
 msgstr "Пакет «%s» не установлен."
 
@@ -650,7 +652,8 @@ msgstr "Укажите шаблон или название пакета, кот
 msgid "Search result for \"%s\""
 msgstr "Результаты поиска «%s»"
 
-#: tazpkg:1568 tazpkg:1629
+#: tazpkg:1568
+#: tazpkg:1629
 msgid "Please specify a pattern or file name to search for."
 msgstr "Укажите шаблон или название файла, который вы хотите найти."
 
@@ -658,7 +661,8 @@ msgstr "Укажите шаблон или название файла, кото
 msgid "Search result for file \"%s\""
 msgstr "Результаты поиска файла «%s»"
 
-#: tazpkg:1580 tazpkg:1603
+#: tazpkg:1580
+#: tazpkg:1603
 msgid "Package %s:"
 msgstr "Пакет %s:"
 
@@ -674,12 +678,8 @@ msgstr[1] "%s пакета"
 msgstr[2] "%s пакетов"
 
 #: tazpkg:1703
-msgid ""
-"Please change directory (cd) to the packages repository and specify the list "
-"of packages to install."
-msgstr ""
-"Перейдите (cd) в репозиторий пакетов и укажите список пакетов, которые "
-"требуется установить."
+msgid "Please change directory (cd) to the packages repository and specify the list of packages to install."
+msgstr "Перейдите (cd) в репозиторий пакетов и укажите список пакетов, которые требуется установить."
 
 #: tazpkg:1711
 msgid "Unable to find list \"%s\""
@@ -737,7 +737,8 @@ msgstr "Деинсталляция пакета «%s» отменена."
 msgid "Extracting package \"%s\""
 msgstr "Распаковка пакета «%s»"
 
-#: tazpkg:1917 tazpkg:1935
+#: tazpkg:1917
+#: tazpkg:1935
 msgid "Copying original package..."
 msgstr "Копирование исходного пакета…"
 
@@ -761,7 +762,9 @@ msgstr "Создание нового пакета…"
 msgid "File lost"
 msgstr "Нет файла"
 
-#: tazpkg:1982 tazpanel/pkgs.cgi:827 tazpanel/pkgs.cgi:910
+#: tazpkg:1982
+#: tazpanel/pkgs.cgi:827
+#: tazpanel/pkgs.cgi:910
 msgid "Configuration files"
 msgstr "Конфигурационные файлы"
 
@@ -793,7 +796,8 @@ msgstr "Не удалось перепаковать, ошибка %s."
 msgid "Package \"%s\" repacked successfully."
 msgstr "Пакет %s успешно переупакован."
 
-#: tazpkg:2103 tazpkg:2168
+#: tazpkg:2103
+#: tazpkg:2168
 msgid "Size: %s"
 msgstr "Размер: %s"
 
@@ -861,23 +865,23 @@ msgstr[1] "В репозитории имеются %s новых пакета."
 msgstr[2] "В репозитории имеются %s новых пакетов."
 
 #: tazpkg:2266
-msgid ""
-"Last %s is ready to use. Note that next time you recharge the list, a list "
-"of differences will be displayed to show new and upgradeable packages."
-msgstr ""
-"Самый новый %s готов к использованию. Обратите внимание, что при следующем "
-"обновлении списка будет отображен список различий, содержащий новые и "
-"обновленные пакеты."
+msgid "Last %s is ready to use. Note that next time you recharge the list, a list of differences will be displayed to show new and upgradeable packages."
+msgstr "Самый новый %s готов к использованию. Обратите внимание, что при следующем обновлении списка будет отображен список различий, содержащий новые и обновленные пакеты."
 
 #: tazpkg:2306
 msgid "List \"%s\" is older than one week... Recharging."
 msgstr "Список «%s» старше одной недели… Обновление."
 
-#: tazpkg:2311 tazpkg-box:48 tazpanel/pkgs.cgi:603
+#: tazpkg:2311
+#: tazpkg-box:48
+#: tazpanel/pkgs.cgi:603
 msgid "Package"
 msgstr "Пакет"
 
-#: tazpkg:2311 tazpkg-box:49 tazpanel/pkgs.cgi:183 tazpanel/pkgs.cgi:804
+#: tazpkg:2311
+#: tazpkg-box:49
+#: tazpanel/pkgs.cgi:183
+#: tazpanel/pkgs.cgi:804
 msgid "Version"
 msgstr "Версия"
 
@@ -987,34 +991,35 @@ msgid "Check completed."
 msgstr "Проверка завершена."
 
 #: tazpkg:2542
-#, fuzzy
 msgid "Package \"%s\" is already blocked."
-msgstr "Пакет «%s» уже установлен."
+msgstr "Пакет «%s» уже был заблокирован."
 
-#: tazpkg:2547 tazpkg:2588
-#, fuzzy
+#: tazpkg:2547
+#: tazpkg:2588
 msgid "Package \"%s\" blocked."
-msgstr "Пакет «%s» не установлен."
+msgstr "Пакет «%s» заблокирован."
 
-#: tazpkg:2564 tazpkg:2583
-#, fuzzy
+#: tazpkg:2564
+#: tazpkg:2583
 msgid "Package \"%s\" unblocked."
-msgstr "Пакет «%s» не установлен."
+msgstr "Пакет «%s» разблокирован."
 
 #: tazpkg:2566
-#, fuzzy
 msgid "Package \"%s\" is not blocked."
-msgstr "Пакет «%s» не установлен."
+msgstr "Пакет «%s» не был заблокирован."
 
-#: tazpkg:2606 tazpkg:2651
+#: tazpkg:2606
+#: tazpkg:2651
 msgid "rootconfig needs --root= option used."
 msgstr "Для rootconfig обязателен параметр --root="
 
-#: tazpkg:2618 tazpkg:2682
+#: tazpkg:2618
+#: tazpkg:2682
 msgid "Package \"%s\" already in the cache"
 msgstr "Пакет «%s» уже находится в кеше"
 
-#: tazpkg:2621 tazpkg:2685
+#: tazpkg:2621
+#: tazpkg:2685
 msgid "Continuing package \"%s\" download"
 msgstr "Продолжение загрузки пакета «%s»"
 
@@ -1070,18 +1075,14 @@ msgid "Install package with \"%s\" or \"%s\""
 msgstr "Установите пакет командой «%s» или «%s»"
 
 #: tazpkg:2830
-#, fuzzy
 msgid "TazPKG SHell."
 msgstr "Оболочка TazPkg."
 
 #: tazpkg:2831
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
-msgstr ""
-"Введите «usage», чтобы выдать список всех доступных команд; «quit», «q» — "
-"выход."
+msgstr "Введите «usage», чтобы выдать список всех доступных команд; «quit», «q» — выход."
 
 #: tazpkg:2840
-#, fuzzy
 msgid "You are already running a TazPKG SHell."
 msgstr "Вы уже работаете в оболочке TazPkg."
 
@@ -1106,9 +1107,8 @@ msgid "Link all missing dependencies? (y/N)"
 msgstr "Создать ссылки на все отсутствующие зависимости? (y/N)"
 
 #: tazpkg:2930
-#, fuzzy
 msgid "Leaving dependencies unresolved for package \"%s\""
-msgstr "Отслеживание зависимостей пакета «%s»"
+msgstr "Зависимости пакета «%s» не решены"
 
 #: tazpkg:2931
 msgid "The package is installed but probably will not work."
@@ -1122,14 +1122,19 @@ msgstr "Отсутствует зависимость:"
 msgid "WARNING: unknown dependency for %s"
 msgstr "ВНИМАНИЕ: неизвестная зависимость %s"
 
-#: modules/tazpkg-convert:87 modules/tazpkg-convert:240
-#: modules/tazpkg-convert:278 modules/tazpkg-convert:346
-#: modules/tazpkg-convert:381 modules/tazpkg-convert:461
-#: modules/tazpkg-convert:703 modules/tazpkg-convert:724
+#: modules/tazpkg-convert:87
+#: modules/tazpkg-convert:240
+#: modules/tazpkg-convert:278
+#: modules/tazpkg-convert:346
+#: modules/tazpkg-convert:381
+#: modules/tazpkg-convert:461
+#: modules/tazpkg-convert:703
+#: modules/tazpkg-convert:724
 msgid "File \"%s\" does not look like %s package!"
 msgstr "Не похоже, чтобы файл «%s» являлся пакетом %s!"
 
-#: modules/tazpkg-convert:205 modules/tazpkg-convert:516
+#: modules/tazpkg-convert:205
+#: modules/tazpkg-convert:516
 msgid "Invalid target: %s (expected i386)"
 msgstr "Неверная платформа: %s (ожидалась i386)"
 
@@ -1169,11 +1174,13 @@ msgstr "Описание"
 msgid "Unpacked size"
 msgstr "Размер"
 
-#: tazpkg-box:52 tazpanel/pkgs.cgi:812
+#: tazpkg-box:52
+#: tazpanel/pkgs.cgi:812
 msgid "Depends"
 msgstr "Зависимости"
 
-#: tazpkg-box:66 tazpanel/pkgs.cgi:131
+#: tazpkg-box:66
+#: tazpanel/pkgs.cgi:131
 msgid "Install"
 msgstr "Установить"
 
@@ -1189,16 +1196,20 @@ msgstr "Загружается: %s"
 msgid "Packages"
 msgstr "Пакеты"
 
-#: tazpanel/pkgs.cgi:38 tazpanel/pkgs.cgi:1289
+#: tazpanel/pkgs.cgi:38
+#: tazpanel/pkgs.cgi:1289
 msgid "Summary"
 msgstr "Сводка"
 
-#: tazpanel/pkgs.cgi:39 tazpanel/pkgs.cgi:126 tazpanel/pkgs.cgi:221
+#: tazpanel/pkgs.cgi:39
+#: tazpanel/pkgs.cgi:126
+#: tazpanel/pkgs.cgi:221
 #: tazpkg-notify:66
 msgid "My packages"
 msgstr "Мои пакеты"
 
-#: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:124
+#: tazpanel/pkgs.cgi:40
+#: tazpanel/pkgs.cgi:124
 msgid "Recharge list"
 msgstr "Обновить список"
 
@@ -1206,7 +1217,9 @@ msgstr "Обновить список"
 msgid "Check updates"
 msgstr "Проверить обновления"
 
-#: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:129 tazpanel/pkgs.cgi:892
+#: tazpanel/pkgs.cgi:42
+#: tazpanel/pkgs.cgi:129
+#: tazpanel/pkgs.cgi:892
 msgid "Administration"
 msgstr "Администрирование"
 
@@ -1218,11 +1231,13 @@ msgstr "Пакеты | TazPanel"
 msgid "Check upgrades"
 msgstr "Проверить обновления"
 
-#: tazpanel/pkgs.cgi:127 tazpanel/pkgs.cgi:810
+#: tazpanel/pkgs.cgi:127
+#: tazpanel/pkgs.cgi:810
 msgid "Tags"
 msgstr "Теги"
 
-#: tazpanel/pkgs.cgi:128 tazpanel/pkgs.cgi:449
+#: tazpanel/pkgs.cgi:128
+#: tazpanel/pkgs.cgi:449
 msgid "Linkable packages"
 msgstr "Присоединенные пакеты"
 
@@ -1247,9 +1262,8 @@ msgid "Unblock"
 msgstr "Разблокировать"
 
 #: tazpanel/pkgs.cgi:136
-#, fuzzy
 msgid "(Un)block"
-msgstr "Разблокировать"
+msgstr "(Раз)блокировать"
 
 #: tazpanel/pkgs.cgi:137
 msgid "Repack"
@@ -1273,7 +1287,7 @@ msgstr "Полная проверка"
 
 #: tazpanel/pkgs.cgi:142
 msgid "Clean"
-msgstr ""
+msgstr "Очистить"
 
 #: tazpanel/pkgs.cgi:143
 msgid "Set link"
@@ -1284,17 +1298,14 @@ msgid "Remove link"
 msgstr "Удалить ссылку"
 
 #: tazpanel/pkgs.cgi:145
-#, fuzzy
 msgid "Add mirror"
-msgstr "зеркало"
+msgstr "Добавить зеркало"
 
 #: tazpanel/pkgs.cgi:146
-#, fuzzy
 msgid "Add repository"
-msgstr "Репозиторий: %s"
+msgstr "Добавить репозиторий"
 
 #: tazpanel/pkgs.cgi:147
-#, fuzzy
 msgid "Toggle all"
 msgstr "Переключить все"
 
@@ -1306,27 +1317,28 @@ msgstr "Поиск"
 msgid "Files"
 msgstr "Файлы"
 
-#: tazpanel/pkgs.cgi:182 tazpanel/pkgs.cgi:803 tazpanel/pkgs.cgi:1036
+#: tazpanel/pkgs.cgi:182
+#: tazpanel/pkgs.cgi:803
+#: tazpanel/pkgs.cgi:1036
 msgid "Name"
 msgstr "Название"
 
-#: tazpanel/pkgs.cgi:184 tazpanel/pkgs.cgi:806
+#: tazpanel/pkgs.cgi:184
+#: tazpanel/pkgs.cgi:806
 msgid "Description"
 msgstr "Описание"
 
 #: tazpanel/pkgs.cgi:222
-#, fuzzy
 msgid "All packages"
-msgstr "Доступные пакеты"
+msgstr "Все пакеты"
 
 #: tazpanel/pkgs.cgi:226
 msgid "Categories"
 msgstr "Категории"
 
 #: tazpanel/pkgs.cgi:244
-#, fuzzy
 msgid "Repository"
-msgstr "Репозиторий: %s"
+msgstr "Репозиторий"
 
 #: tazpanel/pkgs.cgi:247
 msgid "Public"
@@ -1338,21 +1350,21 @@ msgstr "Любой"
 
 #: tazpanel/pkgs.cgi:257
 msgid "All tags..."
-msgstr ""
+msgstr "Все ярлыки…"
 
 #: tazpanel/pkgs.cgi:258
-#, fuzzy
 msgid "All categories..."
-msgstr "Категории"
+msgstr "Все категории…"
 
-#: tazpanel/pkgs.cgi:295 tazpanel/pkgs.cgi:977
+#: tazpanel/pkgs.cgi:295
+#: tazpanel/pkgs.cgi:977
 msgid "Repository: %s"
 msgstr "Репозиторий: %s"
 
-#: tazpanel/pkgs.cgi:304 tazpanel/pkgs.cgi:372
-#, fuzzy
+#: tazpanel/pkgs.cgi:304
+#: tazpanel/pkgs.cgi:372
 msgid "Pages:"
-msgstr "Пакеты"
+msgstr "Страницы:"
 
 #: tazpanel/pkgs.cgi:446
 msgid "Listing linkable packages..."
@@ -1363,11 +1375,11 @@ msgid "Selection:"
 msgstr "Отмеченное:"
 
 #: tazpanel/pkgs.cgi:483
-#, fuzzy
 msgid "Categories list"
-msgstr "Категории"
+msgstr "Список категорий"
 
-#: tazpanel/pkgs.cgi:492 tazpanel/pkgs.cgi:805
+#: tazpanel/pkgs.cgi:492
+#: tazpanel/pkgs.cgi:805
 msgid "Category"
 msgstr "Категория"
 
@@ -1376,30 +1388,29 @@ msgid "Listing packages..."
 msgstr "Список пакетов…"
 
 #: tazpanel/pkgs.cgi:533
-#, fuzzy
 msgid "All packages of category \"%s\""
-msgstr "Установленные пакеты категории «%s»"
+msgstr "Все пакеты категории «%s»"
 
 #: tazpanel/pkgs.cgi:537
-#, fuzzy
 msgid "Installed packages of category \"%s\" in repository \"%s\""
-msgstr "Установленные пакеты категории «%s»"
+msgstr "Установленные пакеты категории «%s» репозитория «%s»"
 
 #: tazpanel/pkgs.cgi:538
-#, fuzzy
 msgid "All packages of category \"%s\" in repository \"%s\""
-msgstr "Установленные пакеты категории «%s»"
+msgstr "Все пакеты категории «%s» репозитория «%s»"
 
-#: tazpanel/pkgs.cgi:543 tazpanel/pkgs.cgi:1082
-#, fuzzy
+#: tazpanel/pkgs.cgi:543
+#: tazpanel/pkgs.cgi:1082
 msgid "Packages list"
-msgstr "Пакет %s"
+msgstr "Список пакетов"
 
-#: tazpanel/pkgs.cgi:549 tazpanel/pkgs.cgi:589 tazpanel/pkgs.cgi:677
-#: tazpanel/pkgs.cgi:1218 tazpanel/pkgs.cgi:1248
-#, fuzzy
+#: tazpanel/pkgs.cgi:549
+#: tazpanel/pkgs.cgi:589
+#: tazpanel/pkgs.cgi:677
+#: tazpanel/pkgs.cgi:1218
+#: tazpanel/pkgs.cgi:1248
 msgid "Selected packages:"
-msgstr "Заблокированных пакетов:"
+msgstr "Отмеченные пакеты:"
 
 #: tazpanel/pkgs.cgi:583
 msgid "Searching packages..."
@@ -1431,9 +1442,7 @@ msgstr "Обновить список пакетов"
 
 #: tazpanel/pkgs.cgi:661
 msgid "Packages lists are up-to-date. You should check for upgrades now."
-msgstr ""
-"Список пакетов обновлен до актуального состояния. Теперь вы можете проверить "
-"обновления."
+msgstr "Список пакетов обновлен до актуального состояния. Теперь вы можете проверить обновления."
 
 #: tazpanel/pkgs.cgi:671
 msgid "Checking for upgrades..."
@@ -1444,39 +1453,32 @@ msgid "Up packages"
 msgstr "Обновить пакеты"
 
 #: tazpanel/pkgs.cgi:720
-#, fuzzy
 msgid "Installing: %s"
-msgstr "Установленные файлы: %s"
+msgstr "Установка: %s"
 
 #: tazpanel/pkgs.cgi:721
-#, fuzzy
 msgid "Removing: %s"
-msgstr "Удаление пакета «%s»"
+msgstr "Удаление: %s"
 
 #: tazpanel/pkgs.cgi:722
-#, fuzzy
 msgid "Linking: %s"
-msgstr "Отсутствует: %s"
+msgstr "Линковка: %s"
 
 #: tazpanel/pkgs.cgi:723
-#, fuzzy
 msgid "Blocking: %s"
-msgstr "Загружается: %s"
+msgstr "Блокирование: %s"
 
 #: tazpanel/pkgs.cgi:724
-#, fuzzy
 msgid "Unblocking: %s"
-msgstr "Загружается: %s"
+msgstr "Разблокирование: %s"
 
 #: tazpanel/pkgs.cgi:725
-#, fuzzy
 msgid "(Un)blocking: %s"
-msgstr "Загружается: %s"
+msgstr "(Раз)блокирование: %s"
 
 #: tazpanel/pkgs.cgi:726
-#, fuzzy
 msgid "Repacking: %s"
-msgstr "Перепаковка «%s»"
+msgstr "Перепаковка: %s"
 
 #: tazpanel/pkgs.cgi:737
 msgid "y"
@@ -1495,9 +1497,8 @@ msgid "Maintainer"
 msgstr "Мэйнтейнер"
 
 #: tazpanel/pkgs.cgi:808
-#, fuzzy
 msgid "License"
-msgstr "Лицензия   : %s"
+msgstr "Лицензия"
 
 #: tazpanel/pkgs.cgi:809
 msgid "Website"
@@ -1511,7 +1512,8 @@ msgstr "Размер"
 msgid "Suggested"
 msgstr "Предлагает"
 
-#: tazpanel/pkgs.cgi:836 tazpanel/pkgs.cgi:843
+#: tazpanel/pkgs.cgi:836
+#: tazpanel/pkgs.cgi:843
 msgid "Installed files"
 msgstr "Установленные файлы"
 
@@ -1535,10 +1537,10 @@ msgstr "Проверка целостности пакетов…"
 msgid "Full packages check..."
 msgstr "Полная проверка пакетов…"
 
-#: tazpanel/pkgs.cgi:936 tazpanel/pkgs.cgi:947
-#, fuzzy
+#: tazpanel/pkgs.cgi:936
+#: tazpanel/pkgs.cgi:947
 msgid "%s is installed on /mnt/packages"
-msgstr "Установленные пакеты"
+msgstr "%s установлен на /mnt/packages"
 
 #: tazpanel/pkgs.cgi:960
 msgid "Packages cache"
@@ -1552,7 +1554,8 @@ msgstr "Пакетов в кеше: %s (%s)"
 msgid "Current mirror list"
 msgstr "Список текущих зеркал"
 
-#: tazpanel/pkgs.cgi:992 tazpanel/pkgs.cgi:1024
+#: tazpanel/pkgs.cgi:992
+#: tazpanel/pkgs.cgi:1024
 msgid "Delete"
 msgstr "Удалить"
 
@@ -1562,35 +1565,23 @@ msgstr "Частные репозитории"
 
 #: tazpanel/pkgs.cgi:1037
 msgid "URL:"
-msgstr ""
+msgstr "Адрес:"
 
 #: tazpanel/pkgs.cgi:1047
 msgid "Link to another SliTaz installation"
 msgstr "Ссылка на другой установленный SliTaz"
 
 #: tazpanel/pkgs.cgi:1050
-msgid ""
-"This link points to the root of another SliTaz installation. You will be "
-"able to install packages using soft links to it."
-msgstr ""
-"Эта ссылка указывает на корень файловой системы другого установленного "
-"SliTaz. Вы сможете устанавливать пакеты, используя символьные ссылки на них."
+msgid "This link points to the root of another SliTaz installation. You will be able to install packages using soft links to it."
+msgstr "Эта ссылка указывает на корень файловой системы другого установленного SliTaz. Вы сможете устанавливать пакеты, используя символьные ссылки на них."
 
 #: tazpanel/pkgs.cgi:1061
 msgid "SliTaz packages DVD"
 msgstr "DVD с пакетами SliTaz"
 
 #: tazpanel/pkgs.cgi:1064
-msgid ""
-"A bootable DVD image of all available packages for the %s version is "
-"generated every day. It also contains a copy of the website and can be used "
-"without an internet connection. This image can be installed on a DVD or a "
-"USB key."
-msgstr ""
-"Образ загрузочного DVD со всеми доступными пакетами для версии %s "
-"генерируется каждый день. Он также содержит копию сайта и может быть "
-"использован при отсутствии соединения с интернетом. Этот образ можно "
-"записать на DVD или установить на USB-флеш."
+msgid "A bootable DVD image of all available packages for the %s version is generated every day. It also contains a copy of the website and can be used without an internet connection. This image can be installed on a DVD or a USB key."
+msgstr "Образ загрузочного DVD со всеми доступными пакетами для версии %s генерируется каждый день. Он также содержит копию сайта и может быть использован при отсутствии соединения с интернетом. Этот образ можно записать на DVD или установить на USB-флеш."
 
 #: tazpanel/pkgs.cgi:1067
 msgid "Install from ISO image:"
@@ -1605,55 +1596,48 @@ msgid "Install from DVD/USB key"
 msgstr "Установить с DVD или USB-флеш"
 
 #: tazpanel/pkgs.cgi:1085
-msgid ""
-"Long list of packages is paginated. Here you can set the page size (default: "
-"100, turning off the pager: 0)."
-msgstr ""
+msgid "Long list of packages is paginated. Here you can set the page size (default: 100, turning off the pager: 0)."
+msgstr "Длинный список пакетов разбивается на страницы. Здесь вы можете указать размер страницы (по умолчанию: 100, отключить разбивку на страницы: 0)."
 
 #: tazpanel/pkgs.cgi:1090
 msgid "Set"
-msgstr ""
+msgstr "Установить"
 
 #: tazpanel/pkgs.cgi:1116
-#, fuzzy
 msgid "Licenses for package %s"
-msgstr "Отсутствуют файлы, установленные пакетом «%s»:"
+msgstr "Лицензии пакета %s"
 
 #: tazpanel/pkgs.cgi:1137
 msgid "%s license on %s website"
-msgstr ""
+msgstr "лицензия %s на сайте %s"
 
 #: tazpanel/pkgs.cgi:1138
 msgid "Read online:"
-msgstr ""
+msgstr "Читать онлайн:"
 
 #: tazpanel/pkgs.cgi:1138
 msgid "Read local:"
-msgstr ""
+msgstr "Читать имеющиеся документы:"
 
 #: tazpanel/pkgs.cgi:1181
-#, fuzzy
 msgid "Tags list"
-msgstr "Обновить список"
+msgstr "Список ярлыков"
 
 #: tazpanel/pkgs.cgi:1184
-#, fuzzy
 msgid "List of tags in all repositories"
-msgstr "Список всех установленных пакетов"
+msgstr "Список всех ярлыков во всех репозиториях"
 
 #: tazpanel/pkgs.cgi:1185
 msgid "List of tags in repository \"%s\""
-msgstr ""
+msgstr "Список ярлыков репозитория «%s»"
 
 #: tazpanel/pkgs.cgi:1214
-#, fuzzy
 msgid "Tag \"%s\""
-msgstr "Перепаковка «%s»"
+msgstr "Ярлык «%s»"
 
 #: tazpanel/pkgs.cgi:1245
-#, fuzzy
 msgid "Blocked packages list"
-msgstr "Заблокированные пакеты"
+msgstr "Список заблокированных пакетов"
 
 #: tazpanel/pkgs.cgi:1293
 msgid "Last recharge:"
@@ -1662,29 +1646,29 @@ msgstr "Последнее обновление:"
 #: tazpanel/pkgs.cgi:1304
 msgid "%d day ago."
 msgid_plural "%d days ago."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d день назад."
+msgstr[1] "%d дня назад."
+msgstr[2] "%d дней назад."
 
 #: tazpanel/pkgs.cgi:1306
 msgid "Today at %s."
-msgstr ""
+msgstr "Сегодня в %s."
 
 #: tazpanel/pkgs.cgi:1307
 msgid "Yesterday at %s."
-msgstr ""
+msgstr "Вчера в %s."
 
 #: tazpanel/pkgs.cgi:1310
 msgid "It is recommended to [recharge] the lists."
-msgstr ""
+msgstr "Рекомендуется [обновить] базы данных."
 
 #: tazpanel/pkgs.cgi:1314
 msgid "never."
-msgstr ""
+msgstr "никогда."
 
 #: tazpanel/pkgs.cgi:1315
 msgid "You need to [download] the lists for further work."
-msgstr ""
+msgstr "Вы должны [загрузить] базы данных для дальнейшей работы."
 
 #: tazpanel/pkgs.cgi:1319
 msgid "Installed packages:"
@@ -1712,7 +1696,7 @@ msgstr "Последние записи журнала"
 
 #: tazpanel/pkgs.cgi:1349
 msgid "Show"
-msgstr ""
+msgstr "Показать"
 
 #: tazpkg-notify:35
 msgid "%s installed package"
@@ -1852,6 +1836,7 @@ msgstr "Система в актуальном состоянии — %s"
 #~ msgstr "На зеркале нет новых пакетов."
 
 #~ msgid "$num file found for: $pkg"
+
 #~ msgid_plural "$num files found for: $pkg"
 #~ msgstr[0] "$num файл найден для «$pkg»"
 #~ msgstr[1] "$num файла найдено для «$pkg»"
