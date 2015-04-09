@@ -1442,7 +1442,7 @@ msgid "Suggested"
 msgstr ""
 
 #: tazpanel/pkgs.cgi:836 tazpanel/pkgs.cgi:843
-msgid "Installed files: %s"
+msgid "Installed files"
 msgstr ""
 
 #: tazpanel/pkgs.cgi:894

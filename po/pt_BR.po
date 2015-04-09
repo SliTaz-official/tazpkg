@@ -1494,8 +1494,8 @@ msgid "Suggested"
 msgstr "Sugeridos:"
 
 #: tazpanel/pkgs.cgi:836 tazpanel/pkgs.cgi:843
-msgid "Installed files: %s"
-msgstr "Arquivos instalados: %s"
+msgid "Installed files"
+msgstr "Arquivos instalados"
 
 #: tazpanel/pkgs.cgi:894
 msgid "TazPkg administration and settings"

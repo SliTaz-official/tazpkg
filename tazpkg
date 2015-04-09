@@ -1921,7 +1921,7 @@ $LIST"
 		cd $DESTDIR
 		extract_package
 		[ -e "receipt" ] && \
-			footer "$(_ 'Package "%s" is extracted to "%s"') $PACKAGE $DESTDIR"
+			footer "$(_ 'Package "%s" is extracted to "%s"' $PACKAGE $DESTDIR)"
 		;;
 
 

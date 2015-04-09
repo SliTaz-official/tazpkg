@@ -15,6 +15,8 @@
 . /etc/slitaz/slitaz.conf
 . /etc/slitaz/tazpkg.conf
 
+export TEXTDOMAIN='tazpkg'
+
 get_config
 
 _()  { local T="$1"; shift; printf "$(gettext "$T")" "$@"; echo; }
@@ -23,9 +25,11 @@ _p() {
 	local S="$1" P="$2" N="$3"; shift 3;
 	printf "$(ngettext "$S" "$P" "$N")" "$@"; }
 
+
 #------
 # menu
 #------
+
 case "$1" in
 	menu)
 		TEXTDOMAIN_original=$TEXTDOMAIN
@@ -47,13 +51,54 @@ EOT
 		exit
 esac
 
+
 header
+
+
+# AJAX commands
+
+case " $(GET) " in
+
+
+	*\ filelist\ * )
+		# Show installed files list
+		pkg=$(GET pkg)
+		cd $PKGS_DB
+
+		if [ -d $INSTALLED/$pkg ]; then
+			files="$(wc -l < $INSTALLED/$pkg/files.list)"
+			cat << EOT
+	<pre class="scroll">$(sort $INSTALLED/$pkg/files.list)</pre>
+	<footer>$(_p '%s file' '%s files' $files $files)</footer>
+EOT
+		else
+			cat << EOT
+	<pre class="scroll">$(lzcat files.list.lzma undigest/*/files.list.lzma \
+		2>/dev/null | awk -vp="$pkg:" '$1==p{print $2}' | sort)</pre>
+EOT
+		fi
+		exit 0 ;;
+
+
+	*\ status\ * )
+		# Show package status
+		pkg=$(GET pkg)
+		class='pkg'
+
+		if grep -q "^$PACKAGE"$'\t' $PKGS_DB/installed.info; then
+			class='pkgi'
+			grep -q "^$PACKAGE$" $PKGS_DB/blocked-packages.list && class='pkgib'
+		fi
+
+		exit 0 ;;
+
+esac
+
 
 # xHTML 5 header with special side bar for categories.
 TITLE=$(TEXTDOMAIN='tazpkg'; _ 'TazPanel - Packages')
 xhtml_header | sed 's/id="content"/id="content-sidebar"/'
 
-export TEXTDOMAIN='tazpkg'
 
 pkg_info_link() {
 	echo "<a data-icon=\"$2\" href=\"?info=${1//+/%2B}\">$1</a>" | sed 's| data-icon=""||'
@@ -830,21 +875,15 @@ EOT
 EOT
 
 		# Show installed files list
-		if [ -d $INSTALLED/$pkg ]; then
-			cat << EOT
+		cat <<EOT
 <section>
-	<header>$(_ 'Installed files: %s' $(wc -l < $INSTALLED/$pkg/files.list))</header>
-	<pre>$(sort $INSTALLED/$pkg/files.list)</pre>
+	<header>$(_ 'Installed files')</header>
+	<span id="fileList">
+		<div style="text-align: center;"><span id="ajaxStatus"></span>$(_ 'Please wait')</div>
+	</span>
 </section>
+<script type="text/javascript">ajax('pkgs.cgi?filelist&pkg=$pkg', '1', 'fileList');</script>
 EOT
-		else
-			cat << EOT
-<section>
-	<header>$(_ 'Installed files: %s' ' ')</header>
-	<pre>$(lzcat files.list.lzma undigest/*/files.list.lzma 2> /dev/null | awk -vp="$pkg:" '$1==p{print $2}' | sort)</pre>
-</section>
-EOT
-		fi
 		;;
 
 
