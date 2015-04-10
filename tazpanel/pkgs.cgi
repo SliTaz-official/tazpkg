@@ -592,6 +592,10 @@ EOT
 <p>$title</p>
 
 EOT
+
+		[ ! -f $PKGS_DB/packages.info ] && msg warn \
+		"$(_ 'You can not view a list of all packages until recharging lists.')"
+
 		[ "$REMOTE_USER" == "root" ] && cat << EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
