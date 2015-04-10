@@ -1375,8 +1375,11 @@ case "$COMMAND" in
 			c|cat|categories)
 				# Display the list of categories.
 				title 'Packages categories'
+
 				echo "$PKGS_CATEGORIES" | sed 's|[^a-z-]|\n|g; /^$/d' | \
-				sed 's|\(.*\)|\1'$'\033''[15G \1|' | translate_category
+				sed 's|\(.*\)|\1\t\1|' | translate_category | awk -F$'\t' '{
+				if ($1==$2) print $1; else print $1"\033[15G "$2}'
+
 				num=$(echo -n "$PKGS_CATEGORIES" | wc -l)
 				footer "$(_p \
 					'%s category' \
