@@ -85,11 +85,12 @@ EOT
 		pkg=$(GET pkg)
 		class='pkg'
 
-		if grep -q "^$PACKAGE"$'\t' $PKGS_DB/installed.info; then
+		if grep -q "^$pkg"$'\t' $PKGS_DB/installed.info; then
 			class='pkgi'
-			grep -q "^$PACKAGE$" $PKGS_DB/blocked-packages.list && class='pkgib'
+			grep -q "^$pkg$" $PKGS_DB/blocked-packages.list && class='pkgib'
 		fi
 
+		echo -n "<a data-icon=\"$class\" href=\"?info=\"${pkg//+/%2B}\">$pkg</a>"
 		exit 0 ;;
 
 esac
@@ -465,9 +466,11 @@ EOT
 
 show_info_links() {
 	if [ -n "$1" ]; then
+		if [ "$3" == 'tag' ]; then icon='tag'; else icon='clock'; fi
 		echo -n "<tr><td><b>$2</b></td><td>"
-		echo $1 | tr ' ' $'\n' | awk -vt="$3" '{
-			printf "<a href=\"?%s=%s\">%s</a>   ", t, gensub(/\+/, "%2B", "g", $1), $1
+		echo $1 | tr ' ' $'\n' | awk -vt="$3" -vi="$icon" '{
+			printf "<span><a data-icon=\"%s\" ", i;
+			printf "href=\"?%s=%s\">%s</a></span>   ", t, gensub(/\+/, "%2B", "g", $1), $1
 		}'
 		echo "</td></tr>"
 	fi
@@ -843,7 +846,7 @@ EOT
 		</form>
 	</header>
 
-<table class="wide zebra summary">
+<table class="wide zebra summary" id="infoTable">
 <tbody>
 	<tr><td><b>$(_ 'Name')</b></td><td>$PACKAGE</td></tr>
 	<tr><td><b>$(_ 'Version')</b></td><td>$VERSION</td></tr>
@@ -859,11 +862,25 @@ EOT
 </tbody>
 </table>
 </section>
+<span id="ajaxStatus" style="display:none"></span>
+
+<script type="text/javascript">
+	var links = document.getElementById('infoTable').getElementsByTagName('a');
+	for (var i = 0; i < links.length; i++) {
+		console.log('i=%s, icon=%s.', i, links[i].dataset.icon);
+		if (links[i].dataset.icon == 'clock') {
+			links[i].parentNode.id = 'link' + i;
+			pkg = links[i].innerText.replace(/\+/g, '%2B');
+			ajax('pkgs.cgi?status&pkg=' + pkg, '1', 'link' + i);
+		}
+	}
+
+</script>
 EOT
 
 		# Show description
 		DESC="$(tazpkg desc $pkg)"
-		[ -n "$DESC" ] && echo "<section><pre>$DESC</pre></section>"
+		[ -n "$DESC" ] && echo "<section><pre class="pre-wrap">$DESC</pre></section>"
 
 		# Show configuration files list
 		CONFIGS="$(tazpkg list-config $pkg | sed 's|\(.*\)|\1 \1|')"

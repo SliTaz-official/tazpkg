@@ -1611,7 +1611,7 @@ msgstr[1] "il y a %d jours."
 
 #: tazpanel/pkgs.cgi:1306
 msgid "Today at %s."
-msgstr "Aujourd'hui à %s.
+msgstr "Aujourd'hui à %s."
 
 #: tazpanel/pkgs.cgi:1307
 msgid "Yesterday at %s."
