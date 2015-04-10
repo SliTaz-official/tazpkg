@@ -692,21 +692,23 @@ EOT
 
 		cat << EOT
 <h2>$(_ 'Recharge')</h2>
+<p>$(_ 'Recharge checks for new or updated packages')</p>
 
-<form>
-<div id="actions">
-	<p>$(_ 'Recharge checks for new or updated packages')</p>
-	<div class="float-right">$(show_button up)</div>
-</div>
+<section>
+	<header>
+		$(_ 'Recharging log')
+		<form>$(show_button up)</form>
+	</header>
 
-<pre>
+	<pre class="scroll">
 EOT
 		echo $(_ 'Recharging packages list') | log
 		tazpkg recharge | filter_taztools_msgs
 		cat << EOT
-</pre>
+	</pre>
 
-<p>$(_ 'Packages lists are up-to-date. You should check for upgrades now.')</p>
+	<footer>$(_ 'Packages lists are up-to-date. You should check for upgrades now.')</footer>
+</section>
 EOT
 		;;
 
@@ -892,6 +894,7 @@ EOT
 EOT
 
 		# Show installed files list
+		pkg=${pkg//+/%2B}
 		cat <<EOT
 <section>
 	<header>$(_ 'Installed files')</header>
