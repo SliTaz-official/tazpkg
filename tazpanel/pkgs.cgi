@@ -90,7 +90,7 @@ EOT
 			grep -q "^$pkg$" $PKGS_DB/blocked-packages.list && class='pkgib'
 		fi
 
-		echo -n "<a data-icon=\"$class\" href=\"?info=\"${pkg//+/%2B}\">$pkg</a>"
+		echo -n "<a data-icon=\"$class\" href=\"?info=${pkg//+/%2B}\">$pkg</a>"
 		exit 0 ;;
 
 esac
