@@ -783,15 +783,16 @@ EOT
 
 		cat << EOT
 <h2>TazPkg: $(GET do)</h2>
-<p>$MSG</p>
+<section>
+	<div>$MSG</div>
+	<pre class="scroll">
 EOT
 		# Do the command for all asked packages
 		cd /tmp
 		for pkg in $pkgs; do
-			echo '<pre>'
 			echo $(_n 'y') | tazpkg $cmd $pkg $opt 2>/dev/null | filter_taztools_msgs
-			echo '</pre>'
-		done ;;
+		done
+		echo '</pre></section>' ;;
 
 
 	*\ info\ *)
