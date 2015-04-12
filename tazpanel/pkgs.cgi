@@ -284,6 +284,7 @@ function setValue(name, value) {
 		}')
 	</div>
 EOT
+#reminder; gettext 'all'; gettext 'extra'
 
 	if [ -d $PKGS_DB/undigest ]; then
 		cat << EOT

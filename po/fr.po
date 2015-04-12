@@ -1733,8 +1733,8 @@ msgstr "Le system est à jour - %s"
 #~ msgid "Web"
 #~ msgstr "Internet"
 
-#~ msgid "all"
-#~ msgstr "Tous"
+msgid "all"
+msgstr "Toutes"
 
 #, fuzzy
 #~ msgid "extra"
