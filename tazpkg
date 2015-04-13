@@ -67,7 +67,7 @@ translate_category()
 
 
 # If category is not one of those translated in native language, keep it
-# untranslated. This allows both native and english language support.
+# untranslated. This allows both native and English language support.
 # This also supports custom categories.
 # And now we support spaces in translated categories
 
@@ -79,7 +79,7 @@ reverse_translate_category()
 
 
 #
-# TazPKG output functions
+# TazPkg output functions
 #
 
 
@@ -144,7 +144,7 @@ im() { tty -s; }
 # Print the usage.
 
 usage () {
-	cat << EOT
+	cat <<EOT
 
 $(_ 'SliTaz package manager - Version: %s' $(colorize 34 $VERSION))
 
@@ -169,7 +169,7 @@ $(optlist "\
      search-pkgname		$(_ 'Search on mirror for package having a particular file')
 -sf  search-file		$(_ 'Search for file in all installed packages files')
 
-     get				$(_ 'Download a package into the current directory')
+-g   get				$(_ 'Download a package into the current directory')
 -gi  get-install		$(_ 'Download and install a package from the mirror')
      get-install-list	$(_ 'Download and install a list of packages from the mirror')
 -i   install			$(_ 'Install a local package')
@@ -184,7 +184,7 @@ $(optlist "\
      repack				$(_ 'Create a package archive from an installed package')
      repack-config		$(_ 'Create a package archive with configuration files')
      recompress			$(_ 'Rebuild a package with a better compression ratio')
-     block|unblock		$(_ 'Block an installed package version or unblock it for upgrade')
+-b|u block|unblock		$(_ 'Block an installed package version or unblock it for upgrade')
      check				$(_ 'Verify consistency of installed packages')
 
      add-flavor			$(_ 'Install the flavor list of packages')
@@ -212,7 +212,7 @@ EOT
 
 
 usage_up() {
-	cat << EOT
+	cat <<EOT
 $(emsg "<b>$(_ 'Usage for command up:')</b>") tazpkg up [$(_ 'option')]
 
  * $(longline "$(_ 'Without options run in interactive mode and ask before install')")
@@ -2533,7 +2533,7 @@ EOT
 		_ 'Check completed.'; echo ;;
 
 
-	block)
+	block|-b)
 		# Add a pkg name to the list of blocked packages.
 		check_root $@
 		check_for_package_on_cmdline
@@ -2552,7 +2552,7 @@ EOT
 		newline ;;
 
 
-	unblock)
+	unblock|-u)
 		# Remove a pkg name from the list of blocked packages.
 		check_root $@
 		check_for_package_on_cmdline
@@ -2593,7 +2593,7 @@ EOT
 		newline ;;
 
 
-	get)
+	get|-g)
 		# Download a package with wget.
 		check_root $@
 		check_for_package_on_cmdline
@@ -2879,7 +2879,7 @@ EOT
 					SUGGESTED=$(echo -n $SUGGESTED | sed "s/$s//")
 				done
 				fi
-				cat << EOT
+				cat <<EOT
 $(boldify $(echo $PACKAGE):) $SUGGESTED
 EOT
 			fi

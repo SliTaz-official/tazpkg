@@ -4,7 +4,7 @@
 # patch to extract a TazPkg file but not Thunar and other FM. TazPkgBox tries
 # to follow freedesktop standards.
 #
-# Copyright (C) 2011-2014 SliTaz GNU/Linux - GNU GPL v2
+# Copyright (C) 2011-2015 SliTaz GNU/Linux - GNU GPL v2
 #
 # Authors: Christophe Lincoln <pankso@slitaz.org>
 #
@@ -23,7 +23,7 @@ opts="--image=tazpkg --image-on-top --center --on-top"
 
 
 usage() {
-	cat << EOT
+	cat <<EOT
 $(_ 'Usage:') $(basename $0) [actions|URL] [$(_ 'package')]
 EOT
 }

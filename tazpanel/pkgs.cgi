@@ -67,12 +67,12 @@ case " $(GET) " in
 
 		if [ -d $INSTALLED/$pkg ]; then
 			files="$(wc -l < $INSTALLED/$pkg/files.list)"
-			cat << EOT
+			cat <<EOT
 	<pre class="scroll">$(sort $INSTALLED/$pkg/files.list)</pre>
 	<footer>$(_p '%s file' '%s files' $files $files)</footer>
 EOT
 		else
-			cat << EOT
+			cat <<EOT
 	<pre class="scroll">$(lzcat files.list.lzma undigest/*/files.list.lzma \
 		2>/dev/null | awk -vp="$pkg:" '$1==p{print $2}' | sort)</pre>
 EOT
@@ -129,7 +129,7 @@ parse_packages_desc() {
 	do
 		class=pkg; [ -d $INSTALLED/${PACKAGE% } ] && class=pkgi
 		i18n_desc $PACKAGE
-		cat << EOT
+		cat <<EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 	<td>$VERSION</td>
@@ -150,7 +150,7 @@ parse_packages_info() {
 			grep -q "^$PACKAGE$" $PKGS_DB/blocked-packages.list && class='pkgib'
 		fi
 		i18n_desc $PACKAGE
-		cat << EOT
+		cat <<EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 	<td>$VERSION</td>
@@ -210,7 +210,7 @@ show_button() {
 # ENTER will search but user may search for a button, so put one.
 
 search_form() {
-	cat << EOT
+	cat <<EOT
 <form class="search"><!--
 	--><input type="search" name="search" results="5" autosave="pkgsearch" autocomplete="on"><!--
 	--><button type="submit">$(_n 'Search')</button><!--
@@ -221,7 +221,7 @@ EOT
 
 
 table_head() {
-	cat << EOT
+	cat <<EOT
 <table class="wide zebra pkglist" id="head1">
 	<thead id="head2">
 		<tr>
@@ -240,7 +240,7 @@ sidebar() {
 	  my=$(COOKIE my);     my=${my:-my};       [ -n "$(GET my)" ]   &&   my=$(GET my)
 	 cat=$(COOKIE cat);   cat=${cat:-all};     [ -n "$(GET cat)" ]  &&  cat=$(GET cat)
 
-	cat << EOT
+	cat <<EOT
 <script type="text/javascript">
 function setCookie(name) {
 	if (name=='cat') {
@@ -287,7 +287,7 @@ EOT
 #reminder; gettext 'all'; gettext 'extra'
 
 	if [ -d $PKGS_DB/undigest ]; then
-		cat << EOT
+		cat <<EOT
 	<h4>$(_ 'Repository')</h4>
 
 	<select id="repo" onchange="setCookie('repo')">
@@ -300,7 +300,7 @@ EOT
 	<script type="text/javascript">setValue('repo', "$repo")</script>
 EOT
 	fi
-	cat << EOT
+	cat <<EOT
 	<a data-icon="tags" href="?tags">$(_ 'All tags...')</a><br/>
 	<a data-icon="list" href="?cats">$(_ 'All categories...')</a>
 </div>
@@ -417,7 +417,7 @@ show_list() {
 	esac
 
 	if [ "$pager" != "<p>$(_ 'Pages:') </p>" ] && [ -n "${list:1:1}" ]; then
-		cat << EOT
+		cat <<EOT
 <h3>$(header_repo_name $i)</h3>
 $pager
 	$(table_head)
@@ -438,7 +438,7 @@ EOT
 	# now pkgs='"pkg1", "pkg2", ... "pkgn"'
 
 	if [ -n "$pkgs" ]; then
-		cat << EOT
+		cat <<EOT
 <script type="text/javascript">
 var pkgs = [$pkgs];
 var theForm = document.getElementById('pkglist');
@@ -494,7 +494,7 @@ case " $(GET) " in
 		search_form; sidebar
 		LOADING_MSG=$(_ 'Listing linkable packages...'); loading_msg
 
-		cat << EOT
+		cat <<EOT
 <h2>$(_ 'Linkable packages')</h2>
 
 <form class="wide">
@@ -506,7 +506,7 @@ EOT
 			[ -s $pkg/receipt ] && continue
 			. $target/$INSTALLED/$pkg/receipt
 			i18n_desc $pkg
-			cat << EOT
+			cat <<EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$pkg" /><a data-icon="pkg" href="?info=${pkg//+/%2B}">$pkg</a></td>
 	<td>$VERSION</td>
@@ -515,7 +515,7 @@ EOT
 </tr>
 EOT
 		done
-		cat << EOT
+		cat <<EOT
 		</tbody>
 	</table>
 </form>
@@ -532,7 +532,7 @@ EOT
 		echo "<h2>$(_ 'Categories list')</h2>"
 
 		for pkgsinfo in $(repo_list /packages.info); do
-			cat << EOT
+			cat <<EOT
 <section>
 	<header>$(header_repo_name $(dirname $pkgsinfo))</header>
 	<table class="wide zebra center">
@@ -558,7 +558,7 @@ EOT
 			}' | sort | awk '{
 			printf "<tr><td><a href=\"?list&amp;cat=%s\">%s</a></td><td>%d</td><td>%d</td></tr>", $1, $1, $2, $3
 			}'
-			cat << EOT
+			cat <<EOT
 		</tbody>
 	</table>
 </section>
@@ -588,7 +588,7 @@ EOT
 				esac ;;
 		esac
 
-		cat << EOT
+		cat <<EOT
 <h2>$(_ 'Packages list')</h2>
 <p>$title</p>
 
@@ -597,7 +597,7 @@ EOT
 		[ ! -f $PKGS_DB/packages.info ] && msg warn \
 		"$(_ 'You can not view a list of all packages until recharging lists.')"
 
-		[ "$REMOTE_USER" == "root" ] && cat << EOT
+		[ "$REMOTE_USER" == "root" ] && cat <<EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -609,14 +609,14 @@ EOT
 	</footer>
 </section>
 EOT
-		cat << EOT
+		cat <<EOT
 
 <form id="pkglist" class="wide">
 EOT
 		for i in $(repo_list ""); do
 			show_list ${my#no}
 		done
-		cat << EOT
+		cat <<EOT
 </form>
 <script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
 EOT
@@ -635,7 +635,7 @@ EOT
 		sidebar
 		LOADING_MSG="$(_ 'Searching packages...')"; loading_msg
 
-		cat << EOT
+		cat <<EOT
 <h2>$(_ 'Search packages')</h2>
 
 <section>
@@ -667,7 +667,7 @@ EOT
 					class='pkgi'
 					grep -q "^$PACKAGE$" $PKGS_DB/blocked-packages.list && class='pkgib'
 				fi
-				cat << EOT
+				cat <<EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
 	<td>$(echo "$FILE" | sed "s|$pkg|<span class=\"diff-add\">&</span>|gI")</td>
@@ -679,7 +679,7 @@ EOT
 			awk -F$'\t' 'BEGIN{IGNORECASE = 1}
 			$1 " " $4 ~ /'$pkg'/{print $0}' $(repo_list /packages.info) | parse_packages_info
 		fi
-		cat << EOT
+		cat <<EOT
 	</tbody>
 	</table>
 </form>
@@ -695,7 +695,7 @@ EOT
 		search_form; sidebar
 		LOADING_MSG="$(_ 'Recharging lists...')"; loading_msg
 
-		cat << EOT
+		cat <<EOT
 <h2>$(_ 'Recharge')</h2>
 <p>$(_ 'Recharge checks for new or updated packages')</p>
 
@@ -709,7 +709,7 @@ EOT
 EOT
 		echo $(_ 'Recharging packages list') | log
 		tazpkg recharge | filter_taztools_msgs
-		cat << EOT
+		cat <<EOT
 	</pre>
 
 	<footer>$(_ 'Packages lists are up-to-date. You should check for upgrades now.')</footer>
@@ -725,7 +725,7 @@ EOT
 		search_form; sidebar
 		LOADING_MSG="$(_ 'Checking for upgrades...')"; loading_msg
 
-		cat << EOT
+		cat <<EOT
 <h2>$(_ 'Up packages')</h2>
 
 <section>
@@ -746,7 +746,7 @@ EOT
 			grep -hs "^$pkg	" $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info | parse_packages_info
 		done
 
-		cat << EOT
+		cat <<EOT
 		</tbody>
 	</table>
 </form>
@@ -781,7 +781,7 @@ EOT
 			repack)  MSG="$(_ 'Repacking: %s'    "$bpkgs")" ;;
 		esac
 
-		cat << EOT
+		cat <<EOT
 <h2>TazPkg: $(GET do)</h2>
 <section>
 	<div>$MSG</div>
@@ -803,7 +803,7 @@ EOT
 		search_form; sidebar
 		LOADING_MSG=$(_ 'Getting package info...'); loading_msg
 
-		cat << EOT
+		cat <<EOT
 <section>
 	<header>
 		$(_ 'Package %s' $pkg)
@@ -850,7 +850,7 @@ EOT
 		i18n_desc $pkg
 
 		# Show info table
-		cat << EOT
+		cat <<EOT
 		</form>
 	</header>
 
@@ -892,7 +892,7 @@ EOT
 
 		# Show configuration files list
 		CONFIGS="$(tazpkg list-config $pkg | sed 's|\(.*\)|\1 \1|')"
-		[ -n "$CONFIGS" ] && cat << EOT
+		[ -n "$CONFIGS" ] && cat <<EOT
 <section>
 	<header>$(_ 'Configuration files')</header>
 	<pre>$(printf '<a href="index.cgi?file=%s">%s</a>\n' $CONFIGS)</pre>
@@ -953,7 +953,7 @@ EOT
 				fi ;;
 		esac
 
-		cat << EOT
+		cat <<EOT
 <h2>$(_ 'Administration')</h2>
 
 <p>$(_ 'TazPkg administration and settings')</p>
@@ -1020,7 +1020,7 @@ EOT
 		[ "$cache_files" == 0 ] && cache_size="0K"
 		mirror=$(cat $PKGS_DB/mirror)
 		default_mirror=${mirror%/packages/*}
-		cat << EOT
+		cat <<EOT
 <section>
 	<header>$(_ 'Packages cache')</header>
 	<form class="wide">
@@ -1041,13 +1041,13 @@ EOT
 			if [ $i != $PKGS_DB/mirrors ]; then
 				echo "<h4>$(_ 'Repository: %s' "$(repo_name $(dirname $i))")</h4>"
 			fi
-			cat << EOT
+			cat <<EOT
 	<form class="wide">
 		<input type="hidden" name="admin" value="select-mirror"/>
 		<table class="wide zebra">
 EOT
 			while read line; do
-				cat << EOT
+				cat <<EOT
 			<tr>
 				<td>
 					<input type="radio" name="mirror" id="$line" value="$line" onchange="this.form.submit()"
@@ -1058,7 +1058,7 @@ EOT
 			</tr>
 EOT
 			done < $i
-			cat << EOT
+			cat <<EOT
 		</table>
 	</form>
 
@@ -1071,7 +1071,7 @@ EOT
 	</form>
 EOT
 		done
-		cat << EOT
+		cat <<EOT
 </section>
 
 
@@ -1079,7 +1079,7 @@ EOT
 	<header>$(_ 'Private repositories')</header>
 EOT
 		if [ -n "$(ls $PKGS_DB/undigest 2> /dev/null)" ]; then
-			cat << EOT
+			cat <<EOT
 	<table class="wide zebra">
 EOT
 			ls $PKGS_DB/undigest 2> /dev/null | while read repo ; do
@@ -1090,12 +1090,12 @@ EOT
 		</tr>
 EOT
 			done
-			cat << EOT
+			cat <<EOT
 	</table>
 EOT
 		fi
 
-		cat << EOT
+		cat <<EOT
 	<form class="wide">
 		<table>
 			<tr><td>$(_ 'Name')</td><td><input type="text" name="repository" size="10"/></td></tr>
@@ -1275,10 +1275,10 @@ END{
 		search_form; sidebar
 
 		tag=$(GET tag)
-		cat << EOT
+		cat <<EOT
 <h2 data-icon="tag">$(_ 'Tag "%s"' $tag)</h2>
 EOT
-		[ "$REMOTE_USER" == "root" ] && cat << EOT
+		[ "$REMOTE_USER" == "root" ] && cat <<EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -1287,13 +1287,13 @@ EOT
 	</footer>
 </section>
 EOT
-		cat << EOT
+		cat <<EOT
 <form id="pkglist" class="wide">
 EOT
 		for i in $(repo_list ""); do
 			show_list all
 		done
-		cat << EOT
+		cat <<EOT
 </form>
 <script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
 EOT
@@ -1306,7 +1306,7 @@ EOT
 		#
 		search_form; sidebar
 
-		cat << EOT
+		cat <<EOT
 <h2>$(_ 'Blocked packages list')</h2>
 
 <section>
@@ -1326,7 +1326,7 @@ EOT
 				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a data-icon=\"pkgib\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", $1, gensub(/\+/, "%2B", "g", $1), $1, $2, $4, $5
 			}' $PKGS_DB/installed.info
 		done
-		cat << EOT
+		cat <<EOT
 		</tbody>
 	</table>
 </form>
@@ -1341,13 +1341,13 @@ EOT
 		#
 		search_form; sidebar
 
-		cat << EOT
+		cat <<EOT
 <form id="actions2">
 EOT
 		fslink=$(readlink $PKGS_DB/fslink)
 		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] && show_button linkable
 		show_button recharge up admin
-		cat << EOT
+		cat <<EOT
 </form>
 
 <section>
