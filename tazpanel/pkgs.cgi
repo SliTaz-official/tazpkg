@@ -9,7 +9,6 @@
 # (C) 2011-2015 SliTaz GNU/Linux - BSD License
 #
 
-. /lib/libtaz.sh
 . lib/libtazpanel
 
 . /etc/slitaz/slitaz.conf
@@ -52,10 +51,10 @@ EOT
 esac
 
 
-header
 
-
+#
 # AJAX commands
+#
 
 case " $(GET) " in
 
@@ -65,6 +64,7 @@ case " $(GET) " in
 		pkg=$(GET pkg)
 		cd $PKGS_DB
 
+		header
 		if [ -d $INSTALLED/$pkg ]; then
 			files="$(wc -l < $INSTALLED/$pkg/files.list)"
 			cat <<EOT
@@ -90,10 +90,57 @@ EOT
 			grep -q "^$pkg$" $PKGS_DB/blocked-packages.list && class='pkgib'
 		fi
 
+		header
 		echo -n "<a data-icon=\"$class\" href=\"?info=${pkg//+/%2B}\">$pkg</a>"
 		exit 0 ;;
 
+	*\ app_img\ * )
+		# Show application image
+		pkg=$(GET app_img)
+		current_user="$(who | cut -d' ' -f1)"
+		if [ -n "$current_user" ]; then
+			current_user_home="$(awk -F: -vu=$current_user '{if($1==u) print $6}' /etc/passwd)"
+			current_icon_theme="/usr/share/icons/$(grep gtk-icon-theme-name $current_user_home/.gtkrc-2.0 | cut -d'"' -f2)"
+			default_pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name 'package-x-generic.png' | head -n1)"
+			pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name "$pkg.png" | head -n1)"
+			if [ -z "$pkg_icon" ]; then
+				pkg_icon="$(find -L /usr/share/pixmaps -type f -name "$pkg.png" | head -n1)"
+			fi
+
+			header "Content-Type: image/png"
+			cat "${pkg_icon:-$default_pkg_icon}"
+		else
+			default_pkg_icon="$(find -L /usr/share/icons -type f -name 'package-x-generic.png' | sort | tail -n1)"
+		fi
+		exit 0 ;;
+
+	*\ show_receipt\ * )
+		# Show package receipt
+		pkg=$(GET show_receipt)
+		if [ -d "$INSTALLED/$pkg" ]; then
+			# Redirects to the receipt view
+			header "HTTP/1.1 301 Moved Permanently" "Location: index.cgi?file=$INSTALLED/$pkg/receipt"
+			exit 0
+		else
+			temp_receipt=$(mktemp -d)
+			wget -O $temp_receipt/receipt -T 5 http://hg.slitaz.org/wok/raw-file/tip/$pkg/receipt
+			if [ -e "$temp_receipt" ]; then
+				# Redirects to the receipt view
+				header "HTTP/1.1 301 Moved Permanently" "Location: index.cgi?file=$temp_receipt/receipt"
+				exit 0
+			else
+				header; xhtml_header
+				msg err "$(_ 'Receipt for package %s unavailable' $pkg)"
+				xhtml_footer
+				exit 0
+			fi
+		fi
+		;;
+
 esac
+
+
+header
 
 
 # xHTML 5 header with special side bar for categories.
@@ -854,6 +901,8 @@ EOT
 		</form>
 	</header>
 
+<table class="wide summary">
+	<tr><td id="appImg"><img src="pkgs.cgi?app_img=$PACKAGE"/></td><td>
 <table class="wide zebra summary" id="infoTable">
 <tbody>
 	<tr><td><b>$(_ 'Name')</b></td><td>$PACKAGE</td></tr>
@@ -869,6 +918,12 @@ EOT
 	$(show_info_links "$SUGGESTED" "$(_ 'Suggested')" 'info')
 </tbody>
 </table>
+</td></tr></table>
+
+	<footer>
+		<a data-icon="text" href="?show_receipt=$pkg">$(_ 'View receipt')</a>
+		<a data-icon="slitaz" href="?improve=$pkg">$(_ 'Improve package')</a>
+	</footer>
 </section>
 <span id="ajaxStatus" style="display:none"></span>
 
@@ -1335,7 +1390,156 @@ EOT
 		;;
 
 
-		*)
+	*\ improve\ *)
+		#
+		# Improving packages by the community effort
+		#
+		search_form; sidebar
+		msg warn 'Under construction!<br/>It is only imitation of working'
+
+		pkg=$(GET improve)
+		user=$(POST user); type=$(POST type); text="$(POST text)"
+		login=$(POST login); password=$(POST password)
+
+		login_c=$(COOKIE login); password_c=$(COOKIE password)
+		mail_hash=$(COOKIE mail_hash); user_name=$(COOKIE user_name)
+
+		n=$'\n'
+
+		if [ -n "$login" ]; then
+			# Get mail hash and user Name from bugs.slitaz.org
+			page="$(busybox wget --post-data "auth=${login}&pass=${password}&id=" \
+				-O- "http://bugs.slitaz.org/bugs.cgi?user=${login}")"
+			# Parse page and get:
+			mail_hash="$(echo "$page" | fgrep '<h2>' | cut -d/ -f5 | cut -c 1-32)"
+			user_name="$(echo "$page" | fgrep '<h2>' | cut -d'>' -f3 | cut -d'<' -f1)"
+
+			# Put variables to the session Cookies (they clean in browser close)
+			cat <<EOT
+<script type="text/javascript">
+	document.cookie = "login=$login";
+	document.cookie = "password=$password";
+	document.cookie = "mail_hash=$mail_hash";
+	document.cookie = "user_name=$user_name";
+</script>
+EOT
+			login_c="$login"; password_c="$password"
+		fi
+
+		if [ -z "$login_c" ]; then
+			cat <<EOT
+<section>
+	<div>$(_ 'Please log in using your TazBug account.')</div>
+	<form method="post">
+		<input type="hidden" name="improve" value="$pkg"/>
+		<table>
+			<tr><td>$(_ 'Login:')</td>
+				<td><input type="text" name="login"/></td></tr>
+			<tr><td>$(_ 'Password:')</td>
+				<td><input type="password" name="password"/></td></tr>
+			<tr><td colspan="2">
+				<button type="submit" data-icon="user">$(_ 'Log in')</button></td></tr>
+		</table>
+	</form>
+	<footer>
+		<a href="http://bugs.slitaz.org/bugs.cgi?signup&online" target="_blank">$(_ 'Create new account')</a>
+	</footer>
+</section>
+EOT
+			xhtml_footer; exit 0
+		fi
+
+
+		# Get receipt variables, show Install/Remove buttons
+		if [ -d $INSTALLED/$pkg ]; then
+			. $INSTALLED/$pkg/receipt
+		else
+			cd $PKGS_DB
+			eval "$(awk -F$'\t' -vp=$pkg '
+			$1==p{
+				printf "VERSION=\"%s\"; SHORT_DESC=\"%s\"; TAGS=\"%s\"; ", $2, $4, $6
+			}' packages.info undigest/*/packages.info)"
+		fi
+
+		RECEIPT="$(wget -O - http://hg.slitaz.org/wok/raw-file/tip/$pkg/receipt | htmlize)"
+		DESCRIPTION="$(wget -O - http://hg.slitaz.org/wok/raw-file/tip/$pkg/description.txt | htmlize)"
+		DESCRIPTION="$(separator)$n${DESCRIPTION:-(empty)}$n$(separator)"
+
+		if [ -z "$type" ]; then
+			cat <<EOT
+<section>
+	<header>
+		$(_ 'Improve package "%s"' $pkg)
+		<form><button name="info" value="$pkg" data-icon="back">$(_ 'Back')</button></form>
+	</header>
+
+	<div style="display:none">
+		<span id="newVersion">Current version: $VERSION${n}New version: $VERSION${n}Link to announce: http://</span>
+		<span id="improveShortDesc">Short description (English):$n$SHORT_DESC</span>
+		<span id="translateShortDesc">Short description (English):$n$SHORT_DESC$n${n}Language: $LANG${n}Short description:$n$SHORT_DESC</span>
+		<span id="improveDesc">Description (English):$n$DESCRIPTION</span>
+		<span id="translateDesc">Language: $LANG${n}Description:$n$DESCRIPTION</span>
+		<span id="improveCategory">Old category: $CATEGORY${n}New category: $CATEGORY</span>
+		<span id="improveTags">Tags: $TAGS</span>
+		<span id="addIcon">Link to application icon (48x48px): http://</span>
+		<span id="addScreenshot">Link to application screenshot: http://</span>
+		<span id="improveReceipt">$RECEIPT</span>
+		<span id="improveOther"></span>
+	</div>
+
+	<form method="post" class="wide">
+
+		<table class="wide">
+			<tr><td style="vertical-align:bottom">
+				<input type="hidden" name="improve" value="$pkg"/>
+				<input type="hidden" name="user" value="$login_c"/>
+				&nbsp;$(_ 'How can you help:')<br/>
+				<select name='type' id="improveType" onchange="improveAction()">
+					<option value=''>$(_ 'Please select an action')
+					<option value='newVersion'>$(_ 'Report new version')
+					<option value='improveShortDesc'>$(_ 'Improve short description')
+					<option value='translateShortDesc'>$(_ 'Translate short description')
+					<option value='improveDesc'>$(_ 'Add or improve description')
+					<option value='translateDesc'>$(_ 'Translate description')
+					<option value='improveCategory'>$(_ 'Improve category')
+					<option value='improveTags'>$(_ 'Add or improve tags')
+					<option value='addIcon'>$(_ 'Add application icon')
+					<option value='addScreenshot'>$(_ 'Add application screenshot')
+					<option value='improveReceipt'>$(_ 'Improve receipt')
+					<option value='improveOther'>$(_ 'Other')
+				</select>
+			</td>
+			<td id="user_info">$user_name
+				<img src="http://www.gravatar.com/avatar/$mail_hash?s=48&amp;d=identicon"
+					style="border-radius: 0.3rem"/>
+			</td></tr>
+		</table>
+
+		<textarea name="text" id="improveText" style="width:100%; resize: vertical; min-height:10rem"></textarea>
+		<button type="submit" data-icon="slitaz">$(_ 'Send')</button>
+	</form>
+</section>
+EOT
+		else
+			cat <<EOT
+<section>
+	<header>
+		$(_ 'Thank you!')
+		<form><button name="info" value="$pkg" data-icon="back">$(_ 'Back')</button></form>
+	</header>
+<div>The following information was sent to SliTaz developers:</div>
+<pre class="scroll"><b>User:</b> $user
+<b>Type:</b> $type
+<b>Package:</b> $pkg
+<b>Message:</b>
+$(echo "$text" | htmlize)</pre>
+</section>
+EOT
+		fi
+		;;
+
+
+	*)
 		#
 		# Default to summary
 		#

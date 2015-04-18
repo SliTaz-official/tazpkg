@@ -11,7 +11,7 @@ TMPLOCALSTATE=
 
 is_elf()
 {
-	[ "$(dd if=$1 bs=1 skip=1 count=3 2> /dev/null)" = "ELF" ]
+	[ `dd if=$1 bs=1 skip=1 count=3 2>/dev/null` == 'ELF' ]
 }
 
 
@@ -19,7 +19,7 @@ is_elf()
 
 ldd()
 {
-	LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so $1 2> /dev/null
+	LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so $1 2>/dev/null
 }
 
 
@@ -30,7 +30,7 @@ find_depends()
 	DEFAULT_DEPENDS="glibc-base gcc-lib-base"
 
 	[ -n "$TMPLOCALSTATE" ] || TMPLOCALSTATE=$PKGS_DB
-	[ -f $TMPLOCALSTATE/files.list.lzma ] || tazpkg recharge > /dev/null
+	[ -f $TMPLOCALSTATE/files.list.lzma ] || tazpkg recharge >/dev/null
 	for i in $TMPLOCALSTATE/files.list.lzma \
 		$TMPLOCALSTATE/undigest/*/files.list.lzma ; do
 		[ -f $i ] && lzma d $i -so >> $TMP_DIR/files.list
@@ -47,7 +47,7 @@ find_depends()
 
 		for lib in $(ldd $chkfile | sed '/=>/!d;s/ =>.*//') ; do
 			case " $libs_found " in
-			*\ $lib\ *) continue
+				*\ $lib\ *) continue
 			esac
 			libs_found="$libs_found $lib"
 			case "$lib" in
@@ -74,7 +74,7 @@ find_depends()
 
 	spc=""
 	[ -s $TMP_DIR/depends ] &&
-	sort < $TMP_DIR/depends 2> /dev/null | uniq | \
+	sort < $TMP_DIR/depends 2>/dev/null | uniq | \
 	while read file; do
 		echo -n "$spc$file"
 		spc=" "
