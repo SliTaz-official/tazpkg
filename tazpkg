@@ -2234,11 +2234,20 @@ EOT
 				action "Creating backup of the last packages list..."
 				for i in packages.desc packages.$SUM packages.txt \
 					packages.list packages.equiv files.list.lzma \
+					wanted.txt depends.txt libraries.txt \
 					extra.list mirrors packages.info
 				do
 					mv -f $i $i.bak 2>/dev/null
 				done
 				status
+			fi
+
+			# ID file & wanted/depends/libraries files were implemented
+			# at the same time. Not all repositories have them.
+			if [ -f ID ]; then
+				for i in wanted depends libraries; do
+					download_from $primary_mirror $i.txt
+				done
 			fi
 
 			for i in desc $SUM txt list equiv; do
