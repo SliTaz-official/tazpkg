@@ -94,14 +94,20 @@ EOT
 		echo -n "<a data-icon=\"$class\" href=\"?info=${pkg//+/%2B}\">$pkg</a>"
 		exit 0 ;;
 
+
 	*\ app_img\ * )
 		# Show application image
 		pkg=$(GET app_img)
+		if [ -f "$PKGS_DB/packages.icons" ]; then
+			predefined_icon="$(awk -F$'\t' -vpkg="$pkg" '{if ($1 == pkg) print $2}' $PKGS_DB/packages.icons)"
+		fi
+		predefined_icon="${predefined_icon:-package-x-generic}.png"
+
 		current_user="$(who | cut -d' ' -f1)"
 		if [ -n "$current_user" ]; then
 			current_user_home="$(awk -F: -vu=$current_user '{if($1==u) print $6}' /etc/passwd)"
 			current_icon_theme="/usr/share/icons/$(grep gtk-icon-theme-name $current_user_home/.gtkrc-2.0 | cut -d'"' -f2)"
-			default_pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name 'package-x-generic.png' | head -n1)"
+			default_pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name $predefined_icon | head -n1)"
 			pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name "$pkg.png" | head -n1)"
 			if [ -z "$pkg_icon" ]; then
 				pkg_icon="$(find -L /usr/share/pixmaps -type f -name "$pkg.png" | head -n1)"
@@ -110,9 +116,10 @@ EOT
 			header "Content-Type: image/png"
 			cat "${pkg_icon:-$default_pkg_icon}"
 		else
-			default_pkg_icon="$(find -L /usr/share/icons -type f -name 'package-x-generic.png' | sort | tail -n1)"
+			default_pkg_icon="$(find -L /usr/share/icons -type f -name $predefined_icon | sort | tail -n1)"
 		fi
 		exit 0 ;;
+
 
 	*\ show_receipt\ * )
 		# Show package receipt
@@ -307,7 +314,7 @@ function setValue(name, value) {
 	setCookie(name);
 }
 </script>
-<form method="post" action="?list">
+<form method="post" action="?list" style="position: absolute">
 
 <div id="sidebar">
 	<select id="my" value="$my" onchange="setCookie('my'); this.form.submit()">
@@ -913,7 +920,7 @@ EOT
 	$([ -n "$LICENSE" ] && echo "<tr><td><b>$(_ 'License')</b></td><td><a href=\"?license=$pkg\">$LICENSE</a></td></tr>")
 	<tr><td><b>$(_ 'Website')</b></td><td><a href="$WEB_SITE" target="_blank">$WEB_SITE</a></td></tr>
 	$(show_info_links "$TAGS" "$(_ 'Tags')" 'tag')
-	<tr><td><b>$(_ 'Sizes')</b></td><td>$PACKED_SIZE/$UNPACKED_SIZE</td></tr>
+	<tr><td><b>$(_ 'Sizes')</b></td><td>${PACKED_SIZE/.0/}/${UNPACKED_SIZE/.0/}</td></tr>
 	$(show_info_links "$DEPENDS" "$(_ 'Depends')" 'info')
 	$(show_info_links "$SUGGESTED" "$(_ 'Suggested')" 'info')
 </tbody>
