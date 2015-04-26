@@ -266,7 +266,7 @@ show_button() {
 search_form() {
 	cat <<EOT
 <form class="search"><!--
-	--><a data-icon="web" href="http://pkg.slitaz.org/" target="_blank" title="Web search tool"></a> <!--
+	--><a data-icon="web" href="http://pkg.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a> <!--
 	--><input type="search" name="search" results="5" autosave="pkgsearch" autocomplete="on"><!--
 	--><button type="submit">$(_n 'Search')</button><!--
 	--><button name="files" value="yes">$(_n 'Files')</button><!--
