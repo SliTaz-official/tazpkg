@@ -1299,7 +1299,7 @@ msgstr "Publique"
 
 #: tazpanel/pkgs.cgi:251
 msgid "Any"
-msgstr "Tous"
+msgstr "Toutes"
 
 #: tazpanel/pkgs.cgi:257
 msgid "All tags..."
