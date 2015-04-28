@@ -98,6 +98,8 @@ EOT
 	*\ app_img\ * )
 		# Show application image
 		pkg=$(GET app_img)
+
+		# check for icons defined with packages.icons file
 		if [ -f "$PKGS_DB/packages.icons" ]; then
 			predefined_icon="$(awk -F$'\t' -vpkg="$pkg" '{if ($1 == pkg) print $2}' $PKGS_DB/packages.icons)"
 		fi
@@ -106,18 +108,30 @@ EOT
 		current_user="$(who | cut -d' ' -f1)"
 		if [ -n "$current_user" ]; then
 			current_user_home="$(awk -F: -vu=$current_user '{if($1==u) print $6}' /etc/passwd)"
-			current_icon_theme="/usr/share/icons/$(grep gtk-icon-theme-name $current_user_home/.gtkrc-2.0 | cut -d'"' -f2)"
-			default_pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name $predefined_icon | head -n1)"
-			pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name "$pkg.png" | head -n1)"
-			if [ -z "$pkg_icon" ]; then
-				pkg_icon="$(find -L /usr/share/pixmaps -type f -name "$pkg.png" | head -n1)"
-			fi
-
-			header "Content-Type: image/png"
-			cat "${pkg_icon:-$default_pkg_icon}"
-		else
-			default_pkg_icon="$(find -L /usr/share/icons -type f -name $predefined_icon | sort | tail -n1)"
+			current_icon_theme="$(grep gtk-icon-theme-name $current_user_home/.gtkrc-2.0 | cut -d'"' -f2)"
 		fi
+		current_icon_theme="/usr/share/icons/$current_icon_theme"
+
+		# Preferred default icon is 48px package-x-generic
+		default_pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name $predefined_icon | head -n1)"
+		# ... or package-x-generic with the bigger size
+		if [ -z "$default_pkg_icon" ]; then
+			default_pkg_icon="$(find -L $current_icon_theme -type f -name $predefined_icon | sort | tail -n1)"
+		fi
+
+		# Preferred package icon size is 48px
+		pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name "$pkg.png" | head -n1)"
+		# ... or just bigger one
+		if [ -z "$pkg_icon" ]; then
+			pkg_icon="$(find -L $current_icon_theme -type f -name "$pkg.png" | sort | tail -n1)"
+		fi
+		# ... or one from pixmaps
+		if [ -z "$pkg_icon" ]; then
+			pkg_icon="$(find -L /usr/share/pixmaps -type f -name "$pkg.png" | head -n1)"
+		fi
+
+		header "Content-Type: image/png"
+		cat "${pkg_icon:-$default_pkg_icon}"
 		exit 0 ;;
 
 

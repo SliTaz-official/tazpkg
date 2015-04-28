@@ -691,6 +691,9 @@ install_package()
 
 	title 'Installation of package "%s"' $PACKAGE
 
+	longline "$(awk -F$'\t' -vp="$PACKAGE" '{if($1==p){print $4;exit}}' $PKGS_DB/packages.info)"
+	separator | tr -c $'\n' '-'
+
 	action 'Copying package...'
 	cp $PACKAGE_FILE $TMP_DIR
 	status
