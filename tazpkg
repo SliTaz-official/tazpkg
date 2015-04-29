@@ -948,9 +948,13 @@ EOT
 	# Clean to save RAM memory before installation
 	rm -rf $PACKAGE-$VERSION
 
-	# Install pseudo package
-	tazpkg install $PACKAGE-$VERSION.tazpkg --root=$ROOT
-	mv $PACKAGE-$VERSION.tazpkg $CACHE_DIR
+	if [ "$3" == "--get" ]; then
+		mv $PACKAGE-$VERSION.tazpkg $TOP_DIR
+	else
+		# Install pseudo package
+		tazpkg install $PACKAGE-$VERSION.tazpkg --root=$ROOT
+		mv $PACKAGE-$VERSION.tazpkg $CACHE_DIR
+	fi
 
 	# Clean
 	cd $TOP_DIR
@@ -2618,23 +2622,28 @@ EOT
 		look_for_priority
 
 		CURRENT_DIR=$PWD
-		check_for_package_in_list
 		cd $CACHE_DIR
-		if [ -f "$PACKAGE.tazpkg" ]; then
-			_ 'Package "%s" already in the cache' $PACKAGE
-			# Check package download was finished
-			tail -c 2k $PACKAGE.tazpkg | fgrep -q 00000000TRAILER || {
-				_ 'Continuing package "%s" download' $PACKAGE
-				download $PACKAGE.tazpkg
-			}
-			if [ "$($CHECKSUM $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.$SUM)" ]; then
-				rm -f $PACKAGE.tazpkg
+		if check_for_package_in_list check ; then
+			if [ -f "$PACKAGE.tazpkg" ]; then
+				_ 'Package "%s" already in the cache' $PACKAGE
+				# Check package download was finished
+				tail -c 2k $PACKAGE.tazpkg | fgrep -q 00000000TRAILER || {
+					_ 'Continuing package "%s" download' $PACKAGE
+					download $PACKAGE.tazpkg
+				}
+				if [ "$($CHECKSUM $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.$SUM)" ]; then
+					rm -f $PACKAGE.tazpkg
+					download $PACKAGE.tazpkg
+				fi
+			else
 				download $PACKAGE.tazpkg
 			fi
-		else
-			download $PACKAGE.tazpkg
+			PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
+		elif download_get_script $PACKAGE /tmp/$PACKAGE.$$ ; then
+			install_package_from_get_script /tmp/$PACKAGE.$$ "$ROOT" --get
+			PACKAGE_FILE=$(ls $PWD/$PACKAGE-*.tazpkg)
 		fi
-		PACKAGE_FILE=$CACHE_DIR/$PACKAGE.tazpkg
+		[ "$PWD" != "$CURRENT_DIR" ] &&
 		cp -a $PACKAGE_FILE $CURRENT_DIR ;;
 
 
