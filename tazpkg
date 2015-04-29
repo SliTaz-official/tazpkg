@@ -912,7 +912,7 @@ install_package_from_get_script()
 	set -e
 	. $SCRIPT
 	set +e
-	cd $TMP_DIR
+	[ -d $PACKAGE-$VERSION ] || cd $TMP_DIR
 	[ -d $PACKAGE-$VERSION ] || abort_package \
 		"$(_ 'Could not download "%s" from "%s". Exiting.' ${TARBALL:-$PACKAGE} ${WGET_URL:-$WEB_SITE})"
 
