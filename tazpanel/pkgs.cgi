@@ -841,9 +841,9 @@ EOT
 		# Describe the command
 		bpkgs="<b>$pkgs</b>"; opt=''
 		case $cmd in
-			install) MSG="$(_ 'Installing: %s'   "$bpkgs")"; opt=--forced; cmd=get-install ;;
+			install) MSG="$(_ 'Installing: %s'   "$bpkgs")"; opt='--forced'; cmd='get-install' ;;
 			remove)  MSG="$(_ 'Removing: %s'     "$bpkgs")" ;;
-			link)    MSG="$(_ 'Linking: %s'      "$bpkgs")"; opt=$(readlink $PKGS_DB/fslink) ;;
+			link)    MSG="$(_ 'Linking: %s'      "$bpkgs")"; opt="$(readlink $PKGS_DB/fslink)" ;;
 			block)   MSG="$(_ 'Blocking: %s'     "$bpkgs")" ;;
 			unblock) MSG="$(_ 'Unblocking: %s'   "$bpkgs")" ;;
 			chblock) MSG="$(_ '(Un)blocking: %s' "$bpkgs")" ;;
@@ -852,16 +852,18 @@ EOT
 
 		cat <<EOT
 <h2>TazPkg: $(GET do)</h2>
-<section>
-	<div>$MSG</div>
-	<pre class="scroll">
+
+<div>$MSG</div>
 EOT
 		# Do the command for all asked packages
 		cd /tmp
+		export output='html'
+
 		for pkg in $pkgs; do
-			echo $(_n 'y') | tazpkg $cmd $pkg $opt 2>/dev/null | filter_taztools_msgs
+			#echo $(_n 'y') | 
+			tazpkg $cmd $pkg $opt 2>/dev/null | filter_taztools_msgs
 		done
-		echo '</pre></section>' ;;
+		;;
 
 
 	*\ info\ *)
