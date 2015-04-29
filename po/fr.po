@@ -1265,6 +1265,9 @@ msgstr "Ajout dépôt"
 msgid "Toggle all"
 msgstr "Tout (dé)séléctionner"
 
+msgid "Web search tool"
+msgstr "Recherche sur Internet"
+
 #: tazpanel/pkgs.cgi:170
 msgid "Search"
 msgstr "Rechercher"

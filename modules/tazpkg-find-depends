@@ -11,7 +11,7 @@ TMPLOCALSTATE=
 
 is_elf()
 {
-	[ `dd if=$1 bs=1 skip=1 count=3 2>/dev/null` == 'ELF' ]
+	[ "$(dd if="$1" bs=1 skip=1 count=3 2>/dev/null)" == "ELF" ]
 }
 
 
@@ -19,7 +19,7 @@ is_elf()
 
 ldd()
 {
-	LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so $1 2>/dev/null
+	LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so "$1" 2>/dev/null
 }
 
 
@@ -40,12 +40,12 @@ find_depends()
 	libs_found=""
 	find ${1:-$TMP_DIR/$file/fs} -type f | \
 	while read chkfile ; do
-		is_elf $chkfile || continue
+		is_elf "$chkfile" || continue
 		case "$chkfile" in
 			*.o|*.ko|*.ko.gz) continue;;
 		esac
 
-		for lib in $(ldd $chkfile | sed '/=>/!d;s/ =>.*//') ; do
+		for lib in $(ldd "$chkfile" | sed '/=>/!d;s/ =>.*//') ; do
 			case " $libs_found " in
 				*\ $lib\ *) continue
 			esac
