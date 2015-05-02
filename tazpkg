@@ -668,7 +668,7 @@ print_short_description() {
 			short_desc=$(grep -e "^$1	" $PKGS_DB/packages-desc.$LC | cut -d'	' -f2)
 		fi
 	done
-	[ -z "$short_desc" ] && \
+	[ -z "$short_desc" -a -s $PKGS_DB/packages.info ] &&
 		short_desc="$(awk -F$'\t' -vp="$PACKAGE" '{if($1==p){print $4;exit}}' $PKGS_DB/packages.info)"
 	longline "$short_desc"
 }
@@ -912,7 +912,7 @@ EOT
 	[ -n "$ROOT" ] || log_pkg Installed
 
 	# Remove package from upgrade list
-	sed -i "/^$PACKAGE\$/d" $UP_LIST
+	[ -s $UP_LIST ] && sed -i "/^$PACKAGE\$/d" $UP_LIST
 }
 
 
