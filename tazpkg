@@ -910,6 +910,9 @@ EOT
 
 	# Log this activity
 	[ -n "$ROOT" ] || log_pkg Installed
+
+	# Remove package from upgrade list
+	sed -i "/^$PACKAGE\$/d" $UP_LIST
 }
 
 
@@ -2435,7 +2438,7 @@ show new and upgradeable packages." packages.list)")"
 		[ "$install" == "n" ] && exit 0
 		if [ "$upnb" -gt 0 ]; then
 			if [ "$install" == "y" ]; then
-				continue
+				answer=0
 			else
 				confirm "$(_ 'Do you wish to install them now? (y/N)')"
 				answer=$?
