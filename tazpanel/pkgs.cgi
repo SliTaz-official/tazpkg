@@ -896,6 +896,14 @@ EOT
 				printf "SHORT_DESC=\"%s\"; WEB_SITE=\"%s\"; TAGS=\"%s\"; ", $4, $5, $6
 				printf "SIZES=\"%s\"; DEPENDS=\"%s\"", $7, $8
 			}' packages.info undigest/*/packages.info)"
+			if [ -z "$PACKAGE" ]; then
+				eval "$(awk -F'|' -vp=$pkg '
+				$1==p{
+					printf "PACKAGE=\"%s\"; SHORT_DESC=\"%s\"; WEB_SITE=\"%s\"; ", $1, $2, $3
+					printf "CATEGORY=\"%s\"; VERSION=\"%s\"; LICENSE=\"%s\"; ", $4, $5, $6
+				}' extra.list undigest/*/extra.list)"
+				[ "$CATEGORY" ] || CATEGORY="non-free"
+			fi
 			PACKED_SIZE=${SIZES% *}
 			UNPACKED_SIZE=${SIZES#* }
 			[ "$REMOTE_USER" == "root" ] &&
