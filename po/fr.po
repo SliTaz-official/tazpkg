@@ -382,7 +382,7 @@ msgstr "Suppression des fichiers temporaires..."
 
 #: tazpkg:875
 msgid "Package \"%s\" (%s) is installed."
-msgstr "Le paquet %s (%s) n'est pas installé."
+msgstr "Le paquet %s (%s) est installé."
 
 #: tazpkg:914
 msgid "Could not download \"%s\" from \"%s\". Exiting."
