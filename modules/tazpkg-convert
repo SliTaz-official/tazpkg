@@ -494,7 +494,7 @@ MAINTAINER="nobody@slitaz.org"
 EOT
 		LICENSE="$(grep /usr/share/common-licenses/ \
 		  $PACKAGE_FILE $TMP_DIR/$file/fs/usr/share/doc/*/copyright | \
-		  sed 's|.*common-licenses/\([-\.A-Za-z0-9]*\).*|\1|;s|[-\.]$||q')"
+		  sed 's|.*common-licenses/\([-\.A-Za-z0-9]*\).*|\1|;s|[-\.]$||;q')"
 		[ -n "$LICENSE" ] && echo "LICENSE=\"$LICENSE\"" >> $file/receipt
 		echo "DEPENDS=\"$(find_depends)\"" >> $file/receipt
 		[ -s conffiles ] && cat >> $file/receipt <<EOT
