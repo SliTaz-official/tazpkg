@@ -248,8 +248,7 @@ EOT
 
 # Check if dir exists
 
-check_dir()
-{
+check_dir() {
 	if ! [ -d "$1" ]; then
 		action 'Creating folder "%s"...' "$1"
 		mkdir -p "$1"
@@ -259,11 +258,10 @@ check_dir()
 }
 
 
-# Check if the directories and files used by TazPKG
-# exist. If not and user is root we create them.
+# Check if the directories and files used by TazPkg exist.
+# If not and user is root we create them.
 
-check_base_dir()
-{
+check_base_dir() {
 	if [ "$(id -u)" = "0" ]; then
 		check_dir $1$CACHE_DIR
 		check_dir $1$INSTALLED
@@ -279,8 +277,7 @@ check_base_dir
 
 # Check for a package name on cmdline.
 
-check_for_package_on_cmdline()
-{
+check_for_package_on_cmdline() {
 	if [ -z "$PACKAGE" ]; then
 		newline
 		_ 'Please specify a package name on the command line.'
@@ -292,8 +289,7 @@ check_for_package_on_cmdline()
 
 # Check if the package (*.tazpkg) exists before installing or extracting.
 
-check_for_package_file()
-{
+check_for_package_file() {
 	if [ ! -f "$PACKAGE_FILE" ]; then
 		newline
 		_ 'Unable to find file "%s"' $PACKAGE_FILE
@@ -305,8 +301,7 @@ check_for_package_file()
 
 # Check for the receipt of an installed package.
 
-check_for_receipt()
-{
+check_for_receipt() {
 	if [ ! -f "$1$INSTALLED/$PACKAGE/receipt" ]; then
 		newline
 		_ 'Unable to find the receipt "%s"' "$1$INSTALLED/$PACKAGE/receipt"
@@ -320,8 +315,7 @@ check_for_receipt()
 # In this files, undigest are called by their name and main mirror
 # by main. Sort order: priority
 
-look_for_priority()
-{
+look_for_priority() {
 	[ -s $PKGS_DB/priority ] && priority=$(cat $PKGS_DB/priority)
 	for rep in main $(ls $PKGS_DB/undigest 2>/dev/null); do
 		if [ ! -s $PKGS_DB/priority ] || \
@@ -342,8 +336,7 @@ look_for_priority()
 
 # Get package name in a directory
 
-package_fullname_in_dir()
-{
+package_fullname_in_dir() {
 	[ -f $1/receipt ] || return
 	EXTRAVERSION=""
 	. $1/receipt
@@ -353,8 +346,7 @@ package_fullname_in_dir()
 
 # Get package name that is already installed.
 
-get_installed_package_pathname()
-{
+get_installed_package_pathname() {
 	for i in $2$INSTALLED/${1%%-*}*; do
 		[ -d $i ] || continue
 		if [ "$1" = "$(package_fullname_in_dir $i)" ]; then
@@ -367,8 +359,7 @@ get_installed_package_pathname()
 
 # Check if a package is already installed.
 
-check_for_installed_package()
-{
+check_for_installed_package() {
 	if [ -n "$(get_installed_package_pathname $PACKAGE $1)" ]; then
 		newline
 		_ '"%s" package is already installed.' $(colorize 34 $PACKAGE)
@@ -381,8 +372,7 @@ check_for_installed_package()
 
 # Check for packages.list to download and install packages.
 
-check_for_packages_list()
-{
+check_for_packages_list() {
 	list_path="$PKGS_DB/packages.list"
 	if [ ! -f "$list_path" ]; then
 		if test $(id -u) = 0 ; then
@@ -403,8 +393,7 @@ packages available on the mirror."
 # Check for installed.info - local file with format of packages.info
 # "installed.info" is absent on not clean installs; check it and re-generate if needed.
 
-check_for_installed_info()
-{
+check_for_installed_info() {
 	info_path="$ROOT$PKGS_DB/installed.info"
 	if [ ! -f "$info_path" ]; then
 		if [ "$(id -u)" == "0" ]; then
@@ -427,8 +416,7 @@ EOT
 }
 
 
-get_cache_dir()
-{
+get_cache_dir() {
 	echo $rep > $tmp/rep
 	if [ "$rep" = "$PKGS_DB" ]; then
 		CACHE_DIR="$SAVE_CACHE_DIR/$SLITAZ_RELEASE/packages"
@@ -445,8 +433,7 @@ get_cache_dir()
 
 # get an already installed package from packages.equiv
 
-equivalent_pkg()
-{
+equivalent_pkg() {
 	for i in $(grep -hs "^$1=" $PKGS_DB/packages.equiv \
 		   $PKGS_DB/undigest/*/packages.equiv | sed "s/^$1=//"); do
 		if echo $i | fgrep -q : ; then
@@ -473,8 +460,7 @@ equivalent_pkg()
 
 # get a virtual package from packages.equiv
 
-virtual_pkg()
-{
+virtual_pkg() {
 	for i in $(for rep in $priority; do
 		grep -hs "^$1=" $rep/packages.equiv
 		done | sed "s/^$1=//"); do
@@ -497,8 +483,7 @@ virtual_pkg()
 
 # Get package filename available on the mirror
 
-get_package_filename()
-{
+get_package_filename() {
 	local pkg
 	for rep in $priority; do
 		pkg=$(grep -A 1 -sh "^$1$" $rep/packages.txt | tail -1 | sed 's/^ *//')
@@ -528,8 +513,7 @@ get_package_filename()
 # Check for a package in packages.list. Used by get and get-install to grep
 # package basename.
 
-check_for_package_in_list()
-{
+check_for_package_in_list() {
 	local filename
 	local check_only
 	check_only="$1"
@@ -552,8 +536,7 @@ check_for_package_in_list()
 # Log this activity
 # (there log_pkg because we have log() in libtaz.sh)
 
-log_pkg()
-{
+log_pkg() {
 	local extra
 
 	[ "$1" = "Installed" ] && \
@@ -568,8 +551,7 @@ log_pkg()
 
 # Download a get-package script from this mirror
 
-download_get_script()
-{
+download_get_script() {
 	local p
 	for p in $priority ; do
 		local i
@@ -586,21 +568,15 @@ download_get_script()
 
 # Download a file from this mirror
 
-download_from()
-{
-	local i
-	local mirrors
-	mirrors="$1"
-	shift
+download_from() {
+	local i mirrors="$1"; shift
 	for i in $mirrors; do
 		case "$i" in
 			# Mirror URL can have a trailing slash or not.
-			http://*|ftp://*)
-				busybox wget -c ${i%/}/$@ && break ;;
-			https://*)
-				echo 'Sorry, https not supported' ;;
+			http://*|https://*|ftp://*)
+				busybox wget -c -q -T 30 -U TazPkg ${i%/}/$@ 2>/dev/null && break ;;
 			*)
-				ln -sf $i/$1 . && break ;;
+				ln -sf ${i%/}/$1 . && break ;;
 		esac
 	done
 }
@@ -608,8 +584,7 @@ download_from()
 
 # Download a file trying all mirrors
 
-download()
-{
+download() {
 	local i
 	case "$1" in
 	*.tazpkg)
@@ -626,8 +601,7 @@ download()
 
 # Extract a package with cpio and gzip/lzma.
 
-extract_package()
-{
+extract_package() {
 	action 'Extracting package...'
 	cpio -idm --quiet < ${PACKAGE_FILE##*/} && rm -f ${PACKAGE_FILE##*/}
 	status
@@ -639,8 +613,7 @@ extract_package()
 }
 
 
-remove_with_path()
-{
+remove_with_path() {
 	# Avoid dirname errors by checking for argument.
 	[ "$1" ] || return
 
@@ -654,8 +627,7 @@ remove_with_path()
 }
 
 
-grepesc()
-{
+grepesc() {
 	sed 's/\[/\\[/g'
 }
 
@@ -676,8 +648,7 @@ print_short_description() {
 
 # This function installs a package in the rootfs.
 
-install_package()
-{
+install_package() {
 	ROOT=$1
 	if [ -n "$ROOT" ]; then
 		# Get absolute path
@@ -918,8 +889,7 @@ EOT
 
 # This function may be called by a get script.
 
-abort_package()
-{
+abort_package() {
 	cd $CUR_DIR
 	rm -rf $TMP_DIR
 	echo "${1:-Abort $PACKAGE.}"
@@ -929,8 +899,7 @@ abort_package()
 
 # This function installs a package from a get script in the rootfs.
 
-install_package_from_get_script()
-{
+install_package_from_get_script() {
 	SCRIPT="$1"
 	ROOT="$2"
 	[ -d $ROOT$INSTALLED/$PACKAGE ] && exit 1
@@ -998,8 +967,7 @@ EOT
 
 # Check for loop in deps tree.
 
-check_for_deps_loop()
-{
+check_for_deps_loop() {
 	local list
 	local pkg
 	local deps
@@ -1029,8 +997,7 @@ check_for_deps_loop()
 
 # Check for missing deps listed in a receipt packages.
 
-check_for_deps()
-{
+check_for_deps() {
 	local saved;
 	saved=$PACKAGE
 	mkdir -p $TMP_DIR
@@ -1071,8 +1038,7 @@ check_for_deps()
 # deps from local dir, cdrom, media or from the mirror. In case we want to
 # install packages from local, we need a packages.list to find the version.
 
-install_deps()
-{
+install_deps() {
 	local root
 	root=""
 	[ -n "$1" ] && root="--root=$1"
@@ -1084,7 +1050,7 @@ install_deps()
 		answer=$?
 		newline
 	fi
-	if [ $answer = 0 ] && ! [ "$nodeps" ]; then
+	if [ $answer == 0 ] && ! [ "$nodeps" ]; then
 		for pkgorg in $DEPENDS; do
 			pkg=$(equivalent_pkg $pkgorg $1)
 			if [ ! -d "$1$INSTALLED/$pkg" ]; then
@@ -1130,8 +1096,7 @@ install_deps()
 
 # Search pattern in installed packages.
 
-search_in_installed_packages()
-{
+search_in_installed_packages() {
 	_ 'Installed packages'
 	separator
 	num=0
@@ -1152,8 +1117,7 @@ search_in_installed_packages()
 
 # Search in packages.list for available pkgs.
 
-search_in_packages_list()
-{
+search_in_packages_list() {
 	_ 'Available packages'
 	separator
 	num=0
@@ -1180,8 +1144,7 @@ search_in_packages_list()
 # search --mirror: Search in packages.txt for available pkgs and give more
 # info than --list or default.
 
-search_in_packages_txt()
-{
+search_in_packages_txt() {
 	_ 'Matching packages name with version and desc'
 	separator
 	num=0
@@ -1205,8 +1168,7 @@ search_in_packages_txt()
 
 # Install package-list from a flavor
 
-install_flavor()
-{
+install_flavor() {
 	check_root $@
 
 	# Get repositories priority list.
@@ -1258,8 +1220,7 @@ install_flavor()
 
 # Update mirror urls
 
-setup_mirror()
-{
+setup_mirror() {
 	# Backup old list.
 	if [ -f "$1/mirror" ]; then
 		cp -f $1/mirror $1/mirror.bak
@@ -1292,8 +1253,7 @@ the complete address to the directory of the packages and packages.list file.")"
 
 # recursive dependencies scan
 
-dep_scan()
-{
+dep_scan() {
 	for i in $1; do
 		case " $ALL_DEPS " in
 			*\ $i\ *) continue;;
@@ -1311,8 +1271,7 @@ dep_scan()
 
 # recursive reverse dependencies scan
 
-rdep_scan()
-{
+rdep_scan() {
 	SEARCH=$1
 
 	for i in * ; do
@@ -1349,51 +1308,61 @@ END {
 }
 
 
-update_desktop_database()
-{
+update_desktop_database() {
 	if [ -f $1/usr/bin/update-desktop-database ] && [ -n "$updatedesktopdb" ]; then
 		chroot "$1/" /usr/bin/update-desktop-database /usr/share/applications 2>/dev/null
 	fi
 }
 
 
-update_mime_database()
-{
+update_mime_database() {
 	if [ -f $1/usr/bin/update-mime-database ] && [ -n "$updatemimedb" ]; then
 		chroot "$1/" /usr/bin/update-mime-database /usr/share/mime
 	fi
 }
 
 
-update_icon_database()
-{
+update_icon_database() {
 	if [ -f $1/usr/bin/gtk-update-icon-cache ] && [ -n "$updateicondb" ]; then
 		chroot "$1/" /usr/bin/gtk-update-icon-cache /usr/share/icons/hicolor
 	fi
 }
 
 
-compile_glib_schemas()
-{
+compile_glib_schemas() {
 	if [ -f $1/usr/bin/glib-compile-schemas ] && [ -n "$compile_schemas" ]; then
 		chroot "$1/" /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 	fi
 }
 
 
-update_kernel_modules()
-{
+update_kernel_modules() {
 	if [ -f $1/sbin/depmod ] && [ -n "$updatedepmod" ]; then
 		chroot "$1/" /sbin/depmod -a
 	fi
 }
 
 
+# When recharging errors occurs
+
+recharging_failed() {
+	colorize 31 "$(_ 'Recharging failed')"
+
+	# Restore database from bak files
+	action 'Restoring database files...'
+	[ -e 'ID'  -a ! -e 'ID.bak' ]  && rm ID
+	[ -e 'IDs' -a ! -e 'IDs.bak' ] && rm IDs
+	for file in $(ls $1/*.bak); do
+		mv -f $file ${file%.bak}
+	done
+	status
+}
+
 
 
 
 ###################
-# TazPKG commands #
+# TazPkg commands #
 ###################
 
 case "$COMMAND" in
@@ -1413,6 +1382,7 @@ case "$COMMAND" in
 				fi
 				newline; exit 0
 				;;
+
 			c|cat|categories)
 				# Display the list of categories.
 				title 'Packages categories'
@@ -1428,6 +1398,7 @@ case "$COMMAND" in
 					$num)"
 				exit 0
 				;;
+
 			'')
 				# By default list all packages and versions.
 				title 'List of all installed packages'
@@ -1441,6 +1412,7 @@ case "$COMMAND" in
 					'%s packages installed.' $packages \
 					"<c 32>$packages</c>"))"
 				;;
+
 			*)
 				# Check for an asked category.
 				ASKED_CATEGORY_I18N="$@"
@@ -1461,6 +1433,7 @@ case "$COMMAND" in
 					"<c 32>$packages</c>" "<c 34>$ASKED_CATEGORY_I18N</c>"))"
 				;;
 		esac ;;
+
 
 	list-mirror|-lm)
 		# List all available packages on the mirror. Option --diff displays
@@ -1593,12 +1566,9 @@ case "$COMMAND" in
 		title 'Search result for "%s"' $PATTERN
 		# Default is to search in installed pkgs and the raw list.
 		case "$3" in
-			-i|--installed)
-				search_in_installed_packages ;;
-			-l|--list)
-				search_in_packages_list ;;
-			-m|--mirror)
-				search_in_packages_txt ;;
+			-i|--installed) search_in_installed_packages ;;
+			-l|--list)      search_in_packages_list ;;
+			-m|--mirror)    search_in_packages_txt ;;
 			*)
 				search_in_installed_packages
 				search_in_packages_list ;;
@@ -2226,102 +2196,139 @@ EOT
 
 
 	recharge)
-		# Recharge packages.list from a mirror.
+		# Recharge packages databases from a mirror.
 		#
 		# WARNING: The 'mirrors' file has all SliTaz mirrors but 'mirror'
 		# must have only the chosen main mirror.
 		#
 		check_root $@
 
-		ARG=$2
-		if [ "$root" ]; then
-			PKGS_DB=$root$PKGS_DB
-			[ "${2#--}" != "$2" ] && ARG=$3
-		fi
-		if [ "$ARG" = main ]; then
-			repository_to_recharge=$PKGS_DB
-		elif [ "$ARG" ]; then
-			if [ -d "$PKGS_DB/undigest/$ARG" ]; then
-				repository_to_recharge=$PKGS_DB/undigest/$ARG
-			else
-				repo="$PKGS_DB/undigest/$ARG"
-				_ "Repository \"%s\" doesn't exist." $repo >&2
-				exit 1
-			fi
-		else
-			repository_to_recharge="$PKGS_DB $PKGS_DB/undigest/*"
-		fi
-		for path in $repository_to_recharge; do
-			[ -f $path/mirror ] || continue
-			cd $path
+		# usage: tazpkg recharge [--root=path] [main|<repository>]
 
-			# Quietly check if recharging is needed.
-			[ -f ID ] && mv ID ID.bak
-			download_from "$(cat mirror)" ID >/dev/null 2>/dev/null
-			if [ -f ID ] && fgrep -q $(cat ID.bak 2>/dev/null || echo "null") ID; then
-				if [ "$path" = "$PKGS_DB" ]; then
-					repository_name=Main
-				else
-					base_path="$(basename $path)"
-					repository_name="$(_n 'Undigest %s' $base_path)"
+		ARG="$2"
+		if [ -n "$root" ]; then
+			PKGS_DB="$root$PKGS_DB"
+			[ "${2#--}" != "$2" ] && ARG="$3"
+		fi
+
+		case "$ARG" in
+			main) repo_to_recharge="$PKGS_DB";;
+			'')   repo_to_recharge="$PKGS_DB $PKGS_DB/undigest/*";;
+			*)    repo_to_recharge="$PKGS_DB/undigest/$ARG"
+				if [ ! -d "$repo_to_recharge" ]; then
+					_ "Repository \"%s\" doesn't exist." "$repo_to_recharge" >&2
+					exit 1
 				fi
-				_ 'Repository "%s" is up to date.' "$repository_name"
-				rm ID.bak
-				continue
+				;;
+		esac
+
+		for path in $repo_to_recharge; do
+			[ ! -f $path/mirror ] && continue	# skip
+			cd $path
+			mirror="$(cat mirror)"
+
+			# Repository name
+			if [ "$path" == "$PKGS_DB" ]; then
+				repo_name='Main'
+			else
+				repo_name="$(_n 'Undigest %s' "$(basename $path)")"
 			fi
 
 			# Don't let ID be a symlink when using local repository.
-			if [ -f ID ]; then
-				mv -f ID ID.bak
-				cat ID.bak > ID
-				rm ID.bak
+			if [ -h ID  ]; then mv -f ID  ID.lnk;  cat ID.lnk  > ID;  rm ID.lnk;  fi
+			if [ -h IDs ]; then mv -f IDs IDs.lnk; cat IDs.lnk > IDs; rm IDs.lnk; fi
+
+			[ -f ID ]  && mv ID  ID.bak					# Compatibility with "old" ID
+			[ -f IDs ] && mv IDs IDs.bak
+			download_from "$mirror" IDs
+			[ -e 'IDs' ] && awk '{print $1}' IDs > ID	# Compatibility with "old" ID
+
+			# Check if recharging is needed
+			if [ -f 'IDs' ] && cmp -s IDs IDs.bak; then
+				_ 'Repository "%s" is up to date.' "$repo_name"
+				rm IDs.bak ID.bak
+				continue
 			fi
 
-			newline
-			if [ "$path" != "$PKGS_DB" ]; then
-				base_path="$(basename $path)"
-				_ 'Recharging undigest %s:' $base_path
+			title 'Recharging repository "%s"' "$repo_name"
+			[ -e 'IDs' ] && _ 'Database timestamp: %s' "$(date -d "@$(awk '{print $2}' IDs)" "+%x %R")"
+
+			action 'Creating backup of the last packages list...'
+			for i in packages.desc packages.$SUM packages.txt packages.list \
+				packages.equiv files.list.lzma extra.list mirrors packages.info; do
+				[ -f "$i" ] && mv -f $i $i.bak 2>/dev/null
+			done
+			status
+
+			# Download and extract bundle: extra.list, mirrors, files-list.md5,
+			#   packages.{info,desc,md5,txt,list,equiv}
+			bundle='bundle.tar.lzma'
+			action 'Getting "%s"...' $bundle
+			download_from "$mirror" $bundle
+			status
+			if [ -f "$bundle" ]; then
+				busybox tar -xaf $bundle; rm $bundle
+			else
+				recharging_failed $path; continue
 			fi
 
-			if [ -f "packages.list" ]; then
-				action "Creating backup of the last packages list..."
-				for i in packages.desc packages.$SUM packages.txt \
-					packages.list packages.equiv files.list.lzma \
-					extra.list mirrors packages.info
-				do
-					mv -f $i $i.bak 2>/dev/null
-				done
+			# Download files.list.lzma
+			files_local='files.list.lzma'; files_remote='files-list.lzma'
+			if [ -e "$files_local.bak" ]; then
+				md5sum $files_local.bak | awk '{printf $1}' > files-list.md5.bak
+				if cmp -s files-list.md5 files-list.md5.bak; then
+					mv $files_local.bak $files_remote
+				else
+					action 'Getting "%s"...' $files_remote
+					download_from "$mirror" $files_remote
+					status
+				fi
+			else
+				action 'Getting "%s"...' $files_remote
+				download_from "$mirror" $files_remote
 				status
 			fi
 
-			for i in desc $SUM txt list equiv; do
-				download_from "$(cat mirror)" packages.$i
+			if [ ! -e "$files_remote" ]; then
+				recharging_failed $path; continue
+			fi
+			mv -f $files_remote $files_local
+
+			# Remove old database files (but packages.list.bak, extra.list.bak)
+			for i in packages.desc packages.$SUM packages.txt packages.equiv \
+				files.list.lzma mirrors packages.info files-list.md5; do
+				[ -f "$i.bak" ] && rm $i.bak 2>/dev/null
 			done
-			download_from "$(cat mirror)" files.list.lzma
-			download_from "$(cat mirror)" extra.list
-			download_from "$(sed 's|packages/.*||' mirror)" mirrors
 
-			# packages.info
-			download_from "$(cat mirror)" packages.info.lzma
-			lzma d packages.info.lzma packages.info
-			rm packages.info.lzma
+			footer "$(_ 'Last database is ready to use.')"
 
-			if [ -f "packages.list.bak" ]; then
+			# Check diff
+			if [ -f 'packages.list.bak' ]; then
 				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
-				[ -f "extra.list.bak" ] &&
-				diff -u extra.list.bak extra.list | grep ^+[a-z] >> packages.diff
+				rm packages.list.bak
+				if [ -f 'extra.list.bak' ]; then
+					if [ -f 'extra.list' ]; then
+						diff -u extra.list.bak extra.list | grep ^+[a-z] >> packages.diff
+						rm extra.list.bak
+					else
+						mv extra.list.bak extra.list
+					fi
+				fi
 				sed -i s/+// packages.diff
-				title 'Mirrored packages diff'
-				cat packages.diff
+
 				new_pkgs=$(wc -l < packages.diff)
-				footer "$(emsg "$(_p \
+				if [ "$new_pkgs" -gt 0 ]; then
+					title 'Mirrored packages diff'
+					cat packages.diff
+					footer "$(emsg "$(_p \
 					'%s new package on the mirror.' \
 					'%s new packages on the mirror.' $new_pkgs \
 					"<c 32>$new_pkgs</c>")")"
+				fi
 			else
-				footer "$(longline "$(_ "Last %s is ready to use. Note that \
-next time you recharge the list, a list of differences will be displayed to \
-show new and upgradeable packages." packages.list)")"
+				longline "$(_ "Note that next time you recharge the \
+list, a list of differences will be displayed to show new and upgradeable \
+packages.")"
 			fi
 		done ;;
 
