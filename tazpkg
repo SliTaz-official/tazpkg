@@ -19,7 +19,7 @@
 ####################
 
 # TazPkg version
-VERSION=5.3.4
+VERSION='5.3.4'
 
 . /etc/slitaz/slitaz.conf
 . /etc/slitaz/tazpkg.conf
@@ -44,10 +44,10 @@ _p() {
 
 # Make array of pre-translated categories
 
-cat_i18n=""
-for c in "base-system" "x-window" "utilities" "network" "graphics" \
-	"multimedia" "office" "development" "system-tools" "security" "games" \
-	"misc" "meta" "non-free"; do
+cat_i18n=''
+for c in 'base-system' 'x-window' 'utilities' 'network' 'graphics' \
+	'multimedia' 'office' 'development' 'system-tools' 'security' 'games' \
+	'misc' 'meta' 'non-free'; do
 	cat_i18n="$cat_i18n
 $(gettext "$c")	$c"
 done
@@ -55,8 +55,7 @@ done
 
 # Translate category names (must be last in line)
 
-translate_category()
-{
+translate_category() {
 	sed "s|base-system$|$(_ base-system)|g; s|x-window$|$(_ x-window)|g;
 		s|utilities$|$(_ utilities)|g; s|network$|$(_ network)|g;
 		s|graphics$|$(_ graphics)|g; s|multimedia$|$(_ multimedia)|g;
@@ -72,8 +71,7 @@ translate_category()
 # This also supports custom categories.
 # And now we support spaces in translated categories
 
-reverse_translate_category()
-{
+reverse_translate_category() {
 	echo "$cat_i18n" | awk "BEGIN{FS=\"	\"}{if (/^$@	/) a=\$2}END{if (a==\"\") a=\"$@\"; print a}"
 }
 
@@ -120,27 +118,28 @@ action() {
 
 # Initialize some variables to use words rather than numbers for functions
 # and actions.
-COMMAND=$1
-PACKAGE=${2%/}
+
+COMMAND="$1"
+PACKAGE="${2%/}"
 PACKAGE_DIR="$(cd $(dirname $PACKAGE 2>/dev/null) 2>/dev/null; pwd)"
 [ -n "$PACKAGE" ] && PACKAGE_FILE="$PACKAGE_DIR/${PACKAGE##*/}"
 if [ -f "$PACKAGE" ]; then
 	# Set pkg basename for install, extract
-	PACKAGE=$(basename $PACKAGE .tazpkg 2>/dev/null)
+	PACKAGE="$(basename $PACKAGE .tazpkg 2>/dev/null)"
 else
 	# Pkg name for remove, search and all other cmds
-	PACKAGE=${PACKAGE%.tazpkg}
+	PACKAGE="${PACKAGE%.tazpkg}"
 fi
-TARGET_DIR=$3
-TOP_DIR=$(pwd)
-TMP_DIR=/tmp/$RANDOM
-INSTALL_LIST=""
+TARGET_DIR="$3"
+TOP_DIR="$(pwd)"
+TMP_DIR="/tmp/$RANDOM"
+INSTALL_LIST=''
 SAVE_CACHE_DIR="$CACHE_DIR"
 
 # Path to tazpkg used dir and configuration files
-MIRROR=$PKGS_DB/mirror
-BLOCKED=$PKGS_DB/blocked-packages.list
-UP_LIST=$PKGS_DB/packages.up
+MIRROR="$PKGS_DB/mirror"
+BLOCKED="$PKGS_DB/blocked-packages.list"
+UP_LIST="$PKGS_DB/packages.up"
 DEFAULT_MIRROR="$ONLINE_PKGS"
 
 
@@ -262,7 +261,7 @@ check_dir() {
 # If not and user is root we create them.
 
 check_base_dir() {
-	if [ "$(id -u)" = "0" ]; then
+	if [ "$(id -u)" == "0" ]; then
 		check_dir $1$CACHE_DIR
 		check_dir $1$INSTALLED
 		check_dir $1$SLITAZ_LOGS
@@ -312,24 +311,23 @@ check_for_receipt() {
 
 
 # Get repositories priority using $PKGS_DB/priority.
-# In this files, undigest are called by their name and main mirror
-# by main. Sort order: priority
+# In this file undigest repos are called by their names and main mirror
+# by 'main'. Sort order: priority
 
 look_for_priority() {
-	[ -s $PKGS_DB/priority ] && priority=$(cat $PKGS_DB/priority)
+	[ -s "$PKGS_DB/priority" ] && priority=$(cat $PKGS_DB/priority)
+
 	for rep in main $(ls $PKGS_DB/undigest 2>/dev/null); do
-		if [ ! -s $PKGS_DB/priority ] || \
-			! grep -q ^$rep$ $PKGS_DB/priority; then
+		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q ^$rep$ $PKGS_DB/priority; then
 			priority=$(echo -e "$priority\n$rep")
 		fi
 	done
 	priority=$(echo "$priority" | sed '/^$/d' | \
 		while read line; do
-		if [ "$line" = main ]; then
-			echo $PKGS_DB
-		else
-			echo $PKGS_DB/undigest/$line
-		fi
+		case $line in
+			main) echo $PKGS_DB;;
+			*)    echo $PKGS_DB/undigest/$line;;
+		esac
 	done)
 }
 
@@ -337,10 +335,10 @@ look_for_priority() {
 # Get package name in a directory
 
 package_fullname_in_dir() {
-	[ -f $1/receipt ] || return
-	EXTRAVERSION=""
+	[ ! -f "$1/receipt" ] && return
+	EXTRAVERSION=''
 	. $1/receipt
-	echo $PACKAGE-$VERSION$EXTRAVERSION
+	echo "$PACKAGE-$VERSION$EXTRAVERSION"
 }
 
 
@@ -348,9 +346,9 @@ package_fullname_in_dir() {
 
 get_installed_package_pathname() {
 	for i in $2$INSTALLED/${1%%-*}*; do
-		[ -d $i ] || continue
-		if [ "$1" = "$(package_fullname_in_dir $i)" ]; then
-			echo $i
+		[ ! -d $i ] && continue
+		if [ "$1" == "$(package_fullname_in_dir $i)" ]; then
+			echo "$i"
 			return
 		fi
 	done
@@ -375,7 +373,7 @@ check_for_installed_package() {
 check_for_packages_list() {
 	list_path="$PKGS_DB/packages.list"
 	if [ ! -f "$list_path" ]; then
-		if test $(id -u) = 0 ; then
+		if [ $(id -u) == 0 ]; then
 			tazpkg recharge
 		else
 			newline
@@ -418,15 +416,15 @@ EOT
 
 get_cache_dir() {
 	echo $rep > $tmp/rep
-	if [ "$rep" = "$PKGS_DB" ]; then
+	if [ "$rep" == "$PKGS_DB" ]; then
 		CACHE_DIR="$SAVE_CACHE_DIR/$SLITAZ_RELEASE/packages"
-	elif [ "${rep%-incoming}" = "$rep" ]; then
+	elif [ "${rep%-incoming}" == "$rep" ]; then
 		CACHE_DIR="$SAVE_CACHE_DIR/${rep##*/}/packages"
 	else
 		rep="${rep%-incoming}"
 		CACHE_DIR="$SAVE_CACHE_DIR/${rep##*/}/packages-incoming"
 	fi
-	[ -d "$CACHE_DIR" ] || mkdir -p $CACHE_DIR
+	[ ! -d "$CACHE_DIR" ] && mkdir -p $CACHE_DIR
 	echo $CACHE_DIR > $tmp/cachedir
 }
 
@@ -439,22 +437,22 @@ equivalent_pkg() {
 		if echo $i | fgrep -q : ; then
 			# format 'alternative:newname'
 			# if alternative is installed then substitute newname
-			if [ -f $2$INSTALLED/${i%:*}/receipt ]; then
+			if [ -f "$2$INSTALLED/${i%:*}/receipt" ]; then
 				# substitute package dependency
-				echo ${i#*:}
+				echo "${i#*:}"
 				return
 			fi
 		else
 			# if alternative is installed then nothing to install
-			if [ -f $2$INSTALLED/$i/receipt ]; then
+			if [ -f "$2$INSTALLED/$i/receipt" ]; then
 				# substitute installed package
-				echo $i
+				echo "$i"
 				return
 			fi
 		fi
 	done
 	# if not found in packages.equiv then no substitution
-	echo $1
+	echo "$1"
 }
 
 
@@ -462,19 +460,19 @@ equivalent_pkg() {
 
 virtual_pkg() {
 	for i in $(for rep in $priority; do
-		grep -hs "^$1=" $rep/packages.equiv
+			grep -hs "^$1=" $rep/packages.equiv
 		done | sed "s/^$1=//"); do
 		if echo $i | fgrep -q : ; then
 			# format 'alternative:newname'
 			# if alternative is installed then substitute newname
-			if [ -f $2$INSTALLED/${i%:*}/receipt ]; then
+			if [ -f "$2$INSTALLED/${i%:*}/receipt" ]; then
 				# substitute package dependency
-				echo ${i#*:}
+				echo "${i#*:}"
 				return
 			fi
 		else
 			# unconditional substitution
-			echo $i
+			echo "$i"
 			return
 		fi
 	done
@@ -487,26 +485,26 @@ get_package_filename() {
 	local pkg
 	for rep in $priority; do
 		pkg=$(grep -A 1 -sh "^$1$" $rep/packages.txt | tail -1 | sed 's/^ *//')
-		[ "$pkg" ] && pkg=$(grep -sh "^$1-$pkg" $rep/packages.list | head -1)
+		[ -n "$pkg" ] && pkg=$(grep -sh "^$1-$pkg" $rep/packages.list | head -1)
 
 		# Allow user to call a package with his version number.
-		[ "$pkg" ] || pkg=$(grep -sh "^$1$" $rep/packages.list | head -1)
+		[ -n "$pkg" ] || pkg=$(grep -sh "^$1$" $rep/packages.list | head -1)
 
-		[ "$pkg" ] || pkg=$(grep -sh "^$1-[0-9]" $rep/packages.list | head -1)
-		[ "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" $rep/packages.list | head -1)
-		[ "$pkg" ] && get_cache_dir && break
+		[ -n "$pkg" ] || pkg=$(grep -sh "^$1-[0-9]" $rep/packages.list | head -1)
+		[ -n "$pkg" ] || pkg=$(grep -sh "^$1-.[\.0-9]" $rep/packages.list | head -1)
+		[ -n "$pkg" ] && get_cache_dir && break
 	done
 	if [ -z "$pkg" ]; then
 		# Check for virtual package
 		local equiv
 		equiv=$(virtual_pkg $1)
 		if [ "$equiv" != "$1" ]; then
-			PACKAGE=$equiv
+			PACKAGE="$equiv"
 			get_package_filename $PACKAGE
 			return
 		fi
 	fi
-	echo $pkg
+	echo "$pkg"
 }
 
 
@@ -518,10 +516,10 @@ check_for_package_in_list() {
 	local check_only
 	check_only="$1"
 	filename=$(get_package_filename $PACKAGE)
-	if [ "$filename" ]; then
-		PACKAGE=$filename
-		CACHE_DIR=$(cat $tmp/cachedir)
-		rep=$(cat $tmp/rep)
+	if [ -n "$filename" ]; then
+		PACKAGE="$filename"
+		CACHE_DIR="$(cat $tmp/cachedir)"
+		rep="$(cat $tmp/rep)"
 		rm -f $tmp/rep $tmp/cachedir
 	else
 		newline
@@ -539,12 +537,12 @@ check_for_package_in_list() {
 log_pkg() {
 	local extra
 
-	[ "$1" = "Installed" ] && \
+	[ "$1" == 'Installed' ] && \
 	extra=" - $(fgrep $PACKAGE-$VERSION $PKGS_DB/installed.$SUM | awk '{ print $1 }')"
 
-	[ -e $LOG ] || touch $LOG
+	[ -e "$LOG" ] || touch $LOG
 
-	[ -w $LOG ] &&
+	[ -w "$LOG" ] &&
 	echo "$(date +'%F %T') - $1 - $PACKAGE ($VERSION$EXTRAVERSION)$extra" >> $LOG
 }
 
@@ -552,13 +550,13 @@ log_pkg() {
 # Download a get-package script from this mirror
 
 download_get_script() {
-	local p
+	local p i
 	for p in $priority ; do
-		local i
 		for i in $(cat $p/mirror) ; do
 			case "$i" in
-				http://*|ftp://*)
-					wget -O $2 ${i%packages/*}packages/get/$1 && return 0 ;;
+				http://*|https://*|ftp://*)
+					busybox wget -q -T 30 -U TazPkg -O $2 \
+						${i%packages/*}packages/get/$1 && return 0 ;;
 			esac
 		done
 	done
@@ -2249,6 +2247,7 @@ EOT
 				rm IDs.bak ID.bak
 				continue
 			fi
+			rm IDs.bak ID.bak 2>/dev/null
 
 			title 'Recharging repository "%s"' "$repo_name"
 			[ -e 'IDs' ] && _ 'Database timestamp: %s' "$(date -d "@$(awk '{print $2}' IDs)" "+%x %R")"
@@ -2308,8 +2307,10 @@ EOT
 				rm packages.list.bak
 				if [ -f 'extra.list.bak' ]; then
 					if [ -f 'extra.list' ]; then
-						diff -u extra.list.bak extra.list | grep ^+[a-z] >> packages.diff
-						rm extra.list.bak
+						awk -F'|' '{print $1 " (extra)"}' extra.list > extra.list1
+						awk -F'|' '{print $1 " (extra)"}' extra.list.bak > extra.list1.bak
+						diff -u extra.list1.bak extra.list1 | grep ^+[a-z] >> packages.diff
+						rm extra.list.bak extra.list1 extra.list1.bak
 					else
 						mv extra.list.bak extra.list
 					fi
@@ -2354,15 +2355,15 @@ packages.")"
 				--check|-c) 	install="n" ;;
 			esac
 		done
-		time=$(date +%s)
+		time="$(date +%s)"
 
 		look_for_priority
 		for repo in $priority; do
-			pkg_list=$repo/packages.list
+			pkg_list="$repo/packages.list"
 			mtime=$(find $pkg_list -mtime +7)
-			if [ "$mtime" ]; then
+			if [ -n "$mtime" ]; then
 				if [ "$repo" == "$PKGS_DB" ]; then
-					repo_name=main
+					repo_name='main'
 				else
 					repo_name="${repo##*/}"
 				fi
@@ -2376,18 +2377,18 @@ packages.")"
 		cd $INSTALLED
 		echo -n > $UP_LIST
 		blocked_count=0
-		installed_sum=$PKGS_DB/installed.$SUM
+		installed_sum="$PKGS_DB/installed.$SUM"
 
 		for pkg in *; do
 			[ ! -d $pkg ] && continue
 			unset VERSION EXTRAVERSION
 			. $pkg/receipt
-			md5=$(fgrep "  $PACKAGE-${VERSION}$EXTRAVERSION.tazpkg" \
+			md5=$(fgrep "  $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" \
 				$installed_sum | awk '{print $1}')
 			for repo in $priority; do
-				pkg_desc=$repo/packages.desc
-				pkg_list=$repo/packages.list
-				pkg_sum=$repo/packages.$SUM
+				pkg_desc="$repo/packages.desc"
+				pkg_list="$repo/packages.list"
+				pkg_sum="$repo/packages.$SUM"
 
 				if ! fgrep -q "$md5  $PACKAGE-" $pkg_sum; then
 					# Jump to next repository in priority if pkg doesn't exist
@@ -2441,10 +2442,11 @@ packages.")"
 				$upnb "$blocked")"
 			newline
 		fi
+
 		# Pkgs to upgrade ? Skip, let install them all or ask user
-		[ "$install" == "n" ] && exit 0
+		[ "$install" == 'n' ] && exit 0
 		if [ "$upnb" -gt 0 ]; then
-			if [ "$install" == "y" ]; then
+			if [ "$install" == 'y' ]; then
 				answer=0
 			else
 				confirm "$(_ 'Do you wish to install them now? (y/N)')"
@@ -2472,11 +2474,13 @@ packages.")"
 		cd $INSTALLED
 		shift
 		LIST=$@
-		[ -n "$LIST" ] || LIST=$(ls)
+		[ -z "$LIST" ] && LIST=$(ls)
 		MSG=$(_n 'No known bugs.')
+
+		title 'Known bugs in packages'
 		for PACKAGE in $LIST; do
-			BUGS=""
-			EXTRAVERSION=""
+			BUGS=''
+			EXTRAVERSION=''
 			. $PACKAGE/receipt
 			if [ -n "$BUGS" ]; then
 				MSG=$(_n 'Bug list completed')
@@ -2487,7 +2491,7 @@ packages.")"
 EOT
 			fi
 		done
-		echo "$MSG" ;;
+		footer "$MSG" ;;
 
 
 	check)

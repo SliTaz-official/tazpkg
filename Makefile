@@ -68,11 +68,11 @@ install: msgfmt
 	cp -a doc/*        $(DESTDIR)$(DOCDIR)/tazpkg
 
 	# TazPanel files
-	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/menu.d
-	cp -a tazpanel/pkgs.cgi $(DESTDIR)/var/www/tazpanel
-	ln -fs ../pkgs.cgi      $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
-	install -m 0755 -d      $(DESTDIR)/var/www/tazpanel/styles/default
-	cp -a tazpanel/pkgs.css $(DESTDIR)/var/www/tazpanel/styles/default
+	install -m 0755 -d                $(DESTDIR)/var/www/tazpanel/menu.d
+	install -m 0755 tazpanel/pkgs.cgi $(DESTDIR)/var/www/tazpanel
+	ln -fs ../pkgs.cgi                $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
+	install -m 0755 -d                $(DESTDIR)/var/www/tazpanel/styles/default
+	install -m 0644 tazpanel/pkgs.css $(DESTDIR)/var/www/tazpanel/styles/default
 
 	# The i18n files
 	install -m 0755 -d $(DESTDIR)$(PREFIX)/share/locale
@@ -85,12 +85,12 @@ install: msgfmt
 
 	# Default icons
 	install -m 0755 -d $(ICONS)/apps
-	install -m 0644 pixmaps/tazpkg.png $(ICONS)/apps
-	ln -fs tazpkg.png $(ICONS)/apps/TazPkg.png # icon for Yad
 	install -m 0755 -d $(ICONS)/actions
-	install -m 0644 pixmaps/tazpkg-up.png $(ICONS)/actions
 	install -m 0755 -d $(ICONS)/status
-	install -m 0644 pixmaps/tazpkg-installed.png $(ICONS)/status
+	install -m 0644    pixmaps/tazpkg.png           $(ICONS)/apps
+	install -m 0644    pixmaps/tazpkg-up.png        $(ICONS)/actions
+	install -m 0644    pixmaps/tazpkg-installed.png $(ICONS)/status
+	ln -fs tazpkg.png  $(ICONS)/apps/TazPkg.png     # icon for Yad
 
 	# TazPkg Notify XDG autostart
 	mkdir -p            $(DESTDIR)/etc/xdg
