@@ -561,7 +561,7 @@ case " $(GET) " in
 		# List linkable packages.
 		#
 		search_form; sidebar
-		LOADING_MSG=$(_ 'Listing linkable packages...'); loading_msg
+		loading_msg "$(_ 'Listing linkable packages...')"
 
 		cat <<EOT
 <h2>$(_ 'Linkable packages')</h2>
@@ -641,7 +641,7 @@ EOT
 		# List all packages by category.
 		#
 		search_form; sidebar
-		LOADING_MSG="$(_ 'Listing packages...')"; loading_msg
+		loading_msg "$(_ 'Listing packages...')"
 
 		bcat="<b>$cat</b>"; brepo="<b>$repo</b>"
 		case $repo in
@@ -702,7 +702,7 @@ EOT
 
 		search_form | sed "s|name=\"search\"|& value=\"$pkg\"|"
 		sidebar
-		LOADING_MSG="$(_ 'Searching packages...')"; loading_msg
+		loading_msg "$(_ 'Searching packages...')"
 
 		cat <<EOT
 <h2>$(_ 'Search packages')</h2>
@@ -762,7 +762,7 @@ EOT
 		# Lets recharge the packages list
 		#
 		search_form; sidebar
-		LOADING_MSG="$(_ 'Recharging lists...')"; loading_msg
+		loading_msg "$(_ 'Recharging lists...')"
 
 		cat <<EOT
 <h2>$(_ 'Recharge')</h2>
@@ -792,7 +792,7 @@ EOT
 		# Upgrade packages
 		#
 		search_form; sidebar
-		LOADING_MSG="$(_ 'Checking for upgrades...')"; loading_msg
+		loading_msg "$(_ 'Checking for upgrades...')"
 
 		cat <<EOT
 <h2>$(_ 'Up packages')</h2>
@@ -872,7 +872,7 @@ EOT
 		#
 		pkg=$(GET info)
 		search_form; sidebar
-		LOADING_MSG=$(_ 'Getting package info...'); loading_msg
+		loading_msg "$(_ 'Getting package info...')"
 
 		cat <<EOT
 <section>
@@ -1052,7 +1052,7 @@ EOT
 EOT
 		case "$(GET action)" in
 			saveconf)
-				LOADING_MSG=$(_ 'Creating the package...'); loading_msg
+				loading_msg "$(_ 'Creating the package...')"
 				echo "<pre>"
 				cd /tmp
 				tazpkg repack-config | filter_taztools_msgs
@@ -1070,12 +1070,12 @@ EOT
 				done
 				echo "</ul>" ;;
 			quickcheck)
-				LOADING_MSG=$(_ 'Checking packages consistency...'); loading_msg
+				loading_msg "$(_ 'Checking packages consistency...')"
 				echo "<pre>"
 				tazpkg check
 				echo "</pre>" ;;
 			fullcheck)
-				LOADING_MSG=$(_ 'Full packages check...'); loading_msg
+				loading_msg "$(_ 'Full packages check...')"
 				echo "<pre>"
 				tazpkg check --full
 				echo "</pre>" ;;
@@ -1575,10 +1575,10 @@ EOT
 		#
 		# Default to summary
 		#
-		search_form; sidebar
+		search_form; sidebar; loading_msg
 
 		cat <<EOT
-<form id="actions2">
+<form>
 EOT
 		fslink=$(readlink $PKGS_DB/fslink)
 		[ -n "$fslink" -a -d "$fslink/$INSTALLED" ] && show_button linkable

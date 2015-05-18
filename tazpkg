@@ -2351,7 +2351,8 @@ EOT
 list, a list of differences will be displayed to show new and upgradeable \
 packages.")"
 			fi
-		done ;;
+		done
+		newline ;;
 
 
 	help-up)
