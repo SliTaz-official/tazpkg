@@ -1346,7 +1346,7 @@ update_kernel_modules() {
 }
 
 
-# When recharging errors occurs
+# When recharging errors occur
 
 recharging_failed() {
 	colorize 31 "$(_ 'Recharging failed')"
