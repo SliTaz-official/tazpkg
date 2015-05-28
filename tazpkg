@@ -1985,10 +1985,7 @@ $LIST"
 		extract_package
 
 		action "Recompressing the FS..."
-		find fs | cpio -o -H newc --quiet | case "$TAZPKG_PACK" in
-		gzip) gzip -9 > fs.cpio.gz ;;
-		*) lzma e fs.cpio.lzma -si ;;
-		esac
+		find fs | cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
 		rm -rf fs
 		status
 
@@ -2189,7 +2186,10 @@ EOT
 		# Build cpio archives.
 
 		action "Compressing the FS..."
-		find fs | cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
+		find fs | cpio -o -H newc --quiet | case "$TAZPKG_PACK" in
+		gzip) gzip -9 > fs.cpio.gz ;;
+		*) lzma e fs.cpio.lzma -si ;;
+		esac
 		rm -rf fs
 		status
 
