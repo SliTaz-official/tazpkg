@@ -1935,8 +1935,8 @@ $LIST"
 						_ 'Check %s for reinstallation' "$INSTALLED/$i"
 						continue
 					fi
-					echo "rm -r $ROOT$INSTALLED/$i"
-					echo "tazpkg get-install ${i%/modifiers} $ROOTOPTS --forced"
+					rm -r $ROOT$INSTALLED/$i
+					tazpkg get-install ${i%/modifiers} $ROOTOPTS --forced
 				done
 			fi
 		fi
