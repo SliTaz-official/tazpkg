@@ -251,17 +251,17 @@ msgstr "Mostrar en reverso el árbol de dependencias."
 #, fuzzy
 msgid "Convert alien package to tazpkg"
 msgstr ""
-"Convertir paquetes deb/rpm/tgz/pet/sfs/sb/arch/ipk al de slitaz (.tazpkg)."
+"Convertir paquetes deb/rpm/tgz/pet/sfs/sb/arch/ipk al de SliTaz (.tazpkg)."
 
 #: tazpkg:215
 #, fuzzy
-msgid "Link a package from another slitaz installation"
-msgstr "Enlazar un paquete desde otra instalación del slitaz."
+msgid "Link a package from another SliTaz installation"
+msgstr "Enlazar un paquete desde otra instalación del SliTaz."
 
 #: tazpkg:217
 #, fuzzy
-msgid "Change the mirror url configuration"
-msgstr "Cambia la configuración del url espejo."
+msgid "Change the mirror URL configuration"
+msgstr "Cambia la configuración del URL espejo."
 
 #: tazpkg:218
 #, fuzzy
@@ -607,7 +607,7 @@ msgstr[1] "%s archivos"
 
 #: tazpkg:1489
 #, fuzzy
-msgid "TazPKG information"
+msgid "TazPkg information"
 msgstr "Información TazPkg"
 
 #: tazpkg:1501
@@ -673,7 +673,7 @@ msgid "Package \"%s\" is not installed."
 msgstr "%s no está instalado."
 
 #: tazpkg:1538
-msgid "TazPKG Activity"
+msgid "TazPkg Activity"
 msgstr ""
 
 #: tazpkg:1561
@@ -1005,18 +1005,18 @@ msgid "Bugs in package \"%s\" version %s:"
 msgstr "Bugs en el paquete %s versión %s:"
 
 #: tazpkg:2502
-msgid "The package \"%s\" installation has not completed"
-msgstr "La instalación del paquete %s no fue completada"
+msgid "The package installation has not completed"
+msgstr "La instalación del paquete no fue completada"
 
 #: tazpkg:2510
 #, fuzzy
-msgid "The package \"%s\" has been modified by:"
-msgstr "El paquete %s ha sido modificado por:"
+msgid "The package has been modified by:"
+msgstr "El paquete ha sido modificado por:"
 
 #: tazpkg:2516
 #, fuzzy
-msgid "Files lost from package \"%s\":"
-msgstr "Archivos perdidos de %s:"
+msgid "Files lost from package:"
+msgstr "Archivos perdidos de:"
 
 #: tazpkg:2520
 msgid "target of symlink"
@@ -1024,11 +1024,11 @@ msgstr "objetivo de symlink"
 
 #: tazpkg:2526
 #, fuzzy
-msgid "Missing dependencies for package \"%s\":"
-msgstr "Archivos perdidos de %s:"
+msgid "Missing dependencies for package:"
+msgstr "Archivos perdidos de:"
 
 #: tazpkg:2534
-msgid "Dependencies loop between \"%s\" and:"
+msgid "Dependencies loop between package and:"
 msgstr ""
 
 # Bug es más conocido que su misma traducción al español.
@@ -1142,7 +1142,7 @@ msgstr "Instala paquete con '%s' o '%s'"
 
 #: tazpkg:2896
 #, fuzzy
-msgid "TazPKG SHell."
+msgid "TazPkg SHell."
 msgstr "TazPkg SHell"
 
 #: tazpkg:2897
@@ -1153,7 +1153,7 @@ msgstr ""
 
 #: tazpkg:2906
 #, fuzzy
-msgid "You are already running a TazPKG SHell."
+msgid "You are already running a TazPkg SHell."
 msgstr "Estás corriendo actualmente un TazPkg SHell"
 
 #: tazpkg:2966

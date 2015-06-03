@@ -1,11 +1,11 @@
-# Polish translation for Tazpkg package.
+# Polish translation for TazPkg package.
 # Copyright (C) 2013 SliTaz
-# This file is distributed under the same license as the Tazpkg package.
+# This file is distributed under the same license as the TazPkg package.
 # Paweł Pyrczak <support@pyrczak.pl>, 2013.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Tazpkg 5.0\n"
+"Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-10 12:26+0300\n"
 "PO-Revision-Date: 2013-08-07 13:34+0100\n"
@@ -250,12 +250,12 @@ msgstr ""
 "                   pakietów SliTaz (*.tazpkg)"
 
 #: tazpkg:215
-msgid "Link a package from another slitaz installation"
+msgid "Link a package from another SliTaz installation"
 msgstr "Dowiązanie do pakietu z innej instalacji SliTaz"
 
 #: tazpkg:217
-msgid "Change the mirror url configuration"
-msgstr "Zmienia konfigurację url serwera"
+msgid "Change the mirror URL configuration"
+msgstr "Zmienia konfigurację URL serwera"
 
 #: tazpkg:218
 msgid "List undigest mirrors"
@@ -607,7 +607,7 @@ msgstr[2] "%s plików"
 
 #: tazpkg:1489
 #, fuzzy
-msgid "TazPKG information"
+msgid "TazPkg information"
 msgstr "Informacje TazPkg"
 
 #: tazpkg:1501
@@ -672,7 +672,7 @@ msgid "Package \"%s\" is not installed."
 msgstr "%s nie jest zainstalowany."
 
 #: tazpkg:1538
-msgid "TazPKG Activity"
+msgid "TazPkg Activity"
 msgstr ""
 
 #: tazpkg:1561
@@ -1003,28 +1003,28 @@ msgid "Bugs in package \"%s\" version %s:"
 msgstr "Błędy w pakiecie %s wersja %s:"
 
 #: tazpkg:2502
-msgid "The package \"%s\" installation has not completed"
-msgstr "Instalacja pakietu %s nie została zakończona pomyśłnie"
+msgid "The package installation has not completed"
+msgstr "Instalacja pakietu nie została zakończona pomyśłnie"
 
 #: tazpkg:2510
-msgid "The package \"%s\" has been modified by:"
-msgstr "Pakiet %s został zmodyfikowany przez:"
+msgid "The package has been modified by:"
+msgstr "Pakiet został zmodyfikowany przez:"
 
 #: tazpkg:2516
-msgid "Files lost from package \"%s\":"
-msgstr "Brakujące pliki pochodzące z %s:"
+msgid "Files lost from package:"
+msgstr "Brakujące pliki pochodzące z:"
 
 #: tazpkg:2520
 msgid "target of symlink"
 msgstr "cel dla dowiązania symbolicznego"
 
 #: tazpkg:2526
-msgid "Missing dependencies for package \"%s\":"
-msgstr "Brakujące zależności dla %s:"
+msgid "Missing dependencies for package:"
+msgstr "Brakujące zależności dla:"
 
 #: tazpkg:2534
-msgid "Dependencies loop between \"%s\" and:"
-msgstr "Pętla zależności pomiędzy %s i:"
+msgid "Dependencies loop between package and:"
+msgstr "Pętla zależności pomiędzy pakietem i:"
 
 #: tazpkg:2539
 msgid "Looking for known bugs..."
@@ -1132,7 +1132,7 @@ msgstr "Instalacja pakietu przy pomocy '%s' albo '%s'"
 
 #: tazpkg:2896
 #, fuzzy
-msgid "TazPKG SHell."
+msgid "TazPkg SHell."
 msgstr "TazPkg SHell."
 
 #: tazpkg:2897
@@ -1144,8 +1144,8 @@ msgstr ""
 
 #: tazpkg:2906
 #, fuzzy
-msgid "You are already running a TazPKG SHell."
-msgstr "Tazpkg SHell jest już uruchomiony."
+msgid "You are already running a TazPkg SHell."
+msgstr "TazPkg SHell jest już uruchomiony."
 
 #: tazpkg:2966
 msgid "Usage: tazpkg link package_name slitaz_root"

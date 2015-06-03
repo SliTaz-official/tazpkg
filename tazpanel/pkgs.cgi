@@ -770,17 +770,13 @@ EOT
 
 <section>
 	<header>
-		$(_ 'Recharging log')
+		<span data-icon="sync">$(_ 'Recharging log')</span>
 		<form>$(show_button up)</form>
 	</header>
-
-	<pre class="scroll">
 EOT
 		echo $(_ 'Recharging packages list') | log
-		tazpkg recharge | filter_taztools_msgs
+		export output="html"; tazpkg recharge
 		cat <<EOT
-	</pre>
-
 	<footer>$(_ 'Packages lists are up-to-date. You should check for upgrades now.')</footer>
 </section>
 EOT
@@ -1071,14 +1067,12 @@ EOT
 				echo "</ul>" ;;
 			quickcheck)
 				loading_msg "$(_ 'Checking packages consistency...')"
-				echo "<pre>"
 				tazpkg check
-				echo "</pre>" ;;
+				;;
 			fullcheck)
 				loading_msg "$(_ 'Full packages check...')"
-				echo "<pre>"
 				tazpkg check --full
-				echo "</pre>" ;;
+				;;
 			dvdimage)
 				dev=$(POST dvdimage)
 				mkdir -p /mnt/packages 2> /dev/null

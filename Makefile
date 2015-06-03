@@ -22,7 +22,7 @@ pot:
 		--package-name=TazPkg \
 		--package-version="$(VERSION)" -kaction -ktitle -k_ -k_n -k_p:1,2 \
 		./tazpkg ./modules/tazpkg-convert ./modules/tazpkg-find-depends ./tazpkg-box \
-		./tazpanel/pkgs.cgi ./tazpkg-notify
+		./tazpanel/pkgs.cgi ./tazpkg-notify ./modules/tazpkg-help
 
 msgmerge:
 	@for l in $(LINGUAS); do \
@@ -50,8 +50,9 @@ install: msgfmt
 	# TazPkg command line interface
 	install -m 0755 -d                  $(DESTDIR)$(PREFIX)/bin
 	install -m 0777 tazpkg              $(DESTDIR)$(PREFIX)/bin
-	-[ "$(VERSION)" ] && sed -i 's/^VERSION=[0-9].*/VERSION=$(VERSION)/' $(DESTDIR)$(PREFIX)/bin/tazpkg
+	#-[ "$(VERSION)" ] && sed -i 's/^VERSION=[0-9].*/VERSION=$(VERSION)/' $(DESTDIR)$(PREFIX)/bin/tazpkg
 	install -m 0777 modules/tazpkg-convert      $(DESTDIR)$(PREFIX)/bin
+	install -m 0777 modules/tazpkg-help         $(DESTDIR)$(PREFIX)/bin
 	install -m 0755 -d                          $(DESTDIR)$(PREFIX)/lib/tazpkg
 	install -m 0777 modules/tazpkg-find-depends $(DESTDIR)$(PREFIX)/lib/tazpkg
 

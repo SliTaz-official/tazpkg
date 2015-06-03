@@ -236,11 +236,11 @@ msgid "Convert alien package to tazpkg"
 msgstr "Конвертировать «чужой» пакет в формат tazpkg"
 
 #: tazpkg:215
-msgid "Link a package from another slitaz installation"
+msgid "Link a package from another SliTaz installation"
 msgstr "Присоединить пакет из другого установленного SliTaz"
 
 #: tazpkg:217
-msgid "Change the mirror url configuration"
+msgid "Change the mirror URL configuration"
 msgstr "Изменить настройки URL репозитория"
 
 #: tazpkg:218
@@ -585,7 +585,7 @@ msgstr[1] "%s файла"
 msgstr[2] "%s файлов"
 
 #: tazpkg:1489
-msgid "TazPKG information"
+msgid "TazPkg information"
 msgstr "Информация TazPkg"
 
 #: tazpkg:1501
@@ -649,7 +649,7 @@ msgid "Package \"%s\" is not installed."
 msgstr "Пакет «%s» не установлен."
 
 #: tazpkg:1538
-msgid "TazPKG Activity"
+msgid "TazPkg Activity"
 msgstr "Журнал действий TazPkg"
 
 #: tazpkg:1561
@@ -976,28 +976,28 @@ msgid "Bugs in package \"%s\" version %s:"
 msgstr "Ошибки в пакете «%s» версии %s:"
 
 #: tazpkg:2502
-msgid "The package \"%s\" installation has not completed"
-msgstr "Установка пакета «%s» не была завершена"
+msgid "The package installation has not completed"
+msgstr "Установка пакета не была завершена"
 
 #: tazpkg:2510
-msgid "The package \"%s\" has been modified by:"
-msgstr "Пакет «%s» был изменен пакетами:"
+msgid "The package has been modified by:"
+msgstr "Пакет был изменен пакетами:"
 
 #: tazpkg:2516
-msgid "Files lost from package \"%s\":"
-msgstr "Отсутствуют файлы, установленные пакетом «%s»:"
+msgid "Files lost from package:"
+msgstr "Отсутствуют файлы, установленные пакетом:"
 
 #: tazpkg:2520
 msgid "target of symlink"
 msgstr "цель ссылки"
 
 #: tazpkg:2526
-msgid "Missing dependencies for package \"%s\":"
-msgstr "Отсутствуют зависимости пакета «%s»:"
+msgid "Missing dependencies for package:"
+msgstr "Отсутствуют зависимости пакета:"
 
 #: tazpkg:2534
-msgid "Dependencies loop between \"%s\" and:"
-msgstr "Циклическая зависимость между пакетами «%s» и:"
+msgid "Dependencies loop between package and:"
+msgstr "Циклическая зависимость между пакетом и:"
 
 #: tazpkg:2539
 msgid "Looking for known bugs..."
@@ -1099,7 +1099,7 @@ msgid "Install package with \"%s\" or \"%s\""
 msgstr "Установите пакет командой «%s» или «%s»"
 
 #: tazpkg:2896
-msgid "TazPKG SHell."
+msgid "TazPkg SHell."
 msgstr "Оболочка TazPkg."
 
 #: tazpkg:2897
@@ -1109,7 +1109,7 @@ msgstr ""
 "выход."
 
 #: tazpkg:2906
-msgid "You are already running a TazPKG SHell."
+msgid "You are already running a TazPkg SHell."
 msgstr "Вы уже работаете в оболочке TazPkg."
 
 #: tazpkg:2966

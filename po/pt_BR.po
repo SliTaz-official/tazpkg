@@ -103,7 +103,7 @@ msgstr "Mostra bugs conhecidos dos pacotes"
 
 #: tazpkg:175
 msgid "Show TazPkg activity log"
-msgstr "Mostra o log de atividade do TazPKG"
+msgstr "Mostra o log de atividade do TazPkg"
 
 #: tazpkg:176
 msgid "List installed packages on the system"
@@ -231,12 +231,12 @@ msgid "Convert alien package to tazpkg"
 msgstr "Converte um pacote deb/rpm/tgz/pet/sfs/sb/arch/ipk para tazpkg"
 
 #: tazpkg:215
-msgid "Link a package from another slitaz installation"
+msgid "Link a package from another SliTaz installation"
 msgstr "Liga um pacote a partir de outra instalação do SliTaz"
 
 #: tazpkg:217
-msgid "Change the mirror url configuration"
-msgstr "Muda a configuração de url do mirror"
+msgid "Change the mirror URL configuration"
+msgstr "Muda a configuração de URL do mirror"
 
 #: tazpkg:218
 msgid "List undigest mirrors"
@@ -571,7 +571,7 @@ msgstr[0] "%s instalado"
 msgstr[1] "%s instalados"
 
 #: tazpkg:1489
-msgid "TazPKG information"
+msgid "TazPkg information"
 msgstr "Informação do TazPkg"
 
 #: tazpkg:1501
@@ -636,8 +636,8 @@ msgid "Package \"%s\" is not installed."
 msgstr "%s não está instalado."
 
 #: tazpkg:1538
-msgid "TazPKG Activity"
-msgstr "Atividade do TazPKG"
+msgid "TazPkg Activity"
+msgstr "Atividade do TazPkg"
 
 #: tazpkg:1561
 msgid "Please specify a pattern or package name to search for."
@@ -963,28 +963,28 @@ msgid "Bugs in package \"%s\" version %s:"
 msgstr "Bugs no pacote %s versão %s:"
 
 #: tazpkg:2502
-msgid "The package \"%s\" installation has not completed"
-msgstr "A instalação do pacote %s não se completou"
+msgid "The package installation has not completed"
+msgstr "A instalação do pacote não se completou"
 
 #: tazpkg:2510
-msgid "The package \"%s\" has been modified by:"
-msgstr "O pacote %s foi modificado por:"
+msgid "The package has been modified by:"
+msgstr "O pacote foi modificado por:"
 
 #: tazpkg:2516
-msgid "Files lost from package \"%s\":"
-msgstr "Arquivos perdidos para %s:"
+msgid "Files lost from package:"
+msgstr "Arquivos perdidos para:"
 
 #: tazpkg:2520
 msgid "target of symlink"
 msgstr "alvo do link simbólico"
 
 #: tazpkg:2526
-msgid "Missing dependencies for package \"%s\":"
-msgstr "Arquivos perdidos para %s:"
+msgid "Missing dependencies for package:"
+msgstr "Arquivos perdidos para:"
 
 #: tazpkg:2534
-msgid "Dependencies loop between \"%s\" and:"
-msgstr "Loop de dependências entre %s e:"
+msgid "Dependencies loop between package and:"
+msgstr "Loop de dependências entre pacote e:"
 
 #: tazpkg:2539
 msgid "Looking for known bugs..."
@@ -1090,7 +1090,7 @@ msgid "Install package with \"%s\" or \"%s\""
 msgstr "Instale o pacote com '%s' ou '%s'"
 
 #: tazpkg:2896
-msgid "TazPKG SHell."
+msgid "TazPkg SHell."
 msgstr "TazPkg SHell."
 
 #: tazpkg:2897
@@ -1098,7 +1098,7 @@ msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr "Digite 'usage' para comandos disponíveis ou 'quit' ou 'q' para sair."
 
 #: tazpkg:2906
-msgid "You are already running a TazPKG SHell."
+msgid "You are already running a TazPkg SHell."
 msgstr "Você já está usando o TazPkg SHell."
 
 #: tazpkg:2966
@@ -1974,8 +1974,8 @@ msgstr "Sistema está atualizado - %s"
 #~ msgid "Depends:"
 #~ msgstr "Dependências:"
 
-#~ msgid "TazPKG"
-#~ msgstr "TazPKG"
+#~ msgid "TazPkg"
+#~ msgstr "TazPkg"
 
 #~ msgid "$PACKAGE_FILE does not look like an Archlinux/Alpine package!"
 #~ msgstr "$PACKAGE_FILE não se parece com um pacote Archlinux/Alpine!"

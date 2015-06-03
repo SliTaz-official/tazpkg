@@ -1,0 +1,95 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager.
+# TazPkg help system
+
+. /lib/libtaz.sh
+
+T="${1#-}"
+DOC='/usr/share/doc/tazpkg/tazpkg.html'
+QUERY="$T"
+
+if [ -z "$T" ]; then
+	tazpkg usage; exit 0
+fi
+
+commands="\
+:usage::help,h::activity,log,a::clean-cache,cc::shell::list,l::list-mirror,lm:\
+:list-config::search,s::search-pkgname,sp::search-file,sf::get,g::install,i:\
+:get-install,gi::install-list,get-install-list::remove,r::reconfigure::link:\
+:set-release::add-flavor,install-flavor::info::desc,d::list-files,lf:\
+:block,b,unblock,u,chblock::check::bugs::depends,rdepends::extract,e::pack:\
+:repack::repack-config::recompress::convert,c::list-suggested::recharge:
+:upgrade,up::setup-mirror,sm::add-undigest,setup-undigest::list-undigest:\
+:remove-undigest:"
+
+if [ ! $(echo $commands | grep -e "[:,]$T[:,]") ]; then
+	try1=$(echo $commands | grep -oe ":[^:]*$T[^:]*:")
+	if [ -z "$try1" ]; then
+		_ 'Sorry, no help for "%s"' "$QUERY"; newline; exit 0
+	fi
+
+	try2=$(echo "$try1" | tr -d : )
+
+	trynum=$(echo "$try2" | wc -l)
+	if [ "$trynum" -ne 1 ]; then
+		_p '%d help topic available:' '%d help topics available:' "$trynum" \
+			"$trynum"; newline
+		echo "$try2" | sed 's|^|  * &|; s|  ,|  |; s|,|, |g'
+		exit 0
+	else
+		T="${try2%%,*}"
+	fi
+else
+	try3=$(echo $commands | grep -oe "[:,]$T[:,]")
+	case $try3 in
+		:*)	try4="$try3";;
+		,*)	try4=$(echo $commands | grep -oe ":[^:]*$try3" | cut -d, -f1);;
+	esac
+
+	T=$(echo $try4 | tr -d ':,')
+fi
+
+title=$(echo $commands | grep -oe ":$T\(,[^:]*\)*:" | tr -d : | sed 's|,|, |g')
+
+
+# style: <h3 id="TOPIC">
+HLP=$(sed "/id=\"$T\"/,/<h3/!d; /<h3/d; /<\/h3/d; /<h2/,\$d" $DOC)
+if [ -z "$HLP" ]; then
+	# style: <a name="TOPIC"></a>
+	HLP=$(sed "/name=\"$T\"/,/name=/!d; /name=/d; /<h3/d; /<h2/,\$d" $DOC)
+fi
+
+if [ -z "$HLP" ]; then
+	_ 'Sorry, no help for "%s"' "$QUERY"
+	exit 0
+fi
+
+PRE=$(echo "$HLP" | sed "/^$/d; /<pre>/,/<\/pre\>/{s|.*|  &|; s| |·|g}; \
+	s|^  </*pre>$||; s|<pre>||; s|</pre>||; s|  ·#|  #|;" | tr '\n' ' ' | \
+	sed '/^[ 	]*$/d' | \
+	sed 's|[ 	][ 	]*| |g;' | \
+	sed 's|[ 	]*<dl>|O\n|g; s|[ 	]*</dl>|L\n|g; s|[ 	]*</*dt>||g;' | \
+	sed 's|[ 	]*<dd>|	|g; s|</dd>|\n|g;' | \
+	sed 's|<h4>|<b>|g; s|</h4>|</b>\n|g' | \
+	sed 's|[ 	]*<p>[ 	]*||g; s|[ 	]*</p>|\n \n|g; s|  |\n  |g' | \
+	sed 's|<a [^>]*>||g; s|</a>||g; s|·| |g' | \
+	sed 's|</*nobr>||g; s|&shy;||g; s|^[ 	]*||' | \
+	sed '/^$/d' | \
+	sed 's|<tt>|A|g; s|<code>|A|g; s|<em>|B|g; s|<strong>|B|g; \
+		s|</tt>|D|g; s|</code>|D|g; s|</em>|D|g; s|</strong>|C|g; \
+		s|DD|D|g;')
+
+OPT=$(echo "$PRE" | sed '/O/,/L/!d; /[OL]/d')
+OPTLIST=$(optlist "$OPT")
+
+OPT0=$(echo "$PRE" | tr '\n' '@')
+OPTA=$(echo "$OPT" | tr '\n' '@')
+OPTB=$(echo "$OPTLIST" | tr '\n' '@')
+
+PRE2=$(echo "$OPT0" | sed "s|$OPTA|$OPTB|" | tr '@' '\n' | sed '/O/d; s|L||')
+
+[ ! -z "$TA" ] && T="$T, $TA"
+
+title '$title'
+emsg "$(longline "$PRE2" | sed 's|A|<c 33>|g; s|B|<c 36>|g; s|C|<b>|g; s|D|</c>|g; ')"
+newline

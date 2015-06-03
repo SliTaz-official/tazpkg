@@ -231,11 +231,11 @@ msgid "Convert alien package to tazpkg"
 msgstr ""
 
 #: tazpkg:215
-msgid "Link a package from another slitaz installation"
+msgid "Link a package from another SliTaz installation"
 msgstr ""
 
 #: tazpkg:217
-msgid "Change the mirror url configuration"
+msgid "Change the mirror URL configuration"
 msgstr ""
 
 #: tazpkg:218
@@ -561,7 +561,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: tazpkg:1489
-msgid "TazPKG information"
+msgid "TazPkg information"
 msgstr ""
 
 #: tazpkg:1501
@@ -625,7 +625,7 @@ msgid "Package \"%s\" is not installed."
 msgstr ""
 
 #: tazpkg:1538
-msgid "TazPKG Activity"
+msgid "TazPkg Activity"
 msgstr ""
 
 #: tazpkg:1561
@@ -943,15 +943,15 @@ msgid "Bugs in package \"%s\" version %s:"
 msgstr ""
 
 #: tazpkg:2502
-msgid "The package \"%s\" installation has not completed"
+msgid "The package installation has not completed"
 msgstr ""
 
 #: tazpkg:2510
-msgid "The package \"%s\" has been modified by:"
+msgid "The package has been modified by:"
 msgstr ""
 
 #: tazpkg:2516
-msgid "Files lost from package \"%s\":"
+msgid "Files lost from package:"
 msgstr ""
 
 #: tazpkg:2520
@@ -959,11 +959,11 @@ msgid "target of symlink"
 msgstr ""
 
 #: tazpkg:2526
-msgid "Missing dependencies for package \"%s\":"
+msgid "Missing dependencies for package:"
 msgstr ""
 
 #: tazpkg:2534
-msgid "Dependencies loop between \"%s\" and:"
+msgid "Dependencies loop between package and:"
 msgstr ""
 
 #: tazpkg:2539
@@ -1065,7 +1065,7 @@ msgid "Install package with \"%s\" or \"%s\""
 msgstr ""
 
 #: tazpkg:2896
-msgid "TazPKG SHell."
+msgid "TazPkg SHell."
 msgstr ""
 
 #: tazpkg:2897
@@ -1073,7 +1073,7 @@ msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr ""
 
 #: tazpkg:2906
-msgid "You are already running a TazPKG SHell."
+msgid "You are already running a TazPkg SHell."
 msgstr ""
 
 #: tazpkg:2966

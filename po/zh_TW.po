@@ -1,5 +1,5 @@
 # Traditional Chinese translations for SliTaz tazpkg package.
-# Copyright (C) 2014 Slitaz Association
+# Copyright (C) 2014 SliTaz Association
 # This file is distributed under the same license as the SliTaz tazpkg package.
 # lunglungyu <lunglungyu2004@gmail.com>, 2014.
 #
@@ -231,12 +231,12 @@ msgid "Convert alien package to tazpkg"
 msgstr "將deb/rpm/tgz/pet/sfs/sb/arch/ipk包轉換成tazpkg 格式"
 
 #: tazpkg:215
-msgid "Link a package from another slitaz installation"
-msgstr "由另一個安裝好的slitaz連接包"
+msgid "Link a package from another SliTaz installation"
+msgstr "由另一個安裝好的SliTaz連接包"
 
 #: tazpkg:217
-msgid "Change the mirror url configuration"
-msgstr "更改鏡像url配置"
+msgid "Change the mirror URL configuration"
+msgstr "更改鏡像URL配置"
 
 #: tazpkg:218
 msgid "List undigest mirrors"
@@ -558,8 +558,8 @@ msgid_plural "%s files"
 msgstr[0] "與 $PACKAGE 同時安裝的 %s 個文件"
 
 #: tazpkg:1489
-msgid "TazPKG information"
-msgstr "TazPKG 資訊"
+msgid "TazPkg information"
+msgstr "TazPkg 資訊"
 
 #: tazpkg:1501
 msgid "Package    : %s"
@@ -623,8 +623,8 @@ msgid "Package \"%s\" is not installed."
 msgstr "未安裝 %s."
 
 #: tazpkg:1538
-msgid "TazPKG Activity"
-msgstr "TazPKG 活動"
+msgid "TazPkg Activity"
+msgstr "TazPkg 活動"
 
 #: tazpkg:1561
 msgid "Please specify a pattern or package name to search for."
@@ -943,28 +943,28 @@ msgid "Bugs in package \"%s\" version %s:"
 msgstr "%s 包 %s 版本的Bugs"
 
 #: tazpkg:2502
-msgid "The package \"%s\" installation has not completed"
-msgstr "未完成 %s 包的安裝"
+msgid "The package installation has not completed"
+msgstr "未完成 包的安裝"
 
 #: tazpkg:2510
-msgid "The package \"%s\" has been modified by:"
-msgstr "%s 包已被以下程式更改:"
+msgid "The package has been modified by:"
+msgstr "包已被以下程式更改:"
 
 #: tazpkg:2516
-msgid "Files lost from package \"%s\":"
-msgstr "%s 已遺失以下文件:"
+msgid "Files lost from package:"
+msgstr "已遺失以下文件:"
 
 #: tazpkg:2520
 msgid "target of symlink"
 msgstr "軟鏈接(symlink)對象"
 
 #: tazpkg:2526
-msgid "Missing dependencies for package \"%s\":"
-msgstr "%s 欠缺以下依賴:"
+msgid "Missing dependencies for package:"
+msgstr "欠缺以下依賴:"
 
 #: tazpkg:2534
-msgid "Dependencies loop between \"%s\" and:"
-msgstr "%s 與以下程式有依賴循環"
+msgid "Dependencies loop between package and:"
+msgstr "包與以下程式有依賴循環"
 
 #: tazpkg:2539
 msgid "Looking for known bugs..."
@@ -1072,16 +1072,16 @@ msgid "Install package with \"%s\" or \"%s\""
 msgstr "以'%s' 或 '%s' 安裝包"
 
 #: tazpkg:2896
-msgid "TazPKG SHell."
-msgstr "TazPKG SHell."
+msgid "TazPkg SHell."
+msgstr "TazPkg SHell."
 
 #: tazpkg:2897
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr "鍵入 'usage' 以列出所有可用命令或 'quit' 或 'q' 以退出"
 
 #: tazpkg:2906
-msgid "You are already running a TazPKG SHell."
-msgstr "你已經在運行 TazPKG SHell."
+msgid "You are already running a TazPkg SHell."
+msgstr "你已經在運行 TazPkg SHell."
 
 #: tazpkg:2966
 msgid "Usage: tazpkg link package_name slitaz_root"
@@ -1950,8 +1950,8 @@ msgstr "系統已更新到最新 - %s"
 #~ msgid "Depends:"
 #~ msgstr "依賴:"
 
-#~ msgid "TazPKG"
-#~ msgstr "TazPKG"
+#~ msgid "TazPkg"
+#~ msgstr "TazPkg"
 
 #~ msgid "$PACKAGE_FILE does not look like an Archlinux/Alpine package!"
 #~ msgstr "$PACKAGE_FILE 並非 Archlinux/Alpine 包!"

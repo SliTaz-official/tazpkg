@@ -237,15 +237,15 @@ msgstr "Εμφάνιση δένδρου αντίστροφων εξαρτήσε�
 
 #: tazpkg:214
 msgid "Convert alien package to tazpkg"
-msgstr "Μετατροπή ενός μη ιθαγενών πακέτου σε μορφή slitaz (.tazpkg)"
+msgstr "Μετατροπή ενός μη ιθαγενών πακέτου σε μορφή SliTaz (.tazpkg)"
 
 #: tazpkg:215
-msgid "Link a package from another slitaz installation"
+msgid "Link a package from another SliTaz installation"
 msgstr "Συνδέστε (link) ένα πακέτο από μια άλλη εγκατάσταση του SliTaz"
 
 #: tazpkg:217
-msgid "Change the mirror url configuration"
-msgstr "Αλλάξτε τη ρύθμιση για το url του mirror"
+msgid "Change the mirror URL configuration"
+msgstr "Αλλάξτε τη ρύθμιση για το URL του mirror"
 
 #: tazpkg:218
 msgid "List undigest mirrors"
@@ -594,7 +594,7 @@ msgstr[1] "%s αρχεία"
 
 #: tazpkg:1489
 #, fuzzy
-msgid "TazPKG information"
+msgid "TazPkg information"
 msgstr "Πληροφορίες για το TazPkg"
 
 #: tazpkg:1501
@@ -659,7 +659,7 @@ msgid "Package \"%s\" is not installed."
 msgstr "Το %s δεν εγκαταστάθηκε."
 
 #: tazpkg:1538
-msgid "TazPKG Activity"
+msgid "TazPkg Activity"
 msgstr ""
 
 #: tazpkg:1561
@@ -992,28 +992,28 @@ msgid "Bugs in package \"%s\" version %s:"
 msgstr "Υπάρχουν σφάλματα στην %s έκδοση %s:"
 
 #: tazpkg:2502
-msgid "The package \"%s\" installation has not completed"
-msgstr "Η εγκατάσταση του πακέτου %s δεν ολοκληρώθηκε"
+msgid "The package installation has not completed"
+msgstr "Η εγκατάσταση του πακέτου δεν ολοκληρώθηκε"
 
 #: tazpkg:2510
-msgid "The package \"%s\" has been modified by:"
-msgstr "Το πακέτο %s τροποποιήθηκε από:"
+msgid "The package has been modified by:"
+msgstr "Το πακέτο τροποποιήθηκε από:"
 
 #: tazpkg:2516
-msgid "Files lost from package \"%s\":"
-msgstr "Χάθηκαν αρχεία από το %s:"
+msgid "Files lost from package:"
+msgstr "Χάθηκαν αρχεία από το:"
 
 #: tazpkg:2520
 msgid "target of symlink"
 msgstr "στόχος του συμβολικού δεσμού symlink"
 
 #: tazpkg:2526
-msgid "Missing dependencies for package \"%s\":"
-msgstr "Εξαρτήσεις που λείπουν για το %s:"
+msgid "Missing dependencies for package:"
+msgstr "Εξαρτήσεις που λείπουν για το:"
 
 #: tazpkg:2534
-msgid "Dependencies loop between \"%s\" and:"
-msgstr "Υπάρχει βρόχος (loop) εξαρτήσεων ανάμεσα στο %s και το:"
+msgid "Dependencies loop between package and:"
+msgstr "Υπάρχει βρόχος (loop) εξαρτήσεων ανάμεσα στο πακέτο και το:"
 
 #: tazpkg:2539
 msgid "Looking for known bugs..."
@@ -1120,7 +1120,7 @@ msgstr "Εγκαταστήστε το πακέτο με το '%s' ή το '%s'"
 
 #: tazpkg:2896
 #, fuzzy
-msgid "TazPKG SHell."
+msgid "TazPkg SHell."
 msgstr "Κέλυφος του TazPkg"
 
 #: tazpkg:2897
@@ -1132,7 +1132,7 @@ msgstr ""
 
 #: tazpkg:2906
 #, fuzzy
-msgid "You are already running a TazPKG SHell."
+msgid "You are already running a TazPkg SHell."
 msgstr "Τρέχετε ήδη ένα κέλυφος TazPkg"
 
 #: tazpkg:2966
@@ -2061,7 +2061,7 @@ msgstr "Το σύστημα είναι ενημερωμένο - %s"
 #~ msgstr "Όνομα πακέτου: <b>$pkgname</b>"
 
 #~ msgid "URL"
-#~ msgstr "url"
+#~ msgstr "URL"
 
 #~ msgid "pkg"
 #~ msgstr "πακέτο"
