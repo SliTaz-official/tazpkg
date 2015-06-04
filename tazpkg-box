@@ -2,24 +2,21 @@
 #
 # Small GTK boxes to TazPkg for deep desktop integration. PCManFM 0.5.x has a
 # patch to extract a TazPkg file but not Thunar and other FM. TazPkgBox tries
-# to follow freedesktop standards.
+# to follow Freedesktop standards.
 #
 # Copyright (C) 2011-2015 SliTaz GNU/Linux - GNU GPL v2
 #
 # Authors: Christophe Lincoln <pankso@slitaz.org>
 #
 
-
 # Internationalization.
 
 . /lib/libtaz.sh
-TEXTDOMAIN='tazpkg'
-export TEXTDOMAIN
+export TEXTDOMAIN='tazpkg'
 
-title="$(_ 'TazPkg')"
-text="$(_ 'SliTaz Package Action')"
-icon="/usr/share/pixmaps/tazpkg.png"
-opts="--image=tazpkg --image-on-top --center --on-top"
+text="<b>$(_ 'SliTaz Package Action')</b>"
+opts="--window-icon=tazpkg --image=tazpkg --image-on-top --center --on-top \
+--height=260 --width=520 --title=TazPkg"
 
 
 usage() {
@@ -32,19 +29,17 @@ EOT
 # Nice GTK output for install and extract.
 
 output() {
-	yad --text-info $opts --title="$title" --text="<b>$text</b>" \
-		--height=260 --width=520  --window-icon=$icon \
-		--tail --margins=4 --button="gtk-close:0"
+	yad --text-info $opts --tail --margins='4' --text="$text" \
+		--button='gtk-close:0'
 }
 
 
 pkginfo() {
-	tmp=/tmp/$(basename $0)/$$
-	mkdir -p $tmp; cd $tmp
-	{ cpio --quiet -i receipt > /dev/null 2>&1; } < ${dir}/$pkg
-	. $tmp/receipt
-	#rm -rf /tmp/$(basename $0)
-	size=$(du -sh ${dir}/$pkg | awk '{print $1}')
+	tmp="$(mktemp -d)"; cd "$tmp"
+	{ cpio --quiet -i receipt >/dev/null 2>&1; } < "$dir/$pkg"
+	. "$tmp/receipt"
+	rm -rf "$tmp"
+	size=$(du -sh "$dir/$pkg" | awk '{print $1}')
 	echo -e "$(_ 'Package')\n$PACKAGE
 $(_ 'Version')\n$VERSION
 $(_ 'Short desc')\n$SHORT_DESC
@@ -56,16 +51,12 @@ $(_ 'Depends')\n$DEPENDS"
 # Main GUI box function with pure Yad spec
 
 actions_main() {
-	pkgname=${pkg%.tazpkg}
-	pkginfo | yad $opts --title="$title" \
-		--list --no-headers --no-click  \
-		--height=260 --width=520 \
-		--text="<b>$text</b>" \
-		--window-icon=$icon \
-		--column "" --column "" \
+	pkgname="${pkg%.tazpkg}"
+	pkginfo | yad $opts --list --no-headers --no-click --text="$text" \
+		--column '' --column '' \
 		--button="$(_ 'Install'):3" \
 		--button="$(_ 'Extract'):2" \
-		--button="gtk-cancel:1"
+		--button='gtk-cancel:1'
 }
 
 
@@ -73,13 +64,12 @@ actions_main() {
 
 actions() {
 	# Store box results
-	main=$(actions_main)
-	ret=$?
+	main="$(actions_main)"
 	# Deal with --button values
-	case $ret in
+	case "$?" in
 		1) exit 0 ;;
-		2) tazpkg extract $pkg . --output="raw" | output ;;
-		3) tazpkg -i $pkg . --forced --output="raw" | output ;;
+		2) tazpkg extract "$pkg" . --output='raw' | output ;;
+		3) tazpkg -i "$pkg" . --forced --output='raw' | output ;;
 	esac
 }
 
@@ -87,11 +77,11 @@ actions() {
 # TazPkg URL Handler.
 
 dl_inst() {
-	pkg=$(basename $url) 
-	_ 'Downloading: %s' $pkg; newline
-	cd /tmp; wget $url 2>&1
-	tazpkg -i $pkg --forced --output="raw" 2>&1
-	rm -f $pkg
+	pkg="$(basename $url)"
+	_ 'Downloading: %s' "$pkg"; newline
+	cd /tmp; wget "$url" 2>&1
+	tazpkg -i "$pkg" --forced --output='raw' 2>&1
+	rm -f "$pkg"
 }
 
 
@@ -108,9 +98,9 @@ case "$1" in
 		url="http://${1#tazpkg://}"
 		dl_inst | output ;;
 	actions)
-		pkg=$(basename $2)
-		dir=$(dirname $2)
-		cd $dir
+		pkg="$(basename "$(realpath "${2%% }")")"		# fight against strange space at the end
+		dir="$(dirname "$(realpath "${2%% }")")"
+		cd "$dir"
 		actions ;;
 esac
 

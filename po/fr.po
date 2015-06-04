@@ -1164,7 +1164,7 @@ msgstr "Format non supporté"
 
 #: tazpkg-box:19
 msgid "TazPkg"
-msgstr ""
+msgstr "TazPkg"
 
 #: tazpkg-box:20
 msgid "SliTaz Package Action"
@@ -1938,9 +1938,6 @@ msgstr "Le system est à jour - %s"
 
 #~ msgid "Depends:"
 #~ msgstr "Dépendances :"
-
-#~ msgid "TazPkg"
-#~ msgstr "TazPkg"
 
 #~ msgid "$PACKAGE_FILE does not look like an Archlinux/Alpine package!"
 #~ msgstr "$PACKAGE_FILE ne semble pas être un paquet Archlinux ou Alpine !"

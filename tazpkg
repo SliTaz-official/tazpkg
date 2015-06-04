@@ -80,11 +80,11 @@ reverse_translate_category() {
 
 COMMAND="$1"
 PACKAGE="${2%/}"
-PACKAGE_DIR="$(cd $(dirname $PACKAGE 2>/dev/null) 2>/dev/null; pwd)"
+PACKAGE_DIR="$(cd $(dirname "$PACKAGE" 2>/dev/null) 2>/dev/null; pwd)"
 [ -n "$PACKAGE" ] && PACKAGE_FILE="$PACKAGE_DIR/${PACKAGE##*/}"
 if [ -f "$PACKAGE" ]; then
 	# Set pkg basename for install, extract
-	PACKAGE="$(basename $PACKAGE .tazpkg 2>/dev/null)"
+	PACKAGE="$(basename "$PACKAGE" .tazpkg 2>/dev/null)"
 else
 	# Pkg name for remove, search and all other cmds
 	PACKAGE="${PACKAGE%.tazpkg}"
@@ -105,7 +105,6 @@ DEFAULT_MIRROR="$ONLINE_PKGS"
 VERSION=$(awk -F$'\t' '$1=="tazpkg"{print $2}' $PKGS_DB/installed.info)
 # User Agent
 UA="TazPkg-$VERSION"
-
 
 
 
@@ -655,20 +654,20 @@ install_package() {
 	mkdir -p $TMP_DIR
 	[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> $ROOT$PKGS_DB/$INSTALL_LIST-processed
 
-	title 'Installation of package "%s"' $PACKAGE
+	title 'Installation of package "%s"' "$PACKAGE"
 
-	print_short_description $PACKAGE
+	print_short_description "$PACKAGE"
 	separator '-'
 
 	action 'Copying package...'
-	cp $PACKAGE_FILE $TMP_DIR
+	cp "$PACKAGE_FILE" "$TMP_DIR"
 	status
 
-	cd $TMP_DIR
+	cd "$TMP_DIR"
 	extract_package
-	SELF_INSTALL=0
-	EXTRAVERSION=""
-	CONFIG_FILES=""
+	SELF_INSTALL='0'
+	EXTRAVERSION=''
+	CONFIG_FILES=''
 
 	# Include temporary receipt to get the right variables.
 	. $PWD/receipt
@@ -2728,30 +2727,31 @@ EOT
 		look_for_priority
 
 		CURRENT_DIR="$PWD"
-		cd $CACHE_DIR
+		cd "$CACHE_DIR"
 		if check_for_package_in_list check ; then
-			cd $CACHE_DIR
+			cd "$CACHE_DIR"
 			if [ -f "$PACKAGE.tazpkg" ]; then
-				_ 'Package "%s" already in the cache' $PACKAGE
+				_ 'Package "%s" already in the cache' "$PACKAGE"
 				# Check package download was finished
-				tail -c 2k $PACKAGE.tazpkg | fgrep -q 00000000TRAILER || {
-					_ 'Continuing package "%s" download' $PACKAGE
-					download $PACKAGE.tazpkg
+				tail -c 2k "$PACKAGE.tazpkg" | fgrep -q '00000000TRAILER' || {
+					_ 'Continuing package "%s" download' "$PACKAGE"
+					download "$PACKAGE.tazpkg"
 				}
-				if [ "$($CHECKSUM $PACKAGE.tazpkg)" != "$(fgrep "  $PACKAGE.tazpkg" $rep/packages.$SUM)" ]; then
-					rm -f $PACKAGE.tazpkg
-					download $PACKAGE.tazpkg
+				if [ "$($CHECKSUM $PACKAGE.tazpkg)" != \
+					"$(fgrep "  $PACKAGE.tazpkg" "$rep/packages.$SUM")" ]; then
+					rm -f "$PACKAGE.tazpkg"
+					download "$PACKAGE.tazpkg"
 				fi
 			else
-				download $PACKAGE.tazpkg
+				download "$PACKAGE.tazpkg"
 			fi
 			PACKAGE_FILE="$CACHE_DIR/$PACKAGE.tazpkg"
-		elif download_get_script $PACKAGE /tmp/$PACKAGE.$$ ; then
-			install_package_from_get_script /tmp/$PACKAGE.$$ "$ROOT" --get
-			PACKAGE_FILE=$(ls $PWD/$PACKAGE-*.tazpkg)
+		elif download_get_script "$PACKAGE" "/tmp/$PACKAGE.$$" ; then
+			install_package_from_get_script "/tmp/$PACKAGE.$$" "$ROOT" --get
+			PACKAGE_FILE="$(ls "$PWD/$PACKAGE-*.tazpkg")"
 		fi
 		[ "$PWD" != "$CURRENT_DIR" ] &&
-			cp -a $PACKAGE_FILE $CURRENT_DIR
+			cp -a "$PACKAGE_FILE" "$CURRENT_DIR"
 		;;
 
 
