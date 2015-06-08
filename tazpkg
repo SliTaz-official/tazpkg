@@ -357,7 +357,7 @@ check_for_installed_info() {
 	info_path="$ROOT$PKGS_DB/installed.info"
 	if [ ! -f "$info_path" ]; then
 		if [ "$(id -u)" == '0' ]; then
-			_ 'File "%s" generated. Please wait...' installed.info
+			_ 'File "%s" generated. Please wait...' 'installed.info'
 			for pkg in $ROOT$PKGS_DB/installed/*/receipt; do
 				unset_receipt
 				. $pkg
@@ -376,8 +376,21 @@ EOT
 		fi
 	fi
 
-	# Check for md5 field in the installed.info
-
+	# Check for md5 field (#9) in the installed.info
+	if [ -n "$(awk -F$'\t' 'BEGIN{ n = "" } { if(NF != 9){ n = "o"; } } END{ print n }' $info_path)" ]; then
+		_n 'File "%s" generated. Please wait...' 'installed.info.new'
+		awk -F$'\t' -vm="$ROOT$PKGS_DB/installed.md5" 'BEGIN{OFS="\t"}
+		{
+			if (NF != 9) {
+				pkg = $1 "-" $2 ".tazpkg";
+				"fgrep " pkg " " m " | cut -c-32" | getline $9;
+				$9 = ($9 == "") ? "00000000000000000000000000000000" : $9;
+			}
+			print;
+		}' $info_path > $info_path.new
+		mv -f $info_path.new $info_path
+		status
+	fi
 }
 
 
@@ -570,12 +583,12 @@ download() {
 extract_package() {
 	action 'Extracting package...'
 	cpio -idm --quiet < "${PACKAGE_FILE##*/}" && rm -f "${PACKAGE_FILE##*/}"
-	status
 	if [ -f fs.cpio.lzma ]; then
 		unlzma -c fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
 	elif [ -f fs.cpio.gz ]; then
 		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
 	fi
+	status
 }
 
 
@@ -641,8 +654,7 @@ install_package() {
 		cp $TMP_DIR/modifiers  "$ROOT$INSTALLED/$PACKAGE" 2>/dev/null
 		cp $TMP_DIR/files.list "$ROOT$INSTALLED/$PACKAGE" 2>/dev/null
 		rm -rf $TMP_DIR 2> /dev/null
-		sed -i "/ $(basename "$PACKAGE_FILE")$/d" \
-			$ROOT$PKGS_DB/installed.$SUM 2> /dev/null
+		sed -i "/ $(basename "$PACKAGE_FILE")$/d" $ROOT$PKGS_DB/installed.$SUM 2>/dev/null
 		cd "$(dirname "$PACKAGE_FILE")"
 		$CHECKSUM "$(basename "$PACKAGE_FILE")" >> $ROOT$PKGS_DB/installed.$SUM
 	}
@@ -834,11 +846,13 @@ END {
 	check_for_installed_info
 	SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
 	DEPENDS=$(echo $DEPENDS) # remove newlines from some receipts
+	PKG_SUM="$(fgrep "$(basename "$PACKAGE_FILE")" "$ROOT$PKGS_DB/installed.$SUM" | cut -d' ' -f1)"
 	II=$ROOT$PKGS_DB/installed.info
 	sed -i "/^$PACKAGE	/d" $II # remove old entry
 	cat >> $II <<EOT
-$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS
+$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS	$PKG_SUM
 EOT
+	#awk -F$'\t' -vp="$PACKAGE" '$1==p' $ROOT$PKGS_DB/packages.info > $II
 	TEMP_FILE=$(mktemp)
 	sort $II > $TEMP_FILE; mv -f $TEMP_FILE $II; chmod a+r $II; unset II
 

@@ -165,8 +165,7 @@ header
 
 
 # xHTML 5 header with special side bar for categories.
-TITLE=$(TEXTDOMAIN='tazpkg'; _ 'TazPanel - Packages')
-xhtml_header | sed 's/id="content"/id="content-sidebar"/'
+TITLE=$(TEXTDOMAIN='tazpkg'; _ 'Packages')
 
 
 pkg_info_link() {
@@ -275,20 +274,6 @@ show_button() {
 #
 
 
-# ENTER will search but user may search for a button, so put one.
-
-search_form() {
-	cat <<EOT
-<form class="search"><!--
-	--><a data-icon="web" href="http://pkg.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a> <!--
-	--><input type="search" name="search" results="5" autosave="pkgsearch" autocomplete="on"><!--
-	--><button type="submit">$(_n 'Search')</button><!--
-	--><button name="files" value="yes">$(_n 'Files')</button><!--
---></form>
-EOT
-}
-
-
 table_head() {
 	cat <<EOT
 <table class="wide zebra pkglist" id="head1">
@@ -379,7 +364,7 @@ EOT
 
 
 repo_list() {
-	if [ -n "$(ls $PKGS_DB/undigest/ 2> /dev/null)" ]; then
+	if [ -n "$(ls $PKGS_DB/undigest/ 2>/dev/null)" ]; then
 		case "$repo" in
 			Public)
 				;;
@@ -388,11 +373,11 @@ repo_list() {
 					[ -d "$i" ] && echo "$i$1"
 				done ;;
 			*)
-				echo "$PKGS_DB/undigest/$repo$1"
+				ls "$PKGS_DB/undigest/$repo$1" 2>/dev/null
 				return ;;
 		esac
 	fi
-	echo "$PKGS_DB$1"
+	[ -e "$PKGS_DB$1" ] && echo "$PKGS_DB$1"
 }
 
 
@@ -456,7 +441,7 @@ show_list() {
 		sed 's|.*|&\ti|' $i/installed.info
 		[ "$cat" == 'extra' ] || [ $1 == 'my' ] || cat $i/packages.info
 		[ "$cat" == 'extra' ] &&
-		sed 's,\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\).*,\1\t\5\textra\t\2\thttp://mirror.slitaz.org/packages/get/\1\t-\t-\t-,' $PKGS_DB/extra.list
+		sed 's,\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\).*,\1\t\5\textra\t\2\thttp://mirror.slitaz.org/packages/get/\1\t-\t-\t-\t-,' $PKGS_DB/extra.list
 	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${cat:--}" -vt="${tag:--}" '
 {
 	if (PKG && PKG != $1) {
@@ -474,8 +459,8 @@ show_list() {
 	if (NF == 2) { DSCL = $2; next }
 	if (c == "all" || $3 == c || index(" "$6" ", " "t" ")) { SEL = 1 }
 	if (SEL) {
-		if ($9 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
-		if (! INS)     { VER = $2; DSC = $4; WEB = $5 }
+		if ($10 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
+		if (! INS)      { VER = $2; DSC = $4; WEB = $5 }
 	}
 }' > $cached
 
@@ -547,6 +532,21 @@ show_info_links() {
 }
 
 
+tazpanel_header() {
+	xhtml_header "$1" | sed 's/id="content"/id="content-sidebar"/'
+	cat <<EOT
+<form class="search"><!--
+	--><a data-icon="web" href="http://pkg.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a> <!--
+	--><input type="search" name="search" value="$(GET search)" results="5" autosave="pkgsearch" autocomplete="on"><!--
+	--><button type="submit">$(_n 'Search')</button><!--
+	--><button name="files" value="yes">$(_n 'Files')</button><!--
+--></form>
+EOT
+	sidebar
+}
+
+
+
 
 #
 # Commands
@@ -560,12 +560,10 @@ case " $(GET) " in
 		#
 		# List linkable packages.
 		#
-		search_form; sidebar
+		tazpanel_header "$(_ 'Linkable packages')"
 		loading_msg "$(_ 'Listing linkable packages...')"
 
 		cat <<EOT
-<h2>$(_ 'Linkable packages')</h2>
-
 <form class="wide">
 	$(_ 'Selection:') $(show_button do=Link)
 EOT
@@ -596,9 +594,7 @@ EOT
 		#
 		# List of all categories.
 		#
-		search_form; sidebar
-
-		echo "<h2>$(_ 'Categories list')</h2>"
+		tazpanel_header "$(_ 'Categories list')"
 
 		for pkgsinfo in $(repo_list /packages.info); do
 			cat <<EOT
@@ -640,7 +636,7 @@ EOT
 		#
 		# List all packages by category.
 		#
-		search_form; sidebar
+		tazpanel_header "$(_ 'Packages list')"
 		loading_msg "$(_ 'Listing packages...')"
 
 		bcat="<b>$cat</b>"; brepo="<b>$repo</b>"
@@ -658,9 +654,7 @@ EOT
 		esac
 
 		cat <<EOT
-<h2>$(_ 'Packages list')</h2>
 <p>$title</p>
-
 EOT
 
 		[ ! -f $PKGS_DB/packages.info ] && msg warn \
@@ -697,16 +691,13 @@ EOT
 		# Search for packages. Here default is to search in packages.desc
 		# and so get result including packages names and descriptions
 		#
+		tazpanel_header "$(_ 'Search packages')"
+		loading_msg "$(_ 'Searching packages...')"
+
 		pkg=$(GET search); [ -z "$pkg" ] && xhtml_footer && exit
 		cd $PKGS_DB
 
-		search_form | sed "s|name=\"search\"|& value=\"$pkg\"|"
-		sidebar
-		loading_msg "$(_ 'Searching packages...')"
-
 		cat <<EOT
-<h2>$(_ 'Search packages')</h2>
-
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -761,11 +752,10 @@ EOT
 		#
 		# Lets recharge the packages list
 		#
-		search_form; sidebar
+		tazpanel_header "$(_ 'Recharge')"
 		loading_msg "$(_ 'Recharging lists...')"
 
 		cat <<EOT
-<h2>$(_ 'Recharge')</h2>
 <p>$(_ 'Recharge checks for new or updated packages')</p>
 
 <section>
@@ -787,12 +777,10 @@ EOT
 		#
 		# Upgrade packages
 		#
-		search_form; sidebar
+		tazpanel_header "$(_ 'Up packages')"
 		loading_msg "$(_ 'Checking for upgrades...')"
 
 		cat <<EOT
-<h2>$(_ 'Up packages')</h2>
-
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -824,7 +812,7 @@ EOT
 		#
 		# Do an action on one or some packages
 		#
-		search_form; sidebar
+		tazpanel_header "TazPkg: $(GET do)"
 		loading_msg
 
 		# Find the command
@@ -847,8 +835,6 @@ EOT
 		esac
 
 		cat <<EOT
-<h2>TazPkg: $(GET do)</h2>
-
 <div>$MSG</div>
 EOT
 		# Do the command for all asked packages
@@ -866,24 +852,33 @@ EOT
 		#
 		# Packages info
 		#
-		pkg=$(GET info)
-		search_form; sidebar
+		tazpanel_header "$(_ 'Package info')"
 		loading_msg "$(_ 'Getting package info...')"
+
+		pkg="$(GET info)"
+
+		# Symbolic icon
+		if [ -d "$INSTALLED/$pkg" ]; then
+			if grep -q "^$pkg$" "$PKGS_DB/blocked-packages.list"
+				then icon='pkgib'
+				else icon='pkgi'
+			fi
+			else icon='pkg'
+		fi
 
 		cat <<EOT
 <section>
 	<header>
-		$(_ 'Package %s' $pkg)
+		<span data-icon="$icon">$(_ 'Package %s' "$pkg")</span>
 		<form>
 			<input type="hidden" name="pkg" value="${pkg#get-}"/>
 EOT
 
 		# Get receipt variables, show Install/Remove buttons
-		if [ -d $INSTALLED/$pkg ]; then
+		if [ -d "$INSTALLED/$pkg" ]; then
 			. $INSTALLED/$pkg/receipt
 			files=$(wc -l < $INSTALLED/$pkg/files.list)
-			[ "$REMOTE_USER" == "root" ] &&
-			show_button do=Remove
+			[ "$REMOTE_USER" == 'root' ] && show_button do=Remove
 		else
 			cd $PKGS_DB
 			eval "$(awk -F$'\t' -vp=$pkg '
@@ -898,13 +893,13 @@ EOT
 					printf "PACKAGE=\"%s\"; SHORT_DESC=\"%s\"; WEB_SITE=\"%s\"; ", $1, $2, $3
 					printf "CATEGORY=\"%s\"; VERSION=\"%s\"; LICENSE=\"%s\"; ", $4, $5, $6
 				}' extra.list undigest/*/extra.list)"
-				[ "$CATEGORY" ] || CATEGORY="non-free"
+				[ -z "$CATEGORY" ] && CATEGORY='non-free'
 			fi
 			PACKED_SIZE=${SIZES% *}
 			UNPACKED_SIZE=${SIZES#* }
-			[ "$REMOTE_USER" == "root" ] &&
+			[ "$REMOTE_USER" == 'root' ] &&
 			if [ "${pkg#get-}" != "$pkg" ]; then
-				show_button "do=Install&amp;nf"
+				show_button 'do=Install&amp;nf'
 			else
 				show_button do=Install
 			fi
@@ -929,24 +924,23 @@ EOT
 		</form>
 	</header>
 
-<table class="wide summary">
-	<tr><td id="appImg"><img src="pkgs.cgi?app_img=$PACKAGE"/></td><td>
 <table class="wide zebra summary" id="infoTable">
 <tbody>
-	<tr><td><b>$(_ 'Name')</b></td><td>$PACKAGE</td></tr>
-	<tr><td><b>$(_ 'Version')</b></td><td>$VERSION</td></tr>
+	<tr><td><b>$(_ 'Name')</b></td><td>$PACKAGE
+	<div id="appImg"><img src="pkgs.cgi?app_img=$PACKAGE"/></div>
+	</td></tr>
+	$([ -n "$VERSION" ] && echo "<tr><td><b>$(_ 'Version')</b></td><td>$VERSION</td></tr>")
 	<tr><td><b>$(_ 'Category')</b></td><td><a href="?list&amp;cat=$CATEGORY">$CATEGORY</a></td></tr>
 	<tr><td><b>$(_ 'Description')</b></td><td>$SHORT_DESC</td></tr>
 	$([ -n "$MAINTAINER" ] && echo "<tr><td><b>$(_ 'Maintainer')</b></td><td>$MAINTAINER</td></tr>")
 	$([ -n "$LICENSE" ] && echo "<tr><td><b>$(_ 'License')</b></td><td><a href=\"?license=$pkg\">$LICENSE</a></td></tr>")
 	<tr><td><b>$(_ 'Website')</b></td><td><a href="$WEB_SITE" target="_blank">$WEB_SITE</a></td></tr>
 	$(show_info_links "$TAGS" "$(_ 'Tags')" 'tag')
-	<tr><td><b>$(_ 'Sizes')</b></td><td>${PACKED_SIZE/.0/}/${UNPACKED_SIZE/.0/}</td></tr>
+	$([ -n "$PACKED_SIZE" ] && echo "<tr><td><b>$(_ 'Sizes')</b></td><td>${PACKED_SIZE/.0/}/${UNPACKED_SIZE/.0/}</td></tr>")
 	$(show_info_links "$DEPENDS" "$(_ 'Depends')" 'info')
 	$(show_info_links "$SUGGESTED" "$(_ 'Suggested')" 'info')
 </tbody>
 </table>
-</td></tr></table>
 
 	<footer>
 		<a data-icon="text" href="?show_receipt=$pkg">$(_ 'View receipt')</a>
@@ -1000,13 +994,14 @@ EOT
 		#
 		# TazPkg configuration page
 		#
+		tazpanel_header "$(_ 'Administration')"
+		loading_msg
+
 		cmd=$(GET admin)
 		pager="$(GET pager)"; pager=${pager:-$PAGE_SIZE}; pager=${pager:-100}
 		mirror="$(GET mirror)"; mirror="${mirror%/}/"
 		repository="$PKGS_DB/undigest/$(GET repository)"
 		link="$(GET link)"; link=${link%/}
-		search_form; sidebar
-		loading_msg
 
 		case "$cmd" in
 			clean)
@@ -1037,8 +1032,6 @@ EOT
 		esac
 
 		cat <<EOT
-<h2>$(_ 'Administration')</h2>
-
 <p>$(_ 'TazPkg administration and settings')</p>
 
 <form id="actions">
@@ -1245,7 +1238,7 @@ EOT
 		#
 		# Show licenses for installed packages
 		#
-		search_form; sidebar
+		tazpanel_header "$(_ 'Administration')"
 
 		pkg=$(GET license)
 		case $pkg in
@@ -1322,24 +1315,23 @@ END{
 		#
 		# Show tag cloud
 		#
-		search_form; sidebar
+		tazpanel_header "$(_ 'Tags list')"
 
-		echo "<h2>$(_ 'Tags list')</h2>"
 		brepo="<b>$repo</b>"
 		case $repo in
 			Any) title="$(_ 'List of tags in all repositories')" ;;
 			*)   title="$(_ 'List of tags in repository "%s"' "$brepo")" ;;
 		esac
 		echo "<p>$title</p><p id=\"tags\">"
-		to_read=""
-		for i in $(repo_list ""); do
-			if [ ! -e $i/packages.info ]; then
-				list=installed
-			else
-				list=packages
+		to_read=''
+		for i in $(repo_list ''); do
+			if [ -e "$i/packages.info" ]; then
+				to_read="$to_read $i/packages.info"
+			elif [ -e "$i/installed.info" ]; then
+				to_read="$to_read $i/installed.info"
 			fi
-			to_read="$to_read $i/$list.info"
 		done
+
 		TAGS="$(awk -F$'\t' '{if($6){print $6}}' $to_read | tr ' ' $'\n' | sort | uniq -c)"
 		MAX="$(echo "$TAGS" | awk '{if ($1 > MAX) MAX = $1} END{print MAX}')"
 		echo "$TAGS" | awk -vMAX="$MAX" '{
@@ -1353,13 +1345,10 @@ END{
 		#
 		# Show packages with matching tag
 		#
-		search_form; sidebar
-
 		tag=$(GET tag)
-		cat <<EOT
-<h2 data-icon="tag">$(_ 'Tag "%s"' $tag)</h2>
-EOT
-		[ "$REMOTE_USER" == "root" ] && cat <<EOT
+		tazpanel_header "$(_ 'Tag "%s"' $tag)"
+
+		[ "$REMOTE_USER" == 'root' ] && cat <<EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -1385,11 +1374,9 @@ EOT
 		#
 		# Show blocked packages list
 		#
-		search_form; sidebar
+		tazpanel_header "$(_ 'Blocked packages list')"
 
 		cat <<EOT
-<h2>$(_ 'Blocked packages list')</h2>
-
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -1420,10 +1407,11 @@ EOT
 		#
 		# Improving packages by the community effort
 		#
-		search_form; sidebar
+		pkg=$(GET improve)
+		tazpanel_header "$(_ 'Improve package "%s"' $pkg)"
+
 		msg warn 'Under construction!<br/>It is only imitation of working'
 
-		pkg=$(GET improve)
 		user=$(POST user); type=$(POST type); text="$(POST text)"
 		login=$(POST login); password=$(POST password)
 
@@ -1463,6 +1451,8 @@ EOT
 				<td><input type="text" name="login"/></td></tr>
 			<tr><td>$(_ 'Password:')</td>
 				<td><input type="password" name="password"/></td></tr>
+			<tr><td colspan="2">
+				<label><input type="checkbox" name="rememberme"/>$(_ 'Remember me')</label></td></tr>
 			<tr><td colspan="2">
 				<button type="submit" data-icon="user">$(_ 'Log in')</button></td></tr>
 		</table>
@@ -1542,7 +1532,9 @@ EOT
 		</table>
 
 		<textarea name="text" id="improveText" style="width:100%; resize: vertical; min-height:10rem"></textarea>
-		<button type="submit" data-icon="slitaz">$(_ 'Send')</button>
+		<footer>
+			<button type="submit" data-icon="slitaz">$(_ 'Send')</button>
+		</footer>
 	</form>
 </section>
 EOT
@@ -1569,7 +1561,8 @@ EOT
 		#
 		# Default to summary
 		#
-		search_form; sidebar; loading_msg
+		tazpanel_header
+		loading_msg
 
 		cat <<EOT
 <form>

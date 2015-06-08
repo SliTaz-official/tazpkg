@@ -162,7 +162,11 @@ a.tag8 { font-size: 2.4em; color: #F00; }
 section .hborders thead tr { border-top: none; border-bottom: 1pt solid #DDD; }
 
 
-#appImg { vertical-align: top; width: 48px; padding: 0; margin: 0; }
+#appImg {
+	display: inline-block;
+	position: absolute; right: 0.6rem;
+	vertical-align: top; width: 48px; padding: 0; margin: 0;
+}
 #appImg img { height: 48px !important; width: 48px !important; }
 
 
