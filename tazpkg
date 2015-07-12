@@ -584,7 +584,7 @@ extract_package() {
 	action 'Extracting package...'
 	cpio -idm --quiet < "${PACKAGE_FILE##*/}" && rm -f "${PACKAGE_FILE##*/}"
 	if [ -f fs.cpio.lzma ]; then
-		unlzma -c fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
+		unlzma < fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
 	elif [ -f fs.cpio.gz ]; then
 		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
 	fi
@@ -2223,7 +2223,7 @@ EOT
 		status
 
 		action "Restoring original package tree..."
-		unlzma -c fs.cpio.lzma | cpio -idm --quiet
+		unlzma < fs.cpio.lzma | cpio -idm --quiet
 		status
 
 		rm fs.cpio.lzma && cd ..

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Package Manager
+Name[fr]=Gestionnaire de paquets
 Name[pt]=Gerenciador de Pacotes
 Name[pt_BR]=Gerenciador de Pacotes
 Name[ru]=Менеджер пакетов
