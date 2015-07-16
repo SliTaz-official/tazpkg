@@ -415,7 +415,10 @@ EOM
 convert_tgz() {
 	parse_pkgname
 	mkdir -p $TMP_DIR/$file/fs
-	tar -xzf "$PACKAGE_FILE" -C $TMP_DIR/$file/fs
+	case "$PACKAGE_FILE" in
+	*.txz) tar -xJf "$PACKAGE_FILE" -C $TMP_DIR/$file/fs ;;
+	*.tgz) tar -xzf "$PACKAGE_FILE" -C $TMP_DIR/$file/fs ;;
+	esac
 	cd $TMP_DIR
 	if [ -d "$file/fs/install" ]; then
 		descrip=$(sed "/^$package/!d;s/.*(\\(.*\\)).*/\\1/;q" \
@@ -731,7 +734,7 @@ else
 		*.sb)					convert_sb;;
 		*.sfs)					convert_sfs;;
 		*.pet)					convert_pet;;
-		*.tgz)					convert_tgz;;
+		*.txz|*.tgz)				convert_tgz;;
 		*.cards.tar.xz)			convert_nutyx;;
 		*.apk|*.pkg.tar.gz|*.pkg.tar.xz)	convert_arch;;
 		*.ipk|*.opk)			convert_ipk;;
