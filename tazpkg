@@ -287,8 +287,8 @@ look_for_priority() {
 	priority=$(echo "$priority" | sed '/^$/d' | \
 		while read line; do
 		case $line in
-			main) echo $PKGS_DB;;
-			*)    echo $PKGS_DB/undigest/$line;;
+			(main) echo $PKGS_DB;;
+			(*)    echo $PKGS_DB/undigest/$line;;
 		esac
 	done)
 }
