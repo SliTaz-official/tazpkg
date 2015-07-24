@@ -382,7 +382,7 @@ msgstr "Checando dependências de pós instalação..."
 
 #: tazpkg:880
 msgid "Package \"%s\" (%s) is installed."
-msgstr "Pacote %s (%s) não está instalado."
+msgstr "Pacote %s (%s) está instalado."
 
 #: tazpkg:920
 msgid "Could not download \"%s\" from \"%s\". Exiting."
