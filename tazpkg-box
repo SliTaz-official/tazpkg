@@ -22,6 +22,14 @@ opts="--window-icon=tazpkg --image=tazpkg --image-on-top --center --on-top \
 usage() {
 	cat <<EOT
 $(_ 'Usage:') $(basename $0) [actions|URL] [$(_ 'package')]
+
+Examples:
+
+$(basename $0) actions /path/to/package-1.0.tazpkg
+    display box to extract or install given package
+
+$(basename $0) tazpkg://example.com/path/to/package-1.0.tazpkg
+    download and install given package
 EOT
 }
 
@@ -91,13 +99,14 @@ dl_inst() {
 #
 
 case "$1" in
-	usage|help|-u|-h)
+	--help|-h|help|usage|-u)
 		usage ;;
 	tazpkg://*)
 		# TazPkg URL's handler.
 		url="http://${1#tazpkg://}"
 		dl_inst | output ;;
 	actions)
+		[ -z "$2" ] && exit 1
 		pkg="$(basename "$(realpath "${2%% }")")"		# fight against strange space at the end
 		dir="$(dirname "$(realpath "${2%% }")")"
 		cd "$dir"
