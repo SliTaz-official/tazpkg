@@ -18,7 +18,7 @@ commands="\
 :get-install,gi::install-list,get-install-list::remove,r::reconfigure::link:\
 :set-release::add-flavor,install-flavor::info::desc,d::list-files,lf:\
 :block,b,unblock,u,chblock::check::bugs::depends,rdepends::extract,e::pack:\
-:repack::repack-config::recompress::convert,c::list-suggested::recharge:
+:repack::repack-config::recompress::convert,c::list-suggested::recharge:\
 :upgrade,up::setup-mirror,sm::add-undigest,setup-undigest::list-undigest:\
 :remove-undigest:"
 

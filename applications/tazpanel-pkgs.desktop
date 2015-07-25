@@ -8,4 +8,4 @@ Name[ru]=Менеджер пакетов
 TryExec=tazweb
 Exec=sh -c 'W=$HOME/.config/slitaz/subox.conf;[ -f $W ]||subox -;tazweb root:$(head $W)@127.0.0.1:82/user/pkgs.cgi'
 Icon=tazpkg
-Categories=Settings;System;PackageManager;
+Categories=Settings;PackageManager;

@@ -1,0 +1,107 @@
+README file for TazPkg developers
+=================================
+
+
+Desktop integration
+-------------------
+
+mimeapps.list: this file deprecated and not installed
+https://wiki.archlinux.org/index.php/Default_applications
+(Also, defaults.list deprecated.)
+
+MIME-type "x-scheme-handler/tazpkg" already listed in the tazpkg-url.desktop
+
+
+Categories for .desktop files are listed here:
+http://standards.freedesktop.org/menu-spec/menu-spec-1.0.html
+
+tazpanel-pkgs.desktop: sub-category PackageManager -> category Settings
+
+
+TazPkg modules
+--------------
+
+About 4,000 lines of code is too big to effectively maintain it in single file.
+
+Linux way [https://en.wikibooks.org/wiki/Linux_Guide/How_Linux_Works]:
+> The Linux Way can be summarized as:
+>   * Use programs that do only one task, but do it well.
+>   * To accomplish complex tasks, use several programs linked together.
+>   * Store information in human-readable plain text files whenever it is
+>     possible.
+>   * There is no "one true way" to do anything.
+>   * Prefer commandline tools over graphical tools.
+
+It decided to split single tazpkg code into few independent modules.
+
+Goals: not to scroll thousand of lines to move forth and back to the internal
+tazpkg functions and to the main tazpkg code; knowledge that single code
+changing in the one place will not have side effect in the other place; reduce
+the barrier to entry for new developers.
+
+
+Place best fit tazpkg modules is /usr/libexec directory.
+http://www.linuxbase.org/betaspecs/fhs/fhs/ch04s07.html
+
+> /usr/libexec includes internal binaries that are not intended to be executed
+> directly by users or shell scripts. Applications may use a single subdirectory
+> under /usr/libexec.
+
+> Applications which use /usr/libexec in this way must not also use /usr/lib to
+> store internal binaries, though they may use /usr/lib for the other purposes
+> documented here.
+
+So, directory for tazpkg modules is /usr/libexec/tazpkg/.
+It is out of the PATH, so modules will not interfere with original Linux
+commands and will not autocomplete in the terminal. Nothing changed with the
+user experience: it is still single tazpkg.
+
+
+To execute module we need to know full path to the module.
+We can use simple names for modules such as "help", "convert", "list", etc.
+
+
+Directory variables
+-------------------
+
+Many programs can be configured using variables such as prefix, docdir, etc.:
+  make prefix=/usr install
+
+All variables are in lower case (only DESTDIR is in upper case). See more here:
+https://www.gnu.org/prep/standards/html_node/Directory-Variables.html
+
+Makefile contains variables support with default values.
+Default prefix=/usr, all other variables are defaults to values described
+at the given link.
+
+
+Code commenting
+---------------
+
+Developer comments are very important to understand how program works.
+But that comments are useless to the end user and they just increase the size
+of the scripts without making any changes to the script business logic. It also
+increase the size of the scripts that includes shared "libs" such as libtaz.sh.
+
+We can strip all the comments from installed scripts, leaving that comments
+for developers in the SliTaz Hg repositories.
+
+We need only to leave "#!/bin/sh" line and one-two lines of comments described
+what it is and where you can find the original scripts if you want to develop
+them.
+
+
+Tests
+-----
+
+Tests are the important part of the development process. TazPkg development is
+not easy. We have no automated tests at the moment. Only we can do manual tests,
+but we even have no check-list.
+
+To test tazpkg effectively we need two sorts of the tests. One set of the tests
+we can reproduce in the local file system (inside special prepared chroot
+environment). For other tests we need special test-server that provide special
+test cases (emulate package database changes), also provide both main and few
+undigest repositories. We can set up special scripts and test repository on the
+existing server (cook.slitaz.org).
+

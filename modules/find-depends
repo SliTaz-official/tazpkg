@@ -1,3 +1,4 @@
+#!/bin/sh
 # /usr/lib/tazpkg/tazpkg-find-depends: this program is a part of TazPkg.
 # This file contains the functions that are common to tazpkg and tazpkg-convert,
 # and sourced by them.

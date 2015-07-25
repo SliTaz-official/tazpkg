@@ -13,7 +13,7 @@ TOP_DIR="$(pwd)"
 
 . /etc/slitaz/slitaz.conf
 . /lib/libtaz.sh
-. /usr/lib/tazpkg/tazpkg-find-depends
+. @@MODULES@@/find-depends
 
 # Internationalization.
 export TEXTDOMAIN='tazpkg'
