@@ -947,25 +947,12 @@ EOT
 		<a data-icon="slitaz" href="?improve=$pkg">$(_ 'Improve package')</a>
 	</footer>
 </section>
-<span id="ajaxStatus" style="display:none"></span>
 
-<script type="text/javascript">
-	var links = document.getElementById('infoTable').getElementsByTagName('a');
-	for (var i = 0; i < links.length; i++) {
-		console.log('i=%s, icon=%s.', i, links[i].dataset.icon);
-		if (links[i].dataset.icon == 'clock') {
-			links[i].parentNode.id = 'link' + i;
-			pkg = links[i].innerText.replace(/\+/g, '%2B');
-			ajax('pkgs.cgi?status&pkg=' + pkg, '1', 'link' + i);
-		}
-	}
-
-</script>
 EOT
 
 		# Show description
 		DESC="$(tazpkg desc $pkg)"
-		[ -n "$DESC" ] && echo "<section><pre class="pre-wrap">$DESC</pre></section>"
+		[ -n "$DESC" ] && echo "<section><pre class=\"pre-wrap\">$DESC</pre></section>"
 
 		# Show configuration files list
 		CONFIGS="$(tazpkg list-config $pkg | sed 's|\(.*\)|\1 \1|')"
@@ -982,10 +969,24 @@ EOT
 <section>
 	<header>$(_ 'Installed files')</header>
 	<span id="fileList">
-		<div style="text-align: center;"><span id="ajaxStatus"></span>$(_ 'Please wait')</div>
+		<div style="text-align: center;"><span data-icon="clock">$(_ 'Please wait')</span></div>
 	</span>
 </section>
-<script type="text/javascript">ajax('pkgs.cgi?filelist&pkg=$pkg', '1', 'fileList');</script>
+
+
+<script type="text/javascript">
+	var links = document.getElementById('infoTable').getElementsByTagName('a');
+	for (var i = 0; i < links.length; i++) {
+		console.log('i=%s, icon=%s.', i, links[i].dataset.icon);
+		if (links[i].dataset.icon == 'clock') {
+			links[i].parentNode.id = 'link' + i;
+			pkg = links[i].innerText.replace(/\+/g, '%2B');
+			ajax('pkgs.cgi?status&pkg=' + pkg, '1', 'link' + i);
+		}
+	}
+
+	ajax('pkgs.cgi?filelist&pkg=$pkg', '1', 'fileList');
+</script>
 EOT
 		;;
 

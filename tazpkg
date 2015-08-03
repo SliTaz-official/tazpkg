@@ -3050,8 +3050,7 @@ EOT
 	convert|-c)
 		# convert misc package format to .tazpkg
 		check_for_package_file
-		shift
-		@@MODULES@@/convert $@
+		shift; @@MODULES@@/convert $@
 		;;
 
 
@@ -3117,6 +3116,11 @@ EOT
 	help|-h)
 		# TazPkg help system
 		shift; @@MODULES@@/help $@ ;;
+
+
+	mkdb)
+		# Make TazPkg database
+		shift; @@MODULES@@/mkdb $@ ;;
 
 
 	'')

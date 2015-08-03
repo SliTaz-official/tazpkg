@@ -30,7 +30,7 @@ pot:
 		--package-name=TazPkg \
 		--package-version="$(VERSION)" -kaction -ktitle -k_ -k_n -k_p:1,2 \
 		./tazpkg \
-		./modules/convert ./modules/find-depends ./modules/help \
+		./modules/convert ./modules/find-depends ./modules/help ./modules/mkdb \
 		./tazpkg-box ./tazpkg-notify ./tazpanel/pkgs.cgi
 
 msgmerge:
@@ -113,9 +113,7 @@ install: msgfmt
 
 uninstall:
 	rm -f  $(DESTDIR)$(bindir)/tazpkg
-	rm -f  $(DESTDIR)$(libexecdir)/tazpkg/convert
-	rm -f  $(DESTDIR)$(libexecdir)/tazpkg/find-depends
-	rm -f  $(DESTDIR)$(libexecdir)/tazpkg/help
+	rm -rf $(DESTDIR)$(libexecdir)/tazpkg
 
 	rm -f  $(DESTDIR)$(bindir)/tazpkg-notify
 	rm -f  $(DESTDIR)$(bindir)/tazpkg-box

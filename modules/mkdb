@@ -1,0 +1,222 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# mkdb - TazPkg module
+# Make TazPkg database for folder with *.tazpkg packages
+
+
+# Input:  $1 - path to folder contains *.tazpkg packages
+# Output files in the $1 folder:
+#    packages.info
+#    packages.equiv
+#    descriptions.txt
+#    files.list.lzma
+#    IDs
+# Do nothing if database already exists; force rebuild it with --forced option.
+
+# DB format:
+# ==========
+
+# packages.info
+# -------------
+# Record is line; fields are tab-separated. Fields description:
+# 1: package name
+# 2: version with extra-version
+# 3: category
+# 4: short description
+# 5: upstream web site
+# 6: tags (space-separated)
+# 7: packed and unpacked sizes (space-separated) in human readable format
+# 8: depends
+# 9: checksum
+
+# packages.equiv
+# --------------
+# This DB file used before package installation
+# Record is line. Separator is "="
+# Field 1 is package name to install (pkg1)
+# Field 2 is space-separated list of items in the special format:
+#    a) pkg2:pkg3
+#       If pkg2 is installed, then install pkg3 instead of pkg1. Example:
+#       busybox=pam:busybox-pam
+#       If 'pam' is installed, then install 'busybox-pam' instead of 'busybox'
+#    b) pkg2
+#       If pkg2 already installed, then pkg1 will not be installed. Example:
+#       mysql=mariadb
+#       If 'mariadb' already installed, then 'mysql' will not be installed
+# Complex rule example:
+#    ssh=pam:openssh-pam openssh pam:dropbear-pam dropbear
+
+# descriptions.txt
+# ----------------
+# Field is line; record separator is empty line.
+# First field is package name, rest - description itself.
+# Empty lines in the description appended with space (" ") to avoid mess
+# with end of record.
+
+# files.list.lzma
+# ---------------
+# It is "files.list" compressed using lzma due to it's big size.
+# Format of the files.list: record is line; field separator is ": ".
+# First field is package name, second field is file path.
+# There are DB records for all files installed with the package.
+
+
+# Preparations
+# Get config values (CHECKSUM)
+. /etc/slitaz/slitaz.conf
+# Connect functions library
+. /lib/libtaz.sh
+
+
+# Report error and finish work
+die() { longline "$(_ "$@")" >&2; exit 1; }
+
+
+# Exit if input folder not specified
+[ -z "$1" ] && die 'Input folder not specified'
+
+# Exit if input folder not exists
+folder="$(realpath "$1")" || exit 1
+
+# Exit if folder is not writable
+[ ! -w "$folder" ] && die 'You are not allowed to write to the folder "%s"' "$folder"
+
+# Exit if input folder does not contain packages
+[ -z "$(find "$folder" -maxdepth 1 -name '*.tazpkg')" ] && \
+	die 'Folder "%s" does not contain packages' "$folder"
+
+
+# DB file names
+DBi="$folder/packages.info"
+DBe="$folder/packages.equiv"
+DBd="$folder/descriptions.txt"
+DBf="$folder/files.list"
+
+# Pre-remove DB if --forced and DB exists
+if [ -n "$forced" ]; then
+	[ -e "$DBi" ] && rm "$DBi"
+	[ -e "$DBe" ] && rm "$DBe"
+	[ -e "$DBd" ] && rm "$DBd"
+	[ -e "$DBf.lzma" ] && rm "$DBf.lzma"
+fi
+
+if [ -s "$DBi" ]; then
+	_ 'Packages DB already exists.' >&2
+	exit 1
+fi
+
+# Random temporary folder
+tempd="$(mktemp -d)"
+
+# Make temporary list of packages checksum (usually md5sum)
+_n 'Calculate %s...' "$CHECKSUM"
+cd "$folder"; $CHECKSUM *.tazpkg > "$tempd/$SUM"
+status
+
+cd "$tempd"
+
+# Loop for every package
+while read pkgsum pkgfile; do
+	# Current processed package
+	echo -n "$pkgfile"
+
+	# Extract receipt from package
+	cpio -F "$folder/$pkgfile" -i receipt >/dev/null 2>&1
+
+	# Unset variables that may absent in the receipt
+	unset EXTRAVERSION TAGS DEPENDS PROVIDE
+	# Get values
+	. receipt; rm receipt
+
+
+	# Make packages.info
+	echo -en "$PACKAGE\t$VERSION$EXTRAVERSION\t$CATEGORY\t" >> "$DBi"
+	echo -en "$SHORT_DESC\t$WEB_SITE\t$TAGS\t" >> "$DBi"
+	echo -en "$PACKED_SIZE $UNPACKED_SIZE\t" | sed 's|\.0||g' >> "$DBi"
+	echo -n $DEPENDS$'\t' >> "$DBi"
+	echo $pkgsum >> "$DBi"
+
+
+	# Make packages.equiv
+	for i in $PROVIDE; do
+		# Example from busybox-pam package:
+		# PACKAGE="busybox-pam", PROVIDE="busybox:pam"
+		case $i in
+			# DEST="pam:"
+			*:*) DEST="${i#*:}:";;
+			*)   DEST='';;
+		esac
+		# PKG="busybox"
+		PKG="${i%:*}"
+		if grep -qs ^$PKG= "$DBe"; then
+			# Append existing record
+			sed -i "s|^$PKG=|\0 $DEST$PACKAGE|" "$DBe"
+		else
+			# Add new record
+			echo "$PKG=$DEST$PACKAGE" >> "$DBe"
+		fi
+	done
+
+
+	# Make descriptions.txt
+	if cpio -F "$folder/$pkgfile" -t 2>/dev/null | fgrep -q 'description.txt'; then
+		# Extract description.txt from package
+		cpio -F "$folder/$pkgfile" -i description.txt >/dev/null 2>&1
+		# Append descriptions DB
+		echo "$PACKAGE" >> "$DBd"
+		cat description.txt | sed 's|^$| |' >> "$DBd"
+		echo >> "$DBd"
+		rm description.txt
+	fi
+
+
+	# Make files.list
+	if cpio -F "$folder/$pkgfile" -t 2>/dev/null | fgrep -q 'files.list'; then
+		# Extract files.list from package
+		cpio -F "$folder/$pkgfile" -i files.list >/dev/null 2>&1
+		# Append files list DB
+		sed "s|.*|$PACKAGE: \0|" files.list >> "$DBf"
+		rm files.list
+	fi
+
+	# End line with the status
+	status
+done < "$tempd/$SUM"
+
+
+# Sort DB alphabetically
+sort -o "$tempd/pi" "$DBi"; mv -f "$tempd/pi" "$DBi"
+
+# Create empty files if they not exists
+touch "$DBi" "$DBe" "$DBd" "$DBf"
+
+# Compress files.list using lzma
+sort -k2 -o "$DBf.sorted" "$DBf"
+lzma e "$DBf.sorted" "$DBf.lzma"
+rm "$DBf" "$DBf.sorted"
+
+# Make DB readable for all
+chmod a+r "$DBi" "$DBe" "$DBd" "$DBf.lzma"
+
+
+# Make files for DB recharge
+# --------------------------
+
+cd "$folder"
+
+# Make IDs: md5 and timestamp
+( md5sum "$tempd/$SUM" | cut -d' ' -f1 | tr '\n' ' '; date -ur "$DBi" +%s ) > IDs
+
+
+# Make files-list.md5: decide whether to download files.list.lzma or not
+md5sum "$DBf.lzma" | cut -d' ' -f1 | tr -d $'\n' > files-list.md5
+
+# Make bundle to fast recharge
+[ -f 'bundle.tar.lzma' ] && rm 'bundle.tar.lzma'
+busybox tar -chaf bundle.tar.lzma \
+	files-list.md5 packages.info descriptions.txt packages.equiv
+
+# Clean up
+rm files-list.md5
+rm -r "$tempd"
+
