@@ -23,7 +23,7 @@
 
 . /lib/libtaz.sh
 . /usr/lib/slitaz/libpkg.sh
-. /usr/lib/tazpkg/tazpkg-find-depends
+. @@MODULES@@/find-depends
 
 # Internationalization.
 export TEXTDOMAIN='tazpkg'
