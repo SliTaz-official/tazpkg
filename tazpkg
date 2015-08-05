@@ -513,7 +513,7 @@ log_pkg() {
 	local extra
 
 	[ "$1" == 'Installed' ] && \
-	extra=" - $(fgrep "$PACKAGE-$VERSION" $PKGS_DB/installed.$SUM | awk '{ print $1 }')"
+	extra=" - $(fgrep " $PACKAGE-$VERSION" $PKGS_DB/installed.$SUM | awk '{ print $1 }')"
 
 	[ -e "$LOG" ] || touch $LOG
 
@@ -846,7 +846,7 @@ END {
 	check_for_installed_info
 	SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
 	DEPENDS=$(echo $DEPENDS) # remove newlines from some receipts
-	PKG_SUM="$(fgrep "$(basename "$PACKAGE_FILE")" "$ROOT$PKGS_DB/installed.$SUM" | cut -d' ' -f1)"
+	PKG_SUM="$(fgrep " $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" "$ROOT$PKGS_DB/installed.$SUM" | cut -d' ' -f1)"
 	II=$ROOT$PKGS_DB/installed.info
 	sed -i "/^$PACKAGE	/d" $II # remove old entry
 	cat >> $II <<EOT
