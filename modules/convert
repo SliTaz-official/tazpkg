@@ -1,7 +1,8 @@
 #!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# convert - TazPkg module
+# Toolset to convert alien package to the tazpkg format
 
-# This program is a part of TazPkg.
-# /usr/bin/tazpkg-convert: toolset to convert alien package to the tazpkg format
 
 # Usage: tazpkg-convert alien_package [ target_directory ]
 

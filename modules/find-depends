@@ -1,7 +1,7 @@
 #!/bin/sh
-# /usr/lib/tazpkg/tazpkg-find-depends: this program is a part of TazPkg.
-# This file contains the functions that are common to tazpkg and tazpkg-convert,
-# and sourced by them.
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# find-depends - TazPkg module
+# Functions that are common to tazpkg and tazpkg-convert, and sourced by them.
 
 
 # Need by check_depends
@@ -10,40 +10,37 @@ TMPLOCALSTATE=
 
 # Check for ELF file
 
-is_elf()
-{
-	[ "$(dd if="$1" bs=1 skip=1 count=3 2>/dev/null)" == "ELF" ]
+is_elf() {
+	[ "$(dd if="$1" bs=1 skip=1 count=3 2>/dev/null)" == 'ELF' ]
 }
 
 
 # Print shared library dependencies
 
-ldd()
-{
+ldd() {
 	LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so "$1" 2>/dev/null
 }
 
 
 # search dependencies for files in $TMP_DIR/$file/fs
 
-find_depends()
-{
-	DEFAULT_DEPENDS="glibc-base gcc-lib-base"
+find_depends() {
+	DEFAULT_DEPENDS='glibc-base gcc-lib-base'
 
-	[ -n "$TMPLOCALSTATE" ] || TMPLOCALSTATE=$PKGS_DB
-	[ -f $TMPLOCALSTATE/files.list.lzma ] || tazpkg recharge >/dev/null
+	[ -z "$TMPLOCALSTATE" ] && TMPLOCALSTATE="$PKGS_DB"
+	[ ! -f "$TMPLOCALSTATE/files.list.lzma" ] && tazpkg recharge >/dev/null
 	for i in $TMPLOCALSTATE/files.list.lzma \
 		$TMPLOCALSTATE/undigest/*/files.list.lzma ; do
-		[ -f $i ] && lzma d $i -so >> $TMP_DIR/files.list
+		[ -f "$i" ] && lzma d $i -so >> $TMP_DIR/files.list
 	done
 
-	echo "Find depends..." 1>&2
-	libs_found=""
+	_ 'Find depends...' 1>&2
+	libs_found=''
 	find ${1:-$TMP_DIR/$file/fs} -type f | \
 	while read chkfile ; do
 		is_elf "$chkfile" || continue
 		case "$chkfile" in
-			*.o|*.ko|*.ko.gz) continue;;
+			*.o|*.ko|*.ko.gz|*.ko.xz) continue;;
 		esac
 
 		for lib in $(ldd "$chkfile" | sed '/=>/!d;s/ =>.*//') ; do
@@ -56,7 +53,9 @@ find_depends()
 			esac
 			find ${1:-$TMP_DIR/$file/fs} | grep -q /$lib$ && continue
 
-			echo -ne "for $lib                   \r" 1>&2
+			_n 'for %s' "$lib" 1>&2
+			echo -ne "                   \r" 1>&2
+
 			for dep in $(fgrep $lib files.list | cut -d: -f1); do
 				case " $DEFAULT_DEPENDS " in
 					*\ $dep\ *) continue 2;;
@@ -73,12 +72,12 @@ find_depends()
 		done
 	done
 
-	spc=""
-	[ -s $TMP_DIR/depends ] &&
+	spc=''
+	[ -s "$TMP_DIR/depends" ] &&
 	sort < $TMP_DIR/depends 2>/dev/null | uniq | \
 	while read file; do
 		echo -n "$spc$file"
-		spc=" "
+		spc=' '
 	done
 }
 

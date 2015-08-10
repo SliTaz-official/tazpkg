@@ -1,0 +1,310 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# list - TazPkg module
+# Produce various lists
+
+
+# Commands and options:
+# blocked							List of blocked packages
+# categories						List of categories
+# linked							List of linked packages
+# installed							List of installed packages
+# installed_of_category <category>	List of installed packages of asked category
+# mirrored							List packages available on the mirror
+# mirrored --diff					Last mirrored packages diff
+# installed_files					List files installed with the package
+# activity							TazPkg activity log
+# activity --nb=30					Show asked number of lines of TazPkg activity log
+# config_files [<package>]			List configuration files installed
+# config_files [<package>] --box	List formatted for Yad-based TazPkg boxes
+# suggested							List of suggested packages (not installed only)
+# suggested --all					List of suggested packages (both installed and not installed)
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+# Get TazPkg configuration variables
+. /etc/slitaz/slitaz.conf
+. /etc/slitaz/tazpkg.conf
+BLOCKED="$PKGS_DB/blocked-packages.list"
+
+
+# Interactive mode
+
+im() { tty -s; }
+
+
+# Functions set for translate categories
+# --------------------------------------
+
+# Translate category names (must be last in line)
+
+translate_category() {
+	sed "s|base-system$|$(_ base-system)|g; s|x-window$|$(_ x-window)|g;
+		s|utilities$|$(_ utilities)|g; s|network$|$(_ network)|g;
+		s|graphics$|$(_ graphics)|g; s|multimedia$|$(_ multimedia)|g;
+		s|office$|$(_ office)|g; s|development$|$(_ development)|g;
+		s|system-tools$|$(_ system-tools)|g; s|security$|$(_ security)|g;
+		s|games$|$(_ games)|g; s|misc$|$(_ misc)|g; s|meta$|$(_ meta)|g;
+		s|non-free$|$(_ non-free)|g"
+}
+
+
+# Make array of pre-translated categories
+
+cat_i18n=''
+for c in 'base-system' 'x-window' 'utilities' 'network' 'graphics' \
+	'multimedia' 'office' 'development' 'system-tools' 'security' 'games' \
+	'misc' 'meta' 'non-free'; do
+	cat_i18n="$cat_i18n
+$(gettext "$c")	$c"
+done
+
+
+# If category is not one of those translated in native language, keep it
+# untranslated. This allows both native and English language support.
+# This also supports custom categories.
+# And now we support spaces in translated categories
+
+reverse_translate_category() {
+	echo "$cat_i18n" | awk "BEGIN{FS=\"	\"}{if (/^$@	/) a=\$2}END{if (a==\"\") a=\"$@\"; print a}"
+}
+
+
+# Main code
+# ---------
+
+case $1 in
+
+	blocked)
+		# List of blocked packages
+		title 'Blocked packages'
+
+		if [ -s "$BLOCKED" ];then
+			cat $BLOCKED
+			num=$(wc -l < $BLOCKED)
+			footer "$(_p '%s package' '%s packages' "$num" \
+				"$(colorize 31 $num)")"
+		else
+			_ 'No blocked packages found.'; newline
+		fi
+		;;
+
+
+	categories)
+		# List of categories
+		title 'Packages categories'
+
+		echo "$PKGS_CATEGORIES" | sed 's|[^a-z-]|\n|g; /^$/d' | \
+		sed 's|\(.*\)|\1\t\1|' | translate_category | awk -F$'\t' '{
+		if ($1==$2) print $1; else printf "%-14s %s\n", $1, $2}'
+
+		num=$(echo -n "$PKGS_CATEGORIES" | wc -l)
+		footer "$(_p '%s category' '%s categories' "$num" \
+			"$(colorize 33 $num)")"
+		;;
+
+
+	linked)
+		# List of linked packages
+		title 'Linked packages'
+
+		linked="$(find $INSTALLED -type l -maxdepth 1)"
+		if [ -n "$linked" ]; then
+			for pkg in $linked; do
+				awk -F$'\t' -vp="$(basename "$pkg")" \
+					'($1==p){printf "%-34s %-17s %s\n", $1, $2, $3}' \
+					$PKGS_DB/installed.info | translate_category
+			done
+			num=$(echo "$linked" | wc -l)
+			footer "$(_p '%s package' '%s packages' "$num" \
+				"$(colorize 31 $num)")"
+		else
+			_ 'No linked packages found.'; newline
+		fi
+		;;
+
+
+	installed)
+		# List of installed packages
+		title 'List of all installed packages'
+
+		awk -F$'\t' '{printf "%-34s %-17s %s\n", $1, $2, $3}' \
+			$PKGS_DB/installed.info | translate_category
+		num=$(wc -l < $PKGS_DB/installed.info)
+
+		footer "$(_p '%s package installed.' '%s packages installed.' "$num" \
+			"$(colorize 32 $num)")"
+		;;
+
+
+	installed_of_category)
+		# List of installed packages of asked category
+		shift
+		ASKED_CATEGORY_I18N="$@"
+		ASKED_CATEGORY=$(reverse_translate_category "$ASKED_CATEGORY_I18N")
+		title 'Installed packages of category "%s"' "$ASKED_CATEGORY_I18N"
+
+		TMPLIST=$(mktemp)
+		awk -F$'\t' -vcat="$ASKED_CATEGORY" \
+			'{ if ($3 == cat) printf "%-34s %s\n", $1, $2; }' \
+			$PKGS_DB/installed.info | tee $TMPLIST | translate_category
+		num=$(wc -l < $TMPLIST); rm $TMPLIST
+
+		footer "$(emsg $(_p \
+			'%s package installed of category "%s".' \
+			'%s packages installed of category "%s".' $num \
+			"<c 32>$num</c>" "<c 34>$ASKED_CATEGORY_I18N</c>"))"
+		;;
+
+
+	mirrored)
+		# List packages available on the mirror
+		# Option --diff displays last mirrored packages diff (see recharge).
+		check_for_packages_info
+		if [ -n "$diff" ]; then
+			if [ -f "$PKGS_DB/packages.diff" ]; then
+				title 'Mirrored packages diff'
+				cat $PKGS_DB/packages.diff
+				num=$(wc -l < $PKGS_DB/packages.diff)
+				footer "$(_p \
+					'%s new package listed on the mirror.' \
+					'%s new packages listed on the mirror.' "$num" \
+					"$(colorize 32 $num)")"
+			else
+				newline
+				_ 'Unable to list anything, no packages.diff found.'
+				_ 'Recharge your current list to create a first diff.'
+				newline
+			fi
+		else
+			title 'List of available packages on the mirror'
+			awk -F$'\t' '{
+				split($7, s, " ");
+				printf "%s\n%s\n%s\n%s (%s installed)\n\n", $1, $2, $4, s[1], s[2];
+				}' $PKGS_DB/packages.info
+			num=$(wc -l < $PKGS_DB/packages.info)
+			footer "$(_p \
+				'%s package in the last recharged list.' \
+				'%s packages in the last recharged list.' "$num" \
+				"$(colorize 32 $num)")"
+		fi
+		;;
+
+
+	installed_files)
+		# List files installed with the package
+		PACKAGE="$2"
+		if [ -d "$INSTALLED/$PACKAGE" ]; then
+			# installed package
+			title 'Installed files by "%s"' "$PACKAGE"
+			sort < "$INSTALLED/$PACKAGE/files.list"
+			num=$(wc -l < "$INSTALLED/$PACKAGE/files.list")
+			footer "$(_p '%s file' '%s files' $num \
+				"$(colorize 32 $num)")"
+		elif [ -n "$(grep "^$PACKAGE"$'\t' $PKGS_DB/packages.info)" ]; then
+			# available package
+			title 'Installed files by "%s"' "$PACKAGE"
+
+			TMPLIST=$(mktemp)
+			lzcat $PKGS_DB/files.list.lzma | sed -n "/^$PACKAGE: / s|^[^:]*: ||p" | tee $TMPLIST
+			num=$(wc -l < $TMPLIST); rm $TMPLIST
+
+			footer "$(_p '%s file' '%s files' $num \
+				"$(colorize 32 $num)")"
+		else
+			newline
+			_ 'Package "%s" not available.' "$PACKAGE"
+			newline
+		fi
+		;;
+
+
+	activity)
+		# Show activity log
+		[ -z "$nb" ] && nb='18'
+		title 'TazPkg Activity'
+		IFS=' '
+		tail -n $nb $LOG | tac | \
+		while read date hour none action none pkg vers none; do
+			case $action in
+				Installed)
+					action=$(colorize 32 $action) ;;
+				Removed)
+					action=$(colorize 31 $action) ;;
+				*)
+					action=$(boldify $action) ;;
+			esac
+			date_locale="$(date -d "$date $hour" '+%x %X')"
+			echo "$date_locale : $action $pkg $vers"
+		done
+		unset IFS
+		footer
+		;;
+
+
+	config_files)
+		# List configuration files installed
+		# Option --box displays list formatted for Yad-based TazPkg boxes
+		if [ -n "$2" ]; then
+			FILES="$INSTALLED/$2/volatile.cpio.gz"
+		else
+			FILES="$INSTALLED/*/volatile.cpio.gz"
+		fi
+
+		if [ -n "$box" ]; then
+			TMP_DIR=$(mktemp -d)
+
+			for i in $FILES; do
+				mkdir -p $TMP_DIR/temp; cd $TMP_DIR/temp
+
+				zcat $i | cpio -idm --quiet >/dev/null
+
+				find . -type f 2>/dev/null | while read file; do
+					if [ ! -e /$file ]; then
+						echo -n "----------|----|----|$(_n 'File lost')"
+					else
+						echo -n "$(stat -c "%A|%U|%G|%s|" /$file)"
+						cmp $file /$file >/dev/null 2>&1 || \
+						echo -n "$(stat -c "%.16y" /$file)"
+					fi
+					echo "|/$file"
+				done
+				rm -r $TMP_DIR/temp
+			done
+			cd "$TOP_DIR"
+			rm -r $TMP_DIR
+		else
+			im && title 'Configuration files'
+			for i in $FILES; do
+				[ -f "$i" ] || continue
+				zcat $i | cpio -t --quiet
+			done | sed 's|^|/|' | sort
+			im && footer
+		fi
+		;;
+
+
+	suggested)
+		# List of suggested packages
+		# By default list only not installed suggested packages
+		# Option --all displays all (installed and not installed) suggested packages
+		for i in $(ls -d $INSTALLED/*/receipt); do
+			unset SUGGESTED
+			. $i
+			if [ -n "$SUGGESTED" ]; then
+				if [ -z "$all" ]; then
+					for s in $SUGGESTED; do
+						[ -d "$INSTALLED/$s" ] && \
+							SUGGESTED="$(echo -n $SUGGESTED | sed "s/$s//")"
+					done
+				fi
+				[ -n "$SUGGESTED" ] && cat <<EOT
+$(boldify $(echo "$PACKAGE"):) $SUGGESTED
+EOT
+			fi
+		done
+		;;
+
+esac
+exit 0

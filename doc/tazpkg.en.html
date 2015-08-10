@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>TazPkg Manual (en)</title>
+	<title>TazPkg Manual</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1"/>
 	<link rel="stylesheet" type="text/css" href="../slitaz-doc.css" />
 	<script type="text/javascript" src="../slitaz-doc.js"></script>
@@ -17,19 +17,19 @@
 <div id="content">
 
 
-<h2>NAME</h2>
+<h2>Name</h2>
 
 <p>TazPkg — Tiny autonomous zone package manager</p>
 
 
-<h2>SYNTAX</h2>
+<h2>Syntax</h2>
 
 <pre>
 tazpkg [command] [options...]
 </pre>
 
 
-<h2>DESCRIPTION</h2>
+<h2>Description</h2>
 
 <p>TazPkg is a lightweight package manager to install, list, download, update or
 remove precompiled packages on a GNU/Linux system. TazPkg offers commands for
@@ -43,10 +43,216 @@ compile sources and generate a .tazpkg package.</p>
 
 <p>TazPkg is entirely built from scratch using Shell script, compatible with
 Bash; it runs under Ash — part of the Busybox project. TazPkg is distributed
-under the free GNU license GPL V3.</p>
+under the free GNU license <a href="file:///usr/share/licenses/gpl.txt"
+target="_blank">GPL V3</a>.</p>
 
 
-<h2>COMMANDS</h2>
+<h2>Environment</h2>
+
+<p>TazPkg uses some environment variables:</p>
+
+<ul>
+	<li><tt>LANGUAGE</tt>: define the language of output and user
+		confirmations. <x-details>Note, <tt>LANG</tt> and <tt>LC_ALL</tt>
+		environment variables also affect output language</x-details></li>
+	<li><tt>LC_TIME</tt>: define the date format in the <a
+		href="#activity">activity</a> command</li>
+	<!-- li><tt>TAZPKG_ROOT</tt>: if defined it points to the root of file system
+		where TazPkg should work. Note, value defined using <tt>--root=</tt>
+		option has precedence over this environment variable</li -->
+</ul>
+
+
+<h2>Files</h2>
+
+
+<h3>Configuration files</h3>
+
+<ul>
+	<li><tt><a href="file:///etc/slitaz/slitaz.conf"
+		target="_blank">/etc/slitaz/slitaz.conf</a></tt></li>
+	<li><tt><a href="file:///etc/slitaz/tazpkg.conf"
+		target="_blank">/etc/slitaz/tazpkg.conf</a></tt></li>
+</ul>
+
+
+<h3>Package database files</h3>
+
+<p>Default placement of the package database is <tt>/var/lib/tazpkg</tt>.</p>
+
+<ul>
+	<li><tt><a href="file:///var/lib/tazpkg/ID" target="_blank">ID</a></tt>
+		(deprecated): identifier of current SliTaz repository state.
+		<x-details>The value change when new or updated packages appear in the
+		repository.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/IDs" target="_blank">IDs</a></tt>:
+		identifier of current SliTaz repository state and the UNIX time stamp.
+		<x-details>The ID value change when new or updated packages appear in
+		the repository. Time stamp allows to track how long a change is made in
+		the repository, and allows to track the freshness of repository mirrors.
+		(To convert UNIX time stamp to the date:
+		<code>date -d@<em>timestamp</em></code>)</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/mirror"
+		target="_blank">mirror</a></tt>: URL of the current repository mirror in
+		use. <x-details>URL points to the remote folder contains packages and
+		database files.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/mirrors"
+		target="_blank">mirrors</a></tt>: list of URLs of available repository
+		mirrors. <x-details>Note the difference between URLs from these two
+		files: you should append URL from this file by
+		<tt>packages/<em>cooking</em>/</tt> (for <tt><em>cooking</em></tt>-based
+		Slitaz version).</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.list"
+		target="_blank">packages.list</a></tt> (deprecated): list of package
+		names with version numbers available in the repository.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.desc"
+		target="_blank">packages.desc</a></tt> (deprecated): list contained
+		package name, version, short description, category, and upstream
+		URL.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.txt"
+		target="_blank">packages.txt</a></tt> (deprecated): list contained
+		package name, version, short description, and two package sizes
+		<x-details>(first — traffic to download package, second — HDD size for
+		installed package)</x-details>.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.md5"
+		target="_blank">packages.md5</a></tt> (deprecated): list contained MD5
+		checksum with package file name.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.info"
+		target="_blank">packages.info</a></tt>: list was build to replace and
+		extend above lists. <x-details>For every package available in the
+		repository it contains: package name, version, category, short
+		description, upstream URL, tags, package sizes, depends, and MD5
+		checksum. Development continues, and the list can be extended by other
+		fields, if necessary.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.equiv"
+		target="_blank">packages.equiv</a></tt>: list of equivalent packages
+		available in the repository. <x-details>Format of the list item:
+		<tt><em>package</em>=<em>rule rule…</em></tt>.<br>
+		Format of the rule: <tt><em>alternative:newname</em></tt> — if
+		<tt><em>alternative</em></tt> is installed then
+		<tt><em>newname</em></tt> will be installed instead of the
+		<tt><em>package</em></tt>.<br>
+		In the second format of the rule <tt><em>alternative:</em></tt> part is
+		omitted — in this case <tt><em>newname</em></tt> <em>can be</em>
+		installed insted of the <tt><em>package</em></tt> (in the user
+		choice).</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.diff"
+		target="_blank">packages.diff</a></tt>: list created when you run
+		<tt><a href="#recharge">recharge</a></tt> command. <x-details>List
+		contains package names with versions of the new packages available in
+		the repository with the last recharging.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.up" 
+		target="_blank">packages.up</a></tt>: list created when you run
+		<tt><a href="#upgrade">upgrade</a></tt> command. <x-details>List
+		contains package names you can upgrade with the last
+		recharging.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/descriptions.txt" 
+		target="_blank">descriptions.txt</a></tt>: list of the “long”
+		descriptions of the all packages available on the repository.</li>
+	<li><tt>packages-desc.<em>language</em></tt> — optional list of the packages
+		translated short descriptions <x-details>(see the package
+		tazpkg-desc-ru)</x-details>.</li>
+	<li><tt>descriptions.<em>language</em>.txt</tt> — optional list of the
+		packages translated “long” descriptions <x-details>(see the package
+		tazpkg-desc-ru)</x-details>.</li>
+	<li><tt>packages.icons</tt> — optional list of the packages icons for
+		TazPanel.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/blocked-packages.list" 
+		target="_blank">blocked-packages.list</a></tt>: optional list of the
+		packages blocked for update.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/extra.list" 
+		target="_blank">extra.list</a></tt>: list of the extra packages
+		<x-details>(non-free packages; free packages but not compiled from
+		sources). List contains package name, short description, upstream URL,
+		category, version, license.</x-details></li>
+	<li><tt>files.list.lzma</tt>: very large compressed list which contains all
+		the files of all the packages available in the repository
+		<x-details>(nearly 5,000 packages and nearly 0.7 million
+		files now)</x-details>.</li>
+	<li><tt>files-list.md5</tt>: MD5 checksum of the
+		<tt>files.list.lzma</tt>.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/installed.info" 
+		target="_blank">installed.info</a></tt>: list of the installed packages
+		with the exact format of the <tt>packages.info</tt> list.
+		<x-details>Idea is just to copy list item from <tt>packages.info</tt> to
+		the <tt>installed.info</tt> while package installation.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/installed.md5"
+		target="_blank">installed.md5</a></tt> (deprecated): list contained MD5
+		checksum with file names of all installed packages.</li>
+</ul>
+
+<p>All the deprecated files will be deleted after we verify that the programs do
+not use them (and modify the programs as necessary).</p>
+
+<p>In addition to the common package database files there is also individual
+folders for all installed packages placed by default in the
+<tt>/var/lib/tazpkg/installed/<em>package</em></tt>. Every folder here may
+contain next files:</p>
+
+<ul>
+	<li><tt>receipt</tt> (mandatory) — the package recipe</li>
+	<li><tt>files.list</tt> (mandatory) — list of package files</li>
+	<li><tt>md5sum</tt> (mandatory) — checksums of package files (other checksum
+		file can be specified in the settings: <tt>cksum</tt> (CRC32),
+		<tt>md5sum</tt> (MD5), <tt>sha1sum</tt> (SHA1), <tt>sha256sum</tt>
+		(SHA256), <tt>sha512sum</tt> (SHA512), <tt>sha3sum</tt> (SHA3-512))</li>
+	<li><tt>description.txt</tt> (optional) — “long” description</li>
+	<li><tt>modifiers</tt> (optional) — list of packages that have replaced some
+		of the files of this package</li>
+	<li><tt>volatile.cpio.gz</tt> (optional) — archive of “official”
+		configuration files</li>
+</ul>
+
+
+<h3>Cache</h3>
+
+<p>Default placement of the packages cache is <tt>/var/cache/tazpkg</tt> with
+sub-folders for the different repositories. <x-details>It is exactly
+<tt>/var/cache/tazpkg/<em>cooking</em>/packages</tt> for the
+<tt><em>cooking</em></tt>-based SliTaz version.</x-details></p>
+
+
+<h3>Misc files</h3>
+
+<p>File with default placement <tt><a href="file:///var/log/slitaz/tazpkg.log"
+target="_blank">/var/log/slitaz/tazpkg.log</a></tt> stores TazPkg activity log.
+<x-details>Log stores five types of actions: installing, uninstalling, blocking,
+unblocking, reconfiguring packages.</x-details></p>
+
+<p>Shared MIME information which allows to “guess” SliTaz package files, package
+receipts, and SliTaz flavor files. <x-details>File placed here: <tt><a
+href="file:///usr/share/mime/packages/tazpkg.xml"
+target="_blank">/usr/share/mime/packages/tazpkg.xml</a></tt>.</x-details></p>
+
+<p>Plug-in for the TazPanel (SliTaz administration and configuration panel)
+<tt>/var/www/tazpanel/pkgs.cgi</tt> allows you to manage SliTaz packages in the
+<a href="http://127.0.0.1:82/pkgs.cgi" target="_blank">web application</a>.</p>
+
+<p>TazPkg documentation you read placed in the <tt>/usr/share/doc/tazpkg</tt>
+folder.</p>
+
+
+
+
+<h2>Commands</h2>
+
+<p>The first <tt>tazpkg</tt> parameter is a command followed by other mandatory
+and optional parameters as will be described hereinafter. Options begin with
+double dashes.<!-- , you can arrange them in any order and in any place, even before
+the command. Unknown and inappropriate options are ignored. The following
+commands are equivalent: --></p>
+
+<!-- pre>
+$ tazpkg info nano --root=<em>/mnt/sda6</em>
+$ tazpkg --root=<em>/mnt/sda6</em> info nano
+$ tazpkg info --root=<em>/mnt/sda6</em> nano <em>--color</em>
+</pre -->
+
+<!-- p>You can add global option <tt>--root=…</tt> to any TazPkg command. This
+option allows to work with other SliTaz installations. Option points to the root
+of mounted file system from other SliTaz installation. <x-details>By the way,
+using this option allows to install SliTaz to the other file system “from
+scratch”, and upgrade SliTaz packages remotely.</x-details></p -->
 
 
 <h3>Service commands</h3>
@@ -344,8 +550,9 @@ package is stored in the current directory. To find the path you can use
 <tt>.tazpkg</tt> extension (<tt>install</tt> or <tt>-i</tt>). See
 <tt><a href="#get-install">get-install</a></tt> to install a package from the
 internet. Note that you can force the installation via the <tt>--forced</tt>
-option, specify the root system where you want to install the packages via the
-<tt>--root=</tt> option.</p>
+option. Option <tt>--newconf</tt> allow to rewrite all user configuration files
+using the new files from package. Option <tt>--nodeps</tt> allow to install only
+specified package without its dependencies.</p>
 
 <pre>
 # tazpkg install <em>package-1.0.tazpkg</em>
@@ -360,14 +567,12 @@ option, specify the root system where you want to install the packages via the
 or <tt>-gi</tt>). Command begins by checking whether the package exists on the
 mirror and if it has been already downloaded. For a list of packages on the
 mirror, we must use the <tt><a href="#list-mirror">list-mirror</a></tt>
-command.</p>
+command. Note that you can force the installation via the <tt>--forced</tt>
+option. Option <tt>--newconf</tt> allow to rewrite all user configuration files
+using the new files from package. Option <tt>--nodeps</tt> allow to install only
+specified package without its dependencies.</p>
 
-<p>Following options are recognized by command:</p>
-
-<p><tt>--forced</tt> allow update already installed package.</p>
-
-<p><tt>--root=</tt> allow specify root of filesystem where package will be
-installed.</p>
+<p>Option <tt>--forced</tt> allow update already installed package.</p>
 
 <pre>
 # tazpkg get-install <em>grub</em>
@@ -395,8 +600,7 @@ confirmation (y/N) of removing the package, as well as for removing packages
 depending on this package, and for reinstalling packages modified by this
 package. This command will delete all files installed with the package.</p>
 
-<p>Option <tt>--root=</tt> allows to specify root of the FS where package will
-be removed. Option <tt>--auto</tt> removes and reinstall packages without your
+<p>Option <tt>--auto</tt> removes and reinstall packages without your
 confirmation.</p>
 
 <pre>
@@ -455,12 +659,18 @@ purges other installed packages.</p>
 
 <h3 id="info">info</h3>
 
-<p>Display any information available in the receipt for the package in
-question — its version, category, maintainer, Web site and any dependencies (see
-also Cookutils for more information on receipts).</p>
+<p>Show all the available information related to your package. You can specify
+the name of the installed package or a package that is not yet installed, but
+available in the repository. You can also get information about local file
+package by entering an absolute or relative path to the file <tt>.tazpkg</tt>.
+The information contained in the TazPkg database and in the package recipe —
+its version, category, maintainer, Web site and all the dependencies (see also
+Cookutils for more information on recipes).</p>
 
 <pre>
 $ tazpkg info <em>busybox</em>
+$ tazpkg info <em>minitube</em>
+$ tazpkg info <em>packages/comix-4.0.4.tazpkg</em>
 </pre>
 
 
@@ -531,6 +741,17 @@ $ tazpkg bugs <em>my_package</em>
 <h3 id="depends">depends, rdepends</h3>
 
 <p>Displays a dependency tree or reverse dependency tree for a package.</p>
+
+<p>For <code>depends</code> command: option <tt>--mark</tt> marks installed
+packages with plus sign, and not installed with minus/dash. Option
+<tt>--total</tt> calculates number of displayed packages and its size. Also,
+with both options at a time you'll get number and size of packages to be
+installed.</p>
+
+<p>For <code>rdepends</code> command: without <tt>--all</tt> option you'll get
+the list of only installed reverse dependency packages, with this option — list
+of all available packages. Option <tt>--mark</tt> marks packages as in the
+<code>depends</code> command.</p>
 
 <pre>
 # tazpkg depends <em>mpd</em>
@@ -684,21 +905,19 @@ and generally offers the latest versions of software. Note that this function is
 aimed at people with SliTaz installed on a hard drive. Updated packages in
 Live CD mode will be lost on system shutdown.</p>
 
+<p>At the beginning the packages database is updated automatically (<tt><a
+href="#recharge">recharge</a></tt>) in order to provide you with the current
+list of packages that you can update.</p>
+
 <p>Without options run in interactive mode and ask before install. You can
-specify one or more of the next options:</p>
-
-<p><tt>-c</tt> or <tt>--check</tt> to check only for available upgrades;</p>
-
-<p><tt>-r</tt> or <tt>--recharge</tt> to force recharge of packages list and
-check;</p>
-
-<p><tt>-i</tt> or <tt>--install</tt> to check for upgrades and install them
-all.</p>
+specify one of the next options: <tt>-c</tt> or <tt>--check</tt> to check only
+for available upgrades; <tt>-i</tt> or <tt>--install</tt> to check for upgrades
+and install them all.</p>
 
 <pre>
 # tazpkg upgrade
-# tazpkg up --recharge --install
-# tazpkg up -r -i
+# tazpkg up --check
+# tazpkg up -i
 </pre>
 
 
@@ -750,11 +969,16 @@ confirmation.</p>
 
 
 
-<h2>MAINTAINER</h2>
+<h2>Maintainer</h2>
 
 <p>Christophe Lincoln &lt;pankso at slitaz.org&gt;</p>
 
 </div>
 <!-- End content -->
+
+<footer>
+	Copyright © 2015 <a href="http://www.slitaz.org/">SliTaz GNU/Linux</a>
+</footer>
+
 </body>
 </html>

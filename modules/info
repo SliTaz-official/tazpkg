@@ -1,0 +1,99 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# info - TazPkg module
+# Information about package (both installed, mirrored, or local)
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+# Get TazPkg configuration variables
+. /etc/slitaz/slitaz.conf
+. /etc/slitaz/tazpkg.conf
+
+
+# Interactive mode
+
+im() { tty -s; }
+
+
+# Unset variables that may absent in the receipt
+unset EXTRAVERSION TAGS DEPENDS PROVIDE SIZES
+
+if [ -e "$1" ]; then
+	# Local package given
+
+	# Extract receipt from package
+	PKG="$(realpath "$1")"
+	TMP_DIR=$(mktemp -d); cd $TMP_DIR
+	cpio -F "$PKG" -i receipt >/dev/null 2>&1
+
+	. receipt; rm -r $TMP_DIR
+	STATE="$(_ 'local package')"
+
+elif [ -d "$INSTALLED/$1" ]; then
+	# Installed package given
+
+	. "$INSTALLED/$1/receipt"
+	STATE="$(_ 'installed package')"
+
+elif [ -n "$(awk -F$'\t' -vp="$1" '$1==p{print $1}' "$PKGS_DB/packages.info")" ]; then
+	# Mirrored package given
+
+	TMP_RECEIPT=$(mktemp)
+	awk -F$'\t' -vp="$1" '$1==p{
+		printf "PACKAGE=\"%s\"\n", $1
+		printf "VERSION=\"%s\"\n", $2
+		printf "CATEGORY=\"%s\"\n", $3
+		printf "SHORT_DESC=\"%s\"\n", $4
+		printf "WEB_SITE=\"%s\"\n", $5
+		printf "TAGS=\"%s\"\n", $6
+		printf "SIZES=\"%s\"\n", $7
+		printf "DEPENDS=\"%s\"\n", $8
+	}' "$PKGS_DB/packages.info" > $TMP_RECEIPT
+
+	. $TMP_RECEIPT; rm $TMP_RECEIPT
+	SIZES="$(echo $SIZES | tr ' ' '/')"
+	STATE="$(_ 'mirrored package')"
+
+else
+	newline
+	_ 'Package "%s" not available.' "$1"
+	newline
+	exit 1
+fi
+
+
+im && title 'TazPkg information'
+
+# Display localized short description
+for LC in $LANG ${LANG%_*}; do
+	PDL="$PKGS_DB/packages-desc.$LC"
+	if [ -e "$PDL" ]; then
+		LOCDESC=$(awk -F$'\t' -vp="$PACKAGE" '$1==p{print $2}' $PDL)
+		[ -n "$LOCDESC" ] && SHORT_DESC="$LOCDESC"
+	fi
+done
+
+[ -z "$SIZES" ] && SIZES=$(echo $PACKED_SIZE/$UNPACKED_SIZE | sed 's|\.0||g' | sed 's|^/$||')
+
+emsg "$(
+{
+	_ 'Package    : %s' "$PACKAGE"
+	_ 'State      : %s' "$STATE"
+	_ 'Version    : %s' "$VERSION$EXTRAVERSION"
+	_ 'Category   : %s' "$(_ $CATEGORY)"
+itemize  "$(_ 'Short desc : %s' "$SHORT_DESC")"
+			_ 'Maintainer : %s' "$MAINTAINER"
+			_ 'License    : %s' "$LICENSE"
+itemize  "$(_ 'Depends    : %s' "$DEPENDS")"
+itemize  "$(_ 'Suggested  : %s' "$SUGGESTED")"
+itemize  "$(_ 'Build deps : %s' "$BUILD_DEPENDS")"
+itemize  "$(_ 'Wanted src : %s' "$WANTED")"
+			_ 'Web site   : %s' "$WEB_SITE"
+itemize  "$(_ 'Conf. files: %s' "$CONFIG_FILES")"
+itemize  "$(_ 'Provide    : %s' "$PROVIDE")"
+			_ 'Size       : %s' "$SIZES"
+itemize  "$(_ 'Tags       : %s' "$TAGS")"
+} | sed '/: $/d; s|^\([^:]*\):|<b>\1:</b>|')"
+im && footer
+

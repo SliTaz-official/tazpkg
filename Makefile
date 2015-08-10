@@ -28,9 +28,10 @@ all: msgfmt
 pot:
 	xgettext -o po/tazpkg.pot -L Shell \
 		--package-name=TazPkg \
-		--package-version="$(VERSION)" -kaction -ktitle -k_ -k_n -k_p:1,2 \
+		--package-version="$(VERSION)" -kaction -ktitle -kdie -k_ -k_n -k_p:1,2 \
 		./tazpkg \
-		./modules/convert ./modules/find-depends ./modules/help ./modules/mkdb \
+		./modules/convert ./modules/find-depends ./modules/help ./modules/info \
+		./modules/list ./modules/mkdb \
 		./tazpkg-box ./tazpkg-notify ./tazpanel/pkgs.cgi
 
 msgmerge:

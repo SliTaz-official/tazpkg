@@ -1,6 +1,8 @@
 #!/bin/sh
-# TazPkg - Tiny autonomous zone packages manager.
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# help - TazPkg module
 # TazPkg help system
+
 
 . /lib/libtaz.sh
 
