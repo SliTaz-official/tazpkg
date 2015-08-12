@@ -36,28 +36,52 @@ elif [ -d "$INSTALLED/$1" ]; then
 	. "$INSTALLED/$1/receipt"
 	STATE="$(_ 'installed package')"
 
-elif [ -n "$(awk -F$'\t' -vp="$1" '$1==p{print $1}' "$PKGS_DB/packages.info")" ]; then
-	# Mirrored package given
+	if [ -e "$PKGS_DB/packages.info" ]; then
+		# Check if upgrade available
+		NEWVER="$(awk -F$'\t' -vp="$1" '$1==p{print $2}' "$PKGS_DB/packages.info")"
+		if [ "$VERSION" != "$NEWVER" ]; then
+			VERSION="$VERSION $(_n '(new version "%s" available)' "$NEWVER")"
+		else
+			OLDMD5="$(awk -F$'\t' -vp="$1" '$1==p{print $9}' "$PKGS_DB/installed.info")"
+			NEWMD5="$(awk -F$'\t' -vp="$1" '$1==p{print $9}' "$PKGS_DB/packages.info")"
+			if [ "$OLDMD5" != "$NEWMD5" ]; then
+				VERSION="$VERSION $(_n '(new build available)')"
+			fi
+		fi
+	fi
 
-	TMP_RECEIPT=$(mktemp)
-	awk -F$'\t' -vp="$1" '$1==p{
-		printf "PACKAGE=\"%s\"\n", $1
-		printf "VERSION=\"%s\"\n", $2
-		printf "CATEGORY=\"%s\"\n", $3
-		printf "SHORT_DESC=\"%s\"\n", $4
-		printf "WEB_SITE=\"%s\"\n", $5
-		printf "TAGS=\"%s\"\n", $6
-		printf "SIZES=\"%s\"\n", $7
-		printf "DEPENDS=\"%s\"\n", $8
-	}' "$PKGS_DB/packages.info" > $TMP_RECEIPT
+elif [ -e "$PKGS_DB/packages.info" ]; then
+	# Mirrored packages DB is available
+	if [ -n "$(awk -F$'\t' -vp="$1" '$1==p{print $1}' "$PKGS_DB/packages.info")" ]; then
+		# Mirrored package given
 
-	. $TMP_RECEIPT; rm $TMP_RECEIPT
-	SIZES="$(echo $SIZES | tr ' ' '/')"
-	STATE="$(_ 'mirrored package')"
+		TMP_RECEIPT=$(mktemp)
+		awk -F$'\t' -vp="$1" '$1==p{
+			printf "PACKAGE=\"%s\"\n", $1
+			printf "VERSION=\"%s\"\n", $2
+			printf "CATEGORY=\"%s\"\n", $3
+			printf "SHORT_DESC=\"%s\"\n", $4
+			printf "WEB_SITE=\"%s\"\n", $5
+			printf "TAGS=\"%s\"\n", $6
+			printf "SIZES=\"%s\"\n", $7
+			printf "DEPENDS=\"%s\"\n", $8
+		}' "$PKGS_DB/packages.info" > $TMP_RECEIPT
 
+		. $TMP_RECEIPT; rm $TMP_RECEIPT
+		SIZES="$(echo $SIZES | tr ' ' '/')"
+		STATE="$(_ 'mirrored package')"
+	else
+		newline
+		_ 'Package "%s" not available.' "$1"
+		newline
+		exit 1
+	fi
 else
+	# Mirrored packages DB isn't available
 	newline
-	_ 'Package "%s" not available.' "$1"
+	longline "$(_ "No \"%s\" found to check for mirrored packages. For more \
+results, please run \"%s\" once as root before searching." 'packages.info' \
+'tazpkg recharge')"
 	newline
 	exit 1
 fi
