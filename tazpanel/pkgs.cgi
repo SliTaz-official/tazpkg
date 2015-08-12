@@ -83,15 +83,39 @@ EOT
 	*\ status\ * )
 		# Show package status
 		pkg=$(GET pkg)
-		class='pkg'
+		orig_pkg=''
 
 		if grep -q "^$pkg"$'\t' $PKGS_DB/installed.info; then
+			# Package installed
 			class='pkgi'
-			grep -q "^$pkg$" $PKGS_DB/blocked-packages.list && class='pkgib'
+		else
+			# Package not installed
+			class='pkg'
+			equivs=$(grep "^$pkg=" $PKGS_DB/packages.equiv)
+			if [ -n "$equivs" ]; then
+				for equiv in ${equivs#*=}; do
+					case $equiv in
+						*:*)
+							if grep -q "^${equiv%:*}"$'\t' "$PKGS_DB/installed.info" &&
+							   grep -q "^${equiv#*:}"$'\t' "$PKGS_DB/installed.info"; then
+								# Equivalent installed
+								orig_pkg="$pkg→"; pkg="${equiv#*:}"; class='pkgi'; break
+							fi;;
+						*)
+							if grep -q "^$equiv"$'\t' "$PKGS_DB/installed.info"; then
+								# Equivalent installed
+								orig_pkg="$pkg→"; pkg="$equiv"; class='pkgi'; break
+							fi;;
+					esac
+				done
+			fi
 		fi
 
+		# Installed and blocked?
+		[ "$class" == 'pkgi' ] && grep -q "^$pkg$" $PKGS_DB/blocked-packages.list && class='pkgib'
+
 		header
-		echo -n "<a data-icon=\"$class\" href=\"?info=${pkg//+/%2B}\">$pkg</a>"
+		echo -n "<a data-icon=\"$class\" href=\"?info=${pkg//+/%2B}\">$orig_pkg$pkg</a>"
 		exit 0 ;;
 
 
