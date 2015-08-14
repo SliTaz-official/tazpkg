@@ -1,0 +1,192 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# recharge - TazPkg module
+# Recharge packages databases from a mirror
+
+
+# Options:
+#   [main|<repository>]				Repository name to recharge (all if empty)
+
+# Environment variables:
+#   root							Root of the packages DB
+#   UA								User Agent string ("TazPkg-<version>")
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+# Get TazPkg configuration variables
+. "$root/etc/slitaz/slitaz.conf"
+. "$root/etc/slitaz/tazpkg.conf"
+PKGS_DB="$root$PKGS_DB"
+
+# Fallback actions
+mkdir -p "$PKGS_DB"
+[ ! -e "$PKGS_DB/mirror" ] && echo "$ONLINE_PKGS" > "$PKGS_DB/mirror"
+
+
+# Functions
+# ---------
+
+# Download a file from specified mirror
+
+download_from() {
+	# input: "<mirror_url>+" "file_name"
+	local i
+	for i in $1; do
+		case "$i" in
+			# Mirror URL can have a trailing slash or not.
+			http://* | https://* | ftp://*)
+				busybox wget -c -q -T 30 -U $UA ${i%/}/$2 2>/dev/null && break ;;
+			*)
+				ln -sf ${i%/}/$2 . && break ;;
+		esac
+	done
+}
+
+
+# When recharging errors occur
+
+recharging_failed() {
+	# Restore database from bak files
+	action 'Restoring database files...'
+	[ -e 'ID'  -a ! -e 'ID.bak' ]  && rm ID
+	[ -e 'IDs' -a ! -e 'IDs.bak' ] && rm IDs
+	for file in $(ls $1/*.bak); do
+		mv -f $file ${file%.bak}
+	done
+	status
+
+	footer "$(colorize 31 "$(_ 'Recharging failed')")"
+}
+
+
+
+
+REPO="$1"
+
+# What to recharge: main, or all, or selected undigest
+case "$REPO" in
+	main) repo_to_recharge="$PKGS_DB";;
+	'')   repo_to_recharge="$PKGS_DB $PKGS_DB/undigest/*";;
+	*)    repo_to_recharge="$PKGS_DB/undigest/$REPO"
+		if [ ! -d "$repo_to_recharge" ]; then
+			_ "Repository \"%s\" doesn't exist." "$repo_to_recharge" >&2
+			exit 1
+		fi
+		;;
+esac
+
+for path in $repo_to_recharge; do
+	[ ! -f $path/mirror ] && continue	# skip
+	cd $path
+	mirror="$(cat mirror)"
+
+	# Repository name
+	if [ "$path" == "$PKGS_DB" ]; then
+		repo_name='Main'
+	else
+		repo_name="$(_n 'Undigest %s' "$(basename "$path")")"
+	fi
+
+	title 'Recharging repository "%s"' "$repo_name"
+
+	# Don't let ID be a symlink when using local repository.
+	if [ -h ID  ]; then mv -f ID  ID.lnk;  cat ID.lnk  > ID;  rm ID.lnk;  fi
+	if [ -h IDs ]; then mv -f IDs IDs.lnk; cat IDs.lnk > IDs; rm IDs.lnk; fi
+
+	[ -f ID ]  && mv ID  ID.bak					# Compatibility with "old" ID
+	[ -f IDs ] && mv IDs IDs.bak
+	download_from "$mirror" IDs
+	[ -e 'IDs' ] && awk '{print $1}' IDs > ID	# Compatibility with "old" ID
+
+	# Check if recharging is needed
+	if [ -f 'IDs' ] && cmp -s IDs IDs.bak; then
+		action 'Checking...'; status			# "Fake" message
+		footer "$(_ 'Repository "%s" is up to date.' "$repo_name")"
+		rm IDs.bak ID.bak
+		continue
+	fi
+	rm IDs.bak ID.bak 2>/dev/null
+
+	[ -e 'IDs' ] && _ 'Database timestamp: %s' "$(date -d "@$(awk '{print $2}' IDs)" "+%x %R")"
+
+	action 'Creating backup of the last packages list...'
+	for i in packages.desc packages.$SUM packages.txt packages.list \
+		packages.equiv files.list.lzma extra.list mirrors packages.info; do
+		[ -f "$i" ] && mv -f $i $i.bak 2>/dev/null
+	done
+	:; status
+
+	# Download and extract bundle: extra.list, mirrors, files-list.md5,
+	#   packages.{info,desc,md5,txt,list,equiv}
+	bundle='bundle.tar.lzma'
+	action 'Getting "%s"...' $bundle
+	download_from "$mirror" $bundle
+	status
+	if [ -f "$bundle" ]; then
+		busybox tar -xaf $bundle; rm $bundle
+	else
+		recharging_failed $path; continue
+	fi
+
+	# Download files.list.lzma
+	files_local='files.list.lzma'; files_remote='files-list.lzma'
+	if [ -e "$files_local.bak" ]; then
+		md5sum $files_local.bak | awk '{printf $1}' > files-list.md5.bak
+		if cmp -s files-list.md5 files-list.md5.bak; then
+			mv $files_local.bak $files_remote
+		else
+			action 'Getting "%s"...' $files_remote
+			download_from "$mirror" $files_remote
+			status
+		fi
+	else
+		action 'Getting "%s"...' $files_remote
+		download_from "$mirror" $files_remote
+		status
+	fi
+
+	if [ ! -e "$files_remote" ]; then
+		recharging_failed $path; continue
+	fi
+	mv -f $files_remote $files_local
+
+	# Remove old database files (but packages.list.bak, extra.list.bak)
+	for i in packages.desc packages.$SUM packages.txt packages.equiv \
+		files.list.lzma mirrors packages.info files-list.md5; do
+		[ -f "$i.bak" ] && rm $i.bak 2>/dev/null
+	done
+
+	footer "$(_ 'Last database is ready to use.')"
+
+	# Check diff
+	if [ -f 'packages.list.bak' ]; then
+		diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
+		rm packages.list.bak
+		if [ -f 'extra.list.bak' ]; then
+			if [ -f 'extra.list' ]; then
+				awk -F'|' '{print $1 " (extra)"}' extra.list > extra.list1
+				awk -F'|' '{print $1 " (extra)"}' extra.list.bak > extra.list1.bak
+				diff -u extra.list1.bak extra.list1 | grep ^+[a-z] >> packages.diff
+				rm extra.list.bak extra.list1 extra.list1.bak
+			else
+				mv extra.list.bak extra.list
+			fi
+		fi
+		sed -i s/+// packages.diff
+
+		new_pkgs=$(wc -l < packages.diff)
+		if [ "$new_pkgs" -gt 0 ]; then
+			title 'Mirrored packages diff'
+			cat packages.diff
+			footer "$(emsg "$(_p \
+			'%s new package on the mirror.' \
+			'%s new packages on the mirror.' $new_pkgs \
+			"<c 32>$new_pkgs</c>")")"
+		fi
+	else
+		longline "$(_ "Note that next time you recharge the list, a list of \
+differences will be displayed to show new and upgradeable packages.")"
+	fi
+done
+newline

@@ -34,6 +34,28 @@ _p() {
 	printf "$(ngettext "$S" "$P" "$N")" "$@"; }
 
 
+# Translate category names (must be last in line)
+
+translate_category() {
+	sed "s|base-system$|$(_ base-system)|; s|x-window$|$(_ x-window)|;
+		s|utilities$|$(_ utilities)|; s|network$|$(_ network)|;
+		s|graphics$|$(_ graphics)|; s|multimedia$|$(_ multimedia)|;
+		s|office$|$(_ office)|; s|development$|$(_ development)|;
+		s|system-tools$|$(_ system-tools)|; s|security$|$(_ security)|;
+		s|games$|$(_ games)|; s|misc$|$(_ misc)|; s|meta$|$(_ meta)|;
+		s|non-free$|$(_ non-free)|; s|all$|$(_ all)|; s|extra$|$(_ extra)|"
+}
+
+
+# Remove all --parameters from cmdline
+#-------------------------------------
+# (thanks to libtaz.sh all --parameters are already set to variables)
+
+IFS=$'\n'
+set -- $(echo "$*" | sed '/^--/d')
+unset IFS
+
+
 # Initialize some variables to use words rather than numbers for functions
 # and actions.
 
@@ -891,7 +913,7 @@ EOT
 	# Clean to save RAM memory before installation
 	rm -rf "$PACKAGE-$VERSION"
 
-	if [ "$3" == '--get' ]; then
+	if [ -n "$get" ]; then
 		mv "$PACKAGE-$VERSION.tazpkg" "$TOP_DIR"
 	else
 		# Install pseudo package
@@ -1037,16 +1059,17 @@ install_deps() {
 # Search pattern in installed packages.
 
 search_in_installed_packages() {
-	_ 'Installed packages'
-	separator '-'
+	_ 'Installed packages'; separator '-'
 	num='0'
-	for pkg in $(ls -1 $INSTALLED | grep -i "$PATTERN"); do
-		EXTRAVERSION=''
-		[ -f $INSTALLED/$pkg/receipt ] || continue
-		. $INSTALLED/$pkg/receipt
-		emsg "$PACKAGE<i 24> $VERSION$EXTRAVERSION<i 42> $(_n $CATEGORY)"
-		num=$(($num+1))
-	done
+	TMPLIST="$(mktemp)"
+
+	awk -F$'\t' -vpattern="$PATTERN" -vt="$TMPLIST" '
+		BEGIN { IGNORECASE = 1 }
+		index($1 "-" $2, pattern) {
+			printf "%-24s%-18s%s\n", $1, $2, $3;
+			printf "1" >> t
+		}' "$PKGS_DB/installed.info" | translate_category
+	num="$(wc -m < $TMPLIST)"; rm $TMPLIST
 
 	footer "$(_p \
 		'%s installed package found for "%s"' \
@@ -1061,27 +1084,23 @@ search_in_packages_list() {
 	_ 'Available packages'; separator '-'
 	num='0'
 	TMPLIST="$(mktemp)"
-	BPATTERN="$(emsg "<b>$PATTERN</b>")"
 
 	for i in $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info; do
-		[ -e "$i" ] && awk -F$'\t' -vpattern="$PATTERN" -vbpattern="$BPATTERN" \
-		-vt="$TMPLIST" '
+		[ -e "$i" ] && awk -F$'\t' -vpattern="$PATTERN" -vt="$TMPLIST" '
 		BEGIN { IGNORECASE = 1 }
 		index($1 "-" $2, pattern) {
-			pv = $1 "-" $2; gsub(pattern, bpattern, pv); print pv;
+			printf "%-24s%-18s%s\n", $1, $2, $3;
 			printf "1" >> t
-		}' $i
+		}' "$i" | translate_category
 	done
 
 	for i in $PKGS_DB/extra.list $PKGS_DB/undigest/*/extra.list; do
-		[ -e "$i" ] && awk -F'|' -vpattern="$PATTERN" -vbpattern="$BPATTERN" \
-		-vt="$TMPLIST" '
+		[ -e "$i" ] && awk -F'|' -vpattern="$PATTERN" -vt="$TMPLIST" '
 		BEGIN { IGNORECASE = 1 }
 		index($1 "-" $5, pattern) {
-			if ($5) pv = $1 "-" $5; else pv = $1;
-			gsub(pattern, bpattern, pv); print pv " (extra)";
+			printf "%-24s%-18s%s\n", $1 " (extra)", $5, $4;
 			printf "1" >> t
-		}' $i
+		}' "$i" | translate_category
 	done
 
 	if [ ! -f "$PKGS_DB/packages.info" ]; then
@@ -1104,25 +1123,29 @@ search_in_packages_list() {
 # info than --list or default.
 
 search_in_packages_txt() {
-	_ 'Matching packages name with version and desc'
-	separator
+	_ 'Matching packages name with version and desc'; separator '-'
 	num='0'
-	for i in \
-		$PKGS_DB/packages.txt \
-		$PKGS_DB/undigest/*/packages.txt; do
+	TMPLIST="$(mktemp)"
 
-		grep -is -A 2 "^$PATTERN" $i
-		num=$(($num + $(grep -is "^$PATTERN" $i | wc -l)))
+	for i in $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info; do
+		[ -e "$i" ] && awk -F$'\t' -vpattern="$PATTERN" -vt="$TMPLIST" '
+		BEGIN { IGNORECASE = 1 }
+		index($1 " " $2 " " $4, pattern) {
+			split($7, s, " ");
+			printf "%s\n%s\n%s\n%s (%s installed)\n\n", $1, $2, $4, s[1], s[2];
+			printf "1" >> t;
+		}' "$i"
 	done
 
-	if [ ! -f "$PKGS_DB/packages.txt" ]; then
+	if [ ! -f "$PKGS_DB/packages.info" ]; then
 		newline
 		longline "$(_ \
 "No \"%s\" found to check for mirrored packages. For more results, please run \
-\"%s\" once as root before searching." 'packages.txt' 'tazpkg recharge')"
+\"%s\" once as root before searching." 'packages.info' 'tazpkg recharge')"
 		newline
 	fi
 
+	num="$(wc -m < $TMPLIST)"; rm $TMPLIST
 	footer "$(_p \
 		'%s available package found for "%s"' \
 		'%s available packages found for "%s"' $num \
@@ -1309,22 +1332,6 @@ update_kernel_modules() {
 }
 
 
-# When recharging errors occur
-
-recharging_failed() {
-	# Restore database from bak files
-	action 'Restoring database files...'
-	[ -e 'ID'  -a ! -e 'ID.bak' ]  && rm ID
-	[ -e 'IDs' -a ! -e 'IDs.bak' ] && rm IDs
-	for file in $(ls $1/*.bak); do
-		mv -f $file ${file%.bak}
-	done
-	status
-
-	footer "$(colorize 31 "$(_ 'Recharging failed')")"
-}
-
-
 # Print package name if not printed yet
 print_pkgname() {
 	if [ "$PACKAGE" != "$PACKAGE_PRINTED" ]; then
@@ -1416,23 +1423,24 @@ case "$COMMAND" in
 	search|-s)
 		# Search for a package by pattern or name.
 		PATTERN="$2"
-		if [ -z "$PATTERN" ]; then
-			newline
-			_ 'Please specify a pattern or package name to search for.'
-			echo "$(_ 'Example:') 'tazpkg search paint'"
-			newline
-			exit 0
-		fi
+		if [ -z "$PATTERN" ]; then tazpkg -h search; exit 1; fi
+
 		title 'Search result for "%s"' "$PATTERN"
 		# Default is to search in installed pkgs and the raw list.
 		case "$3" in
-			-i|--installed) search_in_installed_packages ;;
-			-l|--list)      search_in_packages_list ;;
-#buggy			-m|--mirror)    search_in_packages_txt ;;
-			*)
-				search_in_installed_packages
-				search_in_packages_list ;;
-		esac ;;
+			-i) installed='yes';;
+			-l) list='yes';;
+			-m) mirror='yes';;
+		esac
+
+		[ -n "$installed" ] && search_in_installed_packages
+		[ -n "$list"      ] && search_in_packages_list
+		[ -n "$mirror"    ] && search_in_packages_txt
+		if [ -z "$installed$list$mirror" ]; then
+			search_in_installed_packages
+			search_in_packages_list
+		fi
+		;;
 
 
 	search-file|-sf)
@@ -2035,141 +2043,9 @@ EOT
 		# must have only the chosen main mirror.
 		#
 		check_root $@
-
-		# usage: tazpkg recharge [--root=path] [main|<repository>]
-
-		ARG="$2"
-		if [ -n "$root" ]; then
-			PKGS_DB="$root$PKGS_DB"
-			[ "${2#--}" != "$2" ] && ARG="$3"
-		fi
-
-		case "$ARG" in
-			main) repo_to_recharge="$PKGS_DB";;
-			'')   repo_to_recharge="$PKGS_DB $PKGS_DB/undigest/*";;
-			*)    repo_to_recharge="$PKGS_DB/undigest/$ARG"
-				if [ ! -d "$repo_to_recharge" ]; then
-					_ "Repository \"%s\" doesn't exist." "$repo_to_recharge" >&2
-					exit 1
-				fi
-				;;
-		esac
-
-		for path in $repo_to_recharge; do
-			[ ! -f $path/mirror ] && continue	# skip
-			cd $path
-			mirror="$(cat mirror)"
-
-			# Repository name
-			if [ "$path" == "$PKGS_DB" ]; then
-				repo_name='Main'
-			else
-				repo_name="$(_n 'Undigest %s' "$(basename "$path")")"
-			fi
-
-			title 'Recharging repository "%s"' "$repo_name"
-
-			# Don't let ID be a symlink when using local repository.
-			if [ -h ID  ]; then mv -f ID  ID.lnk;  cat ID.lnk  > ID;  rm ID.lnk;  fi
-			if [ -h IDs ]; then mv -f IDs IDs.lnk; cat IDs.lnk > IDs; rm IDs.lnk; fi
-
-			[ -f ID ]  && mv ID  ID.bak					# Compatibility with "old" ID
-			[ -f IDs ] && mv IDs IDs.bak
-			download_from "$mirror" IDs
-			[ -e 'IDs' ] && awk '{print $1}' IDs > ID	# Compatibility with "old" ID
-
-			# Check if recharging is needed
-			if [ -f 'IDs' ] && cmp -s IDs IDs.bak; then
-				action 'Checking...'; status			# "Fake" message
-				footer "$(_ 'Repository "%s" is up to date.' "$repo_name")"
-				rm IDs.bak ID.bak
-				continue
-			fi
-			rm IDs.bak ID.bak 2>/dev/null
-
-			[ -e 'IDs' ] && _ 'Database timestamp: %s' "$(date -d "@$(awk '{print $2}' IDs)" "+%x %R")"
-
-			action 'Creating backup of the last packages list...'
-			for i in packages.desc packages.$SUM packages.txt packages.list \
-				packages.equiv files.list.lzma extra.list mirrors packages.info; do
-				[ -f "$i" ] && mv -f $i $i.bak 2>/dev/null
-			done
-			status
-
-			# Download and extract bundle: extra.list, mirrors, files-list.md5,
-			#   packages.{info,desc,md5,txt,list,equiv}
-			bundle='bundle.tar.lzma'
-			action 'Getting "%s"...' $bundle
-			download_from "$mirror" $bundle
-			status
-			if [ -f "$bundle" ]; then
-				busybox tar -xaf $bundle; rm $bundle
-			else
-				recharging_failed $path; continue
-			fi
-
-			# Download files.list.lzma
-			files_local='files.list.lzma'; files_remote='files-list.lzma'
-			if [ -e "$files_local.bak" ]; then
-				md5sum $files_local.bak | awk '{printf $1}' > files-list.md5.bak
-				if cmp -s files-list.md5 files-list.md5.bak; then
-					mv $files_local.bak $files_remote
-				else
-					action 'Getting "%s"...' $files_remote
-					download_from "$mirror" $files_remote
-					status
-				fi
-			else
-				action 'Getting "%s"...' $files_remote
-				download_from "$mirror" $files_remote
-				status
-			fi
-
-			if [ ! -e "$files_remote" ]; then
-				recharging_failed $path; continue
-			fi
-			mv -f $files_remote $files_local
-
-			# Remove old database files (but packages.list.bak, extra.list.bak)
-			for i in packages.desc packages.$SUM packages.txt packages.equiv \
-				files.list.lzma mirrors packages.info files-list.md5; do
-				[ -f "$i.bak" ] && rm $i.bak 2>/dev/null
-			done
-
-			footer "$(_ 'Last database is ready to use.')"
-
-			# Check diff
-			if [ -f 'packages.list.bak' ]; then
-				diff -u packages.list.bak packages.list | grep ^+[a-z] > packages.diff
-				rm packages.list.bak
-				if [ -f 'extra.list.bak' ]; then
-					if [ -f 'extra.list' ]; then
-						awk -F'|' '{print $1 " (extra)"}' extra.list > extra.list1
-						awk -F'|' '{print $1 " (extra)"}' extra.list.bak > extra.list1.bak
-						diff -u extra.list1.bak extra.list1 | grep ^+[a-z] >> packages.diff
-						rm extra.list.bak extra.list1 extra.list1.bak
-					else
-						mv extra.list.bak extra.list
-					fi
-				fi
-				sed -i s/+// packages.diff
-
-				new_pkgs=$(wc -l < packages.diff)
-				if [ "$new_pkgs" -gt 0 ]; then
-					title 'Mirrored packages diff'
-					cat packages.diff
-					footer "$(emsg "$(_p \
-					'%s new package on the mirror.' \
-					'%s new packages on the mirror.' $new_pkgs \
-					"<c 32>$new_pkgs</c>")")"
-				fi
-			else
-				longline "$(_ "Note that next time you recharge the \
-list, a list of differences will be displayed to show new and upgradeable \
-packages.")"
-			fi
-		done
-		newline ;;
+		export UA
+		@@MODULES@@/recharge $2
+		;;
 
 
 	help-up)
@@ -2188,103 +2064,131 @@ packages.")"
 		#
 		for opt in $@; do
 			case "$opt" in
-				--recharge|-r)	tazpkg recharge ;;
-				--install|-i)	install="y" ;;
-				--check|-c) 	install="n" ;;
+				-i) install='yes';;
+				-c) check='yes';;
 			esac
 		done
+
 		time="$(date +%s)"
 
-		look_for_priority
-		for repo in $priority; do
-			pkg_list="$repo/packages.list"
-			mtime=$(find $pkg_list -mtime +7)
-			if [ -n "$mtime" ]; then
-				if [ "$repo" == "$PKGS_DB" ]; then
-					repo_name='main'
-				else
-					repo_name="${repo##*/}"
-				fi
-				_ 'List "%s" is older than one week... Recharging.' $pkg_list
-				tazpkg recharge $repo_name
-			fi
-		done
-
-		emsg "<n>$(_ 'Package')<i 28> $(_ 'Version')<i 48> $(_ 'Status')<->"
+		# Recharge packages databases (if necessary)
+		tazpkg recharge >/dev/null
 
 		cd $INSTALLED
 		echo -n > $UP_LIST
-		blocked_count=0
-		installed_sum="$PKGS_DB/installed.$SUM"
+		blocked_counter=$(mktemp)
+		tmp_up_list=$(mktemp)
 
-		for pkg in *; do
-			[ ! -d $pkg ] && continue
-			unset VERSION EXTRAVERSION
-			. $pkg/receipt
-			md5=$(fgrep "  $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" \
-				$installed_sum | awk '{print $1}')
-			for repo in $priority; do
-				pkg_desc="$repo/packages.desc"
-				pkg_list="$repo/packages.list"
-				pkg_sum="$repo/packages.$SUM"
+		look_for_priority
+		repo_number=1
+		for repo in $priority; do
+			if [ "$repo" == "$PKGS_DB" ]; then
+				repo_name='Main'
+			else
+				repo_name="$(basename "$repo")"
+			fi
 
-				if ! fgrep -q "$md5  $PACKAGE-" $pkg_sum; then
-					# Jump to next repository in priority if pkg doesn't exist
-					# in this one.
-					grep -q "^$PACKAGE-" $pkg_list || continue
+			[ ! -f "$repo/packages.info" ] && continue
+			{
+				cat $PKGS_DB/blocked-packages.list | awk '{printf "%s\t%s\n", $1, "b"}';
+				cat $PKGS_DB/installed.info | awk -F$'\t' '{printf "%s\t%s\t%s\t%s\n", $1, "i", $2, $9}';
+				cat $repo/packages.info | awk -F$'\t' '{printf "%s\t%s\t%s\t%s\n", $1, "p", $2, $9}'
+			} | sort -t$'\t' -k1,1 | awk -F$'\t' \
+			-vnewbuild="$(_ 'New build')" -vcolornewbuild="$(emsg '<c 34>')" \
+			-vnewver='→ ' -vcolornewver="$(emsg '<c 32>')" \
+			-vblocked=" ($(_ 'Blocked'))" -vcolorblocked="$(emsg '<c 31>')" \
+			-vcolor0="$(emsg '</c>')" \
+			-vreponum=$repo_number -vreponame=$repo_name \
+			-vuplist="$UP_LIST" -vblocked_counter="$blocked_counter" \
+'{
 
-					emsg -n "$PACKAGE<i 28> $VERSION"
+	if ($1 != p) {
+		if (vi && vp) {
+			bb = (b=="") ? "i" : "b"
+			if ("" vi != vp) { # important: compare as strings
+				startc = (b=="") ? colornewver : colorblocked;
+				printf "%s\t%s\t%s\t%s\t%s%s%s%s%s\t%s\n", p, vi, reponum, reponame, startc, newver, vp, b, color0, bb;
+				print p >> uplist;
+				if (b!="") printf 1 >> blocked_counter;
+			} else if (mi != mp) {
+				startc = (b=="") ? colornewbuild : colorblocked;
+				printf "%s\t%s\t%s\t%s\t%s%s%s%s\t%s\n",   p, vi, reponum, reponame, startc, newbuild, b, color0, bb;
+				print p >> uplist;
+				if (b!="") printf 1 >> blocked_counter;
+			}
+		}
+		p = $1; b = b1 = b2 = vi = mi = vp = mp = "";
+	}
+	if ($2 == "b") { b = blocked; b1 = bl1; b2 = bl2; }
+	if ($2 == "i") { vi = $3; mi = $4; }
+	if ($2 == "p") { vp = $3; mp = $4; }
+}' >> $tmp_up_list
 
-					# Skip pkgs listed in $PKGS_DB/blocked-packages.list
-					if $(grep -qs "^$PACKAGE" $BLOCKED); then
-						blocked_count=$(($blocked_count + 1))
-						emsg "<i 48><c 31> $(_ 'Blocked')</c>"
-						break
-					fi
+			repo_number=$((repo_number + 1))
 
-					new=$(grep "^$PACKAGE |" $pkg_desc | awk '{print $3}')
-
-					if [ "$VERSION" == "$new" ]; then
-						emsg "<i 48><c 34> $(_ 'New build')</c>"
-					else
-						emsg "<i 48><c 32> $(_ 'New version %s' "$new")</c>"
-					fi
-					echo "$PACKAGE" >> $UP_LIST
-					break
-				fi
-			done
 		done
+
+		case "$output" in
+			html)
+				cat <<EOT
+<table class="wide zebra">
+	<thead>
+		<tr><td>$(_ 'Package')</td><td>$(_ 'Repository')</td><td>$(_ 'Version')</td><td>$(_ 'Status')</td></tr>
+	</thead>
+	<tbody>
+EOT
+				sort -t$'\t' -k1,3 $tmp_up_list | awk -F$'\t' '{
+					if($4=="Main"){repoicon="slitaz"}else{repoicon="web"}
+					if($6=="b"){pkgicon="pkgib"}else{pkgicon="pkgi"}
+
+					printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"/>", $1;
+					printf "<a data-icon=\"%s\" href=\"?info=%s\">%s</a></td>", pkgicon, $1, $1;
+					printf "<td><span data-icon=\"%s\">%s</span></td>", repoicon, $4;
+					printf "<td>%s</td>", $2;
+					printf "<td>%s</td></tr>\n", $5;
+					}'
+				echo '</tbody></table>' ;;
+			*)
+				emsg "<n>$(_ 'Package')<i 26>$(_ 'Repository')<i 38>$(_ 'Version')<i 49>$(_ 'Status')<->"
+				sort -t$'\t' -k1,3 $tmp_up_list | awk -F$'\t' \
+					'{printf "%-24s %-11s %-10s %s\n", $1, $4, $2, $5}';;
+		esac
+
 		sed -i /^$/d $UP_LIST
 		upnb=$(wc -l < $UP_LIST)
 		pkgs=$(ls | wc -l)
 		time=$(($(date +%s) - $time))
-		if [ "$upnb" == 0 ]; then
+		if [ "$upnb" -eq 0 ]; then
 			install="n"
 			_ 'System is up-to-date...'
 		fi
 
-		footer "$(emsg "$(_p \
-			'%s installed package scanned in %ds' \
-			'%s installed packages scanned in %ds' $pkgs \
-			"<c 32>$pkgs</c>" $time)")"
+		if [ "$upnb" -ne 0 ]; then
+			blocked_count="$(wc -m < $blocked_counter)"
 
-		if [ "$upnb" != 0 ]; then
 			blocked="$(_p \
 				'%s blocked' \
 				'%s blocked' $blocked_count \
 				$blocked_count)"
 
-			boldify "$(_p \
+			footer "$(_p \
 				'You have %s available upgrade (%s)' \
 				'You have %s available upgrades (%s)' $upnb \
 				$upnb "$blocked")"
-			newline
 		fi
+		emsg "$(_p \
+			'%s installed package scanned in %ds' \
+			'%s installed packages scanned in %ds' $pkgs \
+			"<c 32>$pkgs</c>" $time)"
+
+
+		# Clean
+		rm $blocked_counter $tmp_up_list
 
 		# Pkgs to upgrade ? Skip, let install them all or ask user
-		[ "$install" == 'n' ] && exit 0
+		[ -n "$check" ] && exit 0
 		if [ "$upnb" -gt 0 ]; then
-			if [ "$install" == 'y' ]; then
+			if [ -n "$install" ]; then
 				answer=0
 			else
 				confirm "$(_ 'Do you wish to install them now? (y/N)')"
@@ -2293,7 +2197,7 @@ packages.")"
 			case "$answer" in
 				0)
 					for pkg in $(cat $UP_LIST); do
-						echo 'y' | tazpkg get-install $pkg --forced
+						echo 'y' | tazpkg -gi "$pkg" --forced		#--reason="upgrade"
 					done
 					# List is generated each time and must be cleaned so
 					# tazpkg-notify doesn't find upgrades anymore.
@@ -2304,7 +2208,8 @@ packages.")"
 					exit 0 ;;
 			esac
 		fi
-		newline ;;
+		newline
+		;;
 
 
 	bugs)
@@ -2340,7 +2245,7 @@ EOT
 		look_for_priority
 
 		cd $INSTALLED
-		if [ -z "$2" -o "$2" == '--full' ]; then PACKAGES="$(ls)"; else PACKAGES="$2"; fi
+		if [ -z "$2" -o -n "$full" ]; then PACKAGES="$(ls)"; else PACKAGES="$2"; fi
 		PACKAGE_PRINTED=''
 
 		for PACKAGE in $PACKAGES; do
@@ -2387,7 +2292,7 @@ EOT
 		[ -n "$PACKAGE_PRINTED" ] && footer
 
 		_ 'Looking for known bugs...'
-		if [ -z "$2" -o "$2" == '--full' ]; then tazpkg bugs; else tazpkg bugs "$2"; fi
+		if [ -z "$2" -o -n "$full" ]; then tazpkg bugs; else tazpkg bugs "$2"; fi
 
 
 		if [ -n "$full" ]; then
@@ -2441,7 +2346,7 @@ EOT
 			done
 			footer
 
-			if [ "$2" == '--full' ]; then
+			if [ -n "$full" ]; then
 				title 'Alien files:'
 				MSG="$(_n 'No package has installed the following files:')\n"
 				find /etc /bin /sbin /lib /usr /var/www -not -type d 2>/dev/null | \
@@ -2764,7 +2669,7 @@ EOT
 		else
 			PROMPT="\\033[1;33mtazpkg\\033[0;39m> "
 		fi
-		if [ "$2" != "--noheader" ]; then
+		if [ -z "$noheader" ]; then
 			clear
 			title 'TazPkg SHell.'
 			_ "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
