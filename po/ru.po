@@ -2031,6 +2031,18 @@ msgstr "Последние записи журнала"
 msgid "Show"
 msgstr "Показать"
 
+msgid "all"
+msgstr "все"
+
+msgid "extra"
+msgstr "экстра"
+
+msgid "Provide"
+msgstr "Заменяет"
+
+msgid "Packages suggested by %s"
+msgstr "Пакеты, предложенные пакетом %s"
+
 #~ msgid "Unknown option \"%s\"."
 #~ msgstr "Неизвестный параметр «%s»."
 

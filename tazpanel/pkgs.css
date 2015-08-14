@@ -180,3 +180,9 @@ section .hborders thead tr { border-top: none; border-bottom: 1pt solid #DDD; }
 	padding: 0; margin: 0;
 	vertical-align: bottom;
 }
+
+
+
+
+/* infoTable: space between icons */
+#infoTable span a { margin-right: 1em; }

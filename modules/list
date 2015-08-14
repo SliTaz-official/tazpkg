@@ -40,13 +40,13 @@ im() { tty -s; }
 # Translate category names (must be last in line)
 
 translate_category() {
-	sed "s|base-system$|$(_ base-system)|g; s|x-window$|$(_ x-window)|g;
-		s|utilities$|$(_ utilities)|g; s|network$|$(_ network)|g;
-		s|graphics$|$(_ graphics)|g; s|multimedia$|$(_ multimedia)|g;
-		s|office$|$(_ office)|g; s|development$|$(_ development)|g;
-		s|system-tools$|$(_ system-tools)|g; s|security$|$(_ security)|g;
-		s|games$|$(_ games)|g; s|misc$|$(_ misc)|g; s|meta$|$(_ meta)|g;
-		s|non-free$|$(_ non-free)|g"
+	sed "s|base-system$|$(_ base-system)|; s|x-window$|$(_ x-window)|;
+		s|utilities$|$(_ utilities)|; s|network$|$(_ network)|;
+		s|graphics$|$(_ graphics)|; s|multimedia$|$(_ multimedia)|;
+		s|office$|$(_ office)|; s|development$|$(_ development)|;
+		s|system-tools$|$(_ system-tools)|; s|security$|$(_ security)|;
+		s|games$|$(_ games)|; s|misc$|$(_ misc)|; s|meta$|$(_ meta)|;
+		s|non-free$|$(_ non-free)|; s|all$|$(_ all)|; s|extra$|$(_ extra)|"
 }
 
 

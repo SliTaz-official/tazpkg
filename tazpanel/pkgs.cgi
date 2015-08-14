@@ -82,7 +82,7 @@ EOT
 
 	*\ status\ * )
 		# Show package status
-		pkg=$(GET pkg)
+		pkg=$(GET pkg | tr -d ' ')
 		orig_pkg=''
 
 		if grep -q "^$pkg"$'\t' $PKGS_DB/installed.info; then
@@ -92,7 +92,7 @@ EOT
 			# Package not installed
 			class='pkg'
 			equivs=$(grep "^$pkg=" $PKGS_DB/packages.equiv)
-			if [ -n "$equivs" ]; then
+			if [ "$(GET pkg)" == "$pkg" -a -n "$equivs" ]; then
 				for equiv in ${equivs#*=}; do
 					case $equiv in
 						*:*)
@@ -362,7 +362,6 @@ function setValue(name, value) {
 		}')
 	</div>
 EOT
-#reminder; gettext 'all'; gettext 'extra'
 
 	if [ -d $PKGS_DB/undigest ]; then
 		cat <<EOT
@@ -546,10 +545,15 @@ EOT
 show_info_links() {
 	if [ -n "$1" ]; then
 		if [ "$3" == 'tag' ]; then icon='tag'; else icon='clock'; fi
-		echo -n "<tr><td><b>$2</b></td><td>"
-		echo $1 | tr ' ' $'\n' | awk -vt="$3" -vi="$icon" '{
+		case "$4" in
+			provide) echo -n "<tr><td><b>$2</b></td><td>"; noeq=' ';;
+			'')      echo -n "<tr><td><b>$2</b></td><td>"; noeq='';;
+			*)       echo -n "<tr><td><b><a href=\"?suggested=${4//+/%2B}\">$2</a></b></td><td>";;
+		esac
+
+		echo $1 | tr ' ' $'\n' | awk -vt="$3" -vi="$icon" -vnoeq="$noeq" '{
 			printf "<span><a data-icon=\"%s\" ", i;
-			printf "href=\"?%s=%s\">%s</a></span>   ", t, gensub(/\+/, "%2B", "g", $1), $1
+			printf "href=\"?%s=%s\">%s%s</a></span>", t, gensub(/\+/, "%2B", "g", $1), $1, noeq
 		}'
 		echo "</td></tr>"
 	fi
@@ -704,6 +708,48 @@ EOT
 			show_list ${my#no}
 		done
 		cat <<EOT
+</form>
+<script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
+EOT
+		;;
+
+
+	*\ suggested\ *)
+		#
+		# List all suggested packages
+		#
+		tazpanel_header "$(_ 'Packages list')"
+		loading_msg "$(_ 'Listing packages...')"
+
+		pkg=$(GET suggested)
+		suggested_pkgs=$(. $INSTALLED/$pkg/receipt; echo $SUGGESTED)
+		[ -z "$suggested_pkgs" ] && xhtml_footer && exit
+
+		cat <<EOT
+<p>$(_ 'Packages suggested by %s' "<b>$pkg</b>")</p>
+EOT
+
+		[ "$REMOTE_USER" == "root" ] && cat <<EOT
+<section>
+	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
+	<footer>
+		$({
+			show_button do=Install do=Chblock do=Remove
+		} | sed 's|button |button form="pkglist" |g')
+		$(show_button toggle)
+	</footer>
+</section>
+EOT
+
+		cat <<EOT
+<form id="pkglist" class="wide">
+EOT
+	table_head
+	for pkg in $suggested_pkgs; do
+		grep "^$pkg"$'\t' "$PKGS_DB/packages.info" | parse_packages_info
+	done
+		cat <<EOT
+	</tbody></table>
 </form>
 <script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
 EOT
@@ -881,6 +927,17 @@ EOT
 
 		pkg="$(GET info)"
 
+		# Package state
+		if [ -d "$INSTALLED/$pkg" ]; then
+			STATE="$(_ 'installed package')"
+		elif [ -e "$PKGS_DB/packages.info" -a \
+			-n "$(awk -F$'\t' -vp="$pkg" '$1==p{print $1}' "$PKGS_DB/packages.info")" ]; then
+			STATE="$(_ 'mirrored package')"
+		else
+			msg err "$(_ 'Package "%s" not available.' "$pkg")"
+			xhtml_footer; exit 0
+		fi
+
 		# Symbolic icon
 		if [ -d "$INSTALLED/$pkg" ]; then
 			if grep -q "^$pkg$" "$PKGS_DB/blocked-packages.list"
@@ -953,16 +1010,30 @@ EOT
 	<tr><td><b>$(_ 'Name')</b></td><td>$PACKAGE
 	<div id="appImg"><img src="pkgs.cgi?app_img=$PACKAGE"/></div>
 	</td></tr>
+
+	<tr><td><b>$(_ 'State')</b></td><td>$STATE</td></tr>
+
 	$([ -n "$VERSION" ] && echo "<tr><td><b>$(_ 'Version')</b></td><td>$VERSION</td></tr>")
+
 	<tr><td><b>$(_ 'Category')</b></td><td><a href="?list&amp;cat=$CATEGORY">$CATEGORY</a></td></tr>
+
 	<tr><td><b>$(_ 'Description')</b></td><td>$SHORT_DESC</td></tr>
+
 	$([ -n "$MAINTAINER" ] && echo "<tr><td><b>$(_ 'Maintainer')</b></td><td>$MAINTAINER</td></tr>")
+
 	$([ -n "$LICENSE" ] && echo "<tr><td><b>$(_ 'License')</b></td><td><a href=\"?license=$pkg\">$LICENSE</a></td></tr>")
+
 	<tr><td><b>$(_ 'Website')</b></td><td><a href="$WEB_SITE" target="_blank">$WEB_SITE</a></td></tr>
+
 	$(show_info_links "$TAGS" "$(_ 'Tags')" 'tag')
+
 	$([ -n "$PACKED_SIZE" ] && echo "<tr><td><b>$(_ 'Sizes')</b></td><td>${PACKED_SIZE/.0/}/${UNPACKED_SIZE/.0/}</td></tr>")
+
 	$(show_info_links "$DEPENDS" "$(_ 'Depends')" 'info')
-	$(show_info_links "$SUGGESTED" "$(_ 'Suggested')" 'info')
+
+	$(show_info_links "$PROVIDE" "$(_ 'Provide')" 'info' 'provide')
+
+	$(show_info_links "$SUGGESTED" "$(_ 'Suggested')" 'info' "$PACKAGE")
 </tbody>
 </table>
 
@@ -1005,7 +1076,7 @@ EOT
 		if (links[i].dataset.icon == 'clock') {
 			links[i].parentNode.id = 'link' + i;
 			pkg = links[i].innerText.replace(/\+/g, '%2B');
-			ajax('pkgs.cgi?status&pkg=' + pkg, '1', 'link' + i);
+			ajax('?status&pkg=' + pkg, '1', 'link' + i);
 		}
 	}
 
@@ -1669,6 +1740,5 @@ EOT
 esac
 
 # xHTML 5 footer
-export TEXTDOMAIN='tazpkg'
 xhtml_footer
 exit 0
