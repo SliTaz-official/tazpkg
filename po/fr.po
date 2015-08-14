@@ -1970,6 +1970,18 @@ msgstr "Dernières entrées du journal"
 msgid "Show"
 msgstr "Voir"
 
+msgid "all"
+msgstr "tous"
+
+msgid "extra"
+msgstr ""
+
+msgid "Provide"
+msgstr "Fourni"
+
+msgid "Packages suggested by %s"
+msgstr "Paquets suggérés par %s"
+
 #~ msgid "Unknown option \"%s\"."
 #~ msgstr "Option inconnue : %s"
 
