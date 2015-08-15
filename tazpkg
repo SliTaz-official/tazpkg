@@ -78,14 +78,14 @@ SAVE_CACHE_DIR="$CACHE_DIR"
 
 # Path to tazpkg used dir and configuration files
 MIRROR="$PKGS_DB/mirror"
-BLOCKED="$PKGS_DB/blocked-packages.list"
-UP_LIST="$PKGS_DB/packages.up"
+export BLOCKED="$PKGS_DB/blocked-packages.list"
+export UP_LIST="$PKGS_DB/packages.up"
 DEFAULT_MIRROR="$ONLINE_PKGS"
 
 # TazPkg version
 VERSION=$(awk -F$'\t' '$1=="tazpkg"{print $2}' $PKGS_DB/installed.info)
 # User Agent
-UA="TazPkg-$VERSION"
+export UA="TazPkg-$VERSION"
 
 #title 'DEBUG'; emsg "<b>COMMAND</b>=\"$COMMAND\"\n<b>PACKAGE</b>=\"$PACKAGE\"\n<b>PACKAGE_FILE</b>=\"$PACKAGE_FILE\"\n<b>TARGET_DIR</b>=\"$TARGET_DIR\"\n<b>TOP_DIR</b>=\"$TOP_DIR\"\n<b>TMP_DIR</b>=\"$TMP_DIR\"\n<b>INSTALL_LIST</b>=\"$INSTALL_LIST\"\n<b>SAVE_CACHE_DIR</b>=\"$SAVE_CACHE_DIR\"\n<b>MIRROR</b>=\"$MIRROR\"\n<b>BLOCKED</b>=\"$BLOCKED\"\n<b>UP_LIST</b>=\"$UP_LIST\"\n<b>DEFAULT_MIRROR</b>=\"$DEFAULT_MIRROR\"\n<b>VERSION</b>=\"$VERSION\""; footer
 
@@ -1248,11 +1248,18 @@ dep_scan() {
 			*\ $i\ *) continue;;
 		esac
 		ALL_DEPS="$ALL_DEPS $i"
-		[ -n "$2" ] && echo "$2$i ($(fgrep -A 3 $i $PKGS_DB/packages.txt | \
-						tail -1 | sed 's/.*(\([^ ]*\).*/\1/'))"
-		[ -f $i/receipt ] || continue
-		DEPENDS=""
-		. $i/receipt
+
+		if [ -z "$mark" ]; then
+			ii="$i"
+		else
+			ii="- $i"; grep -q ^$i$'\t' "$PKGS_DB/installed.info" && ii="+ $i"
+		fi
+		[ -n "$2" ] && echo "$2$ii ($(awk -F$'\t' -vp="$i" '
+			$1==p{split($7,s," ");print s[2]}' "$PKGS_DB/packages.info"))"
+
+		DEPENDS="$(awk -F$'\t' -vp="$i" '$1==p{print $8 " "}' "$PKGS_DB/installed.info")"
+		[ -z "$DEPENDS" ] && \
+		DEPENDS="$(awk -F$'\t' -vp="$i" '$1==p{print $8 " "}' "$PKGS_DB/packages.info")"
 		[ -n "$DEPENDS" ] && dep_scan "$DEPENDS" "$2  "
 	done
 }
@@ -1263,36 +1270,40 @@ dep_scan() {
 rdep_scan() {
 	SEARCH="$1"
 
-	for i in * ; do
-		DEPENDS=''
-		. $i/receipt
-		echo "$i $(echo $DEPENDS)"
-	done | busybox awk -v search=$SEARCH '
-function show_deps(deps, all_deps, pkg, space)
-{
-	if (all_deps[pkg] == 1) return
-	all_deps[pkg] = 1
-	if (space != "") printf "%s %s\n",space,pkg
-	for (i = 1, n = split(deps[pkg], mydeps, " "); i <= n; i++) {
-		show_deps(deps, all_deps, mydeps[i],"==" space)
-	}
+	DB='installed'; [ -n "$all" ] && DB='packages'
+
+	awk -F$'\t' '$8 {print $1 " " $8}' "$PKGS_DB/$DB.info" | \
+	busybox awk -F' ' -v search="$SEARCH" '
+function show_deps(pkg, space,   i, n, mydeps) {
+	if (processed[pkg]) return
+	processed[pkg] = 1;
+
+	if (space) printf "%s %s\n", space, pkg;
+
+	n = split(deps[pkg], mydeps, " ");
+	for (i = 1; i <= n; i++)
+		show_deps(mydeps[i], "==" space);
 }
 
 {
-	all_deps[$1] = 0
 	for (i = 2; i <= NF; i++)
-		deps[$i] = deps[$i] " " $1
+		deps[$i] = deps[$i] " " $1;
 }
 
 END {
-	show_deps(deps, all_deps, search, "")
+	show_deps(search, "")
 }
 ' | while read spc pkg; do
+		if [ -z "$mark" ]; then
+			pkgi="$pkg"
+		else
+			pkgi="- $pkg"; grep -q ^$pkg$'\t' "$PKGS_DB/installed.info" && pkgi="+ $pkg"
+		fi
+
 		echo -n $spc | sed 's/=/ /g'
-		echo -n $pkg
-		echo -n ' ('
-		fgrep -A 3 $pkg $PKGS_DB/packages.txt | tail -1 | \
-			sed 's/.*(\([^ ]*\).*/\1)/'
+
+		echo "$pkgi ($(awk -F$'\t' -vp="$pkg" '$1==p{split($7,s," ");print s[2]}' \
+			"$PKGS_DB/$DB.info"))"
 	done
 }
 
@@ -2043,7 +2054,6 @@ EOT
 		# must have only the chosen main mirror.
 		#
 		check_root $@
-		export UA
 		@@MODULES@@/recharge $2
 		;;
 
@@ -2055,7 +2065,7 @@ EOT
 
 
 	up|upgrade)
-		check_root
+		check_root $@
 		#
 		# This is the new way to upgrade packages making 'upgrade' and
 		# upgradeable out-of-date. This new way is much, much more faster!
@@ -2064,151 +2074,12 @@ EOT
 		#
 		for opt in $@; do
 			case "$opt" in
-				-i) install='yes';;
-				-c) check='yes';;
+				-i) export install='yes';;
+				-c) export check='yes';;
 			esac
 		done
 
-		time="$(date +%s)"
-
-		# Recharge packages databases (if necessary)
-		tazpkg recharge >/dev/null
-
-		cd $INSTALLED
-		echo -n > $UP_LIST
-		blocked_counter=$(mktemp)
-		tmp_up_list=$(mktemp)
-
-		look_for_priority
-		repo_number=1
-		for repo in $priority; do
-			if [ "$repo" == "$PKGS_DB" ]; then
-				repo_name='Main'
-			else
-				repo_name="$(basename "$repo")"
-			fi
-
-			[ ! -f "$repo/packages.info" ] && continue
-			{
-				cat $PKGS_DB/blocked-packages.list | awk '{printf "%s\t%s\n", $1, "b"}';
-				cat $PKGS_DB/installed.info | awk -F$'\t' '{printf "%s\t%s\t%s\t%s\n", $1, "i", $2, $9}';
-				cat $repo/packages.info | awk -F$'\t' '{printf "%s\t%s\t%s\t%s\n", $1, "p", $2, $9}'
-			} | sort -t$'\t' -k1,1 | awk -F$'\t' \
-			-vnewbuild="$(_ 'New build')" -vcolornewbuild="$(emsg '<c 34>')" \
-			-vnewver='→ ' -vcolornewver="$(emsg '<c 32>')" \
-			-vblocked=" ($(_ 'Blocked'))" -vcolorblocked="$(emsg '<c 31>')" \
-			-vcolor0="$(emsg '</c>')" \
-			-vreponum=$repo_number -vreponame=$repo_name \
-			-vuplist="$UP_LIST" -vblocked_counter="$blocked_counter" \
-'{
-
-	if ($1 != p) {
-		if (vi && vp) {
-			bb = (b=="") ? "i" : "b"
-			if ("" vi != vp) { # important: compare as strings
-				startc = (b=="") ? colornewver : colorblocked;
-				printf "%s\t%s\t%s\t%s\t%s%s%s%s%s\t%s\n", p, vi, reponum, reponame, startc, newver, vp, b, color0, bb;
-				print p >> uplist;
-				if (b!="") printf 1 >> blocked_counter;
-			} else if (mi != mp) {
-				startc = (b=="") ? colornewbuild : colorblocked;
-				printf "%s\t%s\t%s\t%s\t%s%s%s%s\t%s\n",   p, vi, reponum, reponame, startc, newbuild, b, color0, bb;
-				print p >> uplist;
-				if (b!="") printf 1 >> blocked_counter;
-			}
-		}
-		p = $1; b = b1 = b2 = vi = mi = vp = mp = "";
-	}
-	if ($2 == "b") { b = blocked; b1 = bl1; b2 = bl2; }
-	if ($2 == "i") { vi = $3; mi = $4; }
-	if ($2 == "p") { vp = $3; mp = $4; }
-}' >> $tmp_up_list
-
-			repo_number=$((repo_number + 1))
-
-		done
-
-		case "$output" in
-			html)
-				cat <<EOT
-<table class="wide zebra">
-	<thead>
-		<tr><td>$(_ 'Package')</td><td>$(_ 'Repository')</td><td>$(_ 'Version')</td><td>$(_ 'Status')</td></tr>
-	</thead>
-	<tbody>
-EOT
-				sort -t$'\t' -k1,3 $tmp_up_list | awk -F$'\t' '{
-					if($4=="Main"){repoicon="slitaz"}else{repoicon="web"}
-					if($6=="b"){pkgicon="pkgib"}else{pkgicon="pkgi"}
-
-					printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"/>", $1;
-					printf "<a data-icon=\"%s\" href=\"?info=%s\">%s</a></td>", pkgicon, $1, $1;
-					printf "<td><span data-icon=\"%s\">%s</span></td>", repoicon, $4;
-					printf "<td>%s</td>", $2;
-					printf "<td>%s</td></tr>\n", $5;
-					}'
-				echo '</tbody></table>' ;;
-			*)
-				emsg "<n>$(_ 'Package')<i 26>$(_ 'Repository')<i 38>$(_ 'Version')<i 49>$(_ 'Status')<->"
-				sort -t$'\t' -k1,3 $tmp_up_list | awk -F$'\t' \
-					'{printf "%-24s %-11s %-10s %s\n", $1, $4, $2, $5}';;
-		esac
-
-		sed -i /^$/d $UP_LIST
-		upnb=$(wc -l < $UP_LIST)
-		pkgs=$(ls | wc -l)
-		time=$(($(date +%s) - $time))
-		if [ "$upnb" -eq 0 ]; then
-			install="n"
-			_ 'System is up-to-date...'
-		fi
-
-		if [ "$upnb" -ne 0 ]; then
-			blocked_count="$(wc -m < $blocked_counter)"
-
-			blocked="$(_p \
-				'%s blocked' \
-				'%s blocked' $blocked_count \
-				$blocked_count)"
-
-			footer "$(_p \
-				'You have %s available upgrade (%s)' \
-				'You have %s available upgrades (%s)' $upnb \
-				$upnb "$blocked")"
-		fi
-		emsg "$(_p \
-			'%s installed package scanned in %ds' \
-			'%s installed packages scanned in %ds' $pkgs \
-			"<c 32>$pkgs</c>" $time)"
-
-
-		# Clean
-		rm $blocked_counter $tmp_up_list
-
-		# Pkgs to upgrade ? Skip, let install them all or ask user
-		[ -n "$check" ] && exit 0
-		if [ "$upnb" -gt 0 ]; then
-			if [ -n "$install" ]; then
-				answer=0
-			else
-				confirm "$(_ 'Do you wish to install them now? (y/N)')"
-				answer=$?
-			fi
-			case "$answer" in
-				0)
-					for pkg in $(cat $UP_LIST); do
-						echo 'y' | tazpkg -gi "$pkg" --forced		#--reason="upgrade"
-					done
-					# List is generated each time and must be cleaned so
-					# tazpkg-notify doesn't find upgrades anymore.
-					rm $UP_LIST; touch $UP_LIST ;;
-				*)
-					_ 'Leaving without any upgrades installed.'
-					newline
-					exit 0 ;;
-			esac
-		fi
-		newline
+		@@MODULES@@/upgrade
 		;;
 
 
@@ -2694,20 +2565,34 @@ EOT
 
 	depends)
 		# Display dependencies tree
-		cd $INSTALLED
-		ALL_DEPS=''
-		if [ -f "$2/receipt" ]; then
-			dep_scan $2 ''
-		fi ;;
+		unset ALL_DEPS
+		mkdir $TMP_DIR
+		dep_scan $2 '' | tee "$TMP_DIR/depends"
+		if [ -n "$total" ]; then
+			separator
+			NUM="$(wc -l < "$TMP_DIR/depends")"
+			TOTAL="$(sed 's|.*(\([^)]*\))|\1|' "$TMP_DIR/depends" | hrsum)"
+			_p 'Total: %s package (%s)' 'Total: %s packages (%s)' "$NUM" \
+				"$NUM" "$TOTAL"
+			newline
+
+			if [ -n "$mark" ]; then
+				NUM="$(grep '^ *-' "$TMP_DIR/depends" | wc -l)"
+				TOTAL="$(grep '^ *-' "$TMP_DIR/depends" | sed 's|.*(\([^)]*\))|\1|' | hrsum)"
+				_p 'To install: %s package (%s)' 'To install: %s packages (%s)' "$NUM" \
+					"$NUM" "$TOTAL"
+				newline
+			fi
+		fi
+		rm -rf "$TMP_DIR"
+		;;
 
 
 	rdepends)
 		# Display reverse dependencies tree
 		cd $INSTALLED
-		ALL_DEPS=''
-		if [ -f "$2/receipt" ]; then
-			rdep_scan $2
-		fi
+		unset ALL_DEPS
+		rdep_scan "$2"
 		;;
 
 

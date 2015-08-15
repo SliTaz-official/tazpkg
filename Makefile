@@ -31,7 +31,7 @@ pot:
 		--package-version="$(VERSION)" -kaction -ktitle -kdie -k_ -k_n -k_p:1,2 \
 		./tazpkg \
 		./modules/convert ./modules/find-depends ./modules/help ./modules/info \
-		./modules/list ./modules/mkdb ./modules/recharge \
+		./modules/list ./modules/mkdb ./modules/recharge ./modules/upgrade \
 		./tazpkg-box ./tazpkg-notify ./tazpanel/pkgs.cgi
 
 msgmerge:

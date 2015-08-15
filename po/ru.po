@@ -2043,6 +2043,9 @@ msgstr "Заменяет"
 msgid "Packages suggested by %s"
 msgstr "Пакеты, предложенные пакетом %s"
 
+msgid "State"
+msgstr "Состояние"
+
 #~ msgid "Unknown option \"%s\"."
 #~ msgstr "Неизвестный параметр «%s»."
 

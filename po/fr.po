@@ -2025,13 +2025,6 @@ msgstr "Paquets suggérés par %s"
 #~ msgid "Web"
 #~ msgstr "Internet"
 
-#~ msgid "all"
-#~ msgstr "Toutes"
-
-#, fuzzy
-#~ msgid "extra"
-#~ msgstr "supplémentaire"
-
 #~ msgid "Repositories"
 #~ msgstr "Dépôts"
 
