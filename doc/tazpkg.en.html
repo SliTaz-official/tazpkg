@@ -52,10 +52,10 @@ target="_blank">GPL V3</a>.</p>
 <p>TazPkg uses some environment variables:</p>
 
 <ul>
-	<li><tt>LANGUAGE</tt>: define the language of output and user
+	<li><tt>LANGUAGE</tt>: defines the language of output and user
 		confirmations. <x-details>Note, <tt>LANG</tt> and <tt>LC_ALL</tt>
 		environment variables also affect output language</x-details></li>
-	<li><tt>LC_TIME</tt>: define the date format in the <a
+	<li><tt>LC_TIME</tt>: defines the date format in the <a
 		href="#activity">activity</a> command</li>
 	<!-- li><tt>TAZPKG_ROOT</tt>: if defined it points to the root of file system
 		where TazPkg should work. Note, value defined using <tt>--root=</tt>
@@ -82,24 +82,24 @@ target="_blank">GPL V3</a>.</p>
 
 <ul>
 	<li><tt><a href="file:///var/lib/tazpkg/ID" target="_blank">ID</a></tt>
-		(deprecated): identifier of current SliTaz repository state.
-		<x-details>The value change when new or updated packages appear in the
+		(deprecated): identifier of the current SliTaz repository state.
+		<x-details>The value changes when new or updated packages appear in the
 		repository.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/IDs" target="_blank">IDs</a></tt>:
-		identifier of current SliTaz repository state and the UNIX time stamp.
-		<x-details>The ID value change when new or updated packages appear in
-		the repository. Time stamp allows to track how long a change is made in
-		the repository, and allows to track the freshness of repository mirrors.
+		identifier of the current SliTaz repository state and the UNIX time stamp.
+		<x-details>The ID value changes when new or updated packages appear in
+		the repository. Time stamp allows you to track how long a change is made in
+		the repository and to track the freshness of repository mirrors.
 		(To convert UNIX time stamp to the date:
 		<code>date -d@<em>timestamp</em></code>)</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/mirror"
 		target="_blank">mirror</a></tt>: URL of the current repository mirror in
-		use. <x-details>URL points to the remote folder contains packages and
+		use. <x-details>URL points to the remote folder containing packages and
 		database files.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/mirrors"
 		target="_blank">mirrors</a></tt>: list of URLs of available repository
 		mirrors. <x-details>Note the difference between URLs from these two
-		files: you should append URL from this file by
+		files; you should append URL from this file by
 		<tt>packages/<em>cooking</em>/</tt> (for <tt><em>cooking</em></tt>-based
 		Slitaz version).</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.list"
@@ -107,21 +107,21 @@ target="_blank">GPL V3</a>.</p>
 		names with version numbers available in the repository.</li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.desc"
 		target="_blank">packages.desc</a></tt> (deprecated): list contained
-		package name, version, short description, category, and upstream
+		package name, version, short description, category and upstream
 		URL.</li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.txt"
-		target="_blank">packages.txt</a></tt> (deprecated): list contained
-		package name, version, short description, and two package sizes
+		target="_blank">packages.txt</a></tt> (deprecated): list containing
+		package name, version, short description and two package sizes
 		<x-details>(first — traffic to download package, second — HDD size for
 		installed package)</x-details>.</li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.md5"
-		target="_blank">packages.md5</a></tt> (deprecated): list contained MD5
+		target="_blank">packages.md5</a></tt> (deprecated): list containing MD5
 		checksum with package file name.</li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.info"
-		target="_blank">packages.info</a></tt>: list was build to replace and
+		target="_blank">packages.info</a></tt>: list was built to replace and
 		extend above lists. <x-details>For every package available in the
 		repository it contains: package name, version, category, short
-		description, upstream URL, tags, package sizes, depends, and MD5
+		description, upstream URL, tags, package sizes, depends and MD5
 		checksum. Development continues, and the list can be extended by other
 		fields, if necessary.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.equiv"
@@ -134,18 +134,18 @@ target="_blank">GPL V3</a>.</p>
 		<tt><em>package</em></tt>.<br>
 		In the second format of the rule <tt><em>alternative:</em></tt> part is
 		omitted — in this case <tt><em>newname</em></tt> <em>can be</em>
-		installed insted of the <tt><em>package</em></tt> (in the user
+		installed instead of the <tt><em>package</em></tt> (in the user
 		choice).</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.diff"
 		target="_blank">packages.diff</a></tt>: list created when you run
 		<tt><a href="#recharge">recharge</a></tt> command. <x-details>List
 		contains package names with versions of the new packages available in
-		the repository with the last recharging.</x-details></li>
+		the repository with the last recharge.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.up" 
 		target="_blank">packages.up</a></tt>: list created when you run
 		<tt><a href="#upgrade">upgrade</a></tt> command. <x-details>List
 		contains package names you can upgrade with the last
-		recharging.</x-details></li>
+		recharge.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/descriptions.txt" 
 		target="_blank">descriptions.txt</a></tt>: list of the “long”
 		descriptions of the all packages available on the repository.</li>
@@ -175,9 +175,9 @@ target="_blank">GPL V3</a>.</p>
 		target="_blank">installed.info</a></tt>: list of the installed packages
 		with the exact format of the <tt>packages.info</tt> list.
 		<x-details>Idea is just to copy list item from <tt>packages.info</tt> to
-		the <tt>installed.info</tt> while package installation.</x-details></li>
+		the <tt>installed.info</tt> during package installation.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/installed.md5"
-		target="_blank">installed.md5</a></tt> (deprecated): list contained MD5
+		target="_blank">installed.md5</a></tt> (deprecated): list containing MD5
 		checksum with file names of all installed packages.</li>
 </ul>
 
@@ -187,13 +187,13 @@ not use them (and modify the programs as necessary).</p>
 <p>In addition to the common package database files there is also individual
 folders for all installed packages placed by default in the
 <tt>/var/lib/tazpkg/installed/<em>package</em></tt>. Every folder here may
-contain next files:</p>
+contain the following files:</p>
 
 <ul>
 	<li><tt>receipt</tt> (mandatory) — the package recipe</li>
 	<li><tt>files.list</tt> (mandatory) — list of package files</li>
 	<li><tt>md5sum</tt> (mandatory) — checksums of package files (other checksum
-		file can be specified in the settings: <tt>cksum</tt> (CRC32),
+		files can be specified in the settings: <tt>cksum</tt> (CRC32),
 		<tt>md5sum</tt> (MD5), <tt>sha1sum</tt> (SHA1), <tt>sha256sum</tt>
 		(SHA256), <tt>sha512sum</tt> (SHA512), <tt>sha3sum</tt> (SHA3-512))</li>
 	<li><tt>description.txt</tt> (optional) — “long” description</li>
@@ -220,7 +220,7 @@ target="_blank">/var/log/slitaz/tazpkg.log</a></tt> stores TazPkg activity log.
 unblocking, reconfiguring packages.</x-details></p>
 
 <p>Shared MIME information which allows to “guess” SliTaz package files, package
-receipts, and SliTaz flavor files. <x-details>File placed here: <tt><a
+receipts and SliTaz flavor files. <x-details>File placed here: <tt><a
 href="file:///usr/share/mime/packages/tazpkg.xml"
 target="_blank">/usr/share/mime/packages/tazpkg.xml</a></tt>.</x-details></p>
 
@@ -228,7 +228,7 @@ target="_blank">/usr/share/mime/packages/tazpkg.xml</a></tt>.</x-details></p>
 <tt>/var/www/tazpanel/pkgs.cgi</tt> allows you to manage SliTaz packages in the
 <a href="http://127.0.0.1:82/pkgs.cgi" target="_blank">web application</a>.</p>
 
-<p>TazPkg documentation you read placed in the <tt>/usr/share/doc/tazpkg</tt>
+<p>TazPkg documentation is placed in the <tt>/usr/share/doc/tazpkg</tt>
 folder.</p>
 
 
@@ -550,9 +550,9 @@ package is stored in the current directory. To find the path you can use
 <tt>.tazpkg</tt> extension (<tt>install</tt> or <tt>-i</tt>). See
 <tt><a href="#get-install">get-install</a></tt> to install a package from the
 internet. Note that you can force the installation via the <tt>--forced</tt>
-option. Option <tt>--newconf</tt> allow to rewrite all user configuration files
-using the new files from package. Option <tt>--nodeps</tt> allow to install only
-specified package without its dependencies.</p>
+option. Option <tt>--newconf</tt> allows you to rewrite all user configuration files
+using the new files from package. Option <tt>--nodeps</tt> allows you to install only
+a specified package without its dependencies.</p>
 
 <pre>
 # tazpkg install <em>package-1.0.tazpkg</em>
@@ -568,11 +568,11 @@ or <tt>-gi</tt>). Command begins by checking whether the package exists on the
 mirror and if it has been already downloaded. For a list of packages on the
 mirror, we must use the <tt><a href="#list-mirror">list-mirror</a></tt>
 command. Note that you can force the installation via the <tt>--forced</tt>
-option. Option <tt>--newconf</tt> allow to rewrite all user configuration files
-using the new files from package. Option <tt>--nodeps</tt> allow to install only
-specified package without its dependencies.</p>
-
-<p>Option <tt>--forced</tt> allow update already installed package.</p>
+option. Option <tt>--newconf</tt> allows you to rewrite all user configuration files
+using the new files from a package. Option <tt>--nodeps</tt> allows you to install only
+a specified package without its dependencies.</p>
+ 
+<p>Option <tt>--forced</tt> allows you to update an already installed package.</p>
 
 <pre>
 # tazpkg get-install <em>grub</em>
@@ -600,7 +600,7 @@ confirmation (y/N) of removing the package, as well as for removing packages
 depending on this package, and for reinstalling packages modified by this
 package. This command will delete all files installed with the package.</p>
 
-<p>Option <tt>--auto</tt> removes and reinstall packages without your
+<p>Option <tt>--auto</tt> removes and reinstalls packages without your
 confirmation.</p>
 
 <pre>
@@ -624,7 +624,7 @@ confirmation.</p>
 
 <p>This command allows the installation of a package from another media device.
 The set up is done through symbolic links and consumes very little memory. It is
-generally used within the system RAM to install add-ons from an USB key.</p>
+generally used within the system RAM to install add-ons from a USB key.</p>
 
 <pre>
 # tazpkg link <em>openoffice /media/usbdisk</em>
@@ -661,7 +661,7 @@ purges other installed packages.</p>
 
 <p>Show all the available information related to your package. You can specify
 the name of the installed package or a package that is not yet installed, but
-available in the repository. You can also get information about local file
+available in the repository. You can also get information about a local file
 package by entering an absolute or relative path to the file <tt>.tazpkg</tt>.
 The information contained in the TazPkg database and in the package recipe —
 its version, category, maintainer, Web site and all the dependencies (see also
@@ -702,7 +702,7 @@ $ tazpkg list-files <em>bc</em>
 <p>The <tt>block</tt> (or <tt>-b</tt>) and <tt>unblock</tt> (or <tt>-u</tt>)
 commands permit you to block installed package versions so that they are not
 maintained by an <tt><a href="#upgrade">upgrade</a></tt>. Command
-<tt>chblock</tt> changes blocking state of the package. The list of packages on
+<tt>chblock</tt> changes the blocking state of the package. The list of packages on
 hold are contained in the <tt>/var/lib/tazpkg/blocked-packages.list</tt>. This
 file can also be edited by hand.</p>
 
@@ -743,13 +743,13 @@ $ tazpkg bugs <em>my_package</em>
 <p>Displays a dependency tree or reverse dependency tree for a package.</p>
 
 <p>For <code>depends</code> command: option <tt>--mark</tt> marks installed
-packages with plus sign, and not installed with minus/dash. Option
-<tt>--total</tt> calculates number of displayed packages and its size. Also,
-with both options at a time you'll get number and size of packages to be
+packages with plus sign and not installed with a minus/dash. Option
+<tt>--total</tt> calculates the number of displayed packages and their size. Also,
+with both options at a time you'll get the number and size of packages to be
 installed.</p>
 
-<p>For <code>rdepends</code> command: without <tt>--all</tt> option you'll get
-the list of only installed reverse dependency packages, with this option — list
+<p>For <code>rdepends</code> command: without the <tt>--all</tt> option you'll get
+the list of only installed reverse dependency packages, with this option — a list
 of all available packages. Option <tt>--mark</tt> marks packages as in the
 <code>depends</code> command.</p>
 
@@ -816,7 +816,7 @@ $ tazpkg recompress <em>package.tazpkg</em>
 <h3 id="convert">convert</h3>
 
 <p>Converts an "alien" package into a SliTaz package (.tazpkg) (<tt>convert</tt>
-or <tt>-c</tt>.</p>
+or <tt>-c</tt>).</p>
 
 <p>Supported packages formats:</p>
 
@@ -859,7 +859,7 @@ or <tt>-c</tt>.</p>
 
 <p>List suggested packages for each of your installed packages. With option
 <tt>--all</tt> it shows all suggested packages, and without option it shows only
-not installed suggested packages.</p>
+non installed suggested packages.</p>
 
 <pre>
 $ tazpkg list-suggested
@@ -883,8 +883,8 @@ differences, you can use <code>list-mirror --diff</code>; and to view and update
 packages, you can simply <tt><a href="#upgrade">upgrade</a></tt>.</p>
 
 <p>Command without options will recharge databases of all your repositories. You
-can specify repository to be recharged: "main" for main repo, or undigest
-repository name. Option <tt>--root=</tt> allow you to specify root of filesystem
+can specify the repository to be recharged: "main" for main repo, or undigest
+repository name. Option <tt>--root=</tt> allows you to specify the root of the filesystem
 where you want to recharge DB.</p>
 
 <pre>
@@ -909,7 +909,7 @@ Live CD mode will be lost on system shutdown.</p>
 href="#recharge">recharge</a></tt>) in order to provide you with the current
 list of packages that you can update.</p>
 
-<p>Without options run in interactive mode and ask before install. You can
+<p>Without options it runs in interactive mode and asks before install. You can
 specify one of the next options: <tt>-c</tt> or <tt>--check</tt> to check only
 for available upgrades; <tt>-i</tt> or <tt>--install</tt> to check for upgrades
 and install them all.</p>
