@@ -593,8 +593,8 @@ msgid "Creating new package..."
 msgstr "創建新包..."
 
 #: tazpkg:1876
-msgid "User configuration backup on date"
-msgstr "的用戶配置備分"
+msgid "User configuration backup on date %s"
+msgstr "%s 的用戶配置備分"
 
 #: tazpkg:1893
 msgid "Repacking \"%s\""

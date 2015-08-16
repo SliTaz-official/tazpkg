@@ -602,8 +602,8 @@ msgid "Creating new package..."
 msgstr "Criando novo pacote..."
 
 #: tazpkg:1876
-msgid "User configuration backup on date"
-msgstr "Backup das configurações de usuário em"
+msgid "User configuration backup on date %s"
+msgstr "Backup das configurações de usuário em %s"
 
 #: tazpkg:1893
 msgid "Repacking \"%s\""

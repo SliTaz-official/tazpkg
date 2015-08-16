@@ -1892,7 +1892,7 @@ list of packages to install.")"
 PACKAGE="config"
 VERSION="$CONFIG_VERSION"
 CATEGORY="base-system"
-SHORT_DESC="$(_n 'User configuration backup on date') $pkg_date"
+SHORT_DESC="$(_n 'User configuration backup on date %s' "$pkg_date")"
 DEPENDS="$(ls $INSTALLED)"
 EOT
 		cd ..
