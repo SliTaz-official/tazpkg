@@ -488,7 +488,7 @@ check_for_package_in_list() {
 
 
 # Log this activity
-# (there log_pkg because we have log() in libtaz.sh)
+# (there's log_pkg because we have log() in libtaz.sh)
 
 log_pkg() {
 	local extra
@@ -1603,7 +1603,7 @@ list of packages to install.")"
 			exit 0
 		fi
 
-		# Check if the packages list exist.
+		# Check if the packages list exists.
 		if [ ! -f "$2" ]; then
 			_ 'Unable to find list "%s"' "$2"
 			exit 0
