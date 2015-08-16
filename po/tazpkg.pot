@@ -587,7 +587,7 @@ msgid "Creating new package..."
 msgstr ""
 
 #: tazpkg:1876
-msgid "User configuration backup on date %s"
+msgid "User configuration backup on date"
 msgstr ""
 
 #: tazpkg:1893

@@ -627,8 +627,8 @@ msgid "Creating new package..."
 msgstr "Δημιουργείται νέο πακέτο..."
 
 #: tazpkg:1876
-msgid "User configuration backup on date %s"
-msgstr "Ανττίγραφο ασφαλείας με τις ρυθμίσεις χρήστη στο %s"
+msgid "User configuration backup on date"
+msgstr "Ανττίγραφο ασφαλείας με τις ρυθμίσεις χρήστη στο"
 
 #: tazpkg:1893
 msgid "Repacking \"%s\""
