@@ -85,11 +85,10 @@ EOT
 		# Space at end is flag -> do not check equivalents
 		pkg=$(GET pkg | tr -d ' ')
 		orig_pkg=''
+		# Small hack to get 'pkgi' symbol:
+		data_icon="pkgi"; pkgi="$data_icon"
 
-		if grep -q "^$pkg"$'\t' "$PKGS_DB/installed.info"; then
-			# Package installed
-			data_icon="pkgi"
-		else
+		if ! grep -q "^$pkg"$'\t' "$PKGS_DB/installed.info"; then
 			# Package not installed
 			data_icon="pkg"
 			equivs=$(grep "^$pkg=" "$PKGS_DB/packages.equiv")
@@ -114,7 +113,7 @@ EOT
 		fi
 
 		# Installed and blocked?
-		[ "$data_icon" == 'pkgi' ] && grep -q "^$pkg$" "$BLOCKED" && data_icon="pkgib"
+		[ "$data_icon" == "$pkgi" ] && grep -q "^$pkg$" "$BLOCKED" && data_icon="pkgib"
 
 		header
 		echo -n "<a data-icon=\"$data_icon\" href=\"?info=${pkg//+/%2B}\">$orig_pkg$pkg</a>"
@@ -859,13 +858,6 @@ EOT
 EOT
 
 		tazpkg up -c
-#		# Ask tazpkg to make "packages.up" file
-#		tazpkg up --check >/dev/null
-#		table_head
-
-#		for pkg in $(cat $PKGS_DB/packages.up); do
-#			grep -hs "^$pkg	" $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info | parse_packages_info
-#		done
 
 		cat <<EOT
 </form>
