@@ -13,8 +13,7 @@
 
 . /etc/slitaz/slitaz.conf
 . /etc/slitaz/tazpkg.conf
-
-export TEXTDOMAIN='tazpkg'
+export BLOCKED="$PKGS_DB/blocked-packages.list" TEXTDOMAIN='tazpkg' output=html
 
 get_config
 
@@ -35,16 +34,16 @@ case "$1" in
 		export TEXTDOMAIN='tazpkg'
 
 		cat <<EOT
-  <li tabindex="0">
-   <span>$(gettext 'Packages')</span>
-   <menu>
-    <li><a data-icon="info" href="pkgs.cgi">$(gettext 'Summary')</a></li>
-    <li><a data-icon="list"    href="pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
-    <li><a data-icon="refresh" href="pkgs.cgi?recharge" data-root>$(gettext 'Recharge list')</a></li>
-    <li><a data-icon="upgrade" href="pkgs.cgi?up" data-root>$(gettext 'Check updates')</a></li>
-    <li><a data-icon="admin"   href="pkgs.cgi?admin" data-root>$(gettext 'Administration')</a></li>
-   </menu>
-  </li>
+<li tabindex="0">
+	<span>$(gettext 'Packages')</span>
+	<menu>
+		<li><a data-icon="info" href="pkgs.cgi">$(gettext 'Summary')</a></li>
+		<li><a data-icon="list" href="pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
+		<li><a data-icon="refresh" href="pkgs.cgi?recharge" data-root>$(gettext 'Recharge list')</a></li>
+		<li><a data-icon="upgrade" href="pkgs.cgi?up" data-root>$(gettext 'Check updates')</a></li>
+		<li><a data-icon="admin"   href="pkgs.cgi?admin" data-root>$(gettext 'Administration')</a></li>
+	</menu>
+</li>
 EOT
 		export TEXTDOMAIN=$TEXTDOMAIN_original
 		exit
@@ -62,14 +61,14 @@ case " $(GET) " in
 	*\ filelist\ * )
 		# Show installed files list
 		pkg=$(GET pkg)
-		cd $PKGS_DB
+		cd "$PKGS_DB"
 
 		header
-		if [ -d $INSTALLED/$pkg ]; then
-			files="$(wc -l < $INSTALLED/$pkg/files.list)"
+		if [ -f "$INSTALLED/$pkg/files.list" ]; then
+			files=$(wc -l < "$INSTALLED/$pkg/files.list")
 			cat <<EOT
-	<pre class="scroll">$(sort $INSTALLED/$pkg/files.list)</pre>
-	<footer>$(_p '%s file' '%s files' $files $files)</footer>
+	<pre class="scroll">$(sort "$INSTALLED/$pkg/files.list")</pre>
+	<footer>$(_p '%s file' '%s files' "$files" "$files")</footer>
 EOT
 		else
 			cat <<EOT
@@ -82,29 +81,32 @@ EOT
 
 	*\ status\ * )
 		# Show package status
+
+		# Space at end is flag -> do not check equivalents
 		pkg=$(GET pkg | tr -d ' ')
 		orig_pkg=''
 
-		if grep -q "^$pkg"$'\t' $PKGS_DB/installed.info; then
+		if grep -q "^$pkg"$'\t' "$PKGS_DB/installed.info"; then
 			# Package installed
-			class='pkgi'
+			data_icon="pkgi"
 		else
 			# Package not installed
-			class='pkg'
-			equivs=$(grep "^$pkg=" $PKGS_DB/packages.equiv)
+			data_icon="pkg"
+			equivs=$(grep "^$pkg=" "$PKGS_DB/packages.equiv")
 			if [ "$(GET pkg)" == "$pkg" -a -n "$equivs" ]; then
+				# Check equivalent packages
 				for equiv in ${equivs#*=}; do
 					case $equiv in
 						*:*)
 							if grep -q "^${equiv%:*}"$'\t' "$PKGS_DB/installed.info" &&
 							   grep -q "^${equiv#*:}"$'\t' "$PKGS_DB/installed.info"; then
 								# Equivalent installed
-								orig_pkg="$pkg→"; pkg="${equiv#*:}"; class='pkgi'; break
+								orig_pkg="$pkg→"; pkg="${equiv#*:}"; data_icon="pkgi"; break
 							fi;;
 						*)
 							if grep -q "^$equiv"$'\t' "$PKGS_DB/installed.info"; then
 								# Equivalent installed
-								orig_pkg="$pkg→"; pkg="$equiv"; class='pkgi'; break
+								orig_pkg="$pkg→"; pkg="$equiv"; data_icon="pkgi"; break
 							fi;;
 					esac
 				done
@@ -112,10 +114,10 @@ EOT
 		fi
 
 		# Installed and blocked?
-		[ "$class" == 'pkgi' ] && grep -q "^$pkg$" $PKGS_DB/blocked-packages.list && class='pkgib'
+		[ "$data_icon" == 'pkgi' ] && grep -q "^$pkg$" "$BLOCKED" && data_icon="pkgib"
 
 		header
-		echo -n "<a data-icon=\"$class\" href=\"?info=${pkg//+/%2B}\">$orig_pkg$pkg</a>"
+		echo -n "<a data-icon=\"$data_icon\" href=\"?info=${pkg//+/%2B}\">$orig_pkg$pkg</a>"
 		exit 0 ;;
 
 
@@ -125,36 +127,37 @@ EOT
 
 		# check for icons defined with packages.icons file
 		if [ -f "$PKGS_DB/packages.icons" ]; then
-			predefined_icon="$(awk -F$'\t' -vpkg="$pkg" '{if ($1 == pkg) print $2}' $PKGS_DB/packages.icons)"
+			predefined_icon="$(awk -F$'\t' -vpkg="$pkg" '$1==pkg{print $2}' "$PKGS_DB/packages.icons")"
 		fi
 		predefined_icon="${predefined_icon:-package-x-generic}.png"
 
-		current_user="$(who | cut -d' ' -f1)"
+		current_user=$(id -un)
 		if [ -n "$current_user" ]; then
-			current_user_home="$(awk -F: -vu=$current_user '{if($1==u) print $6}' /etc/passwd)"
-			current_icon_theme="$(grep gtk-icon-theme-name $current_user_home/.gtkrc-2.0 | cut -d'"' -f2)"
+			current_user_home=$(awk -F: -vu="$current_user" '$1==u{print $6}' /etc/passwd)
+			current_icon_theme=$(grep gtk-icon-theme-name "$current_user_home/.gtkrc-2.0" | cut -d'"' -f2)
 		fi
 		current_icon_theme="/usr/share/icons/$current_icon_theme"
 
 		# Preferred default icon is 48px package-x-generic
-		default_pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name $predefined_icon | head -n1)"
+		default_pkg_icon=$(find -L "$current_icon_theme" -type f -path '*48*' -name "$predefined_icon" | head -n1)
 		# ... or package-x-generic with the bigger size
 		if [ -z "$default_pkg_icon" ]; then
-			default_pkg_icon="$(find -L $current_icon_theme -type f -name $predefined_icon | sort | tail -n1)"
+			default_pkg_icon=$(find -L "$current_icon_theme" -type f -name "$predefined_icon" | sort | tail -n1)
 		fi
 
 		# Preferred package icon size is 48px
-		pkg_icon="$(find -L $current_icon_theme -type f -path '*48*' -name "$pkg.png" | head -n1)"
+		pkg_icon=$(find -L "$current_icon_theme" -type f -path '*48*' -name "$pkg.png" | head -n1)
 		# ... or just bigger one
 		if [ -z "$pkg_icon" ]; then
-			pkg_icon="$(find -L $current_icon_theme -type f -name "$pkg.png" | sort | tail -n1)"
+			pkg_icon=$(find -L "$current_icon_theme" -type f -name "$pkg.png" | sort | tail -n1)
 		fi
 		# ... or one from pixmaps
 		if [ -z "$pkg_icon" ]; then
-			pkg_icon="$(find -L /usr/share/pixmaps -type f -name "$pkg.png" | head -n1)"
+			pkg_icon=$(find -L /usr/share/pixmaps -type f -name "$pkg.png" | head -n1)
 		fi
 
-		header "Content-Type: image/png"
+		# Cache app icon maximum for 24h (note Cache-Control was introduced in HTTP 1.1)
+		header "HTTP/1.1 200 OK" "Content-Type: image/png" "Cache-Control: public, max-age=86400"
 		cat "${pkg_icon:-$default_pkg_icon}"
 		exit 0 ;;
 
@@ -162,20 +165,20 @@ EOT
 	*\ show_receipt\ * )
 		# Show package receipt
 		pkg=$(GET show_receipt)
-		if [ -d "$INSTALLED/$pkg" ]; then
+		if [ -f "$INSTALLED/$pkg/receipt" ]; then
 			# Redirects to the receipt view
 			header "HTTP/1.1 301 Moved Permanently" "Location: index.cgi?file=$INSTALLED/$pkg/receipt"
 			exit 0
 		else
 			temp_receipt=$(mktemp -d)
-			wget -O $temp_receipt/receipt -T 5 http://hg.slitaz.org/wok/raw-file/tip/$pkg/receipt
+			wget -O "$temp_receipt/receipt" -T 5 "http://hg.slitaz.org/wok/raw-file/tip/$pkg/receipt"
 			if [ -e "$temp_receipt" ]; then
 				# Redirects to the receipt view
 				header "HTTP/1.1 301 Moved Permanently" "Location: index.cgi?file=$temp_receipt/receipt"
 				exit 0
 			else
 				header; xhtml_header
-				msg err "$(_ 'Receipt for package %s unavailable' $pkg)"
+				msg err "$(_ 'Receipt for package %s unavailable' "$pkg")"
 				xhtml_footer
 				exit 0
 			fi
@@ -214,36 +217,18 @@ i18n_desc() {
 
 # We need packages information for list and search
 
-parse_packages_desc() {
-	IFS="|"
-	cut -f 1,2,3 -d "|" | while read PACKAGE VERSION SHORT_DESC
-	do
-		class=pkg; [ -d $INSTALLED/${PACKAGE% } ] && class=pkgi
-		i18n_desc $PACKAGE
-		cat <<EOT
-<tr>
-	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
-	<td>$VERSION</td>
-	<td>$SHORT_DESC</td>
-</tr>
-EOT
-	done
-	unset IFS
-}
-
-
 parse_packages_info() {
 	IFS=$'\t'
 	while read PACKAGE VERSION CATEGORY SHORT_DESC WEB_SITE TAGS SIZES DEPENDS; do
-		class='pkg'
-		if grep -q "^$PACKAGE"$'\t' $PKGS_DB/installed.info; then
-			class='pkgi'
-			grep -q "^$PACKAGE$" $PKGS_DB/blocked-packages.list && class='pkgib'
+		data_icon="pkg"
+		if grep -q "^$PACKAGE"$'\t' "$PKGS_DB/installed.info"; then
+			data_icon="pkgi"
+			grep -q "^$PACKAGE$" "$BLOCKED" && data_icon="pkgib"
 		fi
-		i18n_desc $PACKAGE
+		i18n_desc "$PACKAGE"
 		cat <<EOT
 <tr>
-	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
+	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$data_icon")</td>
 	<td>$VERSION</td>
 	<td>$SHORT_DESC</td>
 </tr>
@@ -254,39 +239,40 @@ EOT
 
 
 # Show button
+
 show_button() {
 	for button in $@; do
 		class=''; misc=''
 		case $button in
-		recharge)     class='refresh'; label="$(_ 'Recharge list')"; misc=' data-root' ;;
-		up)           class='upgrade'; label="$(_ 'Check upgrades')"; misc=' data-root' ;;
-		list)         class='list';    label="$(_ 'My packages')" ;;
-		tags)         class='tags';    label="$(_ 'Tags')" ;;
-		linkable)     class='link';    label="$(_ 'Linkable packages')" ;;
-		admin)        class='admin';   label="$(_ 'Administration')"; misc=' data-root' ;;
-		*Install*nf*) class='install'; label="$(_ 'Install (Non Free)')" ;;
-		*Install*)    class='install'; label="$(_ 'Install')" ;;
-		*Remove*)     class='remove';  label="$(_ 'Remove')" ;;
-		*Link*)       class='link';    label="$(_ 'Link')" ;;
-		*Block*)      class='lock';    label="$(_ 'Block')" ;;
-		*Unblock*)    class='unlock';  label="$(_ 'Unblock')" ;;
-		*Chblock*)    class='chlock';  label="$(_ '(Un)block')" ;;
-		*Repack*)     class='repack';  label="$(_ 'Repack')" ;;
-		*saveconf*)   class='save';    label="$(_ 'Save configuration')" ;;
-		*listconf*)   class='list';    label="$(_ 'List configuration files')" ;;
-		*quickcheck*) class='check';   label="$(_ 'Quick check')" ;;
-		*fullcheck*)  class='check';   label="$(_ 'Full check')" ;;
-		*clean*)      class='remove';  label="$(_ 'Clean')" ;;
-		*setlink*)    class='link';    label="$(_ 'Set link')" ;;
-		*removelink*) class='unlink';  label="$(_ 'Remove link')" ;;
-		*add-mirror)  class='add';     label="$(_n 'Add mirror')" ;;
-		*add-repo)    class='add';     label="$(_n 'Add repository')" ;;
-		toggle)       class='toggle';  label="$(_n 'Toggle all')" ;;
+		recharge)		data_icon="refresh";	label=$(_ 'Recharge list'); misc=' data-root';;
+		up)				data_icon="upgrade";	label=$(_ 'Check upgrades'); misc=' data-root';;
+		list)			data_icon="list";		label=$(_ 'My packages');;
+		tags)			data_icon="tags";		label=$(_ 'Tags');;
+		linkable)		data_icon="link";		label=$(_ 'Linkable packages');;
+		admin)			data_icon="admin";		label=$(_ 'Administration'); misc=' data-root';;
+		*Install*nf*)	data_icon="install";	label=$(_ 'Install (Non Free)');;
+		*Install*)		data_icon="install";	label=$(_ 'Install');;
+		*Remove*)		data_icon="remove";		label=$(_ 'Remove');;
+		*Link*)			data_icon="link";		label=$(_ 'Link');;
+		*Block*)		data_icon="lock";		label=$(_ 'Block');;
+		*Unblock*)		data_icon="unlock";		label=$(_ 'Unblock');;
+		*Chblock*)		data_icon="chlock";		label=$(_ '(Un)block');;
+		*Repack*)		data_icon="repack";		label=$(_ 'Repack');;
+		*saveconf*)		data_icon="save";		label=$(_ 'Save configuration');;
+		*listconf*)		data_icon="list";		label=$(_ 'List configuration files');;
+		*quickcheck*)	data_icon="check";		label=$(_ 'Quick check');;
+		*fullcheck*)	data_icon="check";		label=$(_ 'Full check');;
+		*clean*)		data_icon="remove";		label=$(_ 'Clean');;
+		*setlink*)		data_icon="link";		label=$(_ 'Set link');;
+		*removelink*)	data_icon="unlink";		label=$(_ 'Remove link');;
+		*add-mirror)	data_icon="add";		label=$(_n 'Add mirror');;
+		*add-repo)		data_icon="add";		label=$(_n 'Add repository');;
+		toggle)			data_icon="toggle";		label=$(_n 'Toggle all');;
 		esac
 		if [ "$button" == 'toggle' ]; then
-			echo -n "<span class=\"float-right\"><button data-icon=\"$class\" onclick=\"checkBoxes()\">$label</button></span>"
+			echo -n "<span class=\"float-right\"><button data-icon=\"$data_icon\" onclick=\"checkBoxes()\">$label</button></span>"
 		else
-			echo -n "<button data-icon=\"$class\" name=\"${button%%=*}\" value=\"${button#*=}\"$misc>$label</button>"
+			echo -n "<button data-icon=\"$data_icon\" name=\"${button%%=*}\" value=\"${button#*=}\"$misc>$label</button>"
 		fi
 	done
 }
@@ -313,7 +299,204 @@ EOT
 }
 
 
-sidebar() {
+repo_list() {
+	if [ -n "$(ls "$PKGS_DB/undigest" 2>/dev/null)" ]; then
+		case "$repo" in
+			Public)
+				;;
+			""|Any)
+				for i in "$PKGS_DB/undigest/"* ; do
+					[ -d "$i" ] && echo "$i$1"
+				done ;;
+			*)
+				ls "$PKGS_DB/undigest/$repo$1" 2>/dev/null
+				return ;;
+		esac
+	fi
+	[ -e "$PKGS_DB$1" ] && echo "$PKGS_DB$1"
+}
+
+
+repo_name() {
+	case "$1" in
+		$PKGS_DB)
+			echo "Public" ;;
+		$PKGS_DB/undigest/*)
+			echo ${1#$PKGS_DB/undigest/} ;;
+	esac
+}
+
+
+header_repo_name() {
+	[ -d "$PKGS_DB/undigest" ] && [ "$repo" != "Public" ] && \
+		_ 'Repository: %s' $(repo_name $1)
+}
+
+
+# Print links to the pages
+
+pager() {
+	: ${PAGE_SIZE=100}
+	[ "$PAGE_SIZE" -ne 0 ] && \
+	awk -F'"' -vpage="$page" -vsize="$PAGE_SIZE" -vnum_lines="$(wc -l < $1)" \
+		-vtext="$(_ 'Pages:') " -vurl="?list&amp;page=" '
+BEGIN{
+	num_pages = int(num_lines / size) + (num_lines % size != 0)
+	if (num_pages != 1) printf "<p>%s", text
+}
+{
+	if (num_pages == 1) exit
+	r = NR % size
+	if (r == 1) {
+		p = int(NR / size) + 1
+		printf "<button class=\"pages%s\" name=\"page\" value=\"%s\" title=\"%s\n···\n", p==page?" current":"", p, $6
+	} else if (r == 0)
+		printf "%s\">%s</button> ", $6, int(NR / size)
+}
+END{
+	if (num_pages == 1) exit
+	if (r != 0) printf "%s\">%s</button>", $6, int(NR / size) + 1
+	print "</p>"
+}' "$1"
+}
+
+
+# Show packages list by category or tag
+
+show_list() {
+	: ${PAGE_SIZE=100}
+	page=$(GET page); page=${page:-1}
+	cached=$(mktemp)
+	[ -n "$tag" ] && cat=''
+	{
+		for L in $LANG ${LANG%%_*}; do
+			if [ -e "$PKGS_DB/packages-desc.$L" ]; then
+				sed '/^#/d' "$PKGS_DB/packages-desc.$L"; break
+			fi
+		done
+		[ -f "$BLOCKED" ] && cat "$BLOCKED"
+		sed 's|.*|&\ti|' "$PKGS_DB/installed.info"
+		[ "$cat" == 'extra' ] || [ $1 == 'my' ] || cat "$i/packages.info"
+		[ "$cat" == 'extra' ] &&
+		sed 's,\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\).*,\1\t\5\textra\t\2\thttp://mirror.slitaz.org/packages/get/\1\t-\t-\t-\t-,' "$PKGS_DB/extra.list"
+	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${cat:--}" -vt="${tag:--}" '
+{
+	if (PKG && PKG != $1) {
+		if (SEL) {
+			if (DSCL) DSC = DSCL
+			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\" id=\"%s\">", PKG, PKG
+
+			if (INS) {
+				if (BLK)	printf "<a data-icon=\"pkgib\" ";
+				else		printf "<a data-icon=\"pkgi\" ";
+			} else			printf "<a data-icon=\"pkg\" ";
+
+			printf "href=\"?info=%s\">%s</a></td>", gensub(/\+/, "%2B", "g", PKG), PKG
+
+			printf "<td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", VER, DSC, WEB
+		}
+		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
+	}
+
+	PKG = $1
+	if (NF == 1) { BLK = "b"; next }
+	if (NF == 2) { DSCL = $2; next }
+	if (c == "all" || $3 == c || index(" "$6" ", " "t" ")) { SEL = 1 }
+	if (SEL) {
+		if ($10 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
+		if (! INS)      { VER = $2; DSC = $4; WEB = $5 }
+	}
+}' > "$cached"
+
+	pager="$(pager $cached)"
+	case $PAGE_SIZE in
+		0) list="$(cat $cached)";;
+		*) list="$(tail -n+$((($page-1)*$PAGE_SIZE+1)) $cached | head -n$PAGE_SIZE)";;
+	esac
+
+	if [ "$pager" != "<p>$(_ 'Pages:') </p>" ] && [ -n "${list:1:1}" ]; then
+		cat <<EOT
+<h3>$(header_repo_name $i)</h3>
+$pager
+	$(table_head)
+		$list
+	</tbody></table>
+$pager
+EOT
+	fi
+	rm -f "$cached"
+
+
+	### Re-select packages when you return to the page
+
+	# Find the packages list
+	pkgs=$(echo "$QUERY_STRING&" | awk '
+		BEGIN { RS="&"; FS="=" }
+		$1=="pkg" { printf "\"%s\", ", $2 }
+	')
+	pkgs=$(httpd -d "${pkgs%, }")
+	# now pkgs='"pkg1", "pkg2", ... "pkgn"'
+
+	if [ -n "$pkgs" ]; then
+		cat <<EOT
+<script type="text/javascript">
+var pkgs = [$pkgs];
+var theForm = document.getElementById('pkglist');
+for (index = 0; index < pkgs.length; index++) {
+	if (document.getElementById(pkgs[index])) {
+		// check existing
+		document.getElementById(pkgs[index]).checked = 'true';
+	}
+	else {
+		// add other as hidden
+		var hInput = document.createElement('input');
+		hInput.type = 'hidden';
+		hInput.name = 'pkg';
+		hInput.value = pkgs[index];
+		theForm.appendChild(hInput);
+	}
+}
+document.getElementById('countSelected').innerText = pkgs.length;
+</script>
+EOT
+	fi
+}
+
+
+# Show links for "info" page
+
+show_info_links() {
+	if [ -n "$1" ]; then
+		if [ "$3" == 'tag' ]; then data_icon="tag"; else data_icon="clock"; fi
+		case "$4" in
+			provide) echo -n "<tr><td><b>$2</b></td><td>"; noeq=' ';;
+			'')      echo -n "<tr><td><b>$2</b></td><td>"; noeq='';;
+			*)       echo -n "<tr><td><b><a href=\"?suggested=${4//+/%2B}\">$2</a></b></td><td>";;
+		esac
+
+		echo $1 | tr ' ' $'\n' | awk -vt="$3" -vi="$data_icon" -vnoeq="$noeq" '{
+			printf "<span><a data-icon=\"%s\" ", i;
+			printf "href=\"?%s=%s\">%s%s</a></span>", t, gensub(/\+/, "%2B", "g", $1), $1, noeq
+		}'
+		echo "</td></tr>"
+	fi
+}
+
+
+tazpanel_header() {
+	[ -n "$(GET noheader)" ] && return
+
+	xhtml_header "$1" | sed 's/id="content"/id="content-sidebar"/'
+
+	cat <<EOT
+<form class="search">
+	<a data-icon="web" href="http://pkg.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a>
+	<input type="search" name="search" value="$(GET search)" results="5" autosave="pkgsearch" autocomplete="on"><!--
+	--><button type="submit">$(_n 'Search')</button><!--
+	--><button name="files" value="yes">$(_n 'Files')</button><!--
+--></form>
+EOT
+
 	repo=$(COOKIE repo); repo=${repo:-Public}; [ -n "$(GET repo)" ] && repo=$(GET repo)
 	  my=$(COOKIE my);     my=${my:-my};       [ -n "$(GET my)" ]   &&   my=$(GET my)
 	 cat=$(COOKIE cat);   cat=${cat:-all};     [ -n "$(GET cat)" ]  &&  cat=$(GET cat)
@@ -363,13 +546,13 @@ function setValue(name, value) {
 	</div>
 EOT
 
-	if [ -d $PKGS_DB/undigest ]; then
+	if [ -d "$PKGS_DB/undigest" ]; then
 		cat <<EOT
 	<h4>$(_ 'Repository')</h4>
 
 	<select id="repo" onchange="setCookie('repo')">
 		<option value="Public">$(_ 'Public')</option>
-		$(for i in $(ls $PKGS_DB/undigest); do
+		$(for i in $(ls "$PKGS_DB/undigest"); do
 			echo "<option value=\"$i\">$i</option>"
 		done)
 		<option value="Any">$(_ 'Any')</option>
@@ -377,200 +560,13 @@ EOT
 	<script type="text/javascript">setValue('repo', "$repo")</script>
 EOT
 	fi
+
 	cat <<EOT
 	<a data-icon="tags" href="?tags">$(_ 'All tags...')</a><br/>
 	<a data-icon="list" href="?cats">$(_ 'All categories...')</a>
 </div>
 </form>
 EOT
-}
-
-
-repo_list() {
-	if [ -n "$(ls $PKGS_DB/undigest/ 2>/dev/null)" ]; then
-		case "$repo" in
-			Public)
-				;;
-			""|Any)
-				for i in $PKGS_DB/undigest/* ; do
-					[ -d "$i" ] && echo "$i$1"
-				done ;;
-			*)
-				ls "$PKGS_DB/undigest/$repo$1" 2>/dev/null
-				return ;;
-		esac
-	fi
-	[ -e "$PKGS_DB$1" ] && echo "$PKGS_DB$1"
-}
-
-
-repo_name() {
-	case "$1" in
-		$PKGS_DB)
-			echo "Public" ;;
-		$PKGS_DB/undigest/*)
-			echo ${1#$PKGS_DB/undigest/} ;;
-	esac
-}
-
-
-header_repo_name() {
-	[ -d $PKGS_DB/undigest ] && [ "$repo" != "Public" ] && \
-		_ 'Repository: %s' $(repo_name $1)
-}
-
-
-# Print links to the pages
-
-pager() {
-	PAGE_SIZE=${PAGE_SIZE:-100}
-	[ "$PAGE_SIZE" != "0" ] && \
-	awk -F'"' -vpage="$page" -vsize="$PAGE_SIZE" -vnum_lines="$(wc -l < $1)" -vtext="$(_ 'Pages:') " -vurl="?list&amp;page=" '
-BEGIN{
-	num_pages = int(num_lines / size) + (num_lines % size != 0)
-	if (num_pages != 1) printf "<p>%s", text
-}
-{
-	if (num_pages == 1) exit
-	r = NR % size
-	if (r == 1) {
-		p = int(NR / size) + 1
-		printf "<button class=\"pages%s\" name=\"page\" value=\"%s\" title=\"%s\n···\n", p==page?" current":"", p, $6
-	} else if (r == 0)
-		printf "%s\">%s</button> ", $6, int(NR / size)
-}
-END{
-	if (num_pages == 1) exit
-	if (r != 0) printf "%s\">%s</button>", $6, int(NR / size) + 1
-	print "</p>"
-}' $1
-}
-
-
-# Show packages list by category or tag
-
-show_list() {
-	PAGE_SIZE=${PAGE_SIZE:-100}
-	page=$(GET page); page=${page:-1}
-	cached=$(mktemp)
-	[ -n "$tag" ] && cat=''
-	{
-		for L in $LANG ${LANG%%_*}; do
-			if [ -e "$PKGS_DB/packages-desc.$L" ]; then
-				sed '/^#/d' $PKGS_DB/packages-desc.$L; break
-			fi
-		done
-		[ -e "$i/blocked-packages.list" ] && cat $i/blocked-packages.list
-		sed 's|.*|&\ti|' $i/installed.info
-		[ "$cat" == 'extra' ] || [ $1 == 'my' ] || cat $i/packages.info
-		[ "$cat" == 'extra' ] &&
-		sed 's,\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\).*,\1\t\5\textra\t\2\thttp://mirror.slitaz.org/packages/get/\1\t-\t-\t-\t-,' $PKGS_DB/extra.list
-	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${cat:--}" -vt="${tag:--}" '
-{
-	if (PKG && PKG != $1) {
-		if (SEL) {
-			if (DSCL) DSC = DSCL
-			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\" id=\"%s\">", PKG, PKG
-			printf "<a data-icon=\"pkg%s%s\" href=\"?info=%s\">%s</a></td>", INS, BLK, gensub(/\+/, "%2B", "g", PKG), PKG
-			printf "<td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", VER, DSC, WEB
-		}
-		VER = DSC = WEB = DSCL = INS = BLK = SEL = ""
-	}
-
-	PKG = $1
-	if (NF == 1) { BLK = "b"; next }
-	if (NF == 2) { DSCL = $2; next }
-	if (c == "all" || $3 == c || index(" "$6" ", " "t" ")) { SEL = 1 }
-	if (SEL) {
-		if ($10 == "i") { VER = $2; DSC = $4; WEB = $5; INS = "i"; next}
-		if (! INS)      { VER = $2; DSC = $4; WEB = $5 }
-	}
-}' > $cached
-
-	pager="$(pager $cached)"
-	case $PAGE_SIZE in
-		0) list="$(cat $cached)";;
-		*) list="$(tail -n+$((($page-1)*$PAGE_SIZE+1)) $cached | head -n$PAGE_SIZE)";;
-	esac
-
-	if [ "$pager" != "<p>$(_ 'Pages:') </p>" ] && [ -n "${list:1:1}" ]; then
-		cat <<EOT
-<h3>$(header_repo_name $i)</h3>
-$pager
-	$(table_head)
-		$list
-	</tbody></table>
-$pager
-EOT
-	fi
-	rm -f $cached
-
-
-	### Re-select packages when you return to the page
-
-	# Find the packages list
-	pkgs=$(echo "$QUERY_STRING&" | awk 'BEGIN{RS="&";FS="="}
-		{if ($1=="pkg") printf "\"%s\", ", $2}')
-	pkgs=$(httpd -d "${pkgs%, }")
-	# now pkgs='"pkg1", "pkg2", ... "pkgn"'
-
-	if [ -n "$pkgs" ]; then
-		cat <<EOT
-<script type="text/javascript">
-var pkgs = [$pkgs];
-var theForm = document.getElementById('pkglist');
-for (index = 0; index < pkgs.length; index++) {
-	if (document.getElementById(pkgs[index])) {
-		// check existing
-		document.getElementById(pkgs[index]).checked = 'true';
-	}
-	else {
-		// add other as hidden
-		var hInput = document.createElement('input');
-		hInput.type = 'hidden';
-		hInput.name = 'pkg';
-		hInput.value = pkgs[index];
-		theForm.appendChild(hInput);
-	}
-}
-document.getElementById('countSelected').innerText = pkgs.length;
-</script>
-EOT
-	fi
-}
-
-
-# Show links for "info" page
-
-show_info_links() {
-	if [ -n "$1" ]; then
-		if [ "$3" == 'tag' ]; then icon='tag'; else icon='clock'; fi
-		case "$4" in
-			provide) echo -n "<tr><td><b>$2</b></td><td>"; noeq=' ';;
-			'')      echo -n "<tr><td><b>$2</b></td><td>"; noeq='';;
-			*)       echo -n "<tr><td><b><a href=\"?suggested=${4//+/%2B}\">$2</a></b></td><td>";;
-		esac
-
-		echo $1 | tr ' ' $'\n' | awk -vt="$3" -vi="$icon" -vnoeq="$noeq" '{
-			printf "<span><a data-icon=\"%s\" ", i;
-			printf "href=\"?%s=%s\">%s%s</a></span>", t, gensub(/\+/, "%2B", "g", $1), $1, noeq
-		}'
-		echo "</td></tr>"
-	fi
-}
-
-
-tazpanel_header() {
-	xhtml_header "$1" | sed 's/id="content"/id="content-sidebar"/'
-	cat <<EOT
-<form class="search"><!--
-	--><a data-icon="web" href="http://pkg.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a> <!--
-	--><input type="search" name="search" value="$(GET search)" results="5" autosave="pkgsearch" autocomplete="on"><!--
-	--><button type="submit">$(_n 'Search')</button><!--
-	--><button name="files" value="yes">$(_n 'Files')</button><!--
---></form>
-EOT
-	sidebar
 }
 
 
@@ -596,11 +592,12 @@ case " $(GET) " in
 	$(_ 'Selection:') $(show_button do=Link)
 EOT
 		table_head
-		target=$(readlink $PKGS_DB/fslink)
-		for pkg in $(ls $target/$INSTALLED); do
-			[ -s $pkg/receipt ] && continue
-			. $target/$INSTALLED/$pkg/receipt
-			i18n_desc $pkg
+		target=$(readlink "$PKGS_DB/fslink")
+		# FIXME: get $INSTALLED value using conf files from --root=$target
+		for pkg in $(ls "$target/$INSTALLED"); do
+			[ -s "$pkg/receipt" ] && continue
+			. "$target/$INSTALLED/$pkg/receipt"
+			i18n_desc "$pkg"
 			cat <<EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$pkg" /><a data-icon="pkg" href="?info=${pkg//+/%2B}">$pkg</a></td>
@@ -627,7 +624,7 @@ EOT
 		for pkgsinfo in $(repo_list /packages.info); do
 			cat <<EOT
 <section>
-	<header>$(header_repo_name $(dirname $pkgsinfo))</header>
+	<header>$(header_repo_name $(dirname "$pkgsinfo"))</header>
 	<table class="wide zebra center">
 		<thead>
 			<tr>
@@ -639,8 +636,8 @@ EOT
 		<tbody>
 EOT
 			{
-				awk -F$'\t' '{print $3}' $pkgsinfo | sort | uniq -c
-				awk -F$'\t' '{print $3}' $PKGS_DB/installed.info | sed 's|.*|& i|' | sort | uniq -c
+				awk -F$'\t' '{print $3}' "$pkgsinfo" | sort | uniq -c
+				awk -F$'\t' '{print $3}' "$PKGS_DB/installed.info" | sed 's|.*|& i|' | sort | uniq -c
 			} | sort -k2,2 | awk '
 			{
 				c [$2] = "."
@@ -671,13 +668,13 @@ EOT
 		case $repo in
 			Any)
 				case $my in
-					my) title="$(_ 'Installed packages of category "%s"' "$bcat")" ;;
-					*)  title="$(_ 'All packages of category "%s"' "$bcat")" ;;
+					my) title=$(_ 'Installed packages of category "%s"' "$bcat");;
+					*)  title=$(_ 'All packages of category "%s"' "$bcat");;
 				esac ;;
 			*)
 				case $my in
-					my) title="$(_ 'Installed packages of category "%s" in repository "%s"' "$bcat" "$brepo")" ;;
-					*)  title="$(_ 'All packages of category "%s" in repository "%s"' "$bcat" "$brepo")" ;;
+					my) title=$(_ 'Installed packages of category "%s" in repository "%s"' "$bcat" "$brepo");;
+					*)  title=$(_ 'All packages of category "%s" in repository "%s"' "$bcat" "$brepo");;
 				esac ;;
 		esac
 
@@ -792,14 +789,14 @@ EOT
 			lzcat $(repo_list /files.list.lzma) | grep -Ei ": .*$(GET search)" | \
 			while read PACKAGE FILE; do
 				PACKAGE=${PACKAGE%:}
-				class='pkg'
+				data_icon="pkg"
 				if [ -d $INSTALLED/$PACKAGE ]; then
-					class='pkgi'
-					grep -q "^$PACKAGE$" $PKGS_DB/blocked-packages.list && class='pkgib'
+					data_icon="pkgi"
+					grep -q "^$PACKAGE$" "$BLOCKED" && data_icon="pkgib"
 				fi
 				cat <<EOT
 <tr>
-	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link $PACKAGE $class)</td>
+	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$data_icon")</td>
 	<td>$(echo "$FILE" | sed "s|$pkg|<span class=\"diff-add\">&</span>|gI")</td>
 </tr>
 EOT
@@ -857,22 +854,23 @@ EOT
 		$(show_button do=Install do=Chblock do=Remove | sed 's|button |button form="pkglist" |g')
 		$(show_button toggle)
 	</footer>
-</section>
 
 <form id="pkglist" class="wide">
 EOT
-		# Ask tazpkg to make "packages.up" file
-		tazpkg up --check >/dev/null
-		table_head
 
-		for pkg in $(cat $PKGS_DB/packages.up); do
-			grep -hs "^$pkg	" $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info | parse_packages_info
-		done
+		tazpkg up -c
+#		# Ask tazpkg to make "packages.up" file
+#		tazpkg up --check >/dev/null
+#		table_head
+
+#		for pkg in $(cat $PKGS_DB/packages.up); do
+#			grep -hs "^$pkg	" $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info | parse_packages_info
+#		done
 
 		cat <<EOT
-		</tbody>
-	</table>
 </form>
+</section>
+
 <script type="text/javascript">window.onscroll = scrollHandler; setCountSelPkgs();</script>
 EOT
 		;;
@@ -940,17 +938,17 @@ EOT
 
 		# Symbolic icon
 		if [ -d "$INSTALLED/$pkg" ]; then
-			if grep -q "^$pkg$" "$PKGS_DB/blocked-packages.list"
-				then icon='pkgib'
-				else icon='pkgi'
+			if grep -q "^$pkg$" "$BLOCKED"
+				then data_icon="pkgib"
+				else data_icon="pkgi"
 			fi
-			else icon='pkg'
+			else data_icon="pkg"
 		fi
 
 		cat <<EOT
 <section>
 	<header>
-		<span data-icon="$icon">$(_ 'Package %s' "$pkg")</span>
+		<span data-icon="$data_icon">$(_ 'Package %s' "$pkg")</span>
 		<form>
 			<input type="hidden" name="pkg" value="${pkg#get-}"/>
 EOT
@@ -989,7 +987,7 @@ EOT
 		# Show Block/Unblock, and Repack buttons
 		[ "$REMOTE_USER" == "root" ] &&
 		if [ -d $INSTALLED/$pkg ]; then
-			if grep -qs "^$pkg$" $PKGS_DB/blocked-packages.list; then
+			if grep -qs "^$pkg$" "$BLOCKED"; then
 				show_button do=Unblock
 			else
 				show_button do=Block
@@ -1072,8 +1070,7 @@ EOT
 <script type="text/javascript">
 	var links = document.getElementById('infoTable').getElementsByTagName('a');
 	for (var i = 0; i < links.length; i++) {
-		console.log('i=%s, icon=%s.', i, links[i].dataset.icon);
-		if (links[i].dataset.icon == 'clock') {
+		if (links[i].dataset.icon=="clock") {
 			links[i].parentNode.id = 'link' + i;
 			pkg = links[i].innerText.replace(/\+/g, '%2B');
 			ajax('?status&pkg=' + pkg, '1', 'link' + i);
@@ -1484,11 +1481,15 @@ EOT
 <form id="pkglist" class="wide">
 EOT
 		table_head
-		for i in $(cat $PKGS_DB/blocked-packages.list); do
-			awk -F$'\t' -vp="$i" '{
-			if ($1 == p)
-				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"><a data-icon=\"pkgib\" href=\"?info=%s\">%s</a></td><td>%s</td><td>%s</td><td><a href=\"%s\"></a></td></tr>\n", $1, gensub(/\+/, "%2B", "g", $1), $1, $2, $4, $5
-			}' $PKGS_DB/installed.info
+		for i in $(cat "$BLOCKED"); do
+			awk -F$'\t' -vp="$i" -vi='data-icon="pkgib"' '
+			$1 == p {
+				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\">", $1
+				printf "<a %s href=\"?info=%s\">%s</a>", i, gensub(/\+/, "%2B", "g", $1), $1
+				printf "</td><td>%s</td><td>%s</td><td>", $2, $4
+				printf "<a href=\"%s\"></a></td></tr>\n", $5
+			}
+			' $PKGS_DB/installed.info
 		done
 		cat <<EOT
 		</tbody>
@@ -1720,7 +1721,7 @@ EOT
 		<tr>
 			<td>$(_ 'Blocked packages:')</td>
 			<td><a href="?blocked">
-				<b>$(cat $PKGS_DB/blocked-packages.list | wc -l)</b>
+				<b>$(wc -l < "$BLOCKED")</b>
 				</a></td></tr>
 	</table>
 </section>

@@ -6,9 +6,11 @@
 
 # Connect function libraries
 . /lib/libtaz.sh
-# Get TazPkg configuration variables
-. /etc/slitaz/slitaz.conf
-. /etc/slitaz/tazpkg.conf
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
 
 
 # Interactive mode
@@ -19,31 +21,31 @@ im() { tty -s; }
 # Unset variables that may absent in the receipt
 unset EXTRAVERSION TAGS DEPENDS PROVIDE SIZES
 
-if [ -e "$1" ]; then
+if [ -e "$1" -a "${1%.tazpkg}" != "$1" ]; then
 	# Local package given
 
 	# Extract receipt from package
-	PKG="$(realpath "$1")"
-	TMP_DIR=$(mktemp -d); cd $TMP_DIR
+	PKG=$(realpath "$1")
+	TMP_DIR=$(mktemp -d); cd "$TMP_DIR"
 	cpio -F "$PKG" -i receipt >/dev/null 2>&1
 
-	. receipt; rm -r $TMP_DIR
-	STATE="$(_ 'local package')"
+	. receipt; rm -r "$TMP_DIR"
+	STATE=$(_ 'local package')
 
 elif [ -d "$INSTALLED/$1" ]; then
 	# Installed package given
 
 	. "$INSTALLED/$1/receipt"
-	STATE="$(_ 'installed package')"
+	STATE=$(_ 'installed package')
 
 	if [ -e "$PKGS_DB/packages.info" ]; then
 		# Check if upgrade available
-		NEWVER="$(awk -F$'\t' -vp="$1" '$1==p{print $2}' "$PKGS_DB/packages.info")"
+		NEWVER=$(awk -F$'\t' -vp="$1" '$1==p{print $2}' "$PKGS_DB/packages.info")
 		if [ "$VERSION" != "$NEWVER" ]; then
 			VERSION="$VERSION $(_n '(new version "%s" available)' "$NEWVER")"
 		else
-			OLDMD5="$(awk -F$'\t' -vp="$1" '$1==p{print $9}' "$PKGS_DB/installed.info")"
-			NEWMD5="$(awk -F$'\t' -vp="$1" '$1==p{print $9}' "$PKGS_DB/packages.info")"
+			OLDMD5=$(awk -F$'\t' -vp="$1" '$1==p{print $9}' "$PKGS_DB/installed.info")
+			NEWMD5=$(awk -F$'\t' -vp="$1" '$1==p{print $9}' "$PKGS_DB/packages.info")
 			if [ "$OLDMD5" != "$NEWMD5" ]; then
 				VERSION="$VERSION $(_n '(new build available)')"
 			fi
@@ -57,19 +59,19 @@ elif [ -e "$PKGS_DB/packages.info" ]; then
 
 		TMP_RECEIPT=$(mktemp)
 		awk -F$'\t' -vp="$1" '$1==p{
-			printf "PACKAGE=\"%s\"\n", $1
-			printf "VERSION=\"%s\"\n", $2
-			printf "CATEGORY=\"%s\"\n", $3
+			printf "PACKAGE=\"%s\"\n",    $1
+			printf "VERSION=\"%s\"\n",    $2
+			printf "CATEGORY=\"%s\"\n",   $3
 			printf "SHORT_DESC=\"%s\"\n", $4
-			printf "WEB_SITE=\"%s\"\n", $5
-			printf "TAGS=\"%s\"\n", $6
-			printf "SIZES=\"%s\"\n", $7
-			printf "DEPENDS=\"%s\"\n", $8
-		}' "$PKGS_DB/packages.info" > $TMP_RECEIPT
+			printf "WEB_SITE=\"%s\"\n",   $5
+			printf "TAGS=\"%s\"\n",       $6
+			printf "SIZES=\"%s\"\n",      $7
+			printf "DEPENDS=\"%s\"\n",    $8
+		}' "$PKGS_DB/packages.info" > "$TMP_RECEIPT"
 
-		. $TMP_RECEIPT; rm $TMP_RECEIPT
-		SIZES="$(echo $SIZES | tr ' ' '/')"
-		STATE="$(_ 'mirrored package')"
+		. "$TMP_RECEIPT"; rm "$TMP_RECEIPT"
+		SIZES=$(echo $SIZES | tr ' ' '/')
+		STATE=$(_ 'mirrored package')
 	else
 		newline
 		_ 'Package "%s" not available.' "$1"
@@ -87,7 +89,7 @@ results, please run \"%s\" once as root before searching." 'packages.info' \
 fi
 
 
-im && title 'TazPkg information'
+im && title 'TazPkg information' >&2
 
 # Display localized short description
 for LC in $LANG ${LANG%_*}; do
@@ -102,10 +104,10 @@ done
 
 emsg "$(
 {
-	_ 'Package    : %s' "$PACKAGE"
-	_ 'State      : %s' "$STATE"
-	_ 'Version    : %s' "$VERSION$EXTRAVERSION"
-	_ 'Category   : %s' "$(_ $CATEGORY)"
+			_ 'Package    : %s' "$PACKAGE"
+			_ 'State      : %s' "$STATE"
+			_ 'Version    : %s' "$VERSION$EXTRAVERSION"
+			_ 'Category   : %s' "$(_ $CATEGORY)"
 itemize  "$(_ 'Short desc : %s' "$SHORT_DESC")"
 			_ 'Maintainer : %s' "$MAINTAINER"
 			_ 'License    : %s' "$LICENSE"
@@ -119,5 +121,5 @@ itemize  "$(_ 'Provide    : %s' "$PROVIDE")"
 			_ 'Size       : %s' "$SIZES"
 itemize  "$(_ 'Tags       : %s' "$TAGS")"
 } | sed '/: $/d; s|^\([^:]*\):|<b>\1:</b>|')"
-im && footer
+im && footer >&2
 

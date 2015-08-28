@@ -1,0 +1,144 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# depends - TazPkg module
+# Show packages dependencies and reverse dependencies trees
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+# recursive dependencies scan
+
+dep_scan() {
+	for i in $1; do
+		case " $ALL_DEPS " in
+			*\ $i\ *) continue;;
+		esac
+		ALL_DEPS="$ALL_DEPS $i"
+
+		if [ -z "$mark" ]; then
+			ii="$i"
+		else
+			ii="- $i"; grep -q ^$i$'\t' "$PKGS_DB/installed.info" && ii="+ $i"
+		fi
+		[ -n "$2" ] && echo "$2$ii ($(awk -F$'\t' -vp="$i" '
+			$1==p{split($7,s," ");print s[2]}' "$PKGS_DB/packages.info"))"
+
+		DEPENDS="$(awk -F$'\t' -vp="$i" '$1==p{print $8 " "}' "$PKGS_DB/installed.info")"
+		[ -z "$DEPENDS" ] && \
+		DEPENDS="$(awk -F$'\t' -vp="$i" '$1==p{print $8 " "}' "$PKGS_DB/packages.info")"
+		[ -n "$DEPENDS" ] && dep_scan "$DEPENDS" "$2  "
+	done
+}
+
+
+# recursive reverse dependencies scan
+
+rdep_scan() {
+	SEARCH="$1"
+
+	DB='installed'; [ -n "$all" ] && DB='packages'
+
+	awk -F$'\t' '$8 {print $1 " " $8}' "$PKGS_DB/$DB.info" | \
+	busybox awk -F' ' -v search="$SEARCH" '
+function show_deps(pkg, space,   i, n, mydeps) {
+	if (processed[pkg]) return
+	processed[pkg] = 1;
+
+	if (space) printf "%s %s\n", space, pkg;
+
+	n = split(deps[pkg], mydeps, " ");
+	for (i = 1; i <= n; i++)
+		show_deps(mydeps[i], "==" space);
+}
+
+{
+	for (i = 2; i <= NF; i++)
+		deps[$i] = deps[$i] " " $1;
+}
+
+END {
+	show_deps(search, "")
+}
+' | while read spc pkg; do
+		if [ -z "$mark" ]; then
+			pkgi="$pkg"
+		else
+			pkgi="- $pkg"; grep -q ^$pkg$'\t' "$PKGS_DB/installed.info" && pkgi="+ $pkg"
+		fi
+
+		echo -n $spc | sed 's/=/ /g'
+
+		echo "$pkgi ($(awk -F$'\t' -vp="$pkg" '$1==p{split($7,s," ");print s[2]}' \
+			"$PKGS_DB/$DB.info"))"
+	done
+}
+
+
+# Human readable sum
+
+hrsum() {
+	awk '
+	BEGIN {
+		K = 1024; M = K * 1024; G = M * 1024;
+		SUM=0;
+	}
+	/K/ { SUM += $1 * K }
+	/M/ { SUM += $1 * M }
+	/G/ { SUM += $1 * G }
+	END {
+		if (SUM >= G) {
+			SUM /= G; P = "GiB";
+		} else if (SUM >= M) {
+			SUM /= M; P = "MiB";
+		} else {
+			SUM /= K; P = "KiB";
+		}
+		if (SUM >= 100) printf "%d%s", SUM, P; else printf "%.1f%s", SUM, P;
+	}' | sed 's|\.0||'
+}
+
+
+
+
+case "$1" in
+
+	depends)
+		# Display dependencies tree
+		unset ALL_DEPS
+		TMP_DIR=$(mktemp -d)
+		dep_scan "$2" '' | tee "$TMP_DIR/depends"
+		if [ -n "$total" ]; then
+			separator
+			NUM="$(wc -l < "$TMP_DIR/depends")"
+			TOTAL="$(sed 's|.*(\([^)]*\))|\1|' "$TMP_DIR/depends" | hrsum)"
+			_p 'Total: %s package (%s)' 'Total: %s packages (%s)' "$NUM" \
+				"$NUM" "$TOTAL"
+			newline
+
+			if [ -n "$mark" ]; then
+				NUM="$(grep '^ *-' "$TMP_DIR/depends" | wc -l)"
+				TOTAL="$(grep '^ *-' "$TMP_DIR/depends" | sed 's|.*(\([^)]*\))|\1|' | hrsum)"
+				_p 'To install: %s package (%s)' 'To install: %s packages (%s)' "$NUM" \
+					"$NUM" "$TOTAL"
+				newline
+			fi
+		fi
+		rm -rf "$TMP_DIR"
+		;;
+
+
+	rdepends)
+		# Display reverse dependencies tree
+		cd $INSTALLED
+		unset ALL_DEPS
+		rdep_scan "$2"
+		;;
+
+esac

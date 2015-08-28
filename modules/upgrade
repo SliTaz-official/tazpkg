@@ -4,8 +4,6 @@
 # Check for upgrades and make system up-to-date
 
 
-# Options:
-
 # Environment variables:
 #   root							Root of the packages DB
 #   check							Only check for upgrades
@@ -15,27 +13,8 @@
 # Connect function libraries
 . /lib/libtaz.sh
 
-
-
-
 # Get TazPkg working environment
-# ------------------------------
-
-[ ! -d "$root/etc/slitaz" ] && mkdir -p "$root/etc/slitaz"
-[ ! -e "$root/etc/slitaz/slitaz.conf" ] && cp /etc/slitaz/slitaz.conf "$root/etc/slitaz"
-[ ! -e "$root/etc/slitaz/tazpkg.conf" ] && cp /etc/slitaz/tazpkg.conf "$root/etc/slitaz"
-[ ! -e "$root/etc/slitaz-release" ] && echo 'cooking' > "$root/etc/slitaz-release"
-
-# Read configuration
-if [ -n "$root" ]; then
-	# Patch external conf files to correctly handle --root value
-	slitaz_conf=$(mktemp); cp "$root/etc/slitaz/slitaz.conf" $slitaz_conf
-	tazpkg_conf=$(mktemp); cp "$root/etc/slitaz/tazpkg.conf" $tazpkg_conf
-	sed -i "s| /| $root/|g; s|\"/|\"$root/|g" $slitaz_conf $tazpkg_conf
-	. $slitaz_conf; . $tazpkg_conf; rm $slitaz_conf $tazpkg_conf
-else
-	. /etc/slitaz/slitaz.conf; . /etc/slitaz/tazpkg.conf
-fi
+. @@MODULES@@/getenv
 
 
 
@@ -48,10 +27,10 @@ fi
 # by 'main'. Sort order: priority
 
 look_for_priority() {
-	[ -s "$PKGS_DB/priority" ] && priority=$(cat $PKGS_DB/priority)
+	[ -s "$PKGS_DB/priority" ] && priority=$(cat "$PKGS_DB/priority")
 
-	for rep in main $(ls $PKGS_DB/undigest 2>/dev/null); do
-		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q ^$rep$ $PKGS_DB/priority; then
+	for rep in main $(ls "$PKGS_DB/undigest" 2>/dev/null); do
+		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q "^$rep$" "$PKGS_DB/priority"; then
 			priority=$(echo -e "$priority\n$rep")
 		fi
 	done
@@ -59,8 +38,8 @@ look_for_priority() {
 	priority=$(echo "$priority" | sed '/^$/d' | \
 		while read line; do
 		case $line in
-			(main) echo $PKGS_DB;;
-			(*)    echo $PKGS_DB/undigest/$line;;
+			(main) echo "$PKGS_DB";;
+			(*)    echo "$PKGS_DB/undigest/$line";;
 		esac
 	done)
 }
@@ -70,10 +49,10 @@ look_for_priority() {
 
 time="$(date +%s)"
 
-# Recharge packages databases (if necessary) (respects "root" value)
+# Recharge packages databases (if necessary) (respects already exported "root" value)
 tazpkg recharge >&2
 
-echo -n > $UP_LIST
+echo -n > "$UP_LIST"
 blocked_counter=$(mktemp)
 tmp_up_list=$(mktemp)
 
@@ -88,15 +67,15 @@ for repo in $priority; do
 
 	[ ! -f "$repo/packages.info" ] && continue
 	{
-		cat $BLOCKED | awk '{printf "%s\t%s\n", $1, "b"}';
-		cat $PKGS_DB/installed.info | awk -F$'\t' '{printf "%s\t%s\t%s\t%s\n", $1, "i", $2, $9}';
-		cat $repo/packages.info | awk -F$'\t' '{printf "%s\t%s\t%s\t%s\n", $1, "p", $2, $9}'
+		cat "$BLOCKED" | awk '{printf "%s\t%s\n", $1, "b"}'
+		cat "$PKGS_DB/installed.info" | awk -F$'\t' '{printf "%s\t%s\t%s\t%s\n", $1, "i", $2, $9}'
+		cat "$repo/packages.info" | awk -F$'\t' '{printf "%s\t%s\t%s\t%s\n", $1, "p", $2, $9}'
 	} | sort -t$'\t' -k1,1 | awk -F$'\t' \
 	-vnewbuild="$(_ 'New build')" -vcolornewbuild="$(emsg '<c 34>')" \
 	-vnewver='→ ' -vcolornewver="$(emsg '<c 32>')" \
 	-vblocked=" ($(_ 'Blocked'))" -vcolorblocked="$(emsg '<c 31>')" \
 	-vcolor0="$(emsg '</c>')" \
-	-vreponum=$repo_number -vreponame=$repo_name \
+	-vreponum="$repo_number" -vreponame="$repo_name" \
 	-vuplist="$UP_LIST" -vblocked_counter="$blocked_counter" \
 '{
 
@@ -105,14 +84,20 @@ for repo in $priority; do
 			bb = (b=="") ? "i" : "b"
 			if ("" vi != vp) { # important: compare as strings
 				startc = (b=="") ? colornewver : colorblocked;
-				printf "%s\t%s\t%s\t%s\t%s%s%s%s%s\t%s\n", p, vi, reponum, reponame, startc, newver, vp, b, color0, bb;
-				print p >> uplist;
-				if (b!="") printf 1 >> blocked_counter;
+				printf "%s\t%s\t%s\t%s\t", p, vi, reponum, reponame;
+				printf "%s%s%s%s%s\t%s\n", startc, newver, vp, b, color0, bb;
+				if (b=="")
+					print p >> uplist;
+				else
+					printf 1 >> blocked_counter;
 			} else if (mi != mp) {
 				startc = (b=="") ? colornewbuild : colorblocked;
-				printf "%s\t%s\t%s\t%s\t%s%s%s%s\t%s\n",   p, vi, reponum, reponame, startc, newbuild, b, color0, bb;
-				print p >> uplist;
-				if (b!="") printf 1 >> blocked_counter;
+				printf "%s\t%s\t%s\t%s\t", p, vi, reponum, reponame;
+				printf "%s%s%s%s\t%s\n",   startc, newbuild, b, color0, bb;
+				if (b=="")
+					print p >> uplist;
+				else
+					printf 1 >> blocked_counter;
 			}
 		}
 		p = $1; b = b1 = b2 = vi = mi = vp = mp = "";
@@ -120,7 +105,7 @@ for repo in $priority; do
 	if ($2 == "b") { b = blocked; b1 = bl1; b2 = bl2; }
 	if ($2 == "i") { vi = $3; mi = $4; }
 	if ($2 == "p") { vp = $3; mp = $4; }
-}' >> $tmp_up_list
+}' >> "$tmp_up_list"
 
 	repo_number=$((repo_number + 1))
 
@@ -135,56 +120,55 @@ case "$output" in
 	</thead>
 	<tbody>
 EOT
-		sort -t$'\t' -k1,3 $tmp_up_list | awk -F$'\t' '{
-			if($4=="Main"){repoicon="slitaz"}else{repoicon="web"}
-			if($6=="b"){pkgicon="pkgib"}else{pkgicon="pkgi"}
+		sort -t$'\t' -k1,3 "$tmp_up_list" | awk -F$'\t' '{
+			if($4=="Main"){repo_icon="slitaz"}else{repo_icon="web"}
+			if($6=="b"){data_icon="pkgib"}else{data_icon="pkgi"}
 
 			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"/>", $1;
-			printf "<a data-icon=\"%s\" href=\"?info=%s\">%s</a></td>", pkgicon, $1, $1;
-			printf "<td><span data-icon=\"%s\">%s</span></td>", repoicon, $4;
+			printf "<a data-icon=\"%s\" href=\"?info=%s\">%s</a></td>", data_icon, $1, $1;
+			printf "<td><span data-icon=\"%s\">%s</span></td>", repo_icon, $4;
 			printf "<td>%s</td>", $2;
 			printf "<td>%s</td></tr>\n", $5;
 			}'
 		echo '</tbody></table>' ;;
 	*)
 		emsg "<n>$(_ 'Package')<i 26>$(_ 'Repository')<i 38>$(_ 'Version')<i 49>$(_ 'Status')<->"
-		sort -t$'\t' -k1,3 $tmp_up_list | awk -F$'\t' \
+		sort -t$'\t' -k1,3 "$tmp_up_list" | awk -F$'\t' \
 			'{printf "%-24s %-11s %-10s %s\n", $1, $4, $2, $5}';;
 esac
 
-sed -i /^$/d $UP_LIST
-upnb=$(wc -l < $UP_LIST)
-pkgs=$(wc -l < $PKGS_DB/installed.info)
+sed -i /^$/d "$UP_LIST"
+upnb=$(wc -l < "$UP_LIST")
+pkgs=$(wc -l < "$PKGS_DB/installed.info")
 time=$(($(date +%s) - $time))
 if [ "$upnb" -eq 0 ]; then
 	install="n"
 	_ 'System is up-to-date...'
-fi
+else
+	blocked_count=$(wc -m < "$blocked_counter")
 
-if [ "$upnb" -ne 0 ]; then
-	blocked_count="$(wc -m < $blocked_counter)"
-
-	blocked="$(_p \
+	blocked=$(_p \
 		'%s blocked' \
-		'%s blocked' $blocked_count \
-		$blocked_count)"
+		'%s blocked' "$blocked_count" \
+		"$blocked_count")
 
 	footer "$(_p \
 		'You have %s available upgrade (%s)' \
-		'You have %s available upgrades (%s)' $upnb \
-		$upnb "$blocked")"
+		'You have %s available upgrades (%s)' "$upnb" \
+		"$upnb" "$blocked")"
 fi
 emsg "$(_p \
 	'%s installed package scanned in %ds' \
-	'%s installed packages scanned in %ds' $pkgs \
-	"<c 32>$pkgs</c>" $time)"
+	'%s installed packages scanned in %ds' "$pkgs" \
+	"<c 32>$pkgs</c>" "$time")"
 
 
 # Clean
-rm $blocked_counter $tmp_up_list
+rm "$blocked_counter" "$tmp_up_list"
 
 # Pkgs to upgrade ? Skip, let install them all, or ask user
 [ -n "$check" ] && exit 0
+
 if [ "$upnb" -gt 0 ]; then
 	if [ -n "$install" ]; then
 		answer=0
@@ -194,12 +178,12 @@ if [ "$upnb" -gt 0 ]; then
 	fi
 	case "$answer" in
 		0)
-			for pkg in $(cat $UP_LIST); do
+			for pkg in $(cat "$UP_LIST"); do
 				echo 'y' | tazpkg -gi "$pkg" --forced		#--reason="upgrade"
 			done
 			# List is generated each time and must be cleaned so
 			# tazpkg-notify doesn't find upgrades anymore.
-			rm $UP_LIST; touch $UP_LIST ;;
+			rm "$UP_LIST"; touch "$UP_LIST" ;;
 		*)
 			_ 'Leaving without any upgrades installed.'
 			newline

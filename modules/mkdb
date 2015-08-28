@@ -76,7 +76,7 @@ die() { longline "$(_ "$@")" >&2; exit 1; }
 [ -z "$1" ] && die 'Input folder not specified'
 
 # Exit if input folder not exists
-folder="$(realpath "$1")" || exit 1
+folder=$(realpath "$1") || exit 1
 
 # Exit if folder is not writable
 [ ! -w "$folder" ] && die 'You are not allowed to write to the folder "%s"' "$folder"

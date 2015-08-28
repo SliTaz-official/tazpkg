@@ -1,27 +1,37 @@
 # Makefile for TazPkg.
 #
-prefix?=/usr
-exec_prefix?=$(prefix)
-bindir?=$(exec_prefix)/bin
-libexecdir?=$(exec_prefix)/libexec
-datarootdir?=$(prefix)/share
-sysconfdir?=/etc
-docdir?=$(datarootdir)/doc/tazpkg
-libdir?=$(exec_prefix)/lib
-localedir?=$(datarootdir)/locale
-iconsdir?=$(datarootdir)/icons
+prefix      ?= /usr
+exec_prefix ?= $(prefix)
+bindir      ?= $(exec_prefix)/bin
+libexecdir  ?= $(exec_prefix)/libexec
+datarootdir ?= $(prefix)/share
+sysconfdir  ?= /etc
+docdir      ?= $(datarootdir)/doc/tazpkg
+libdir      ?= $(exec_prefix)/lib
+localedir   ?= $(datarootdir)/locale
+iconsdir    ?= $(datarootdir)/icons
 
-DESTDIR?=
-LINGUAS?=el es fr pl pt_BR ru sv zh_CN zh_TW
+DESTDIR ?=
+LINGUAS ?= el es fr pl pt_BR ru sv zh_CN zh_TW
+MODULES := $(shell ls modules)
 
-VERSION:=$(shell grep ^VERSION=[0-9] tazpkg | cut -d'=' -f2)
+VERSION := 5.0
 ICONS = $(DESTDIR)$(iconsdir)/hicolor/32x32
 
 tmpdir = tar-install/tazpkg-$(VERSION)
 tarball = tazpkg-$(VERSION).tar.gz
 
-all: msgfmt
+.PHONY: all pot msgmerge msgfmt install uninstall clean targz help
 
+all: msgfmt
+	mkdir build
+	cp -a tazpkg tazpkg-box tazpkg-notify \
+		modules/* tazpanel/pkgs.cgi tazpanel/pkgs.css \
+		build
+	./stripall.sh
+
+	# Substitute "@@MODULES@@" with modules path
+	find build -type f -exec sed -i "s|@@MODULES@@|$(libexecdir)/tazpkg|g" \{\} \;
 
 # i18n.
 
@@ -29,10 +39,9 @@ pot:
 	xgettext -o po/tazpkg.pot -L Shell \
 		--package-name=TazPkg \
 		--package-version="$(VERSION)" -kaction -ktitle -kdie -k_ -k_n -k_p:1,2 \
-		./tazpkg \
-		./modules/convert ./modules/find-depends ./modules/help ./modules/info \
-		./modules/list ./modules/mkdb ./modules/recharge ./modules/upgrade \
-		./tazpkg-box ./tazpkg-notify ./tazpanel/pkgs.cgi
+		tazpkg \
+		$(foreach module, $(MODULES), modules/$(module) ) \
+		tazpkg-box tazpkg-notify tazpanel/pkgs.cgi
 
 msgmerge:
 	@for l in $(LINGUAS); do \
@@ -58,34 +67,32 @@ msgfmt:
 
 install: msgfmt
 	# TazPkg command line interface
-	install -m 0755 -d     $(DESTDIR)$(bindir)
-	install -m 0755 tazpkg $(DESTDIR)$(bindir)
+	install -m 0755 -d           $(DESTDIR)$(bindir)
+	install -m 0755 build/tazpkg $(DESTDIR)$(bindir)
 
 	# TazPkg modules
-	install -m 0755 -d        $(DESTDIR)$(libexecdir)/tazpkg
-	install -m 0755 modules/* $(DESTDIR)$(libexecdir)/tazpkg
-	# Substitute "@@MODULES@@" with modules path
-	sed -i "s|@@MODULES@@|$(libexecdir)/tazpkg|g" $(DESTDIR)$(bindir)/tazpkg
-	sed -i "s|@@MODULES@@|$(libexecdir)/tazpkg|g" $(DESTDIR)$(libexecdir)/tazpkg/convert
+	install -m 0755 -d                $(DESTDIR)$(libexecdir)/tazpkg
+	$(foreach module, $(MODULES), install -m 0755 build/$(module) $(DESTDIR)$(libexecdir)/tazpkg;)
 
 	# TazPkg-box GUI
-	install -m 0777 tazpkg-notify $(DESTDIR)$(bindir)
-	install -m 0777 tazpkg-box    $(DESTDIR)$(bindir)
+	install -m 0777 build/tazpkg-notify $(DESTDIR)$(bindir)
+	install -m 0777 build/tazpkg-box    $(DESTDIR)$(bindir)
 
 	# Configuration files
 	install -m 0755 -d          $(DESTDIR)$(sysconfdir)/slitaz
 	install -m 0644 tazpkg.conf $(DESTDIR)$(sysconfdir)/slitaz
+	sed -i "s|@@sysconfdir@@|$(sysconfdir)|g" $(DESTDIR)$(sysconfdir)/slitaz/tazpkg.conf
 
 	# Documentation
 	install -m 0755 -d $(DESTDIR)$(docdir)
 	cp -a doc/*        $(DESTDIR)$(docdir)
 
 	# TazPanel files
-	install -m 0755 -d                $(DESTDIR)/var/www/tazpanel/menu.d
-	install -m 0755 tazpanel/pkgs.cgi $(DESTDIR)/var/www/tazpanel
-	ln -fs ../pkgs.cgi                $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
-	install -m 0755 -d                $(DESTDIR)/var/www/tazpanel/styles/default
-	install -m 0644 tazpanel/pkgs.css $(DESTDIR)/var/www/tazpanel/styles/default
+	install -m 0755 -d             $(DESTDIR)/var/www/tazpanel/menu.d
+	install -m 0755 build/pkgs.cgi $(DESTDIR)/var/www/tazpanel
+	ln -fs ../pkgs.cgi             $(DESTDIR)/var/www/tazpanel/menu.d/pkgs
+	install -m 0755 -d             $(DESTDIR)/var/www/tazpanel/styles/default
+	install -m 0644 build/gz/pkgs.css.gz $(DESTDIR)/var/www/tazpanel/styles/default
 
 	# The i18n files
 	install -m 0755 -d $(DESTDIR)$(localedir)
@@ -103,7 +110,7 @@ install: msgfmt
 	install -m 0644    pixmaps/tazpkg.png           $(ICONS)/apps
 	install -m 0644    pixmaps/tazpkg-up.png        $(ICONS)/actions
 	install -m 0644    pixmaps/tazpkg-installed.png $(ICONS)/status
-	ln -fs tazpkg.png  $(ICONS)/apps/TazPkg.png     # icon for Yad
+	#ln -fs tazpkg.png  $(ICONS)/apps/TazPkg.png     # icon for Yad
 
 	# TazPkg Notify XDG autostart
 	mkdir -p            $(DESTDIR)$(sysconfdir)/xdg
@@ -141,6 +148,7 @@ uninstall:
 
 
 clean:
+	rm -rf build
 	rm -rf _pkg
 	rm -rf tar-install
 	rm -rf po/mo

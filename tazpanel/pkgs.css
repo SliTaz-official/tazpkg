@@ -115,9 +115,9 @@
 .dark  .pages { background-color: #222; }
 .light .pages { background-color: #CCC; }
 .pages:hover {
-	//border: 1px solid #F94;
-	//background: #F94;
-	//color: black;
+	border: 1px solid #F94;
+	background: #F94;
+	color: black;
 	box-shadow: 0 0 2pt 0 hsl(0, 0%, 50%);
 }
 .pages.current, .pages.current:hover {

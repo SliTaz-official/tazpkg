@@ -1,0 +1,119 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# mirror - TazPkg module
+# Add/remove/list undigest mirrors, URLs
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+# Update mirror URLs
+
+setup_mirror() {
+	# Backup old list.
+	if [ -f "$1/mirror" ]; then
+		cp -f $1/mirror $1/mirror.bak
+	fi
+	title 'Current mirror(s)'
+	echo "  $(cat "$1/mirror" 2>/dev/null)"
+	longline "$(_ "Please enter URL of the new mirror (http, ftp or local \
+path). You must specify the complete address to the directory of the packages \
+and packages.list file.")"
+	newline
+
+	_n 'New mirror(s) URL: '
+	NEW_MIRROR_URL="$2"
+	if [ -n "$NEW_MIRROR_URL" ]; then
+		echo $NEW_MIRROR_URL
+	else
+		read NEW_MIRROR_URL
+	fi
+
+	if [ -z "$NEW_MIRROR_URL" ]; then
+		_ 'Nothing has been changed.'
+	else
+		_ 'Setting mirror(s) to: "%s"' "$NEW_MIRROR_URL"
+		rm -f "$1/mirror"
+		for i in $NEW_MIRROR_URL; do
+			echo "${i%/}/" >> "$1/mirror"
+		done
+	fi
+	newline
+}
+
+
+
+
+case $1 in
+	list)
+		# List undigest mirrors URLs
+
+		if [ -n "$box" ]; then
+			for i in $PKGS_DB/undigest/*/mirror; do
+				[ -f "$i" ] || continue
+				echo "$(basename "$(dirname "$i")")|$(cat "$i")"
+			done
+		else
+			title 'Current undigest(s)'
+			for i in $PKGS_DB/undigest/*/mirror; do
+				if [ ! -f "$i" ]; then
+					_ 'No undigest mirror found.'
+					exit 1
+				fi
+				echo "$(basename "$(dirname "$i")")"$'\t'"$(cat "$i")"
+			done
+			newline
+		fi
+		;;
+
+
+	remove)
+		# Remove undigest mirror
+
+		undigest="$2"
+		if [ -d "$PKGS_DB/undigest/$2" ]; then
+			confirm "$(_ 'Remove "%s" undigest? (y/N)' "$undigest")"
+			if [ $? -eq 0 ]; then
+				action 'Removing "%s" undigest...' "$undigest"
+				rm -rf "$PKGS_DB/undigest/$2"
+				status
+				rmdir "$PKGS_DB/undigest" 2>/dev/null
+			fi
+		else
+			_ 'Undigest "%s" not found' "$undigest"
+		fi
+		;;
+
+
+	add)
+		# Add undigest URL
+
+		[ ! -d "$PKGS_DB/undigest" ] && mkdir "$PKGS_DB/undigest"
+
+		undigest="$2"
+		if [ -z "$undigest" ]; then
+			i='1'
+			while [ -d "$PKGS_DB/undigest/$i" ]; do
+				i=$(($i+1))
+			done
+			undigest="$i"
+		fi
+		if [ ! -d "$PKGS_DB/undigest/$undigest" ]; then
+			_ 'Creating new undigest "%s".' "$undigest"
+			mkdir "$PKGS_DB/undigest/$undigest"
+		fi
+		setup_mirror "$PKGS_DB/undigest/$undigest" "$3"
+		;;
+
+	setup)
+		# Change mirror URL
+		setup_mirror "$PKGS_DB" "$2"
+		;;
+
+esac

@@ -1,43 +1,35 @@
 #!/bin/sh
-#
-# TazPkg Notify - Notification icon for TazPkg packages. Recharging pkgs
-# list can be done automatically at boot, so notifies users if some
-# updates are available. Also notifies users if the packages list is too
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# tazpkg-notify - part of TazPkg
+# Notification icon for TazPkg packages
+
+# Recharging pkgs list can be done automatically at boot, so notifies users
+# if some updates are available. Also notifies users if the packages list is too
 # old and out-of-date or if no packages list found. This script should
 # be run by the WM autostart script or ~/.xsession and needs a systray to
 # sit in like in LXpanel or Tint2.
-#
-# Copyright (C) 2012-2014 SliTaz GNU/Linux - GNU GPL v2
-#
-# Authors : Christophe Lincoln <pankso@slitaz.org>
-#
+
+# Copyright (C) 2012-2015 SliTaz - GNU General Public License v3.
+# Authors: See the AUTHORS files
+
 
 . /lib/libtaz.sh
 . /etc/slitaz/slitaz.conf
 
 # I18n
 export TEXTDOMAIN='tazpkg'
-_()  { local T="$1"; shift; printf "$(gettext "$T")" "$@"; echo; }
-_n() { local T="$1"; shift; printf "$(gettext "$T")" "$@"; }
-_p() {
-	local S="$1" P="$2" N="$3"; shift; shift; shift;
-	printf "$(ngettext "$S" "$P" "$N")" "$@"; }
-
 
 fifo=/tmp/$(basename $0).fifo
-tazweb="tazweb --notoolbar"
-panelbase="http://tazpanel:82/pkgs.cgi"
-panel="http://tazpanel:82/user/pkgs.cgi"
 doc="file:///usr/share/doc/tazpkg/tazpkg.html"
 
-installed=$(wc -l < $PKGS_DB/installed.info)
+installed=$(wc -l < "$PKGS_DB/installed.info")
 text="$(_p \
 		'%s installed package' \
-		'%s installed packages' $installed \
+		'%s installed packages' "$installed" \
 		"<b>$installed</b>")"
 
-[ -f "$PKGS_DB/packages.list" ] && mtime=$(find $PKGS_DB/packages.list -mtime +10;)
-up=0; [ -f "$PKGS_DB/packages.up" ] && up=$(cat $PKGS_DB/packages.up | wc -l)
+[ -f "$PKGS_DB/IDs" ] && mtime=$(find "$PKGS_DB/IDs" -mtime +10;)
+up=0; [ -f "$PKGS_DB/packages.up" ] && up=$(wc -l < "$PKGS_DB/packages.up")
 
 
 # Notification icon
@@ -63,11 +55,11 @@ listen() {
 menu() {
 	cat << EOT
 menu:\
-$(_n 'My packages'       )!$tazweb $panelbase?list!TazPkg|\
-$(_n 'Recharge lists'    )!$tazweb $panel?recharge!tazpkg-up|\
-$(_n 'Check upgrade'     )!$tazweb $panel?up!tazpkg-up|\
+$(_n 'My packages'       )!tazpanel pkgs#list!TazPkg|\
+$(_n 'Recharge lists'    )!tazbox su tazpanel pkgs#recharge!tazpkg-up|\
+$(_n 'Check upgrade'     )!tazbox su tazpanel pkgs#up!tazpkg-up|\
 $(_n 'TazPkg SHell'      )!terminal -e tazpkg shell!utilities-terminal|\
-$(_n 'TazPkg manual'     )!$tazweb $doc!slitaz-doc|\
+$(_n 'TazPkg manual'     )!tazweb --notoolbar $doc!slitaz-doc|\
 $(_n 'Close notification')!quit!gtk-close
 EOT
 }
@@ -87,18 +79,19 @@ case $1 in
 		sleep 6
 
 		# Missing packages list
-		if [ ! -f $PKGS_DB/packages.list ]; then
+		if [ ! -f "$PKGS_DB/packages.info" ]; then
 			tooltip="$(_ 'No packages list found - %s' "$text")"
-			(echo "action:$tazweb $panel?recharge"
+			(echo "action:tazbox su tazpanel pkgs#recharge"
 			 echo "tooltip:$tooltip"
 			 echo "icon:tazpkg-up") > $fifo
 			exit 0
 		fi
 
 		# Too old packages list
-		if [ "$mtime" ]; then
+		if [ -n "$mtime" ]; then
 			tooltip="$(_ 'Your packages list is older than 10 days')"
-			(echo "action:$tazweb $panel?recharge"
+			(echo "action:tazbox su tazpanel pkgs#recharge"
+			 echo "action:quit"
 			 echo "tooltip:$tooltip"
 			 echo "icon:tazpkg-up") > $fifo
 			exit 0
@@ -108,9 +101,9 @@ case $1 in
 		if [ "$up" -gt 0 ]; then
 			tooltip="$(_p \
 				'There is %s upgradeable package' \
-				'There are %s upgradeable packages' $up \
+				'There are %s upgradeable packages' "$up" \
 				"<b>$up</b>")"
-			(echo "action:$tazweb $panel?up"
+			(echo "action:tazbox su tazpanel pkgs#up"
 			 echo "tooltip:$tooltip"
 			 echo "icon:tazpkg-up") > $fifo
 			exit 0

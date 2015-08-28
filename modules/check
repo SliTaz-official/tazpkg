@@ -1,0 +1,226 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# check - TazPkg module
+# Check installed packages set
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+# Get repositories priority using $PKGS_DB/priority.
+# In this file undigest repos are called by their names and main mirror
+# by 'main'. Sort order: priority
+
+look_for_priority() {
+	[ -s "$PKGS_DB/priority" ] && priority=$(cat "$PKGS_DB/priority")
+
+	for rep in main $(ls "$PKGS_DB/undigest" 2>/dev/null); do
+		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q "^$rep$" "$PKGS_DB/priority"; then
+			priority=$(echo -e "$priority\n$rep")
+		fi
+	done
+
+	priority=$(echo "$priority" | sed '/^$/d' | \
+		while read line; do
+		case $line in
+			(main) echo "$PKGS_DB";;
+			(*)    echo "$PKGS_DB/undigest/$line";;
+		esac
+	done)
+}
+
+
+# Print package name if not printed yet
+print_pkgname() {
+	if [ "$PACKAGE" != "$PACKAGE_PRINTED" ]; then
+		[ -n "$PACKAGE_PRINTED" ] && footer
+		title 'Package %s' "$PACKAGE-$VERSION$EXTRAVERSION"
+		PACKAGE_PRINTED="$PACKAGE"
+	fi
+}
+
+
+# get an already installed package from packages.equiv
+
+equivalent_pkg() {
+	for i in $(grep -hs "^$1=" "$PKGS_DB/packages.equiv" \
+			"$PKGS_DB"/undigest/*/packages.equiv | sed "s/^$1=//"); do
+		if echo $i | fgrep -q : ; then
+			# format 'alternative:newname'
+			# if alternative is installed then substitute newname
+			if [ -f "$INSTALLED/${i%:*}/receipt" ]; then
+				# substitute package dependency
+				echo "${i#*:}"
+				return
+			fi
+		else
+			# if alternative is installed then nothing to install
+			if [ -f "$INSTALLED/$i/receipt" ]; then
+				# substitute installed package
+				echo "$i"
+				return
+			fi
+		fi
+	done
+	# if not found in packages.equiv then no substitution
+	echo "$1"
+}
+
+
+# Check for loop in deps tree.
+
+check_for_deps_loop() {
+	local list pkg="$1" deps
+	shift
+	[ -n "$1" ] || return
+	list=''
+
+	# Filter out already processed deps
+	for i in $@; do
+		case " $ALL_DEPS" in
+			*\ $i\ *) ;;
+			*) list="$list $i";;
+		esac
+	done
+	ALL_DEPS="$ALL_DEPS$list "
+	for i in $list; do
+		[ -f "$i/receipt" ] || continue
+		deps="$(unset DEPENDS; . "$i/receipt"; echo $DEPENDS)"
+		case " $deps " in
+			*\ $pkg\ *)
+				print_pkgname
+				echo -e "$MSG  $i"; MSG='';;
+			*)
+				check_for_deps_loop "$pkg" "$deps";;
+		esac
+	done
+}
+
+
+grepesc() { sed 's/\[/\\[/g'; }
+
+
+
+
+# Get repositories priority list.
+look_for_priority
+
+cd "$INSTALLED"
+if [ -z "$2" -o -n "$full" ]; then PACKAGES="$(ls)"; else PACKAGES="$2"; fi
+PACKAGE_PRINTED=''
+
+for PACKAGE in $PACKAGES; do
+
+	if [ ! -f "$PACKAGE/receipt" ]; then
+		print_pkgname
+		_ 'The package installation has not completed'
+		continue
+	fi
+
+	unset DEPENDS EXTRAVERSION
+	. "$PACKAGE/receipt"
+	if [ -s "$PACKAGE/modifiers" ]; then
+		print_pkgname
+		_ 'The package has been modified by:'
+		awk '{print "  " $0}' "$PACKAGE/modifiers"
+	fi
+
+	MSG="$(_n 'Files lost from package:')\n"
+	while read file; do
+		[ -e "$file" ] && continue
+		if [ -L "$file" ]; then
+			MSG="$MSG  $(_n 'target of symlink')"
+		fi
+		print_pkgname
+		echo -e "$MSG  $file"
+		MSG=''
+	done < "$PACKAGE/files.list"
+
+	MSG="$(_n 'Missing dependencies for package:')\n"
+	for i in $DEPENDS; do
+		[ -d "$i" ] && continue
+		[ -d "$(equivalent_pkg "$i")" ] && continue
+		print_pkgname
+		echo -e "$MSG  $i"
+		MSG=''
+	done
+
+	MSG="$(_n 'Dependencies loop between package and:')\n"
+	ALL_DEPS=''
+	check_for_deps_loop "$PACKAGE" "$DEPENDS"
+done
+[ -n "$PACKAGE_PRINTED" ] && footer
+
+_ 'Looking for known bugs...'
+if [ -z "$2" -o -n "$full" ]; then tazpkg bugs; else tazpkg bugs "$2"; fi
+
+
+if [ -n "$full" ]; then
+	separator
+
+	title 'Mismatch checksum of installed files:'
+
+	for PACKAGE in $PACKAGES; do
+		file="$PACKAGE/$CHECKSUM"
+		CONFIG_FILES=''
+		. "$PACKAGE/receipt"
+		[ -s "$file" ] || continue
+		while read md5 f; do
+			[ -f "$f" ] || continue
+			for i in $CONFIG_FILES; do
+				case "$f" in
+					$i|$i/*) continue 2;;
+				esac
+			done
+			echo "$md5  $f"
+		done < "$file" | busybox $CHECKSUM -c - 2>/dev/null | grep -v OK$ | sed "s/: FAILED$//"
+	done
+	footer
+
+	title 'Check file providers:'
+	FILES=' '
+	for PACKAGE in $PACKAGES; do
+		for file in $(cat "$PACKAGE/files.list"); do
+			[ -d "$file" ] && continue
+			case "$FILES" in
+				*\ $file\ *) continue;;
+			esac
+			[ $(grep "^$(echo $file | grepesc)$" */files.list 2> /dev/null | wc -l) -gt 1 ] || continue
+			FILES="$FILES$file "
+			newline
+			_ 'The following packages provide file "%s":' "$file"
+			grep -l "^$(echo "$file" | grepesc)$" */files.list | \
+			while read f; do
+				pkg=${f%/files.list}
+				if [ -f "$pkg/modifiers" ]; then
+					overriders=$(_n '(overridden by %s)' "$(tr '\n' ' ' < $pkg/modifiers | sed 's| $||')")
+				else
+					overriders=''
+				fi
+				echo -n "  * $pkg $overriders"
+				newline
+			done
+		done
+	done
+	footer
+
+	if [ -n "$full" ]; then
+		title 'Alien files:'
+		MSG="$(_n 'No package has installed the following files:')\n"
+		find /etc /bin /sbin /lib /usr /var/www -not -type d 2>/dev/null | \
+		while read file; do
+			case "$file" in *\[*) continue;; esac
+			grep -q "^$(echo $file | grepesc)$" */files.list && continue
+			echo -e "$MSG  $file"
+			MSG=''
+		done
+		footer
+	fi
+fi
+_ 'Check completed.'; newline

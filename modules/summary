@@ -1,0 +1,81 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# summary - TazPkg module
+# Show TazPkg summary
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+STATE=$(mktemp)
+
+title "$(_ 'SliTaz package manager - Version: %s' $(colorize 34 $VERSION))"
+
+# Per-repository stuff
+
+if [ -h "$PKGS_DB/fslink" ]; then
+	if [ -e "$PKGS_DB/fslink/etc/slitaz/slitaz.conf" ]; then
+		PKGS_DB_LINK="$PKGS_DB/fslink/$(. "$PKGS_DB/fslink/etc/slitaz/slitaz.conf"; echo "$PKGS_DB")"
+	fi
+fi
+
+for path in $PKGS_DB $PKGS_DB/undigest/* $PKGS_DB_LINK; do
+	[ ! -e "$path" ] && continue
+	case "$path" in
+		$PKGS_DB) repo_name='Main';;
+		*/fslink/*) repo_name=$(readlink "$PKGS_DB/fslink");;
+		*) repo_name=$(_n 'Undigest %s' "$(basename "$path")");;
+	esac
+
+	newline; colorize 33 "$(_n 'Repository:'; echo -e "\t$repo_name")"
+
+	_n 'Last recharge:'; echo -en '\t'
+	IDs="$path/IDs"
+	if [ -e "$IDs" ]; then
+		# Timezone offset as string, ex. '+0200' for EET (+2 hours)
+		ohhmm=$(date +%z)
+		# Timezone offset in the seconds
+		offset=$(( 60 * (60 * ${ohhmm:0:3} + ${ohhmm:3:2}) ))
+		daynow=$(( ($(date         +%s) + $offset) / 86400 ))
+		dayupd=$(( ($(date -r $IDs +%s) + $offset) / 86400 ))
+		days=$(( $daynow - $dayupd ))
+		time=$(date -r $IDs +%R)
+		case $days in
+			0) _ 'Today at %s.' "$time";;
+			1) _ 'Yesterday at %s.' "$time";;
+			*) _p '%d day ago.' '%d days ago.' "$days" "$days"; newline;;
+		esac
+
+		_n 'Database timestamp:'; echo -en '\t'
+		date -d "@$(awk '{print $2}' "$IDs")" "+%x %R"
+	else
+		_ 'never.'
+	fi
+
+	if [ -e "$path/packages.info" ]; then
+		_n 'Mirrored packages:'; echo -en '\t'; wc -l < "$path/packages.info"
+	fi
+
+	if [ "${path/fslink/}" != "$path" ]; then
+		_n 'Linked packages:'; echo -en '\t'
+		find "$INSTALLED" -type l | wc -l
+	fi
+done >> "$STATE"
+
+# Common stuff
+
+optlist "\
+$(_ 'Installed packages:')		$(wc -l < "$PKGS_DB/installed.info")
+$(_ 'Installed files:')			$( (cat $INSTALLED/*/files.list | wc -l) 2>/dev/null || echo 0)
+$(_ 'Blocked packages:')		$(wc -l < "$BLOCKED")
+$(_ 'Upgradeable packages:')	$(wc -l < "$UP_LIST")
+$(cat "$STATE")"
+footer
+
+rm "$STATE"

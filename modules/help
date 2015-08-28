@@ -6,12 +6,85 @@
 
 . /lib/libtaz.sh
 
+
+
+
+# Print the usage.
+
+usage () {
+	cat <<EOT
+ 
+$(_ 'SliTaz package manager - Version: %s' $(colorize 34 $VERSION))
+ 
+$(boldify "$(_ 'Usage:')")
+  $(_ 'tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]')
+ 
+$(boldify "$(_ 'SHell:')") tazpkg shell
+ 
+$(boldify "$(_ 'Commands:')")
+$(optlist "\
+     usage				$(_ 'Print this short usage')
+-h   help				$(_ 'Show help on the TazPkg commands')
+-a   activity			$(_ 'Show TazPkg activity log')
+-cc  clean-cache		$(_ 'Clean all packages downloaded in cache directory')
+     shell				$(_ 'Run interactive TazPkg shell')
+ 
+-l   list				$(_ 'List installed packages on the system')
+-lm  list-mirror		$(_ 'List all available packages on the mirror')
+     list-config		$(_ 'List the configuration files')
+ 
+-s   search				$(_ 'Search for a package by pattern or name')
+-sp  search-pkgname		$(_ 'Search on mirror for package having a particular file')
+-sf  search-file		$(_ 'Search for file in all installed packages files')
+ 
+-g   get				$(_ 'Download a package into the current directory')
+-i   install			$(_ 'Install a local package')
+-gi  get-install		$(_ 'Download and install a package from the mirror')
+     install-list		$(_ 'Install all packages from a list of packages')
+     get-install-list	$(_ 'Download and install a list of packages from the mirror')
+-r   remove				$(_ 'Remove the specified package and all installed files')
+     reconfigure		$(_ 'Replay post install script from package')
+     link				$(_ 'Link a package from another SliTaz installation')
+     set-release		$(_ 'Change release and update packages')
+     add-flavor			$(_ 'Install the flavor list of packages')
+     install-flavor		$(_ 'Install the flavor list of packages and remove other ones')
+ 
+     info				$(_ 'Print information about a package')
+-d   desc				$(_ 'Print description of a package')
+-lf  list-files			$(_ 'List the files installed with a package')
+-b|u block|unblock		$(_ 'Block an installed package version or unblock it for upgrade')
+     check				$(_ 'Verify consistency of installed packages')
+     bugs				$(_ 'Show known bugs in packages')
+     depends			$(_ 'Display dependencies tree')
+     rdepends			$(_ 'Display reverse dependencies tree')
+-e   extract			$(_ 'Extract a (*.tazpkg) package into a directory')
+     pack				$(_ 'Pack an unpacked or prepared package tree')
+     repack				$(_ 'Create a package archive from an installed package')
+     repack-config		$(_ 'Create a package archive with configuration files')
+     recompress			$(_ 'Rebuild a package with a better compression ratio')
+     convert			$(_ 'Convert alien package to tazpkg')
+     list-suggested		$(_ 'Print list of suggested packages')
+ 
+     recharge			$(_ 'Recharge your packages.list from the mirror')
+     up					$(_ 'Check packages %s to list and install latest upgrades' $CHECKSUM)
+-sm  setup-mirror		$(_ 'Change the mirror URL configuration')
+     setup-undigest		$(_ 'Update an undigest mirror')
+     list-undigest		$(_ 'List undigest mirrors')
+     add-undigest		$(_ 'Add an undigest mirror')
+     remove-undigest	$(_ 'Remove an undigest mirror')
+")
+EOT
+}
+
+
+
+
 T="${1#-}"
 DOC='/usr/share/doc/tazpkg/tazpkg.html'
 QUERY="$T"
 
 if [ -z "$T" ]; then
-	tazpkg usage; exit 0
+	usage; exit 0
 fi
 
 commands="\
@@ -92,6 +165,6 @@ PRE2=$(echo "$OPT0" | sed "s|$OPTA|$OPTB|" | tr '@' '\n' | sed '/O/d; s|L||')
 
 [ ! -z "$TA" ] && T="$T, $TA"
 
-title '$title'
+title '%s' "$title"
 emsg "$(longline "$PRE2" | sed 's|A|<c 33>|g; s|B|<c 36>|g; s|C|<b>|g; s|D|</c>|g; ')"
 newline

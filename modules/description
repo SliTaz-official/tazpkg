@@ -1,0 +1,63 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# description - TazPkg module
+# Display package description
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+# Interactive mode
+
+im() { tty -s; }
+
+
+
+
+unset desc
+
+# 1) Localized description
+for LC in $LANG ${LANG%_*}; do
+	[ -e "$PKGS_DB/descriptions.$LC.txt" ] &&
+	desc="$(awk -vRS='' -vFS='\n' -vOFS='\n' -vp="$1" '
+		$1 == p { $1 = ""; print $0; exit; }
+		' "$PKGS_DB/descriptions.$LC.txt" | sed '1d')"
+done
+
+# 2) Installed description
+if [ -z "$desc" -a -s "$INSTALLED/$1/description.txt" ]; then
+	desc="$(cat "$INSTALLED/$1/description.txt")"
+fi
+
+# 3) Mirrored description
+if [ -z "$desc" -a -s "$PKGS_DB/descriptions.txt" ]; then
+	desc="$(awk -vRS='' -vFS='\n' -vOFS='\n' -vp="$1" '
+		$1==p {$1 = ""; print $0; exit}
+		' "$PKGS_DB/descriptions.txt" | sed '1d')"
+fi
+
+# 4) Short description only in interactive terminal
+if [ -z "$desc" ] && im; then
+	for LC in $LANG ${LANG%_*}; do
+		[ -e "$PKGS_DB/packages-desc.$LC" ] &&
+			desc=$(awk -F$'\t' -vp="$1" '$1==p {print $2; exit}' "$PKGS_DB/packages-desc.$LC")
+	done
+
+	[ -z "$desc" -a -s "$PKGS_DB/packages.info" ] &&
+		desc="$(awk -F$'\t' -vp="$1" '$1==p {print $4; exit}' "$PKGS_DB/packages.info")"
+fi
+
+if [ -n "$desc" ]; then
+	# Title and footer only in interactive terminal
+	im && title 'Description of package "%s"' "$1"
+	longline "$desc"
+	im && footer
+else
+	im && _ 'Description absent.'
+fi

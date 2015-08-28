@@ -1,0 +1,238 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# search - TazPkg module
+# Search packages and files
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+# Translate category names (must be last in line)
+
+translate_category() {
+	sed "s|base-system$|$(_ base-system)|; s|x-window$|$(_ x-window)|;
+		s|utilities$|$(_ utilities)|; s|network$|$(_ network)|;
+		s|graphics$|$(_ graphics)|; s|multimedia$|$(_ multimedia)|;
+		s|office$|$(_ office)|; s|development$|$(_ development)|;
+		s|system-tools$|$(_ system-tools)|; s|security$|$(_ security)|;
+		s|games$|$(_ games)|; s|misc$|$(_ misc)|; s|meta$|$(_ meta)|;
+		s|non-free$|$(_ non-free)|; s|all$|$(_ all)|; s|extra$|$(_ extra)|"
+}
+
+
+# Search pattern in installed packages.
+
+search_in_installed_packages() {
+	_ 'Installed packages'; separator '-'
+	num='0'
+	TMPLIST=$(mktemp)
+
+	awk -F$'\t' -vpattern="$PATTERN" -vt="$TMPLIST" '
+		BEGIN { IGNORECASE = 1 }
+		index($1 "-" $2, pattern) {
+			printf "%-24s%-18s%s\n", $1, $2, $3;
+			printf "1" >> t
+		}' "$PKGS_DB/installed.info" | translate_category
+	num=$(wc -m < "$TMPLIST"); rm "$TMPLIST"
+
+	footer "$(_p \
+		'%s installed package found for "%s"' \
+		'%s installed packages found for "%s"' "$num" \
+		"$num" "$PATTERN")"
+}
+
+
+# Search in packages.list for available pkgs.
+
+search_in_packages_list() {
+	_ 'Available packages'; separator '-'
+	num='0'
+	TMPLIST=$(mktemp)
+
+	for i in $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info; do
+		[ -e "$i" ] && awk -F$'\t' -vpattern="$PATTERN" -vt="$TMPLIST" '
+		BEGIN { IGNORECASE = 1 }
+		index($1 "-" $2, pattern) {
+			printf "%-24s%-18s%s\n", $1, $2, $3;
+			printf "1" >> t
+		}' "$i" | translate_category
+	done
+
+	for i in $PKGS_DB/extra.list $PKGS_DB/undigest/*/extra.list; do
+		[ -e "$i" ] && awk -F'|' -vpattern="$PATTERN" -vt="$TMPLIST" '
+		BEGIN { IGNORECASE = 1 }
+		index($1 "-" $5, pattern) {
+			printf "%-24s%-18s%s\n", $1 " (extra)", $5, $4;
+			printf "1" >> t
+		}' "$i" | translate_category
+	done
+
+	if [ ! -f "$PKGS_DB/packages.info" ]; then
+		newline
+		longline "$(_ \
+"No \"%s\" found to check for mirrored packages. For more results, please run \
+\"%s\" once as root before searching." 'packages.info' 'tazpkg recharge')"
+		newline
+	fi
+
+	num=$(wc -m < "$TMPLIST"); rm "$TMPLIST"
+	footer "$(_p \
+		'%s available package found for "%s"' \
+		'%s available packages found for "%s"' "$num" \
+		"$num" "$PATTERN")"
+}
+
+
+# search --mirror: Search in packages.txt for available pkgs and give more
+# info than --list or default.
+
+search_in_packages_txt() {
+	_ 'Matching packages name with version and desc'; separator '-'
+	num='0'
+	TMPLIST=$(mktemp)
+
+	for i in $PKGS_DB/packages.info $PKGS_DB/undigest/*/packages.info; do
+		[ -e "$i" ] && awk -F$'\t' -vpattern="$PATTERN" -vt="$TMPLIST" '
+		BEGIN { IGNORECASE = 1 }
+		index($1 " " $2 " " $4, pattern) {
+			split($7, s, " ");
+			printf "%s\n%s\n%s\n%s (%s installed)\n\n", $1, $2, $4, s[1], s[2];
+			printf "1" >> t;
+		}' "$i"
+	done
+
+	if [ ! -f "$PKGS_DB/packages.info" ]; then
+		newline
+		longline "$(_ \
+"No \"%s\" found to check for mirrored packages. For more results, please run \
+\"%s\" once as root before searching." 'packages.info' 'tazpkg recharge')"
+		newline
+	fi
+
+	num=$(wc -m < "$TMPLIST"); rm "$TMPLIST"
+	footer "$(_p \
+		'%s available package found for "%s"' \
+		'%s available packages found for "%s"' "$num" \
+		"$num" "$PATTERN")"
+}
+
+
+
+
+case "$1" in
+	pkg)
+		# Search for a package by pattern or name
+
+		# Input: package_name pattern (part of package name)
+		# Output:
+		#   installed: list of installed packages (as info table)
+		#   list:      list of available packages (installed and installable) (as info table)
+		#   mirror:    list of available packages (installed and installable) (in special format)
+		#              (matching package name, version, or short description)
+
+		PATTERN="$2"
+		title 'Search result for "%s"' "$PATTERN"
+		[ -n "$installed" ] && search_in_installed_packages
+		[ -n "$list"      ] && search_in_packages_list
+		[ -n "$mirror"    ] && search_in_packages_txt
+		if [ -z "$installed$list$mirror" ]; then
+			# If none of "--installed", "--list", "--mirror" given
+			search_in_installed_packages
+			search_in_packages_list
+		fi
+		;;
+
+	file)
+		# Search for a file by pattern or name
+
+		# Input: file_name pattern (part of file name)
+		# Output: list of (installed or available) packages with matched filenames by file_name pattern
+
+		title 'Search result for file "%s"' "$2"
+		TMPLIST=$(mktemp)
+
+		if [ -n "$mirror" ]; then
+			# Option "--mirror" given: process available packages
+			TMPDIR=$(mktemp -d)
+			for i in $PKGS_DB/files.list.lzma $PKGS_DB/undigest/*/files.list.lzma; do
+				[ -f "$i" ] || continue
+				lzcat "$i" | awk -F: -vtmp="$TMPLIST" -vdir="$TMPDIR" \
+					-vfile="$2" -vcfile="$(colorize 32 "$2")" '
+					BEGIN { efile = gensub("\+", "\\\+", "g", file); }
+					index($2, file) {
+						gsub(efile, cfile, $2);
+						print $2 >> dir"/"$1;
+						printf "1" >> tmp;
+					}'
+			done
+
+			for pkg in $(cd "$TMPDIR"; ls); do
+				newline
+				emsg "<c 33>$(_ 'Package %s:' $pkg)</c>"
+				cat "$TMPDIR/$pkg"
+			done
+
+			rm -r "$TMPDIR"
+
+		else
+			# Option "--mirror" not given: process installed packages
+
+			# Check all pkg files.list in search match which specify the package
+			# name and the full path to the file(s).
+			for pkg in $INSTALLED/*; do
+				if grep -qs "$2" "$pkg/files.list"; then
+					newline
+					emsg "<c 33>$(_ 'Package %s:' "$pkg")</c>"
+					awk -vtmp="$TMPLIST" -vfile="$2" -vcfile="$(colorize 32 $2)" '
+						BEGIN { efile = gensub("\+", "\\\+", "g", file); }
+						index($0, file) {
+							gsub(efile, cfile);
+							print " "$0;
+							printf "1" >> tmp;
+						}
+					' "$pkg/files.list"
+				fi
+			done
+
+		fi
+
+		num=$(wc -m < "$TMPLIST"); rm "$TMPLIST"
+		footer "$(_p '%s file' '%s files' "$num" \
+			"$(colorize 32 "$num")")"
+		;;
+
+	file2)
+		# Search for a package name
+
+		# Input: file_name pattern (part of file name)
+		# Output: list of available packages with matched filenames by file_name pattern
+
+		title 'Search result for package "%s"' "$2"
+
+		# Search for a file on mirror and output only the package name
+		TMPLIST=$(mktemp)
+		for i in $PKGS_DB/files.list.lzma $PKGS_DB/undigest/*/files.list.lzma; do
+				[ -f "$i" ] || continue
+				lzcat "$i" | awk -F: -vT="$TMPLIST" -vterm="$2" '
+					BEGIN { P = "" }
+					index($2, term) {
+						if ($1 != P) {
+							print $1;
+							printf "1" >> T;
+							P = $1
+						}
+					}'
+		done
+		match=$(wc -m < "$TMPLIST")
+		rm "$TMPLIST"
+
+		footer "$(emsg "$(_p '%s package' '%s packages' "$match" \
+			"<c 32>$match</c>")")"
+		;;
+esac

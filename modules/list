@@ -23,10 +23,11 @@
 
 # Connect function libraries
 . /lib/libtaz.sh
-# Get TazPkg configuration variables
-. /etc/slitaz/slitaz.conf
-. /etc/slitaz/tazpkg.conf
-BLOCKED="$PKGS_DB/blocked-packages.list"
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
 
 
 # Interactive mode
@@ -81,8 +82,8 @@ case $1 in
 		title 'Blocked packages'
 
 		if [ -s "$BLOCKED" ];then
-			cat $BLOCKED
-			num=$(wc -l < $BLOCKED)
+			cat "$BLOCKED"
+			num=$(wc -l < "$BLOCKED")
 			footer "$(_p '%s package' '%s packages' "$num" \
 				"$(colorize 31 $num)")"
 		else
@@ -109,12 +110,12 @@ case $1 in
 		# List of linked packages
 		title 'Linked packages'
 
-		linked="$(find $INSTALLED -type l -maxdepth 1)"
+		linked="$(find "$INSTALLED" -type l -maxdepth 1)"
 		if [ -n "$linked" ]; then
 			for pkg in $linked; do
 				awk -F$'\t' -vp="$(basename "$pkg")" \
-					'($1==p){printf "%-34s %-17s %s\n", $1, $2, $3}' \
-					$PKGS_DB/installed.info | translate_category
+					'$1==p{printf "%-34s %-17s %s\n", $1, $2, $3}' \
+					"$PKGS_DB/installed.info" | translate_category
 			done
 			num=$(echo "$linked" | wc -l)
 			footer "$(_p '%s package' '%s packages' "$num" \
@@ -130,8 +131,8 @@ case $1 in
 		title 'List of all installed packages'
 
 		awk -F$'\t' '{printf "%-34s %-17s %s\n", $1, $2, $3}' \
-			$PKGS_DB/installed.info | translate_category
-		num=$(wc -l < $PKGS_DB/installed.info)
+			"$PKGS_DB/installed.info" | translate_category
+		num=$(wc -l < "$PKGS_DB/installed.info")
 
 		footer "$(_p '%s package installed.' '%s packages installed.' "$num" \
 			"$(colorize 32 $num)")"
@@ -147,9 +148,9 @@ case $1 in
 
 		TMPLIST=$(mktemp)
 		awk -F$'\t' -vcat="$ASKED_CATEGORY" \
-			'{ if ($3 == cat) printf "%-34s %s\n", $1, $2; }' \
-			$PKGS_DB/installed.info | tee $TMPLIST | translate_category
-		num=$(wc -l < $TMPLIST); rm $TMPLIST
+			'$3==cat{printf "%-34s %s\n", $1, $2}' \
+			"$PKGS_DB/installed.info" | tee "$TMPLIST" | translate_category
+		num=$(wc -l < "$TMPLIST"); rm "$TMPLIST"
 
 		footer "$(emsg $(_p \
 			'%s package installed of category "%s".' \
@@ -161,12 +162,11 @@ case $1 in
 	mirrored)
 		# List packages available on the mirror
 		# Option --diff displays last mirrored packages diff (see recharge).
-		check_for_packages_info
 		if [ -n "$diff" ]; then
 			if [ -f "$PKGS_DB/packages.diff" ]; then
 				title 'Mirrored packages diff'
-				cat $PKGS_DB/packages.diff
-				num=$(wc -l < $PKGS_DB/packages.diff)
+				cat "$PKGS_DB/packages.diff"
+				num=$(wc -l < "$PKGS_DB/packages.diff")
 				footer "$(_p \
 					'%s new package listed on the mirror.' \
 					'%s new packages listed on the mirror.' "$num" \
@@ -182,8 +182,8 @@ case $1 in
 			awk -F$'\t' '{
 				split($7, s, " ");
 				printf "%s\n%s\n%s\n%s (%s installed)\n\n", $1, $2, $4, s[1], s[2];
-				}' $PKGS_DB/packages.info
-			num=$(wc -l < $PKGS_DB/packages.info)
+				}' "$PKGS_DB/packages.info"
+			num=$(wc -l < "$PKGS_DB/packages.info")
 			footer "$(_p \
 				'%s package in the last recharged list.' \
 				'%s packages in the last recharged list.' "$num" \
@@ -202,13 +202,13 @@ case $1 in
 			num=$(wc -l < "$INSTALLED/$PACKAGE/files.list")
 			footer "$(_p '%s file' '%s files' $num \
 				"$(colorize 32 $num)")"
-		elif [ -n "$(grep "^$PACKAGE"$'\t' $PKGS_DB/packages.info)" ]; then
+		elif [ -n "$(grep "^$PACKAGE"$'\t' "$PKGS_DB/packages.info")" ]; then
 			# available package
 			title 'Installed files by "%s"' "$PACKAGE"
 
 			TMPLIST=$(mktemp)
-			lzcat $PKGS_DB/files.list.lzma | sed -n "/^$PACKAGE: / s|^[^:]*: ||p" | tee $TMPLIST
-			num=$(wc -l < $TMPLIST); rm $TMPLIST
+			lzcat "$PKGS_DB/files.list.lzma" | sed -n "/^$PACKAGE: / s|^[^:]*: ||p" | tee "$TMPLIST"
+			num=$(wc -l < "$TMPLIST"); rm "$TMPLIST"
 
 			footer "$(_p '%s file' '%s files' $num \
 				"$(colorize 32 $num)")"
@@ -222,10 +222,10 @@ case $1 in
 
 	activity)
 		# Show activity log
-		[ -z "$nb" ] && nb='18'
+		: ${nb=18}
 		title 'TazPkg Activity'
 		IFS=' '
-		tail -n $nb $LOG | tac | \
+		tail -n $nb "$LOG" | tac | \
 		while read date hour none action none pkg vers none; do
 			case $action in
 				Installed)
@@ -246,39 +246,34 @@ case $1 in
 	config_files)
 		# List configuration files installed
 		# Option --box displays list formatted for Yad-based TazPkg boxes
-		if [ -n "$2" ]; then
-			FILES="$INSTALLED/$2/volatile.cpio.gz"
-		else
-			FILES="$INSTALLED/*/volatile.cpio.gz"
-		fi
+		FILES="$INSTALLED/${2:-*}/volatile.cpio.gz"
 
 		if [ -n "$box" ]; then
 			TMP_DIR=$(mktemp -d)
 
 			for i in $FILES; do
-				mkdir -p $TMP_DIR/temp; cd $TMP_DIR/temp
+				mkdir -p "$TMP_DIR/temp"; cd "$TMP_DIR/temp"
 
 				zcat $i | cpio -idm --quiet >/dev/null
 
 				find . -type f 2>/dev/null | while read file; do
-					if [ ! -e /$file ]; then
+					if [ ! -e "/$file" ]; then
 						echo -n "----------|----|----|$(_n 'File lost')"
 					else
-						echo -n "$(stat -c "%A|%U|%G|%s|" /$file)"
-						cmp $file /$file >/dev/null 2>&1 || \
-						echo -n "$(stat -c "%.16y" /$file)"
+						echo -n "$(stat -c "%A|%U|%G|%s|" "/$file")"
+						cmp "$file" "/$file" >/dev/null 2>&1 || \
+						echo -n "$(stat -c "%.16y" "/$file")"
 					fi
 					echo "|/$file"
 				done
-				rm -r $TMP_DIR/temp
+				rm -r "$TMP_DIR/temp"
 			done
-			cd "$TOP_DIR"
-			rm -r $TMP_DIR
+			rm -r "$TMP_DIR"
 		else
 			im && title 'Configuration files'
 			for i in $FILES; do
 				[ -f "$i" ] || continue
-				zcat $i | cpio -t --quiet
+				zcat "$i" | cpio -t --quiet
 			done | sed 's|^|/|' | sort
 			im && footer
 		fi
@@ -289,7 +284,7 @@ case $1 in
 		# List of suggested packages
 		# By default list only not installed suggested packages
 		# Option --all displays all (installed and not installed) suggested packages
-		for i in $(ls -d $INSTALLED/*/receipt); do
+		for i in $(ls -d "$INSTALLED"/*/receipt); do
 			unset SUGGESTED
 			. $i
 			if [ -n "$SUGGESTED" ]; then

@@ -1,4 +1,4 @@
-README for TazPkg -  Tiny autonomous packages manager
+README for TazPkg - Tiny autonomous packages manager
 ===============================================================================
 
 
@@ -9,28 +9,34 @@ the SliTaz Cookbook and the manual.
 
 TazPkg is entirely built from scratch using SHell script; compatible with
 Bash, it runs under Ash - part of the Busybox project. TazPkg is distributed
-under the free GNU license GPL V3. 
+under the free GNU license GPL V3.
 
 Development HG repo: http://hg.slitaz.org/tazpkg
 
 
 Installation
 ------------
+
 To install all needed files and compile translated messages, make and gettext
 must be installed. Running 'make install' will install everything in /usr, but
-another path and/or destination can be specified via PREFIX and DESTDIR.
+another path and/or destination can be specified via prefix and DESTDIR.
+
 Example:
 
 	$ make DESTDIR=$PWD/_pkg install
 
+
 Uninstall
 ---------
+
 Simply type:
-	
-	$ make uninstall	
+
+	$ make uninstall
+
 
 Translation
------------	
+-----------
+
 To start a new translation please use msginit from the pot file directory.
 Example for French/France locale (fr_FR):
 

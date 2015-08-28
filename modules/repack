@@ -1,0 +1,84 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# repack - TazPkg module
+# Create SliTaz package archive from an installed package
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+alias cpio='busybox cpio'
+
+
+unset EXTRAVERSION; . "$INSTALLED/$1/receipt"
+
+title 'Repacking "%s"' "$PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
+
+if grep -qs ^NO_REPACK= "$INSTALLED/$PACKAGE/receipt"; then
+	_ "Can't repack package \"%s\"" "$PACKAGE"
+	exit 1
+fi
+
+if [ -s "$INSTALLED/$PACKAGE/modifiers" ]; then
+	_ "Can't repack, \"%s\" files have been modified by:" "$PACKAGE"
+	sed 's|.*|  \0|' "$INSTALLED/$PACKAGE/modifiers"
+	exit 1
+fi
+
+MISSING=''
+while read i; do
+	[ -e "$i" ] && continue
+	[ -L "$i" ] || MISSING="$MISSING\n  $i"
+done < "$INSTALLED/$PACKAGE/files.list"
+if [ -n "$MISSING" ]; then
+	_n "Can't repack, the following files are lost:"
+	echo -e "$MISSING"
+	exit 1
+fi
+
+TMP_DIR=$(mktemp -d)
+cd "$TMP_DIR"
+
+FILES="fs.cpio.lzma\n"
+for i in $(ls "$INSTALLED/$PACKAGE"); do
+	case $i in
+		volatile.cpio.gz|modifiers) ;;
+		*) cp "$INSTALLED/$PACKAGE/$i" .; FILES="$FILES$i\n" ;;
+	esac
+done
+
+ln -s / rootfs
+mkdir tmp
+sed 's/^/rootfs/' < files.list | cpio -o -H newc --quiet | \
+	{ cd tmp ; cpio -idm --quiet >/dev/null; cd ..; }
+mv tmp/rootfs fs
+
+if [ -f  "$INSTALLED/$PACKAGE/volatile.cpio.gz" ]; then
+	zcat "$INSTALLED/$PACKAGE/volatile.cpio.gz" | \
+		{ cd fs; cpio -idm --quiet; cd ..; }
+fi
+
+if fgrep -q repack_cleanup "$INSTALLED/$PACKAGE/receipt"; then
+	. "$INSTALLED/$PACKAGE/receipt"
+	repack_cleanup fs
+fi
+
+if [ -f "$INSTALLED/$PACKAGE/$CHECKSUM" ]; then
+	sed 's,  ,  fs,' < "$INSTALLED/$PACKAGE/$CHECKSUM" | $CHECKSUM -s -c || {
+		_ "Can't repack, %s error." "$CHECKSUM"
+		cd "$TOP_DIR"
+		rm -rf "$TMP_DIR"
+		exit 1
+	}
+fi
+
+find fs | cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
+echo -e "$FILES" | cpio -o -H newc --quiet > "$TOP_DIR/$PACKAGE-$VERSION$EXTRAVERSION.tazpkg"
+cd "$TOP_DIR"
+#\rm -R "$TMP_DIR"
+_ 'Package "%s" repacked successfully.' "$PACKAGE"
+_ 'Size: %s' "$(du -sh "$PACKAGE-$VERSION$EXTRAVERSION.tazpkg")"
+newline

@@ -1,0 +1,175 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# remove - TazPkg module
+# Remove packages
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+remove_with_path() {
+	# Avoid dirname errors by checking for argument.
+	[ -n "$1" ] || return
+
+	local dir
+	rm -f $1 2>/dev/null
+	dir="$1"
+	while [ "$dir" != "/" ]; do
+		dir="$(dirname "$dir")"
+		rmdir "$dir" 2>/dev/null || break
+	done
+}
+
+
+grepesc() {
+	sed 's/\[/\\[/g'
+}
+
+
+# Log activity
+
+log_pkg() {
+	[ -w "$LOG" ] &&
+	echo "$(date +'%F %T') - $1 - $PACKAGE ($VERSION$EXTRAVERSION)" >> "$LOG"
+}
+
+
+# Interactive mode
+
+im() { tty -s; }
+
+
+
+
+PACKAGE="$1"
+
+if [ ! -f "$INSTALLED/$PACKAGE/receipt" ]; then
+	newline; _ 'Package "%s" is not installed.' "$PACKAGE"
+	exit 1
+fi
+
+. "$INSTALLED/$PACKAGE/receipt"
+
+# Info #1: dependent packages (to be processed later)
+ALTERED="$(awk -F$'\t' -vp=" $PACKAGE " 'index(" " $8 " ", p) { printf "  %s\n", $1 }' "$PKGS_DB/installed.info")"
+
+if [ -n "$ALTERED" ]; then
+	_ 'The following packages depend on package "%s":' "$PACKAGE"
+	echo "$ALTERED"
+fi
+
+# Info #2: changed packages (to be processed later)
+REFRESH=$(cd "$INSTALLED"; grep -sl "^$PACKAGE$" */modifiers)
+
+if [ -n "$REFRESH" ]; then
+	_ 'The following packages have been modified by package "%s":' "$PACKAGE"
+	for i in $REFRESH; do
+		echo "  ${i%/modifiers}"
+	done
+fi
+
+# Confirmation
+if im && [ -z "$auto" ]; then
+	confirm "$(_ 'Remove package "%s" (%s)? (y/N)' "$PACKAGE" "$VERSION$EXTRAVERSION")"
+	if [ "$?" -ne 0 ]; then
+		newline; _ 'Uninstallation of package "%s" cancelled.' "$PACKAGE"
+		exit 0
+	fi
+fi
+# We are here: non-interactive mode, or --auto, or answer 'y'
+
+# Removing package
+title 'Removing package "%s"' "$PACKAGE"
+
+# [1/4] Pre-remove commands
+if grep -q ^pre_remove "$INSTALLED/$PACKAGE/receipt"; then
+	action 'Execution of pre-remove commands...'
+	pre_remove
+	status
+fi
+
+# [2/4] Removing files
+action 'Removing all files installed...'
+if [ -f "$INSTALLED/$PACKAGE/modifiers" ]; then
+	for file in $(cat "$INSTALLED/$PACKAGE/files.list"); do
+		for mod in $(cat "$INSTALLED/$PACKAGE/modifiers"); do
+			[ -f "$INSTALLED/$mod/files.list" ] && \
+			[ $(grep "^$(echo $file | grepesc)$" "$INSTALLED/$mod/files.list" | wc -l) -gt 1 ] && \
+			continue 2
+		done
+		[ -n "$debug" ] && echo "remove_with_path $root$file"
+		remove_with_path $root$file
+	done
+else
+	for file in $(cat "$INSTALLED/$PACKAGE/files.list"); do
+		[ -n "$debug" ] && echo "remove_with_path $root$file"
+		remove_with_path $root$file
+	done
+fi
+status
+
+# [3/4] Post-remove commands
+if grep -q ^post_remove "$INSTALLED/$PACKAGE/receipt"; then
+	action 'Execution of post-remove commands...'
+	post_remove
+	status
+fi
+
+# [4/4] Remove package receipt and remove it from databases
+action 'Removing package receipt...'
+rm -rf "$INSTALLED/$PACKAGE"
+sed -i "/ $PACKAGE-$VERSION$EXTRAVERSION.tazpkg$/d" "$PKGS_DB/installed.$SUM"
+sed -i "/^$PACKAGE	/d" "$PKGS_DB/installed.info"
+status
+
+footer "$(_ 'Package "%s" (%s) removed.' "$PACKAGE" "$VERSION$EXTRAVERSION")"
+
+# Log this activity
+log_pkg Removed
+
+# Stop if non-interactive mode and no --auto option
+if ! im && [ -z "$auto" ]; then exit 0; fi
+
+# Process dependent packages
+if [ -n "$ALTERED" ]; then
+	if [ -n "$auto" ]; then
+		answer=0
+	else
+		confirm "$(_ 'Remove packages depending on package "%s"? (y/N)' "$PACKAGE")"
+		answer=$?
+	fi
+	if [ "$answer" -eq 0 ]; then
+		for i in $ALTERED; do
+			if [ -d "$INSTALLED/$i" ]; then
+				tazpkg remove $i
+			fi
+		done
+	fi
+fi
+
+# Process changed packages
+if [ -n "$REFRESH" ]; then
+	if [ -n "$auto" ]; then
+		answer=0
+	else
+		confirm "$(_ 'Reinstall packages modified by package "%s"? (y/N)' "$PACKAGE")"
+		answer=$?
+	fi
+	if [ "$answer" -eq 0 ]; then
+		for i in $REFRESH; do
+			if [ "$(wc -l < "$INSTALLED/$i")" -gt 1 ]; then
+				_ 'Check %s for reinstallation' "$INSTALLED/$i"
+				continue
+			fi
+			rm -r "$INSTALLED/$i"
+			tazpkg get-install ${i%/modifiers} --forced
+		done
+	fi
+fi
+

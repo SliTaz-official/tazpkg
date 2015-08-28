@@ -1,0 +1,136 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# getenv - TazPkg module
+# Get TazPkg working environment
+
+
+# Check and re-create files and folders (if permissions enough)
+missing() {
+	case $1 in
+		file)
+			if [ ! -f "$2" ]; then
+				case $(id -u) in
+					0)  mkdir -p "$(dirname "$2")"; touch "$2"
+						[ -n "$3" ] && cp -a "$3" "$(dirname "$2")"
+						;;
+					*) _ 'Missing: %s' "$2"; _ 'Please run tazpkg as root.'; exit 1;;
+				esac
+			fi;;
+		dir)
+			if [ ! -d "$2" ]; then
+				case $(id -u) in
+					0) mkdir -p "$2";;
+					*) _ 'Missing: %s' "$2"; _ 'Please run tazpkg as root.'; exit 1;;
+				esac
+			fi;;
+	esac
+}
+
+# Fill empty file with value
+fill() {
+	if [ ! -s "$1" ]; then
+		case $(id -u) in
+			0) echo "$2" > "$1";;
+			*) _ 'File "%s" empty.' "$1"; _ 'Please run tazpkg as root.'; exit 1;;
+		esac
+	fi
+}
+
+
+
+
+# Setup main config files
+missing dir  "$root/etc/slitaz/"
+missing file "$root/etc/slitaz/slitaz.conf" '/etc/slitaz/slitaz.conf'
+missing file "$root/etc/slitaz/tazpkg.conf" '/etc/slitaz/tazpkg.conf'
+missing file "$root/etc/slitaz-release"; fill "$root/etc/slitaz-release" 'cooking'
+
+# Read configuration
+if [ -n "$root" ]; then
+	# Patch external conf files to correctly handle --root value
+	slitaz_conf=$(mktemp); cp "$root/etc/slitaz/slitaz.conf" "$slitaz_conf"
+	tazpkg_conf=$(mktemp); cp "$root/etc/slitaz/tazpkg.conf" "$tazpkg_conf"
+	sed -i "s| /| $root/|g; s|\"/|\"$root/|g" "$slitaz_conf" "$tazpkg_conf"
+	. "$slitaz_conf"; . "$tazpkg_conf"
+	rm "$slitaz_conf" "$tazpkg_conf"
+else
+	. /etc/slitaz/slitaz.conf; . /etc/slitaz/tazpkg.conf
+fi
+
+BLOCKED="$PKGS_DB/blocked-packages.list"
+UP_LIST="$PKGS_DB/packages.up"
+
+# Re-create TazPkg working folders and files
+for dir in "$PKGS_DB" "$CACHE_DIR" "$INSTALLED" "$SLITAZ_LOGS"; do
+	missing dir "$dir"
+done
+for file in "$BLOCKED" "$UP_LIST" "$LOG" "$PKGS_DB/packages.info" "$PKGS_DB/mirror"; do
+	missing file "$file"
+done
+fill "$PKGS_DB/mirror" "${ONLINE_PKGS%/}/"
+
+# Check for installed.info
+info_path="$PKGS_DB/installed.info"
+missing file "$info_path"
+if [ ! -s "$info_path" ]; then
+	# Empty installed.info
+	if [ "$(id -u)" -eq 0 ]; then
+		# Root can re-create installed.info
+		_ 'File "%s" generated. Please wait...' 'installed.info'
+		for pkg in $(find "$INSTALLED" -name receipt); do
+			unset PACKAGE VERSION EXTRAVERSION CATEGORY SHORT_DESC WEB_SITE \
+				TAGS PACKED_SIZE UNPACKED_SIZE DEPENDS
+			. $pkg
+			SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
+			# remove newlines from some receipts
+			DEPENDS=$(echo $DEPENDS)
+			MD5="$(fgrep " $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" "$PKGS_DB/installed.md5" | awk '{print $1}')"
+			cat >> "$info_path" << EOT
+$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS	$MD5
+EOT
+		done
+	else
+		# User can't re-create installed.info
+		fill "$info_path"
+	fi
+else
+	# Non-empty installed.info
+
+	# Check for md5 field (#9) in the installed.info: older version missed it
+	if [ -n "$(awk -F$'\t' 'BEGIN{ n = "" } { if(NF != 9){ n = "o"; } } END{ print n }' $info_path)" ]; then
+		if [ "$(id -u)" -eq 0 ]; then
+			# Root can re-create it
+			_n 'File "%s" generated. Please wait...' 'installed.info.new'
+			awk -F$'\t' -vm="$PKGS_DB/installed.md5" 'BEGIN{OFS="\t"}
+			{
+				if (NF != 9) {
+					pkg = $1 "-" $2 ".tazpkg";
+					"fgrep " pkg " " m " | cut -c-32" | getline $9;
+					$9 = ($9 == "") ? "00000000000000000000000000000000" : $9;
+				}
+				print;
+			}' $info_path > $info_path.new
+			mv -f $info_path.new $info_path
+			status
+		else
+			# User can't re-create it
+			_ 'Old "%s".' 'installed.info'
+			_ 'Please run tazpkg as root.'
+			exit 1
+		fi
+	fi
+fi
+
+
+if [ -n "$debug" ]; then
+	cat <<EOT
+root        = "$root"
+PKGS_DB     = "$PKGS_DB"
+CACHE_DIR   = "$CACHE_DIR"
+INSTALLED   = "$INSTALLED"
+BLOCKED     = "$BLOCKED"
+UP_LIST     = "$UP_LIST"
+SLITAZ_LOGS = "$SLITAZ_LOGS"
+LOG         = "$LOG"
+EOT
+fi

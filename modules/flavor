@@ -1,0 +1,123 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# flavor - TazPkg module
+# Install package-list from a flavor
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+alias cpio='busybox cpio'
+
+
+
+
+# Get repositories priority using $PKGS_DB/priority.
+# In this file undigest repos are called by their names and main mirror
+# by 'main'. Sort order: priority
+
+look_for_priority() {
+	[ -s "$PKGS_DB/priority" ] && priority=$(cat "$PKGS_DB/priority")
+
+	for rep in main $(ls "$PKGS_DB/undigest" 2>/dev/null); do
+		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q "^$rep$" "$PKGS_DB/priority"; then
+			priority=$(echo -e "$priority\n$rep")
+		fi
+	done
+
+	priority=$(echo "$priority" | sed '/^$/d' | \
+		while read line; do
+		case $line in
+			(main) echo "$PKGS_DB";;
+			(*)    echo "$PKGS_DB/undigest/$line";;
+		esac
+	done)
+}
+
+
+# Download a file from this mirror
+
+download_from() {
+	case "$1" in
+		# Mirror URL can have a trailing slash or not.
+		http://* | https://* | ftp://*)
+			busybox wget -c -q -T 30 -U $UA ${1%/}/$2 2>/dev/null && break ;;
+		*)
+			ln -sf ${1%/}/$2 . && break ;;
+	esac
+}
+
+
+# Download a file trying all mirrors
+
+download() {
+	# input: <package_name>-<version>.tazpkg
+	local i
+	case "$1" in
+		*.tazpkg)
+			for i in $priority; do
+				if [ -n "$(awk -F$'\t' -vp="$1" 'p==$1"-"$2".tazpkg"{print $1}' \
+					"$i/packages.info")" ]; then
+					download_from "$(cat $i/mirror)" "$@" && return
+				fi
+			done
+			;;
+	esac
+
+	for i in $(cat $(for rep in $priority; do echo $rep/mirror; done) 2>/dev/null); do
+		download_from "$i" "$@" && break
+	done
+}
+
+
+
+
+# Get repositories priority list.
+look_for_priority
+
+FLAVOR="$1"
+TMP_DIR=$(mktemp -d)
+
+[ -f "$FLAVOR.flavor" ] && cp "$FLAVOR.flavor" "$TMP_DIR"
+
+cd "$TMP_DIR"
+if [ -f "$FLAVOR.flavor" ] || download "$FLAVOR.flavor"; then
+	zcat < "$FLAVOR.flavor" | cpio --quiet -i >/dev/null
+
+	while read file; do
+		# 'file' here in form 'package-version'
+		is_installed=$(awk -F$'\t' -vf="$file" '$1 "-" $2 == f {print 1}' "$PKGS_DB/installed.info")
+		[ -n "$is_installed" ] && continue
+
+		# Install package if it not installed or has a different version
+		cd "$CACHE_DIR"
+		download "$file.tazpkg"
+		cd "$TMP_DIR"
+		tazpkg install "$CACHE_DIR/$file.tazpkg" --forced
+	done < "$FLAVOR.pkglist"
+
+	[ -f "$FLAVOR.nonfree" ] && \
+	while read pkg; do
+		[ -d "$INSTALLED/$pkg" ] && continue
+		[ ! -d "$INSTALLED/get-$pkg" ] && tazpkg get-install get-$pkg
+		get-$pkg
+	done < "$FLAVOR.nonfree"
+
+	# Option "--purge"
+	[ -n "$purge" ] && \
+	for pkg in $(awk -F$'\t' '{printf "%s:%s ", $1, $2}' "$PKGS_DB/installed.info"); do
+		# If installed 'package-version' listed in 'pkglist'
+		grep -q "^${pkg/:/-}$" "$FLAVOR.pkglist" && continue
+		# If installed 'package' listed in 'nonfree'
+		grep -qs "^${pkg%:*}$" "$FLAVOR.nonfree" && continue
+		# Remove other packages
+		tazpkg remove "${pkg%:*}"
+	done
+else
+	_ "Can't find flavor \"%s\". Abort." "$FLAVOR"
+fi
+cd "$TOP_DIR"
+rm -rf "$TMP_DIR"
