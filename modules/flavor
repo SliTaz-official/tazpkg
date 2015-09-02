@@ -15,29 +15,6 @@ alias cpio='busybox cpio'
 
 
 
-# Get repositories priority using $PKGS_DB/priority.
-# In this file undigest repos are called by their names and main mirror
-# by 'main'. Sort order: priority
-
-look_for_priority() {
-	[ -s "$PKGS_DB/priority" ] && priority=$(cat "$PKGS_DB/priority")
-
-	for rep in main $(ls "$PKGS_DB/undigest" 2>/dev/null); do
-		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q "^$rep$" "$PKGS_DB/priority"; then
-			priority=$(echo -e "$priority\n$rep")
-		fi
-	done
-
-	priority=$(echo "$priority" | sed '/^$/d' | \
-		while read line; do
-		case $line in
-			(main) echo "$PKGS_DB";;
-			(*)    echo "$PKGS_DB/undigest/$line";;
-		esac
-	done)
-}
-
-
 # Download a file from this mirror
 
 download_from() {
@@ -76,7 +53,7 @@ download() {
 
 
 # Get repositories priority list.
-look_for_priority
+priority=$(tazpkg call look_for_priority)
 
 FLAVOR="$1"
 TMP_DIR=$(mktemp -d)

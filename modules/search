@@ -13,19 +13,6 @@
 
 
 
-# Translate category names (must be last in line)
-
-translate_category() {
-	sed "s|base-system$|$(_ base-system)|; s|x-window$|$(_ x-window)|;
-		s|utilities$|$(_ utilities)|; s|network$|$(_ network)|;
-		s|graphics$|$(_ graphics)|; s|multimedia$|$(_ multimedia)|;
-		s|office$|$(_ office)|; s|development$|$(_ development)|;
-		s|system-tools$|$(_ system-tools)|; s|security$|$(_ security)|;
-		s|games$|$(_ games)|; s|misc$|$(_ misc)|; s|meta$|$(_ meta)|;
-		s|non-free$|$(_ non-free)|; s|all$|$(_ all)|; s|extra$|$(_ extra)|"
-}
-
-
 # Search pattern in installed packages.
 
 search_in_installed_packages() {
@@ -38,7 +25,7 @@ search_in_installed_packages() {
 		index($1 "-" $2, pattern) {
 			printf "%-24s%-18s%s\n", $1, $2, $3;
 			printf "1" >> t
-		}' "$PKGS_DB/installed.info" | translate_category
+		}' "$PKGS_DB/installed.info" | tazpkg call translate_category
 	num=$(wc -m < "$TMPLIST"); rm "$TMPLIST"
 
 	footer "$(_p \
@@ -61,7 +48,7 @@ search_in_packages_list() {
 		index($1 "-" $2, pattern) {
 			printf "%-24s%-18s%s\n", $1, $2, $3;
 			printf "1" >> t
-		}' "$i" | translate_category
+		}' "$i" | tazpkg call translate_category
 	done
 
 	for i in $PKGS_DB/extra.list $PKGS_DB/undigest/*/extra.list; do
@@ -70,7 +57,7 @@ search_in_packages_list() {
 		index($1 "-" $5, pattern) {
 			printf "%-24s%-18s%s\n", $1 " (extra)", $5, $4;
 			printf "1" >> t
-		}' "$i" | translate_category
+		}' "$i" | tazpkg call translate_category
 	done
 
 	if [ ! -f "$PKGS_DB/packages.info" ]; then
@@ -185,8 +172,9 @@ case "$1" in
 
 			# Check all pkg files.list in search match which specify the package
 			# name and the full path to the file(s).
-			for pkg in $INSTALLED/*; do
-				if grep -qs "$2" "$pkg/files.list"; then
+			for pkg in $(awk -F$'\t' '{print $1}' $PKGS_DB/installed.info); do
+				FL="$INSTALLED/$pkg/files.list"
+				if grep -qs "$2" "$FL"; then
 					newline
 					emsg "<c 33>$(_ 'Package %s:' "$pkg")</c>"
 					awk -vtmp="$TMPLIST" -vfile="$2" -vcfile="$(colorize 32 $2)" '
@@ -196,7 +184,7 @@ case "$1" in
 							print " "$0;
 							printf "1" >> tmp;
 						}
-					' "$pkg/files.list"
+					' "$FL"
 				fi
 			done
 

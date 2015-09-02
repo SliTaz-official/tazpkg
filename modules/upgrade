@@ -17,36 +17,6 @@
 . @@MODULES@@/getenv
 
 
-
-
-# Functions
-# ---------
-
-# Get repositories priority using $PKGS_DB/priority.
-# In this file undigest repos are called by their names and main mirror
-# by 'main'. Sort order: priority
-
-look_for_priority() {
-	[ -s "$PKGS_DB/priority" ] && priority=$(cat "$PKGS_DB/priority")
-
-	for rep in main $(ls "$PKGS_DB/undigest" 2>/dev/null); do
-		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q "^$rep$" "$PKGS_DB/priority"; then
-			priority=$(echo -e "$priority\n$rep")
-		fi
-	done
-
-	priority=$(echo "$priority" | sed '/^$/d' | \
-		while read line; do
-		case $line in
-			(main) echo "$PKGS_DB";;
-			(*)    echo "$PKGS_DB/undigest/$line";;
-		esac
-	done)
-}
-
-
-
-
 time="$(date +%s)"
 
 # Recharge packages databases (if necessary) (respects already exported "root" value)
@@ -56,9 +26,8 @@ echo -n > "$UP_LIST"
 blocked_counter=$(mktemp)
 tmp_up_list=$(mktemp)
 
-look_for_priority
 repo_number=1
-for repo in $priority; do
+for repo in $(tazpkg call look_for_priority); do
 	if [ "$repo" == "$PKGS_DB" ]; then
 		repo_name='Main'
 	else

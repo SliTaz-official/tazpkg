@@ -173,17 +173,17 @@ look_for_priority() {
 	[ -s "$PKGS_DB/priority" ] && priority=$(cat $PKGS_DB/priority)
 
 	for rep in main $(ls $PKGS_DB/undigest 2>/dev/null); do
-		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q ^$rep$ $PKGS_DB/priority; then
+		if [ ! -s "$PKGS_DB/priority" ] || ! grep -q ^$rep$ "$PKGS_DB/priority"; then
 			priority=$(echo -e "$priority\n$rep")
 		fi
 	done
-	priority=$(echo "$priority" | sed '/^$/d' | \
-		while read line; do
+	echo "$priority" | sed '/^$/d' | \
+	while read line; do
 		case $line in
-			(main) echo $PKGS_DB;;
-			(*)    echo $PKGS_DB/undigest/$line;;
+			main) echo "$PKGS_DB";;
+			*)    echo "$PKGS_DB/undigest/$line";;
 		esac
-	done)
+	done
 }
 
 
@@ -357,7 +357,7 @@ get_package_filename() {
 	# input: "<package_name>" or "<package_name>-<version>" (ex. "nano" or "nano-2.4.0")
 	local pkg equiv
 	for rep in $priority; do
-		pkg=$(awk -F$'\t' -vp="$1" 'p==$1||p==$1"-"$2{print $1"-"$2}' $rep/packages.info)
+		pkg=$(awk -F$'\t' -vp="$1" 'p==$1||p==$1"-"$2{print $1"-"$2}' "$rep/packages.info")
 
 		if [ -n "$pkg" ]; then
 			get_cache_dir; break
@@ -979,6 +979,15 @@ update_kernel_modules() {
 ###################
 
 case "$COMMAND" in
+	call)
+		# Call internal tazpkg function from external tazpkg module or other script.
+		# Useful for functions sharing.
+		shift
+		# Check to call only tazpkg functions
+		fgrep -q "$1()" "$0" && $@
+		;;
+
+
 	list|-l)
 		# Various lists
 		shift
@@ -1061,7 +1070,7 @@ case "$COMMAND" in
 		[ -n "$list" ] && INSTALL_LIST="$list"
 
 		# Get repositories priority list.
-		look_for_priority
+		priority=$(look_for_priority)
 
 		# Check if forced install.
 		if [ -z "$forced" ]; then
@@ -1358,7 +1367,7 @@ EOT
 		fi
 
 		# Get repositories priority list.
-		look_for_priority
+		priority=$(look_for_priority)
 
 		CURRENT_DIR="$PWD"
 		cd "$CACHE_DIR"
@@ -1401,7 +1410,7 @@ EOT
 		[ -n "$list" ] && INSTALL_LIST="$list"					# internal option
 
 		# Get repositories priority list.
-		look_for_priority
+		priority=$(look_for_priority)
 
 		AUTOEXEC='no'
 		# Magic :)
