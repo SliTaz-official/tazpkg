@@ -6,6 +6,6 @@ Name[pt]=Gerenciador de Pacotes
 Name[pt_BR]=Gerenciador de Pacotes
 Name[ru]=Менеджер пакетов
 TryExec=tazweb
-Exec=sh -c 'W=$HOME/.config/slitaz/subox.conf;[ -f $W ]||subox -;tazweb root:$(head $W)@127.0.0.1:82/user/pkgs.cgi'
+Exec=sh -c 'tazweb root:$$@127.0.0.1:82/user/pkgs.cgi'
 Icon=tazpkg
 Categories=Settings;PackageManager;
