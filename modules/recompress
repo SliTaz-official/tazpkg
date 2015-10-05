@@ -1,0 +1,52 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# recompress - TazPkg module
+# Recompress .tazpkg cpio archive with lzma
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+# Extract a package with cpio and gzip/lzma.
+
+extract_package() {
+	action 'Extracting package...'
+	cpio -idm --quiet < "${PACKAGE_FILE##*/}" && rm -f "${PACKAGE_FILE##*/}"
+	if [ -f fs.cpio.lzma ]; then
+		unlzma < fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
+	elif [ -f fs.cpio.gz ]; then
+		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
+	fi
+	status
+}
+
+
+PACKAGE_FILE="$1"
+
+title 'Recompressing package "%s"' "$(basename "$PACKAGE_FILE" .tazpkg)"
+TMP_DIR="$(mktemp -d)"
+
+action "Copying original package..."
+cp "$PACKAGE_FILE" "$TMP_DIR"
+status
+
+cd "$TMP_DIR"
+extract_package
+
+action "Recompressing the FS..."
+find fs | busybox cpio -o -H newc --quiet | lzma e fs.cpio.lzma -si
+rm -rf fs
+status
+
+action "Creating new package..."
+find | busybox cpio -o -H newc --quiet > "$PACKAGE_FILE"
+status
+
+rm -rf "$TMP_DIR"
+separator; newline

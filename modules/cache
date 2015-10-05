@@ -1,0 +1,32 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# cache - TazPkg module
+# Work with package cache
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+case $1 in
+	clean)
+		num=$(find "$CACHE_DIR" -name *.tazpkg | wc -l)
+		size=$(du -hs "$CACHE_DIR" | cut -f1 | sed 's|\.0||')
+		[ "$num" -eq 0 ] && size="0K"
+
+		title 'Cleaning cache directory...'
+		action 'Path: %s' "$CACHE_DIR"
+		find "$CACHE_DIR" -name '*.tazpkg' -delete
+		status
+
+		footer "$(_p \
+			'%s file removed from cache (%s).' \
+			'%s files removed from cache (%s).' "$num" \
+			"$(colorize 32 "$num")" "$size")"
+		;;
+esac

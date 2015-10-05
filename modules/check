@@ -85,9 +85,6 @@ grepesc() { sed 's/\[/\\[/g'; }
 
 
 
-# Get repositories priority list.
-priority=$(tazpkg call look_for_priority)
-
 cd "$INSTALLED"
 if [ -z "$2" -o -n "$full" ]; then PACKAGES="$(ls)"; else PACKAGES="$2"; fi
 PACKAGE_PRINTED=''

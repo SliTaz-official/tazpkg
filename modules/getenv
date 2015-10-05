@@ -4,26 +4,45 @@
 # Get TazPkg working environment
 
 
+# Set up the aliases to guaranteed to work with Busybox applets rather with the GNU Coreutils ones
+# due to some incompatibilities.
+# Please don't hesitate to expand or shrink this list (with justification).
+for i in awk basename bzcat cat chmod chroot clear cmp cp cpio cut date dd diff dirname dpkg-deb \
+	du egrep fgrep find grep gzip head httpd id ln ls lzcat md5sum mkdir mktemp mv readlink \
+	realpath rm rmdir rpm rpm2cpio sed sort stat su tac tail tar tee touch tr tty uniq unlzma wc \
+	wget which xzcat zcat; do
+	alias $i="busybox $i"
+done
+
+
+. /lib/libtaz.sh
+
+# Report error and finish work
+die() { longline "$(_ "$@")" >&2; exit 1; }
+
+# Show debug messages
+debug() { if [ -n "$debug" ]; then colorize 036 "$@" >&2; fi; }
+
+debug "\n========\n$0 '$1' '$2' '$3' '$4'"
+
 # Check and re-create files and folders (if permissions enough)
-missing() {
-	case $1 in
-		file)
-			if [ ! -f "$2" ]; then
-				case $(id -u) in
-					0)  mkdir -p "$(dirname "$2")"; touch "$2"
-						[ -n "$3" ] && cp -a "$3" "$(dirname "$2")"
-						;;
-					*) _ 'Missing: %s' "$2"; _ 'Please run tazpkg as root.'; exit 1;;
-				esac
-			fi;;
-		dir)
-			if [ ! -d "$2" ]; then
-				case $(id -u) in
-					0) mkdir -p "$2";;
-					*) _ 'Missing: %s' "$2"; _ 'Please run tazpkg as root.'; exit 1;;
-				esac
-			fi;;
-	esac
+missing_file() {
+	if [ ! -f "$1" ]; then
+		case $(id -u) in
+			0)  mkdir -p "$(dirname "$1")"; touch "$1"
+				[ -n "$2" ] && cp -a "$2" "$(dirname "$1")"
+				;;
+			*) _ 'Missing: %s' "$1" >&2; die 'Please run tazpkg as root.';;
+		esac
+	fi
+}
+missing_dir() {
+	if [ ! -d "$1" ]; then
+		case $(id -u) in
+			0) mkdir -p "$1";;
+			*) _ 'Missing: %s' "$1" >&2; die 'Please run tazpkg as root.';;
+		esac
+	fi
 }
 
 # Fill empty file with value
@@ -31,7 +50,7 @@ fill() {
 	if [ ! -s "$1" ]; then
 		case $(id -u) in
 			0) echo "$2" > "$1";;
-			*) _ 'File "%s" empty.' "$1"; _ 'Please run tazpkg as root.'; exit 1;;
+			*) _ 'File "%s" empty.' "$1" >&2; die 'Please run tazpkg as root.';;
 		esac
 	fi
 }
@@ -39,11 +58,15 @@ fill() {
 
 
 
+# Normalize $root
+root="${root%/}"
+debug "root        = '$root'"
+
 # Setup main config files
-missing dir  "$root/etc/slitaz/"
-missing file "$root/etc/slitaz/slitaz.conf" '/etc/slitaz/slitaz.conf'
-missing file "$root/etc/slitaz/tazpkg.conf" '/etc/slitaz/tazpkg.conf'
-missing file "$root/etc/slitaz-release"; fill "$root/etc/slitaz-release" 'cooking'
+missing_dir  "$root/etc/slitaz/"
+missing_file "$root/etc/slitaz/slitaz.conf" '/etc/slitaz/slitaz.conf'
+missing_file "$root/etc/slitaz/tazpkg.conf" '/etc/slitaz/tazpkg.conf'
+missing_file "$root/etc/slitaz-release"; fill "$root/etc/slitaz-release" 'cooking'
 
 # Read configuration
 if [ -n "$root" ]; then
@@ -57,41 +80,55 @@ else
 	. /etc/slitaz/slitaz.conf; . /etc/slitaz/tazpkg.conf
 fi
 
+debug "PKGS_DB     = '$PKGS_DB'"
+debug "INSTALLED   = '$INSTALLED'"
+debug "SLITAZ_LOGS = '$SLITAZ_LOGS'"
+debug "LOG         = '$LOG'"
+
 BLOCKED="$PKGS_DB/blocked-packages.list"
+debug "BLOCKED     = '$BLOCKED'"
 UP_LIST="$PKGS_DB/packages.up"
+debug "UP_LIST     = '$UP_LIST'"
+debug "CACHE_DIR   = '$CACHE_DIR'"
+SAVE_CACHE_DIR="$CACHE_DIR"
+
 
 # Re-create TazPkg working folders and files
 for dir in "$PKGS_DB" "$CACHE_DIR" "$INSTALLED" "$SLITAZ_LOGS"; do
-	missing dir "$dir"
+	missing_dir "$dir"
 done
 for file in "$BLOCKED" "$UP_LIST" "$LOG" "$PKGS_DB/packages.info" "$PKGS_DB/mirror"; do
-	missing file "$file"
+	missing_file "$file"
 done
 fill "$PKGS_DB/mirror" "${ONLINE_PKGS%/}/"
 
+
 # Check for installed.info
 info_path="$PKGS_DB/installed.info"
-missing file "$info_path"
+missing_file "$info_path"
 if [ ! -s "$info_path" ]; then
 	# Empty installed.info
-	if [ "$(id -u)" -eq 0 ]; then
-		# Root can re-create installed.info
-		_ 'File "%s" generated. Please wait...' 'installed.info'
-		for pkg in $(find "$INSTALLED" -name receipt); do
-			unset PACKAGE VERSION EXTRAVERSION CATEGORY SHORT_DESC WEB_SITE \
-				TAGS PACKED_SIZE UNPACKED_SIZE DEPENDS
-			. $pkg
-			SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
-			# remove newlines from some receipts
-			DEPENDS=$(echo $DEPENDS)
-			MD5="$(fgrep " $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" "$PKGS_DB/installed.md5" | awk '{print $1}')"
-			cat >> "$info_path" << EOT
+	if [ -n "$(ls "$INSTALLED")" ]; then
+		# Some packages are installed
+		if [ "$(id -u)" -eq 0 ]; then
+			# Root can re-create installed.info
+			_ 'File "%s" generated. Please wait...' 'installed.info' >&2
+			for pkg in $(find "$INSTALLED" -name receipt); do
+				unset PACKAGE VERSION EXTRAVERSION CATEGORY SHORT_DESC WEB_SITE \
+					TAGS PACKED_SIZE UNPACKED_SIZE DEPENDS
+				. $pkg
+				SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
+				# remove newlines from some receipts
+				DEPENDS=$(echo $DEPENDS)
+				MD5="$(fgrep " $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" "$PKGS_DB/installed.md5" | awk '{print $1}')"
+				cat >> "$info_path" << EOT
 $PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS	$MD5
 EOT
-		done
-	else
-		# User can't re-create installed.info
-		fill "$info_path"
+			done
+		else
+			# User can't re-create installed.info
+			fill "$info_path"
+		fi
 	fi
 else
 	# Non-empty installed.info
@@ -100,7 +137,7 @@ else
 	if [ -n "$(awk -F$'\t' 'BEGIN{ n = "" } { if(NF != 9){ n = "o"; } } END{ print n }' $info_path)" ]; then
 		if [ "$(id -u)" -eq 0 ]; then
 			# Root can re-create it
-			_n 'File "%s" generated. Please wait...' 'installed.info.new'
+			_n 'File "%s" generated. Please wait...' 'installed.info.new' >&2
 			awk -F$'\t' -vm="$PKGS_DB/installed.md5" 'BEGIN{OFS="\t"}
 			{
 				if (NF != 9) {
@@ -114,23 +151,39 @@ else
 			status
 		else
 			# User can't re-create it
-			_ 'Old "%s".' 'installed.info'
-			_ 'Please run tazpkg as root.'
-			exit 1
+			_ 'Old "%s".' 'installed.info' >&2; die 'Please run tazpkg as root.'
 		fi
 	fi
 fi
 
 
-if [ -n "$debug" ]; then
-	cat <<EOT
-root        = "$root"
-PKGS_DB     = "$PKGS_DB"
-CACHE_DIR   = "$CACHE_DIR"
-INSTALLED   = "$INSTALLED"
-BLOCKED     = "$BLOCKED"
-UP_LIST     = "$UP_LIST"
-SLITAZ_LOGS = "$SLITAZ_LOGS"
-LOG         = "$LOG"
-EOT
+# Check for packages.info
+if [ ! -s "$PKGS_DB/packages.info" -a "$(id -u)" -eq 0 -a "$0" != '@@MODULES@@/recharge' ]; then
+	@@MODULES@@/recharge >&2
 fi
+
+
+
+# Get repositories priority using $PKGS_DB/priority.
+# In this file undigest repos are called by their names and main mirror by 'main'
+
+PRIORITY="$(
+{
+	[ -s "$PKGS_DB/priority" ] && cat "$PKGS_DB/priority"
+	echo 'main'
+	[ -d "$PKGS_DB/undigest" ] && ls "$PKGS_DB/undigest"
+} | awk -vv="$PKGS_DB/undigest/" '{
+	if(arr[$0] != 1) { arr[$0]=1; print v $0; }
+}' | sed 's|/undigest/main||')"
+debug "PRIORITY    = '$PRIORITY'"
+
+
+# TazPkg version
+export VERSION=$(awk -F$'\t' '$1=="tazpkg"{print $2;exit}' "$PKGS_DB/installed.info")
+# User Agent
+export UA="TazPkg-${VERSION:-Unknown}"
+debug "UA          = '$UA'"
+
+CUR_DIR="$(pwd)"
+
+debug '-- end getenv --'

@@ -27,7 +27,7 @@ blocked_counter=$(mktemp)
 tmp_up_list=$(mktemp)
 
 repo_number=1
-for repo in $(tazpkg call look_for_priority); do
+for repo in $PRIORITY; do
 	if [ "$repo" == "$PKGS_DB" ]; then
 		repo_name='Main'
 	else

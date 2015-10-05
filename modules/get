@@ -1,0 +1,369 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# get - TazPkg module
+# Get package to the cache directory
+
+
+# 1. "Plain packages" - compiled and packed on cook.slitaz.org using receipts.
+#
+# Recently added other type of packages: packages that can't be compiled due to the closed sources
+# or due to the giant size of that sources. In this case special script: a) downloads package
+# compiled for other Linux from official web site, b) converts this package to the TazPkg format,
+# c) installs this package as "plain" package.
+#
+# 2. "Get-packages" - package contains only one special script for downloading/converting.
+# Sometimes get-package can get some specified version of the package, sometimes - different
+# (latest) version.
+#
+# Packages 1. and 2. can be found in the wok repository: http://hg.slitaz.org/wok/
+#
+# 3. "Extra" get-scripts. Next addition - only script, without packaging.
+# Extra get-scripts repository: http://hg.slitaz.org/get-scripts/
+# Extra get-scripts mirror:     http://mirror.slitaz.org/packages/get/
+#
+# 4. Converted "extra" packages. Next addition - some packages like LibreOffice / OpenOffice are
+# big to compile them like _1. "Plain packages"_ as well as big to convert them on the user side
+# (you need a lot of time, CPU, and RAM) and sometimes it is unable on the weak user machines.
+# So, some selected and free packages are converted on the SliTaz server side, packaged and
+# are ready to download by any user: http://mirror.slitaz.org/packages/extra/
+#
+#
+# Algorithm to get package:
+#  - search package in question in the mirrored packages list, download if exists;
+#  - search "get-package" in the mirrored packages list, download if exists;
+#  - search package in the "extra" get-scripts list, download if exists and run it, get the package.
+#
+# Note, here doubling. Imagine, you may wanted "palemoon" package.
+# 1. No "plain package";
+# 2. Existing "get-palemoon" package;
+# 3. Existing "palemoon" extra get-script;
+# 4. Existing "palemoon" extra converted package.
+# User will get 2. He can specify "--extra" option to get 3.
+# FIXME: do something with doubling.
+
+
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+. /usr/lib/slitaz/libpkg.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+. @@MODULES@@/find-depends
+
+
+
+
+# Get cache directory path
+
+get_cache_path() {
+	# input:  $1 = DB folder such as "$PKGS_DB" or "$PKGS_DB/undigest/*"
+	#         $2 (optional): 'extra' for cache for extra-package scripts
+	# output: path to cache directory
+
+	local cache_dir
+
+	if [ "$2" == 'extra' ]; then
+		cache_dir="$SAVE_CACHE_DIR/extra/packages"
+	elif [ "$1" == "$PKGS_DB" ]; then
+		# Main repository
+		cache_dir="$SAVE_CACHE_DIR/$SLITAZ_RELEASE/packages"
+	else
+		# Undigest repository
+		cache_dir="$SAVE_CACHE_DIR/${1##*/}/packages"
+	fi
+
+	# Make cache directory if absent
+	mkdir -p "$cache_dir"
+	chmod a+w "$cache_dir"
+
+	echo "$cache_dir"
+}
+
+
+# Download a file from mirror
+
+download_from() {
+	# input: "<mirror_url>" "<package_name>-<version>.tazpkg"
+
+	debug "\ndownload_from('$1', '$2')"
+
+	case "$1" in
+		# Mirror URL can have a trailing slash or not.
+		http://* | https://* | ftp://*)
+			debug "  busybox wget -c -q -T 30 -U $UA ${1%/}/$2"
+			# TODO: display abridged wget status
+			busybox wget -c -q -T 30 -U $UA ${1%/}/$2
+			;;
+		*)
+			debug "  ln -sf ${1%/}/$2 ."
+			ln -sf ${1%/}/$2 .;;
+	esac
+}
+
+
+# This function may be called by a get script.
+
+abort_package() {
+	cd "$CUR_DIR"
+	rm -rf "$tmp_dir"
+	echo "${1:-Abort $PACKAGE.}"
+	exit 1
+}
+
+
+# Get extra-package file to the cache
+
+get_pkg_extra() {
+	# input:  $1 extra-package name (like 'dropbox')
+	#         $2 (internal): empty or 'redo' (when recursive calling)
+	# action: download stuff and make package
+	# output: full path to created package
+
+	debug "\nget_pkg_extra('$1', '$2')"
+
+	local mirror extra_cache converted tmp_dir script
+
+	# Check extra.list
+	if [ ! -s "$PKGS_DB/extra.list" ]; then
+		# Empty extra.list
+		if [ "$2" != 'redo' ]; then
+			tazpkg recharge >&2
+			get_pkg_extra "$1" 'redo'; exit 0
+		else
+			# Give up
+			_ 'File "%s" empty.' 'extra.list' >&2
+			die 'Unable to find package "%s" in the extra packages list.' "$(boldify $1)"
+		fi
+	fi
+
+	# Extra.list exists and not empty
+	if ! grep -q "^$1|" "$PKGS_DB/extra.list"; then
+		die 'Unable to find package "%s" in the extra packages list.' "$(boldify $1)"
+	fi
+
+	# Extra-package found in extra.list
+
+	if [ -z "$nocache" ]; then
+		# Go to cache for "get-install" command; don't move for "get" command
+		extra_cache="$(get_cache_path "$PKGS_DB" 'extra')"
+		debug "cd '$extra_cache'"
+		cd "$extra_cache"
+
+		# Extra-cache should contain packages DB files (packages.info, etc.)
+		# to list extra-packages contained in the extra-cache
+		[ ! -f 'packages.info' ] && tazpkg mkdb "$extra_cache" --root='' --forced >/dev/null
+
+		if [ -f 'packages.info' ]; then
+			awk -F$'\t' -vp="$1" '$1==p{exit 1}' packages.info
+			if [ "$?" -eq 1 ]; then
+				_ 'Package "%s" already in the cache' "$1" >&2
+				echo -n "$(pwd)/"
+				awk -F$'\t' -vp="$1" '$1==p{printf "%s-%s.tazpkg\n", $1, $2; exit}' packages.info
+				exit 0
+			fi
+		fi
+	fi
+
+	mirror="$(cat "$PKGS_DB/mirror")"
+	debug "mirror='$mirror'"
+
+
+	# Try converted extra-packages first
+	# FIXME: Workaround to get packages filenames (even better to have names and versions separate)
+	converted="$(busybox wget -O - http://mirror1.slitaz.org/packages/extra/ 2>/dev/null | \
+		tr \'\" $'\n' | grep "$1-.*\.tazpkg$" | sort -u)"
+	debug "converted='$converted'"
+	if [ -n "$converted" ]; then
+		case "$mirror" in
+			http://*|https://*|ftp://*)
+				# Default 'http://mirror.slitaz.org/packages/cooking/'
+				#      -> 'http://mirror.slitaz.org/packages/extra/'
+				debug "busybox wget -q -T 30 -U '$UA' '${mirror%packages/*}packages/extra/$converted'"
+				busybox wget -q -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted";;
+		esac
+		if [ -f "$converted" ]; then
+			echo "$extra_cache/$converted"; exit 0
+		fi
+	fi
+
+
+	# Fails to download converted extra-package; now try to download and execute get-script
+	cd ..
+	case "$mirror" in
+		http://*|https://*|ftp://*)
+			# Default 'http://mirror.slitaz.org/packages/cooking/'
+			#      -> 'http://mirror.slitaz.org/packages/get/'
+			debug "busybox wget -q -T 30 -U '$UA' '${mirror%packages/*}packages/get/$1'"
+			busybox wget -q -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1";;
+	esac
+
+	if [ ! -f "$1" ]; then
+		# TODO: extra package or extra package script? :) Too complicated...
+		die 'Unable to download extra package "%s".' "$(boldify $1)"
+	fi
+
+	# Extra-package script downloaded in the /var/cache/tazpkg/extra/
+
+	unset_receipt
+	PACKAGE="$1"
+	script="$(realpath $1)"
+	tmp_dir="$(mktemp -d)"; cd "$tmp_dir"
+	# Run script
+	set -e
+	. "$script"
+	set +e
+
+	if [ ! -d "$PACKAGE-$VERSION" ]; then
+		abort_package 'Could not download "%s" from "%s". Exiting.' "${TARBALL:-$PACKAGE}" "${WGET_URL:-$WEB_SITE}"
+	fi
+
+	if [ ! -s "$PACKAGE-$VERSION/receipt" ]; then
+		# Create receipt (if script not created it early) using variables from script
+		cat > "$PACKAGE-$VERSION/receipt" <<EOT
+# SliTaz package receipt.
+
+PACKAGE="$PACKAGE"
+VERSION="${VERSION:-unknown}"
+CATEGORY="${CATEGORY:-non-free}"
+WEB_SITE="$WEB_SITE"
+SHORT_DESC="${SHORT_DESC:-$PACKAGE}"
+MAINTAINER="${MAINTAINER:-nobody@slitaz.org}"
+LICENSE="$LICENSE"
+TARBALL="$TARBALL"
+WGET_URL="$WGET_URL"
+CONFIG_FILES="$CONFIG_FILES"
+SUGGESTED="$SUGGESTED"
+PROVIDE="$PROVIDE"
+DEPENDS="$DEPENDS"
+HOST_ARCH="$HOST_ARCH"
+TAGS="$TAGS"
+EXTRA_SOURCE_FILES="$EXTRA_SOURCE_FILES"
+EOT
+	fi
+
+	# Add dependencies which was found to already defined dependencies
+	DEPENDS="$(unset DEPENDS; . "$PACKAGE-$VERSION/receipt"; echo $DEPENDS)"
+	for i in $(find_depends "$PACKAGE-$VERSION/fs"); do
+		case " $DEPENDS " in
+			*\ $i\ *) continue;;
+		esac
+		sed -i "s/^DEPENDS=\"/&$i /" "$PACKAGE-$VERSION/receipt"
+	done
+
+	# Remove empty variables
+	sed -i '/=""$/d' "$PACKAGE-$VERSION/receipt"
+
+	tazpkg pack "$PACKAGE-$VERSION" gzip >&2
+
+	if [ -z "nocache" ]; then
+		# move package to the extra-cache for "get-install" command
+		mv -f "$tmp_dir/$PACKAGE-$VERSION.tazpkg" "$extra_cache"
+		# Re-make extra packages database
+		tazpkg mkdb "$extra_cache" --root='' --forced >/dev/null
+	else
+		# move package to directory where "tazpkg get" command invoked
+		mv -f "$tmp_dir/$PACKAGE-$VERSION.tazpkg" "$CUR_DIR"
+	fi
+
+	# Clean
+	rm -rf "$tmp_dir"
+
+	# Function output: path to package
+	echo "$CUR_DIR/$PACKAGE-$VERSION.tazpkg"
+}
+
+
+# Download package file to the cache
+
+get_pkg() {
+	# input:  $1 package name either "name" or "name-version"
+	#         $2 (internal): empty or 'redo' (when recursive calling)
+	# action: download package from mirror to the cache directory
+	# output: full path to the downloaded package
+
+	debug "\nget_pkg('$1', '$2')"
+	local repo line namever pkgsum
+
+	IFS=$'\n'
+	for rep in $PRIORITY; do
+		[ ! -f "$rep/packages.info" ] && continue
+		# If found, output string "<name>-<ver>:<sum>"
+		line=$(awk -F$'\t' -vpkg="$1" \
+			'$1==pkg || $1"-"$2==pkg {printf "%s-%s:%s", $1, $2, $9; exit}' "$rep/packages.info")
+		if [ -n "$line" ]; then
+			namever=${line%:*}; pkgsum=${line#*:}
+			break
+		fi
+	done
+	unset IFS
+
+	debug "  rep='$rep'\n  namever='$namever'\n  pkgsum='$pkgsum'"
+
+	if [ -z "$line" ]; then
+		_ 'Unable to find package "%s" in the mirrored packages list.' "$(boldify $1)" >&2
+		# Retry with "get-package"; prevent looping with 'redo'
+		if [ "$2" != 'redo' ]; then
+			get_pkg "get-$1" 'redo'; exit 0
+		else
+			# Retry with extra-package
+			get_pkg_extra "${1#get-}"
+			exit 0
+		fi
+	fi
+
+	# We need package "$namever.tazpkg" from "$rep" with "$pkgsum"
+
+	if [ -z "$nocache" ]; then
+		# Go to cache for "get-install" command; don't move for "get" command
+		debug "cd '$(get_cache_path "$rep")'"
+		cd "$(get_cache_path "$rep")"
+	fi
+
+	# Check if package already downloaded
+	if [ -f "$namever.tazpkg" ]; then
+		[ -z "$nocache" ] && _ 'Package "%s" already in the cache' "$namever" >&2
+
+		# Check if downloading complete, resume it not complete
+		if ! tail -c 2k "$namever.tazpkg" | fgrep -q '00000000TRAILER'; then
+			_ 'Continuing package "%s" download' "$namever" >&2
+			download_from "$(cat "$rep/mirror")" "$namever.tazpkg"
+		fi
+	else
+		# Package absent in the cache, "cold" downloading
+		download_from "$(cat "$rep/mirror")" "$namever.tazpkg"
+	fi
+
+	# Make sure we downloaded what we want with checksum
+
+	if [ "$($CHECKSUM "$namever.tazpkg" | cut -d' ' -f1)" != "$pkgsum" ]; then
+		_ 'Checksum error for "%s"' "$namever.tazpkg"
+		rm "$namever.tazpkg"
+
+		# Recharge DBs and try again; prevent looping with 'redo'
+		if [ "$2" != 'redo' ]; then
+			tazpkg recharge >&2
+			get_pkg "$1" 'redo'; exit 0
+		else
+			# Give up
+			# TODO: try another mirror?
+			die 'Please wait until the mirror synchronization is complete and try again.'
+		fi
+	fi
+
+	# Output: path to downloaded package
+	printf '%s/%s.tazpkg\n' "$(pwd)" "$namever"
+}
+
+
+
+
+if [ -n "$extra" ]; then
+	# When '--extra' option given, extra-package has priority over 'regular' packages
+	get_pkg_extra "$1"
+else
+	# Try to get 'package', then 'get-package', then extra 'package'
+	get_pkg "$1"
+fi

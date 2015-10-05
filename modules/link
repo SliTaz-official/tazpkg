@@ -1,0 +1,68 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# link - TazPkg module
+# Link a package from another SliTaz installation
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+PACKAGE="$2"
+TARGET_DIR="$3"
+
+if [ -e "$INSTALLED/$PACKAGE" ]; then
+	_ 'Package "%s" is already installed.' "$PACKAGE"
+	exit 1
+fi
+
+ln -s "$TARGET_DIR$INSTALLED/$PACKAGE" $INSTALLED
+DEPENDS="$(. "$INSTALLED/$PACKAGE/receipt"; echo $DEPENDS)"
+MISSING=''
+
+for i in $DEPENDS; do
+	[ -e $INSTALLED/$i ] && continue
+	MISSING="$MISSING$i "
+	_ 'Missing: %s' $i
+done
+
+if [ -n "$MISSING" ]; then
+	newline
+	confirm "$(_ 'Link all missing dependencies? (y/N)')"
+	answer=$?
+	newline
+	if [ "$answer" -eq 0 ]; then
+		for i in $MISSING; do
+			tazpkg link $i $TARGET_DIR
+		done
+	else
+		newline
+		_ 'Leaving dependencies unresolved for package "%s"' "$PACKAGE"
+		_ 'The package is installed but probably will not work.'
+		newline
+	fi
+fi
+
+. "$INSTALLED/$PACKAGE/receipt"
+if grep -q ^pre_install "$INSTALLED/$PACKAGE/receipt"; then
+	pre_install
+fi
+
+while read path; do
+	[ -e "$path" ] && continue
+	while true; do
+		dir="$(dirname "$path")"
+		[ -e "$dir" ] && break
+		path="$dir"
+	done
+	ln -s "$TARGET_DIR$path" "$dir"
+done < "$INSTALLED/$PACKAGE/files.list"
+
+if grep -q ^post_install "$INSTALLED/$PACKAGE/receipt"; then
+	post_install
+fi

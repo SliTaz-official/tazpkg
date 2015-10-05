@@ -186,3 +186,34 @@ section .hborders thead tr { border-top: none; border-bottom: 1pt solid #DDD; }
 
 /* infoTable: space between icons */
 #infoTable span a { margin-right: 1em; }
+
+/* info: description */
+section#desc { padding: 0 1ex; font-size: 1rem; line-height: 1.25rem; }
+
+section#desc p,
+section#desc li { padding: 0; text-align: justify; }
+
+section#desc ul li { list-style-type: disc; }
+
+section#desc p code, .light section#desc li code {
+	padding: 0.3ex; border-radius: 0.3ex; background-color: hsla(0, 0%, 70%, 0.3); }
+
+section#desc p,
+section#desc ul,
+section#desc ol,
+section#desc dl,
+section#desc table,
+section#desc blockquote,
+section#desc pre {
+	margin: 0.5rem 0; }
+
+section#desc ul ul,
+section#desc ol ol,
+section#desc ul ol,
+section#desc ol ul {
+	margin: 0; }
+
+section#desc hr {
+	margin: 0; border: none; padding: 1.25rem 0 0; }
+
+section#desc ul, section#desc ol { padding: 0 0 0 1.25em; }

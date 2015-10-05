@@ -1,0 +1,37 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# bugs - TazPkg module
+# Show known bugs in package(s)
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+cd "$INSTALLED"
+
+LIST=$@
+[ -z "$LIST" ] && LIST=$(ls)
+
+MSG=$(_n 'No known bugs.')
+
+title 'Known bugs in packages'
+
+for pkg in $LIST; do
+	unset BUGS EXTRAVERSION
+	. "$pkg/receipt"
+
+	if [ -n "$BUGS" ]; then
+		MSG=$(_n 'Bug list completed')
+		newline
+		_ 'Bugs in package "%s" version %s:' "$PACKAGE" "$VERSION$EXTRAVERSION"
+		echo -e "  $BUGS\n"
+	fi
+done
+
+footer "$MSG"

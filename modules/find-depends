@@ -4,48 +4,31 @@
 # Functions that are common to tazpkg and tazpkg-convert, and sourced by them.
 
 
-# Need by check_depends
-unset TMPLOCALSTATE
-
-
-# Check for ELF file
-
-is_elf() {
-	[ "$(dd if="$1" bs=1 skip=1 count=3 2>/dev/null)" == 'ELF' ]
-}
-
-
-# Print shared library dependencies
-
-ldd() {
-	LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so "$1" 2>/dev/null
-}
-
-
 # search dependencies for files in $TMP_DIR/$file/fs
 
 find_depends() {
 	DEFAULT_DEPENDS='glibc-base gcc-lib-base'
 
-	[ -z "$TMPLOCALSTATE" ] && TMPLOCALSTATE="$PKGS_DB"
-	[ ! -f "$TMPLOCALSTATE/files.list.lzma" ] && tazpkg recharge >/dev/null
-	for i in "$TMPLOCALSTATE/files.list.lzma" \
-		"$TMPLOCALSTATE/undigest/"*"/files.list.lzma"; do
+	[ ! -f "$PKGS_DB/files.list.lzma" ] && tazpkg recharge >/dev/null
+
+	for i in "$PKGS_DB/files.list.lzma" \
+		"$PKGS_DB/undigest/"*"/files.list.lzma"; do
 		[ -f "$i" ] && lzma d "$i" -so >> "$TMP_DIR/files.list"
 	done
 
 	_ 'Find depends...' 1>&2
 	libs_found=''
-	find "${1:-$TMP_DIR/$file/fs}" -type f | \
+	find "$1" -type f | \
 	while read chkfile; do
-		is_elf "$chkfile" || continue
+		[ "$(dd bs=1 skip=1 count=3 < "$chkfile" 2>/dev/null)" != 'ELF' ] && continue
+
 		case "$chkfile" in
 			*.o|*.ko|*.ko.gz|*.ko.xz) continue;;
 		esac
 
-		for lib in $(ldd "$chkfile" | sed '/=>/!d;s/ =>.*//'); do
+		for lib in $(LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so "$chkfile" 2>/dev/null | sed '/=>/!d;s/ =>.*//'); do
 			case " $libs_found " in
-				*\ $lib\ *) continue
+				*\ $lib\ *) continue;;
 			esac
 			libs_found="$libs_found $lib"
 			case "$lib" in
@@ -54,9 +37,9 @@ find_depends() {
 			find "${1:-$TMP_DIR/$file/fs}" | grep -q /$lib$ && continue
 
 			_n 'for %s' "$lib" 1>&2
-			echo -ne "                   \r" 1>&2
+			echo -ne '                   \r' 1>&2
 
-			for dep in $(fgrep $lib files.list | cut -d: -f1); do
+			for dep in $(fgrep "$lib" "$TMP_DIR/files.list" | cut -d: -f1); do
 				case " $DEFAULT_DEPENDS " in
 					*\ $dep\ *) continue 2;;
 				esac

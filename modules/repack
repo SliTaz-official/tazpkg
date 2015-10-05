@@ -10,8 +10,6 @@
 # Get TazPkg working environment
 . @@MODULES@@/getenv
 
-alias cpio='busybox cpio'
-
 
 unset EXTRAVERSION; . "$INSTALLED/$1/receipt"
 

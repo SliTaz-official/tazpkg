@@ -23,11 +23,11 @@ im() { tty -s; }
 unset desc
 
 # 1) Localized description
-for LC in $LANG ${LANG%_*}; do
-	[ -e "$PKGS_DB/descriptions.$LC.txt" ] &&
+for lang in $LANG ${LANG%_*}; do
+	[ -e "$PKGS_DB/descriptions.$lang.txt" ] || continue
 	desc="$(awk -vRS='' -vFS='\n' -vOFS='\n' -vp="$1" '
 		$1 == p { $1 = ""; print $0; exit; }
-		' "$PKGS_DB/descriptions.$LC.txt" | sed '1d')"
+		' "$PKGS_DB/descriptions.$lang.txt" | sed '1d')"
 done
 
 # 2) Installed description
@@ -44,9 +44,9 @@ fi
 
 # 4) Short description only in interactive terminal
 if [ -z "$desc" ] && im; then
-	for LC in $LANG ${LANG%_*}; do
-		[ -e "$PKGS_DB/packages-desc.$LC" ] &&
-			desc=$(awk -F$'\t' -vp="$1" '$1==p {print $2; exit}' "$PKGS_DB/packages-desc.$LC")
+	for lang in $LANG ${LANG%_*}; do
+		[ -e "$PKGS_DB/packages-desc.$lang" ] || continue
+		desc=$(awk -F$'\t' -vp="$1" '$1==p {print $2; exit}' "$PKGS_DB/packages-desc.$lang")
 	done
 
 	[ -z "$desc" -a -s "$PKGS_DB/packages.info" ] &&
@@ -54,10 +54,30 @@ if [ -z "$desc" ] && im; then
 fi
 
 if [ -n "$desc" ]; then
-	# Title and footer only in interactive terminal
-	im && title 'Description of package "%s"' "$1"
-	longline "$desc"
-	im && footer
+	case $output in
+		html)
+			# Description for TazPanel in html format
+			if [ -n "$(which sundown)" ]; then
+				# Parse description as markdown
+				echo "$desc" | sundown
+			else
+				# Dump description within <pre> tag
+				echo '<pre class="pre-wrap">'
+				echo "$desc" | sed -e 's|\&|\&amp;|g; s|<|\&lt;|g; s|>|\&gt;|g'
+				echo '</pre>'
+			fi
+			;;
+		*)
+			# Description for terminal tazpkg in plain text
+			# Title and footer only in interactive terminal
+			im && title 'Description of package "%s"' "$1"
+			echo "$desc"
+			im && footer
+			;;
+	esac
+
 else
 	im && _ 'Description absent.'
 fi
+
+exit 0

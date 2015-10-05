@@ -1,0 +1,54 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# extract - TazPkg module
+# Extract .tazpkg cpio archive into a directory
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+# Extract a package with cpio and gzip/lzma.
+
+extract_package() {
+	action 'Extracting package...'
+	cpio -idm --quiet < "$1" && rm -f "$1"
+	if [ -f fs.cpio.lzma ]; then
+		unlzma < fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
+	elif [ -f fs.cpio.gz ]; then
+		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
+	fi
+	status
+}
+
+
+
+
+PACKAGE_FILE="$1"
+TARGET_DIR="$2"
+PACKAGE="$(basename "$PACKAGE_FILE" .tazpkg)"
+
+title 'Extracting package "%s"' "$PACKAGE"
+
+# If no directory destination is found on the cmdline
+# we create one in the current dir using the package name.
+if [ -n "$TARGET_DIR" ]; then
+	DESTDIR="$TARGET_DIR/$PACKAGE"
+else
+	DESTDIR="$PACKAGE"
+fi
+mkdir -p "$DESTDIR"
+
+action 'Copying original package...'
+cp "$PACKAGE_FILE" "$DESTDIR"
+status
+
+cd "$DESTDIR"
+extract_package "${PACKAGE_FILE##*/}"
+
+[ -e "receipt" ] && footer "$(_ 'Package "%s" is extracted to "%s"' "$PACKAGE" "$DESTDIR")"

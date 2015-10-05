@@ -10,8 +10,6 @@
 # Get TazPkg working environment
 . @@MODULES@@/getenv
 
-alias cpio='busybox cpio'
-
 
 
 
@@ -35,7 +33,7 @@ download() {
 	local i
 	case "$1" in
 		*.tazpkg)
-			for i in $priority; do
+			for i in $PRIORITY; do
 				if [ -n "$(awk -F$'\t' -vp="$1" 'p==$1"-"$2".tazpkg"{print $1}' \
 					"$i/packages.info")" ]; then
 					download_from "$(cat $i/mirror)" "$@" && return
@@ -44,16 +42,13 @@ download() {
 			;;
 	esac
 
-	for i in $(cat $(for rep in $priority; do echo $rep/mirror; done) 2>/dev/null); do
+	for i in $(cat $(for rep in $PRIORITY; do echo $rep/mirror; done) 2>/dev/null); do
 		download_from "$i" "$@" && break
 	done
 }
 
 
 
-
-# Get repositories priority list.
-priority=$(tazpkg call look_for_priority)
 
 FLAVOR="$1"
 TMP_DIR=$(mktemp -d)
@@ -64,16 +59,17 @@ cd "$TMP_DIR"
 if [ -f "$FLAVOR.flavor" ] || download "$FLAVOR.flavor"; then
 	zcat < "$FLAVOR.flavor" | cpio --quiet -i >/dev/null
 
-	while read file; do
-		# 'file' here in form 'package-version'
-		is_installed=$(awk -F$'\t' -vf="$file" '$1 "-" $2 == f {print 1}' "$PKGS_DB/installed.info")
-		[ -n "$is_installed" ] && continue
+	while read pkgver; do
+		# 'pkgver' here in form 'package-version'
+		awk -F$'\t' -vf="$pkgver" '$1 "-" $2 == f {exit 1}' "$PKGS_DB/installed.info"
+		# Continue if package already installed
+		[ "$?" -eq 1 ] && continue
 
 		# Install package if it not installed or has a different version
 		cd "$CACHE_DIR"
-		download "$file.tazpkg"
+		download "$pkgver.tazpkg"
 		cd "$TMP_DIR"
-		tazpkg install "$CACHE_DIR/$file.tazpkg" --forced
+		tazpkg install "$CACHE_DIR/$pkgver.tazpkg" --forced
 	done < "$FLAVOR.pkglist"
 
 	[ -f "$FLAVOR.nonfree" ] && \
@@ -84,6 +80,7 @@ if [ -f "$FLAVOR.flavor" ] || download "$FLAVOR.flavor"; then
 	done < "$FLAVOR.nonfree"
 
 	# Option "--purge"
+	# FIXME: respect all the installed dependencies of the flavored packages
 	[ -n "$purge" ] && \
 	for pkg in $(awk -F$'\t' '{printf "%s:%s ", $1, $2}' "$PKGS_DB/installed.info"); do
 		# If installed 'package-version' listed in 'pkglist'

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-28 16:04+0300\n"
+"POT-Creation-Date: 2015-10-05 03:48+0300\n"
 "PO-Revision-Date: 2012-12-23 14:08+0200\n"
 "Last-Translator: Constantine Mousafiris <kvisitor@gnugr.org>\n"
 "Language-Team: Kostis Mousafiris\n"
@@ -17,433 +17,245 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Virtaal 0.5.2\n"
 
-#: tazpkg:40 modules/list:44 modules/search:19
-msgid "base-system"
-msgstr "βασικό-σύστημα"
-
-#: tazpkg:40 modules/list:44 modules/search:19
-msgid "x-window"
-msgstr "x-window"
-
-#: tazpkg:41 modules/list:45 modules/search:20
-msgid "utilities"
-msgstr "Βοηθήματα"
-
-#: tazpkg:41 modules/list:45 modules/search:20
-msgid "network"
-msgstr "δίκτυο"
-
-#: tazpkg:42 modules/list:46 modules/search:21
-msgid "graphics"
-msgstr "γραφικά"
-
-#: tazpkg:42 modules/list:46 modules/search:21
-msgid "multimedia"
-msgstr "πολυμέσα"
-
-#: tazpkg:43 modules/list:47 modules/search:22
-msgid "office"
-msgstr "γραφείο"
-
-#: tazpkg:43 modules/list:47 modules/search:22
-msgid "development"
-msgstr "προγραμματισμός"
-
-#: tazpkg:44 modules/list:48 modules/search:23
-msgid "system-tools"
-msgstr "εργαλεία-συστήματος"
-
-#: tazpkg:44 modules/list:48 modules/search:23
-msgid "security"
-msgstr "ασφάλεια"
-
-#: tazpkg:45 modules/list:49 modules/search:24
-msgid "games"
-msgstr "παιγνίδια"
-
-#: tazpkg:45 modules/list:49 modules/search:24
-msgid "misc"
-msgstr "διάφορα"
-
-#: tazpkg:45 modules/list:49 modules/search:24
-msgid "meta"
-msgstr "μετα"
-
-#: tazpkg:46 modules/list:50 modules/search:25
-msgid "non-free"
-msgstr "μη-ελεύθερα"
-
-#: tazpkg:46 modules/list:50 modules/search:25
-#, fuzzy
-msgid "all"
-msgstr "Όλα"
-
-#: tazpkg:46 modules/list:50 modules/search:25
-#, fuzzy
-msgid "extra"
-msgstr "Εξαγωγή"
-
-#: tazpkg:107
+#: tazpkg:100
 msgid "Creating folder \"%s\"..."
 msgstr "Γίνεται δημιουργία του \"%s\"..."
 
-#: tazpkg:137
+#: tazpkg:136
 msgid "Please specify a package name on the command line."
 msgstr "Παρακαλώ δώστε ένα όνομα πακέτου στη γραμμή εντολών."
 
-#: tazpkg:149 tazpkg:265
+#: tazpkg:139
+#, fuzzy
+msgid "Please specify a list name on the command line."
+msgstr "Παρακαλώ δώστε ένα όνομα πακέτου στη γραμμή εντολών."
+
+#: tazpkg:142
+#, fuzzy
+msgid "Please specify a flavor name on the command line."
+msgstr "Παρακαλώ δώστε ένα όνομα πακέτου στη γραμμή εντολών."
+
+#: tazpkg:145
+#, fuzzy
+msgid "Please specify a release name on the command line."
+msgstr "Παρακαλώ δώστε ένα όνομα πακέτου στη γραμμή εντολών."
+
+#: tazpkg:148
 msgid "Unable to find file \"%s\""
 msgstr "Αδύνατη η εύρεση του: %s"
 
-#: tazpkg:161
+#: tazpkg:151
+#, fuzzy
+msgid "Please specify an existing folder name on the command line."
+msgstr "Παρακαλώ δώστε ένα όνομα πακέτου στη γραμμή εντολών."
+
+#: tazpkg:154
+#, fuzzy
+msgid "Please specify a pattern to search for."
+msgstr ""
+"Παρακαλώ καθορίστε ένα pattern ή ένα όνομα αρχείου για να γίνει αναζήτηση."
+
+#: tazpkg:157
 msgid "Unable to find the receipt \"%s\""
 msgstr "Αδύνατη η εύρεση της απόδειξης: %s"
 
-#: tazpkg:218
-msgid "\"%s\" package is already installed."
-msgstr "Το πακέτο \"%s\" είναι ήδη εγκατεστημένο."
-
-#: tazpkg:219
-msgid "You can use the --forced option to force installation."
-msgstr ""
-"Μπορείτε να χρησιμοποιήσετε την επιλογή --forced για να κάνετε υποχρεωτική\n"
-"εγκατάσταση, ή κάντε πρώτα διαγραφή και, μετά, επανεγκατάσταση."
-
-#: tazpkg:235
-msgid "Unable to find the list \"%s\""
-msgstr "Αδύνατη ανεύρεση της λίστας: %s"
-
-#: tazpkg:236
-msgid ""
-"You must probably run '%s' as root to get the latest list of packages "
-"available on the mirror."
-msgstr ""
-"Μάλλον πρέπει να εκτελέσετε το '%s' ως διαχειριστής συστήματος, για να "
-"λάβετε την πιο πρόσφατη λίστα πακέτων που είναι διαθέσιμη στον mirror."
-
-#: tazpkg:252 tazpkg:273 modules/getenv:79 modules/getenv:103
-msgid "File \"%s\" generated. Please wait..."
-msgstr ""
-
-#: tazpkg:266 modules/getenv:16 modules/getenv:23 modules/getenv:34
-#: modules/getenv:118
-msgid "Please run tazpkg as root."
-msgstr ""
-
-#: tazpkg:393
-msgid "Unable to find package \"%s\" in the mirrored packages list."
-msgstr ""
-"Αδύνατη η ανεύρεση του: %s στη λίστα πακέτων που βρίσκονται στον mirror."
-
-#: tazpkg:476
+#: tazpkg:225 modules/extract:19 modules/install:191 modules/recompress:19
 msgid "Extracting package..."
 msgstr "Γίνεται εξαγωγή..."
 
-#: tazpkg:562
-msgid "Installation of package \"%s\""
-msgstr "Εγκατάσταση του: %s"
+#: tazpkg:239 modules/list:44
+msgid "base-system"
+msgstr "βασικό-σύστημα"
 
-#: tazpkg:567
-msgid "Copying package..."
-msgstr "Γίνεται αντιγραφή του..."
+#: tazpkg:239 modules/list:44
+msgid "x-window"
+msgstr "x-window"
 
-#: tazpkg:583
-msgid "Checking post install dependencies..."
-msgstr ""
-"Μετά την ολοκλήρωση της εγκατάστασης, γίνεται έλεγχος για τις εξαρτήσεις..."
+#: tazpkg:240 modules/list:45
+msgid "utilities"
+msgstr "Βοηθήματα"
 
-#: tazpkg:586
-msgid "Please run \"%s\" in / and retry."
-msgstr ""
-"Παρακαλώ εκτελέστε την εντολή '%s'\n"
-"στον αρχικό κατάλογο συστήματος / και, κατόπιν, ξαναπροσπαθήστε."
+#: tazpkg:240 modules/list:45
+msgid "network"
+msgstr "δίκτυο"
 
-#: tazpkg:669
-msgid "Saving configuration files..."
-msgstr "Γίνεται αποθήκευση των αρχείων ρυθμίσεως..."
+#: tazpkg:241 modules/list:46
+msgid "graphics"
+msgstr "γραφικά"
 
-#: tazpkg:687
-msgid "Installing package..."
-msgstr "Γίνεται εγκατάσταση..."
+#: tazpkg:241 modules/list:46
+msgid "multimedia"
+msgstr "πολυμέσα"
 
-#: tazpkg:692
-msgid "Removing old package..."
-msgstr "Γίνεται απομάκρυνση του παλιού..."
+#: tazpkg:242 modules/list:47
+msgid "office"
+msgstr "γραφείο"
 
-#: tazpkg:701
-msgid "Removing all tmp files..."
-msgstr "Γίνεται απομάκρυνση όλων των προσωρινών αρχείων temp..."
+#: tazpkg:242 modules/list:47
+msgid "development"
+msgstr "προγραμματισμός"
 
-#: tazpkg:707
+#: tazpkg:243 modules/list:48
+msgid "system-tools"
+msgstr "εργαλεία-συστήματος"
+
+#: tazpkg:243 modules/list:48
+msgid "security"
+msgstr "ασφάλεια"
+
+#: tazpkg:244 modules/list:49
+msgid "games"
+msgstr "παιγνίδια"
+
+#: tazpkg:244 modules/list:49
+msgid "misc"
+msgstr "διάφορα"
+
+#: tazpkg:244 modules/list:49
+msgid "meta"
+msgstr "μετα"
+
+#: tazpkg:245 modules/list:50
+msgid "non-free"
+msgstr "μη-ελεύθερα"
+
+#: tazpkg:430
 #, fuzzy
-msgid "Execute post-install commands..."
-msgstr ""
-"Μετά την ολοκλήρωση της εγκατάστασης, γίνεται έλεγχος για τις εξαρτήσεις..."
+msgid "Done: %s"
+msgstr "Μέγεθος: %s"
 
-#: tazpkg:752
-msgid "Package \"%s\" (%s) is installed."
-msgstr "Το πακέτο %s (%s) δεν έχει εγκατασταθεί."
-
-#: tazpkg:792
-msgid "Could not download \"%s\" from \"%s\". Exiting."
-msgstr ""
-
-#: tazpkg:859
-msgid "WARNING! Dependency loop between \"%s\" and \"%s\"."
-msgstr ""
-"ΠΡΟΕΙΔΟΠΟΙΗΣΗ Υπάρχει βρόχος (loop) εξάρτησης ανάμεσα στο %s και το %s."
-
-#: tazpkg:864
-msgid "Tracking dependencies for package \"%s\""
-msgstr "Γίνεται εντοπισμός εξαρτήσεων για το: %s"
-
-#: tazpkg:869
-msgid "Missing package \"%s\""
-msgstr "Λείπει το: %s"
-
-#: tazpkg:873
-msgid "%s missing package to install."
-msgid_plural "%s missing packages to install."
-msgstr[0] "%s λείπει πακέτο για εγκατάσταση"
-msgstr[1] "%s λείπουν πακέτα για εγκατάσταση"
-
-#: tazpkg:892
-msgid "Install all missing dependencies? (y/N)"
-msgstr "Να εγκατασταθούν όλες οι εξαρτήσεις που λείπουν? (y/N)"
-
-#: tazpkg:907
-msgid "Checking if package \"%s\" exists in local list..."
-msgstr "Γίνεται έλεγχος αν το %s συμπεριλαμβάνεται στην τοπική λίστα..."
-
-#: tazpkg:933
-msgid "Leaving dependencies for package \"%s\" unresolved."
-msgstr "Κάποιες εξαρτήσεις για το %s έμειναν ανεπίλυτες."
-
-#: tazpkg:934
-msgid "The package is installed but will probably not work."
-msgstr "Το πακέτο εγκαταστάθηκε, αλλά μάλλον δε θα δουλέψει."
-
-#: tazpkg:1086
-msgid "Unable to find list \"%s\""
-msgstr "Αδύνατη η ανεύρεση του: %s"
-
-#: tazpkg:1106
-msgid "Adding implicit depends \"%s\"..."
-msgstr "Γίνεται προσθήκη δεδηλωμένων εξαρτήσεων στο %s..."
-
-#: tazpkg:1163
-msgid "Extracting package \"%s\""
-msgstr "Γίνεται εξαγωγή του: %s"
-
-#: tazpkg:1174 tazpkg:1192
-msgid "Copying original package..."
-msgstr "Γίνεται αντιγραφή του πρωτότυπου πακέτου..."
-
-#: tazpkg:1181
-msgid "Package \"%s\" is extracted to \"%s\""
-msgstr "Γίνεται εξαγωγή του %s στο: %s"
-
-#: tazpkg:1189
-msgid "Recompressing package \"%s\""
-msgstr "Γίνεται επανασυμπίεση του: %s"
-
-#: tazpkg:1199
-msgid "Recompressing the FS..."
-msgstr "Γίνεται επανασυμπίεση του fs..."
-
-#: tazpkg:1204
-msgid "Creating new package..."
-msgstr "Δημιουργείται νέο πακέτο..."
-
-#: tazpkg:1245
-msgid "User configuration backup on date %s"
-msgstr "Ανττίγραφο ασφαλείας με τις ρυθμίσεις χρήστη στο %s"
-
-#: tazpkg:1308
-msgid "No known bugs."
-msgstr "Δεν υπάρχουν γνωστά σφάλματα."
-
-#: tazpkg:1310
-#, fuzzy
-msgid "Known bugs in packages"
-msgstr "Εμφάνιση των γνωστών σφαλμάτων στα πακέτα"
-
-#: tazpkg:1316
-msgid "Bug list completed"
-msgstr "Ο κατάλογος σφαλμάτων ολοκληρώθηκε"
-
-#: tazpkg:1318
-msgid "Bugs in package \"%s\" version %s:"
-msgstr "Υπάρχουν σφάλματα στην %s έκδοση %s:"
-
-#: tazpkg:1355
-msgid "rootconfig needs --root= option used."
-msgstr "Το rootconfig πρέπει να χρησιμοποιήσει την επιλογή --root= option"
-
-#: tazpkg:1368 tazpkg:1434
-msgid "Package \"%s\" already in the cache"
-msgstr "%s βρίκεται ήδη στη μνήμη cache"
-
-#: tazpkg:1371 tazpkg:1437
-msgid "Continuing package \"%s\" download"
-msgstr "Συνεχίζεται η μεταφόρτωση του %s"
-
-#: tazpkg:1462
-msgid "Cleaning cache directory..."
-msgstr "Γίνεται καθαρισμός του καταλόγου της μνήμης cache..."
-
-#: tazpkg:1463
-#, fuzzy
-msgid "Path: %s"
-msgstr "Διαδρομή:"
-
-#: tazpkg:1468
-msgid "%s file removed from cache (%s)."
-msgid_plural "%s files removed from cache (%s)."
-msgstr[0] "%s το αρχείο έχει διαγραφεί από τη μνήμη cache (%s)."
-msgstr[1] "%s το αρχείο έχει διαγραφεί από τη μνήμη cache (%s)."
-
-#: tazpkg:1511
-msgid "Nothing to do for package \"%s\"."
-msgstr "Δεν μπορεί να γίνει τίποτε για το %s."
-
-#: tazpkg:1515 modules/block:32 modules/block:51 modules/block:70
-#: modules/remove:53
-msgid "Package \"%s\" is not installed."
-msgstr "Το %s δεν εγκαταστάθηκε."
-
-#: tazpkg:1516
-msgid "Install package with \"%s\" or \"%s\""
-msgstr "Εγκαταστήστε το πακέτο με το '%s' ή το '%s'"
-
-#: tazpkg:1531
+#: tazpkg:502
 #, fuzzy
 msgid "TazPkg SHell."
 msgstr "Κέλυφος του TazPkg"
 
-#: tazpkg:1532
+#: tazpkg:503
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr ""
 "Πληκτρολογήστε την εντολή 'usage' για να εμφανισθεί ένας κατάλογος με όλες "
 "τις\n"
 "διαθέσιμες εντολές, ή δώστε την εντολή 'quit', ή απλώς 'q' για να βγείτε."
 
-#: tazpkg:1541
+#: tazpkg:512
 #, fuzzy
 msgid "You are already running a TazPkg SHell."
 msgstr "Τρέχετε ήδη ένα κέλυφος TazPkg"
 
-#: tazpkg:1574
-msgid "Usage: tazpkg link package_name slitaz_root"
-msgstr "χρήση: tazpkg link όνομα_πακέτου καταλόγου_συστήματος_του_slitaz"
+#: modules/block:18 modules/remove:86
+msgid "Package \"%s\" is not installed."
+msgstr "Το %s δεν εγκαταστάθηκε."
 
-#: tazpkg:1576
-msgid "Example:"
-msgstr "Παράδειγμα:"
-
-#: tazpkg:1578
-msgid "\"%s\" will use less than 100k in your running system RAM."
-msgstr "Το '%s' θα χρησιμοποιήσει λιγώτερα από 100KB στο σύστημα που τρέχετε."
-
-#: tazpkg:1583
-msgid "Package \"%s\" is already installed."
-msgstr "Το %s είναι ήδη εγκατεστημένο."
-
-#: tazpkg:1592 modules/getenv:16 modules/getenv:23
-msgid "Missing: %s"
-msgstr "Λείπουν: %s"
-
-#: tazpkg:1596
-msgid "Link all missing dependencies? (y/N)"
-msgstr "Σύνδεση όλων των εξαρτήσεων που λείπουν? (y/N)"
-
-#: tazpkg:1605
-msgid "Leaving dependencies unresolved for package \"%s\""
-msgstr "Έχουν μείνει ανεπίλυτες εξαρτήσεις για το: %s"
-
-#: tazpkg:1606
-msgid "The package is installed but probably will not work."
-msgstr "Το πακέτο εγκαταστάθηκε, αλλά μάλλον δε θα δουλέψει."
-
-#: modules/block:36
+#: modules/block:27
 #, fuzzy
 msgid "Package \"%s\" is already blocked."
 msgstr "Το %s είναι ήδη εγκατεστημένο."
 
-#: modules/block:41 modules/block:82
+#: modules/block:32 modules/block:61
 #, fuzzy
 msgid "Package \"%s\" blocked."
 msgstr "Το %s δεν εγκαταστάθηκε."
 
-#: modules/block:58 modules/block:77
+#: modules/block:43 modules/block:56
 #, fuzzy
 msgid "Package \"%s\" unblocked."
 msgstr "Το %s δεν εγκαταστάθηκε."
 
-#: modules/block:60
+#: modules/block:45
 #, fuzzy
 msgid "Package \"%s\" is not blocked."
 msgstr "Το %s δεν εγκαταστάθηκε."
 
-#: modules/check:43 tazpanel/pkgs.cgi:951
+#: modules/bugs:21
+msgid "No known bugs."
+msgstr "Δεν υπάρχουν γνωστά σφάλματα."
+
+#: modules/bugs:23
+#, fuzzy
+msgid "Known bugs in packages"
+msgstr "Εμφάνιση των γνωστών σφαλμάτων στα πακέτα"
+
+#: modules/bugs:30
+msgid "Bug list completed"
+msgstr "Ο κατάλογος σφαλμάτων ολοκληρώθηκε"
+
+#: modules/bugs:32
+msgid "Bugs in package \"%s\" version %s:"
+msgstr "Υπάρχουν σφάλματα στην %s έκδοση %s:"
+
+#: modules/cache:22
+msgid "Cleaning cache directory..."
+msgstr "Γίνεται καθαρισμός του καταλόγου της μνήμης cache..."
+
+#: modules/cache:23
+#, fuzzy
+msgid "Path: %s"
+msgstr "Διαδρομή:"
+
+#: modules/cache:28
+msgid "%s file removed from cache (%s)."
+msgid_plural "%s files removed from cache (%s)."
+msgstr[0] "%s το αρχείο έχει διαγραφεί από τη μνήμη cache (%s)."
+msgstr[1] "%s το αρχείο έχει διαγραφεί από τη μνήμη cache (%s)."
+
+#: modules/check:20 tazpanel/pkgs.cgi:948
 msgid "Package %s"
 msgstr "Πακέτο %s"
 
-#: modules/check:122
+#: modules/check:96
 msgid "The package installation has not completed"
 msgstr "Η εγκατάσταση του πακέτου δεν ολοκληρώθηκε"
 
-#: modules/check:130
+#: modules/check:104
 msgid "The package has been modified by:"
 msgstr "Το πακέτο τροποποιήθηκε από:"
 
-#: modules/check:134
+#: modules/check:108
 msgid "Files lost from package:"
 msgstr "Χάθηκαν αρχεία από το:"
 
-#: modules/check:138
+#: modules/check:112
 msgid "target of symlink"
 msgstr "στόχος του συμβολικού δεσμού symlink"
 
-#: modules/check:145
+#: modules/check:119
 msgid "Missing dependencies for package:"
 msgstr "Εξαρτήσεις που λείπουν για το:"
 
-#: modules/check:154
+#: modules/check:128
 msgid "Dependencies loop between package and:"
 msgstr "Υπάρχει βρόχος (loop) εξαρτήσεων ανάμεσα στο πακέτο και το:"
 
-#: modules/check:160
+#: modules/check:134
 msgid "Looking for known bugs..."
 msgstr "Γίνεται αναζήτηση για γνωστά σφάλματα..."
 
-#: modules/check:167
+#: modules/check:141
 msgid "Mismatch checksum of installed files:"
 msgstr ""
 
-#: modules/check:186
+#: modules/check:160
 #, fuzzy
 msgid "Check file providers:"
 msgstr "Έλεγχος αναβαθμίσεων"
 
-#: modules/check:197
+#: modules/check:171
 msgid "The following packages provide file \"%s\":"
 msgstr "Τα ακόλουθα πακέτα παρέχουν το %s:"
 
-#: modules/check:202
+#: modules/check:176
 msgid "(overridden by %s)"
 msgstr "(παρακάμπτεται απο το %s)"
 
-#: modules/check:214
+#: modules/check:188
 #, fuzzy
 msgid "Alien files:"
 msgstr "Εγκατεστημένα αρχεία:"
 
-#: modules/check:215
+#: modules/check:189
 msgid "No package has installed the following files:"
 msgstr "Κανένα πακεο δεν εγκατέστησε τα εξής αρχεία:"
 
-#: modules/check:226
+#: modules/check:200
 msgid "Check completed."
 msgstr "Ο έλεγχος ολοκληρώθηκε."
 
@@ -496,32 +308,78 @@ msgid_plural "To install: %s packages (%s)"
 msgstr[0] "%s εγκατεστημένο πακέτο"
 msgstr[1] "%s εγκατεστημένο πακέτο"
 
-#: modules/description:58
+#: modules/description:73
 msgid "Description of package \"%s\""
 msgstr "Περιγραφή του: %s"
 
-#: modules/description:62
+#: modules/description:80
 #, fuzzy
 msgid "Description absent."
 msgstr "Περιγραφή"
 
-#: modules/find-depends:37
+#: modules/extract:36
+msgid "Extracting package \"%s\""
+msgstr "Γίνεται εξαγωγή του: %s"
+
+#: modules/extract:47 modules/recompress:35
+msgid "Copying original package..."
+msgstr "Γίνεται αντιγραφή του πρωτότυπου πακέτου..."
+
+#: modules/extract:54
+msgid "Package \"%s\" is extracted to \"%s\""
+msgstr "Γίνεται εξαγωγή του %s στο: %s"
+
+#: modules/find-depends:19
 msgid "Find depends..."
 msgstr ""
 
-#: modules/find-depends:56
+#: modules/find-depends:39
 msgid "for %s"
 msgstr ""
 
-#: modules/flavor:120
+#: modules/flavor:94
 msgid "Can't find flavor \"%s\". Abort."
 msgstr "Αδύνατη η ανεύρεση του flavor %s. Ακύρωση."
 
-#: modules/getenv:34
+#: modules/get:137 modules/getenv:53
 msgid "File \"%s\" empty."
 msgstr ""
 
-#: modules/getenv:117
+#: modules/get:138 modules/get:144
+#, fuzzy
+msgid "Unable to find package \"%s\" in the extra packages list."
+msgstr ""
+"Αδύνατη η ανεύρεση του: %s στη λίστα πακέτων που βρίσκονται στον mirror."
+
+#: modules/get:162 modules/get:327
+msgid "Package \"%s\" already in the cache"
+msgstr "%s βρίκεται ήδη στη μνήμη cache"
+
+#: modules/get:331
+msgid "Continuing package \"%s\" download"
+msgstr "Συνεχίζεται η μεταφόρτωση του %s"
+
+#: modules/get:342
+msgid "Checksum error for \"%s\""
+msgstr ""
+
+#: modules/get:352
+msgid "Please wait until the mirror synchronization is complete and try again."
+msgstr ""
+
+#: modules/getenv:35 modules/getenv:43 modules/link:31
+msgid "Missing: %s"
+msgstr "Λείπουν: %s"
+
+#: modules/getenv:35 modules/getenv:43 modules/getenv:53 modules/getenv:154
+msgid "Please run tazpkg as root."
+msgstr ""
+
+#: modules/getenv:115 modules/getenv:140
+msgid "File \"%s\" generated. Please wait..."
+msgstr ""
+
+#: modules/getenv:154
 msgid "Old \"%s\"."
 msgstr ""
 
@@ -732,7 +590,7 @@ msgstr "Προσθήκη ενός undigest mirror"
 msgid "Remove an undigest mirror"
 msgstr "Διαγραφή όλων των undigest mirrors"
 
-#: modules/help:103 modules/help:138
+#: modules/help:103 modules/help:134
 #, fuzzy
 msgid "Sorry, no help for \"%s\""
 msgstr "Να γίνει αναζήτηση για το: %s"
@@ -743,7 +601,7 @@ msgid_plural "%d help topics available:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/help:168
+#: modules/help:164
 msgid "%s"
 msgstr ""
 
@@ -752,7 +610,7 @@ msgstr ""
 msgid "local package"
 msgstr "Διαθέσιμα πακέτα"
 
-#: modules/info:39 tazpanel/pkgs.cgi:930
+#: modules/info:39 tazpanel/pkgs.cgi:927
 #, fuzzy
 msgid "installed package"
 msgstr "%s εγκατεστημένο πακέτο"
@@ -766,17 +624,17 @@ msgstr "Νέα έκδοση %s"
 msgid "(new build available)"
 msgstr ""
 
-#: modules/info:74 tazpanel/pkgs.cgi:933
+#: modules/info:74 tazpanel/pkgs.cgi:930
 #, fuzzy
 msgid "mirrored package"
 msgstr "Καθρεπτιζόμενα πακέτα:"
 
-#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:935
+#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:932
 #, fuzzy
 msgid "Package \"%s\" not available."
 msgstr "Το %s δεν εγκαταστάθηκε."
 
-#: modules/info:84 modules/search:79 modules/search:113
+#: modules/info:84 modules/search:66 modules/search:100
 msgid ""
 "No \"%s\" found to check for mirrored packages. For more results, please run "
 "\"%s\" once as root before searching."
@@ -857,11 +715,138 @@ msgstr "Μέγεθος: %s"
 msgid "Tags       : %s"
 msgstr ""
 
+#: modules/install:109
+msgid "WARNING! Dependency loop between \"%s\" and \"%s\"."
+msgstr ""
+"ΠΡΟΕΙΔΟΠΟΙΗΣΗ Υπάρχει βρόχος (loop) εξάρτησης ανάμεσα στο %s και το %s."
+
+#: modules/install:117
+msgid "Tracking dependencies for package \"%s\""
+msgstr "Γίνεται εντοπισμός εξαρτήσεων για το: %s"
+
+#: modules/install:121
+msgid "Missing package \"%s\""
+msgstr "Λείπει το: %s"
+
+#: modules/install:125
+msgid "%s missing package to install."
+msgid_plural "%s missing packages to install."
+msgstr[0] "%s λείπει πακέτο για εγκατάσταση"
+msgstr[1] "%s λείπουν πακέτα για εγκατάσταση"
+
+#: modules/install:134
+msgid "Install all missing dependencies? (y/N)"
+msgstr "Να εγκατασταθούν όλες οι εξαρτήσεις που λείπουν? (y/N)"
+
+#: modules/install:161
+msgid "Checking if package \"%s\" exists in local list..."
+msgstr "Γίνεται έλεγχος αν το %s συμπεριλαμβάνεται στην τοπική λίστα..."
+
+#: modules/install:179
+msgid "Leaving dependencies for package \"%s\" unresolved."
+msgstr "Κάποιες εξαρτήσεις για το %s έμειναν ανεπίλυτες."
+
+#: modules/install:180
+msgid "The package is installed but will probably not work."
+msgstr "Το πακέτο εγκαταστάθηκε, αλλά μάλλον δε θα δουλέψει."
+
+#: modules/install:251
+#, fuzzy
+msgid "Execute pre-install commands..."
+msgstr ""
+"Μετά την ολοκλήρωση της εγκατάστασης, γίνεται έλεγχος για τις εξαρτήσεις..."
+
+#: modules/install:265
+#, fuzzy
+msgid "Execute post-install commands..."
+msgstr ""
+"Μετά την ολοκλήρωση της εγκατάστασης, γίνεται έλεγχος για τις εξαρτήσεις..."
+
+#: modules/install:335
+#, fuzzy
+msgid "Installation of package \"%s\" (%s)"
+msgstr "Εγκατάσταση του: %s"
+
+#: modules/install:337
+msgid "Installation of package \"%s\""
+msgstr "Εγκατάσταση του: %s"
+
+#: modules/install:343
+msgid "Copying package..."
+msgstr "Γίνεται αντιγραφή του..."
+
+#: modules/install:373
+#, fuzzy
+msgid "Remember modified packages..."
+msgstr "Γίνεται απομάκρυνση του παλιού..."
+
+#: modules/install:435
+msgid "Saving configuration files..."
+msgstr "Γίνεται αποθήκευση των αρχείων ρυθμίσεως..."
+
+#: modules/install:460
+msgid "Installing package..."
+msgstr "Γίνεται εγκατάσταση..."
+
+#: modules/install:466
+#, fuzzy
+msgid "Removing old files..."
+msgstr "Γίνεται απομάκρυνση όλων των προσωρινών αρχείων temp..."
+
+#: modules/install:483
+msgid "Removing all tmp files..."
+msgstr "Γίνεται απομάκρυνση όλων των προσωρινών αρχείων temp..."
+
+#: modules/install:508
+#, fuzzy
+msgid "Update system databases..."
+msgstr "Γίνεται απομάκρυνση όλων των προσωρινών αρχείων temp..."
+
+#: modules/install:546
+msgid "Package \"%s\" (%s) is installed."
+msgstr "Το πακέτο %s (%s) δεν έχει εγκατασταθεί."
+
+#: modules/install:576
+msgid "\"%s\" package is already installed."
+msgstr "Το πακέτο \"%s\" είναι ήδη εγκατεστημένο."
+
+#: modules/install:577
+msgid "You can use the --forced option to force installation."
+msgstr ""
+"Μπορείτε να χρησιμοποιήσετε την επιλογή --forced για να κάνετε υποχρεωτική\n"
+"εγκατάσταση, ή κάντε πρώτα διαγραφή και, μετά, επανεγκατάσταση."
+
+#: modules/link:20
+msgid "Package \"%s\" is already installed."
+msgstr "Το %s είναι ήδη εγκατεστημένο."
+
+#: modules/link:36
+msgid "Link all missing dependencies? (y/N)"
+msgstr "Σύνδεση όλων των εξαρτήσεων που λείπουν? (y/N)"
+
+#: modules/link:45
+msgid "Leaving dependencies unresolved for package \"%s\""
+msgstr "Έχουν μείνει ανεπίλυτες εξαρτήσεις για το: %s"
+
+#: modules/link:46
+msgid "The package is installed but probably will not work."
+msgstr "Το πακέτο εγκαταστάθηκε, αλλά μάλλον δε θα δουλέψει."
+
+#: modules/list:50
+#, fuzzy
+msgid "all"
+msgstr "Όλα"
+
+#: modules/list:50
+#, fuzzy
+msgid "extra"
+msgstr "Εξαγωγή"
+
 #: modules/list:82
 msgid "Blocked packages"
 msgstr "Μπλοκαρισμένα πακέτα"
 
-#: modules/list:87 modules/list:121 modules/search:235
+#: modules/list:87 modules/list:121 modules/search:223
 msgid "%s package"
 msgid_plural "%s packages"
 msgstr[0] "%s πακέτο"
@@ -901,7 +886,7 @@ msgid_plural "%s packages installed."
 msgstr[0] "%s εγκατεστημένο πακέτο."
 msgstr[1] "%s εγκατεστημένα πακέτα."
 
-#: modules/list:147 tazpanel/pkgs.cgi:671
+#: modules/list:147 tazpanel/pkgs.cgi:670
 msgid "Installed packages of category \"%s\""
 msgstr "Εγκατεστημένα πακέτα στην κατηγορία: %s"
 
@@ -944,7 +929,7 @@ msgstr[1] "%s πακέτα στην τελευταία επαναφορτωθε�
 msgid "Installed files by \"%s\""
 msgstr "Εγκατεστηνμένα αρχεία από το: %s"
 
-#: modules/list:203 modules/list:213 modules/search:206 tazpanel/pkgs.cgi:71
+#: modules/list:203 modules/list:213 modules/search:194 tazpanel/pkgs.cgi:72
 msgid "%s file"
 msgid_plural "%s files"
 msgstr[0] "%s αρχείο"
@@ -958,7 +943,7 @@ msgstr ""
 msgid "File lost"
 msgstr "Το αρχείο χάθηκε"
 
-#: modules/list:273 tazpanel/pkgs.cgi:1054 tazpanel/pkgs.cgi:1144
+#: modules/list:273 tazpanel/pkgs.cgi:1051 tazpanel/pkgs.cgi:1141
 msgid "Configuration files"
 msgstr "Αρχεία ρυθμίσεων"
 
@@ -1012,65 +997,65 @@ msgstr "Το πειραματικό (undigest) %s δεν βρέθηκε"
 msgid "Creating new undigest \"%s\"."
 msgstr "Δημιουργείται νέο πειραματικό (undigest) %s."
 
-#: modules/mkdb:76
+#: modules/mkdb:74
 msgid "Input folder not specified"
 msgstr ""
 
-#: modules/mkdb:82
+#: modules/mkdb:80
 msgid "You are not allowed to write to the folder \"%s\""
 msgstr ""
 
-#: modules/mkdb:86
+#: modules/mkdb:84
 #, fuzzy
 msgid "Folder \"%s\" does not contain packages"
 msgstr "Το %s δεν μοιάζει να είναι ένα πακέτο του %s!"
 
-#: modules/mkdb:104
+#: modules/mkdb:102
 #, fuzzy
 msgid "Packages DB already exists."
 msgstr "Το %s είναι ήδη εγκατεστημένο."
 
-#: modules/mkdb:112
+#: modules/mkdb:110
 msgid "Calculate %s..."
 msgstr ""
 
-#: modules/pack:19
+#: modules/pack:22
 msgid "Receipt is missing. Please read the documentation."
 msgstr "Λείπει η απόδειξη. Παρακαλώ διαβάστε την τεκμηρίωση."
 
-#: modules/pack:23
+#: modules/pack:26
 msgid "Packing package \"%s\""
 msgstr "Γίνεται πακετάρισμα: %s"
 
-#: modules/pack:26
+#: modules/pack:29
 msgid "Creating the list of files..."
 msgstr "Δημιουργείται ο κατάλογος αρχείων..."
 
-#: modules/pack:33
+#: modules/pack:36
 msgid "Creating %s of files..."
 msgstr "Δημιουργείται το %s των αρχείων..."
 
-#: modules/pack:47
+#: modules/pack:50
 msgid "Compressing the FS..."
 msgstr "Γίνεται συμπίεση του fs..."
 
-#: modules/pack:57
+#: modules/pack:60
 msgid "Updating receipt sizes..."
 msgstr "Γίνεται ενημέρωση του μεγέθους των αποδείξεων..."
 
-#: modules/pack:63
+#: modules/pack:66
 msgid "Creating full cpio archive..."
 msgstr "Δημιουργείται ένα πλήρες αρχείο cpio..."
 
-#: modules/pack:67
+#: modules/pack:70
 msgid "Restoring original package tree..."
 msgstr "Γίνεται ανάκτηση του αρχικού δένδρου πακέτων..."
 
-#: modules/pack:72
+#: modules/pack:80
 msgid "Package \"%s\" compressed successfully."
 msgstr "Το πακέτο %s συμπιέσθηκε επιτυχώς."
 
-#: modules/pack:73 modules/repack:83
+#: modules/pack:81 modules/repack:81
 msgid "Size: %s"
 msgstr "Μέγεθος: %s"
 
@@ -1140,121 +1125,145 @@ msgstr ""
 "εμφανιστεί μια λίστα με διαφορές, για να δείξει τα νέα και ενημερώσιμα "
 "πακέτα."
 
-#: modules/remove:63
+#: modules/recompress:32
+msgid "Recompressing package \"%s\""
+msgstr "Γίνεται επανασυμπίεση του: %s"
+
+#: modules/recompress:42
+msgid "Recompressing the FS..."
+msgstr "Γίνεται επανασυμπίεση του fs..."
+
+#: modules/recompress:47
+msgid "Creating new package..."
+msgstr "Δημιουργείται νέο πακέτο..."
+
+#: modules/reconfigure:26
+msgid "Nothing to do for package \"%s\"."
+msgstr "Δεν μπορεί να γίνει τίποτε για το %s."
+
+#: modules/remove:57
+#, fuzzy
+msgid "Execute pre-remove commands..."
+msgstr ""
+"Μετά την ολοκλήρωση της εγκατάστασης, γίνεται έλεγχος για τις εξαρτήσεις..."
+
+#: modules/remove:70
+#, fuzzy
+msgid "Execute post-remove commands..."
+msgstr ""
+"Μετά την ολοκλήρωση της εγκατάστασης, γίνεται έλεγχος για τις εξαρτήσεις..."
+
+#: modules/remove:96
 msgid "The following packages depend on package \"%s\":"
 msgstr "Τα ακόλουθα πακέτα εξαρτώνται από το %s:"
 
-#: modules/remove:71
+#: modules/remove:104
 msgid "The following packages have been modified by package \"%s\":"
 msgstr "Τα ακόλουθα πακέτα τροποποιήθηκαν από το %s:"
 
-#: modules/remove:79
+#: modules/remove:112
 msgid "Remove package \"%s\" (%s)? (y/N)"
 msgstr "Να γίνει απομάκρυνση του %s (%s)? (y/N)"
 
-#: modules/remove:81
+#: modules/remove:114
 msgid "Uninstallation of package \"%s\" cancelled."
 msgstr "Απεγκατάσταση του %s έχει διαγραφεί."
 
-#: modules/remove:88
+#: modules/remove:121
 msgid "Removing package \"%s\""
 msgstr "Γίνεται απομάκρυνση του: %s"
 
-#: modules/remove:92
-msgid "Execution of pre-remove commands..."
-msgstr ""
-
-#: modules/remove:98
+#: modules/remove:128
 msgid "Removing all files installed..."
 msgstr "Γίνεται απομάκρυνση όλων των εγκατεστημένων πακέτων..."
 
-#: modules/remove:119
-msgid "Execution of post-remove commands..."
-msgstr ""
-
-#: modules/remove:125
+#: modules/remove:151
 msgid "Removing package receipt..."
 msgstr "Γίνεται απομάκρυνση των αποδείξεων πακέτου..."
 
-#: modules/remove:131
+#: modules/remove:157
 #, fuzzy
 msgid "Package \"%s\" (%s) removed."
 msgstr "Το πακέτο %s (%s) δεν έχει εγκατασταθεί."
 
-#: modules/remove:144
+#: modules/remove:170
 msgid "Remove packages depending on package \"%s\"? (y/N)"
 msgstr "Να γίνει απομάκρυνση των πακέτων που εξαρτώνται από το %s? (y/N)"
 
-#: modules/remove:161
+#: modules/remove:187
 msgid "Reinstall packages modified by package \"%s\"? (y/N)"
 msgstr "Να επανεγκατασταθούν τα πακέτα που εξαρτώνται από το %s? (y/N)"
 
-#: modules/remove:167
+#: modules/remove:193
 msgid "Check %s for reinstallation"
 msgstr "Ελέγξτε τα %s για επανεγκατάσταση"
 
-#: modules/repack:18
+#: modules/repack:16
 msgid "Repacking \"%s\""
 msgstr "Γίνεται ξαναπακετάρισμα στο: %s"
 
-#: modules/repack:21
+#: modules/repack:19
 msgid "Can't repack package \"%s\""
 msgstr "Αδύνατο το ξαναπακετάρισμα %s"
 
-#: modules/repack:26
+#: modules/repack:24
 msgid "Can't repack, \"%s\" files have been modified by:"
 msgstr "Αδύνατο το ξαναπακετάρισμα, %s τα αρχεία τροποποιήθηκαν από:"
 
-#: modules/repack:37
+#: modules/repack:35
 msgid "Can't repack, the following files are lost:"
 msgstr "Αδύνατο το ξαναπακετάρισμα, χάθηκαν τα εξής αρχεία:"
 
-#: modules/repack:71
+#: modules/repack:69
 msgid "Can't repack, %s error."
 msgstr "Αδύνατο το ξαναπακετάρισμα, σφάλμα στο %s."
 
-#: modules/repack:82
+#: modules/repack:80
 msgid "Package \"%s\" repacked successfully."
 msgstr "Το πακέτο %s ξαναπακεταρίστηκε επιτυχώς."
 
-#: modules/search:32 tazpanel/pkgs.cgi:633
+#: modules/repack-config:44
+msgid "User configuration backup on date %s"
+msgstr "Ανττίγραφο ασφαλείας με τις ρυθμίσεις χρήστη στο %s"
+
+#: modules/search:19 tazpanel/pkgs.cgi:632
 msgid "Installed packages"
 msgstr "Εγκατεστημένα πακέτα"
 
-#: modules/search:45
+#: modules/search:32
 msgid "%s installed package found for \"%s\""
 msgid_plural "%s installed packages found for \"%s\""
 msgstr[0] "%s εγκατεστημένο πακέτο βρέθηκε για το: %s"
 msgstr[1] "%s εγκατεστημένα πακέτα βρέθηκαν για το: %s"
 
-#: modules/search:54 tazpanel/pkgs.cgi:632
+#: modules/search:41 tazpanel/pkgs.cgi:631
 msgid "Available packages"
 msgstr "Διαθέσιμα πακέτα"
 
-#: modules/search:86 modules/search:120
+#: modules/search:73 modules/search:107
 msgid "%s available package found for \"%s\""
 msgid_plural "%s available packages found for \"%s\""
 msgstr[0] "%s διαθέσιμο πακέτο βρέθηκε για το: %s"
 msgstr[1] "%s διαθέσιμα πακέτα βρέθηκαν για το: %s"
 
-#: modules/search:96
+#: modules/search:83
 msgid "Matching packages name with version and desc"
 msgstr "Ταίριασμα του ονόματος των πακέτων με την έκδοση και την περιγραφή"
 
-#: modules/search:140
+#: modules/search:127
 msgid "Search result for \"%s\""
 msgstr "Να γίνει αναζήτηση για το: %s"
 
-#: modules/search:157
+#: modules/search:144
 msgid "Search result for file \"%s\""
 msgstr "Να γίνει αναζήτηση για το αρχείο %s"
 
-#: modules/search:177 modules/search:191
+#: modules/search:164 modules/search:179
 #, fuzzy
 msgid "Package %s:"
 msgstr "Πακέτο"
 
-#: modules/search:216
+#: modules/search:204
 msgid "Search result for package \"%s\""
 msgstr "Αναζήτηση για το πακέτο %s"
 
@@ -1263,19 +1272,19 @@ msgstr "Αναζήτηση για το πακέτο %s"
 msgid "Repository:"
 msgstr "Αποθετήριο: %s"
 
-#: modules/summary:38 tazpanel/pkgs.cgi:1678
+#: modules/summary:38 tazpanel/pkgs.cgi:1675
 msgid "Last recharge:"
 msgstr "Τελευταία ανανέωση:"
 
-#: modules/summary:50 tazpanel/pkgs.cgi:1691
+#: modules/summary:50 tazpanel/pkgs.cgi:1688
 msgid "Today at %s."
 msgstr ""
 
-#: modules/summary:51 tazpanel/pkgs.cgi:1692
+#: modules/summary:51 tazpanel/pkgs.cgi:1689
 msgid "Yesterday at %s."
 msgstr ""
 
-#: modules/summary:52 tazpanel/pkgs.cgi:1689
+#: modules/summary:52 tazpanel/pkgs.cgi:1686
 msgid "%d day ago."
 msgid_plural "%d days ago."
 msgstr[0] ""
@@ -1285,11 +1294,11 @@ msgstr[1] ""
 msgid "Database timestamp:"
 msgstr ""
 
-#: modules/summary:58 tazpanel/pkgs.cgi:1699
+#: modules/summary:58 tazpanel/pkgs.cgi:1696
 msgid "never."
 msgstr ""
 
-#: modules/summary:62 tazpanel/pkgs.cgi:1709
+#: modules/summary:62 tazpanel/pkgs.cgi:1706
 msgid "Mirrored packages:"
 msgstr "Καθρεπτιζόμενα πακέτα:"
 
@@ -1298,75 +1307,75 @@ msgstr "Καθρεπτιζόμενα πακέτα:"
 msgid "Linked packages:"
 msgstr "Πακέτα με δυνατότητα διασυνδέσης (linkable)"
 
-#: modules/summary:74 tazpanel/pkgs.cgi:1704
+#: modules/summary:74 tazpanel/pkgs.cgi:1701
 msgid "Installed packages:"
 msgstr "Εγκατεστημένα πακέτα:"
 
-#: modules/summary:75 tazpanel/pkgs.cgi:1719
+#: modules/summary:75 tazpanel/pkgs.cgi:1716
 msgid "Installed files:"
 msgstr "Εγκατεστημένα αρχεία:"
 
-#: modules/summary:76 tazpanel/pkgs.cgi:1722
+#: modules/summary:76 tazpanel/pkgs.cgi:1719
 msgid "Blocked packages:"
 msgstr "Μπλοκαρισμένα πακέτα:"
 
-#: modules/summary:77 tazpanel/pkgs.cgi:1714
+#: modules/summary:77 tazpanel/pkgs.cgi:1711
 msgid "Upgradeable packages:"
 msgstr "Αναβαθμίσιμα πακέτα:"
 
-#: modules/upgrade:74
+#: modules/upgrade:43
 msgid "New build"
 msgstr "Νέο build"
 
-#: modules/upgrade:76
+#: modules/upgrade:45
 msgid "Blocked"
 msgstr "Μπλοκαρίστηκε"
 
-#: modules/upgrade:119 modules/upgrade:135 tazpanel/pkgs.cgi:783
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:782
 msgid "Package"
 msgstr "Πακέτο"
 
-#: modules/upgrade:119 modules/upgrade:135 tazpanel/pkgs.cgi:551
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:550
 #, fuzzy
 msgid "Repository"
 msgstr "Αποθετήριο: %s"
 
-#: modules/upgrade:119 modules/upgrade:135 tazpanel/pkgs.cgi:293
-#: tazpanel/pkgs.cgi:1014
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:292
+#: tazpanel/pkgs.cgi:1011
 msgid "Version"
 msgstr "Έκδοση"
 
-#: modules/upgrade:119 modules/upgrade:135
+#: modules/upgrade:88 modules/upgrade:104
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: modules/upgrade:146
+#: modules/upgrade:115
 msgid "System is up-to-date..."
 msgstr "Το σύστημα είναι ενημερωμένο..."
 
-#: modules/upgrade:151
+#: modules/upgrade:120
 msgid "%s blocked"
 msgid_plural "%s blocked"
 msgstr[0] "%s μπλοκαρίστηκε"
 msgstr[1] "%s μπλοκαρίστηκαν"
 
-#: modules/upgrade:156
+#: modules/upgrade:125
 msgid "You have %s available upgrade (%s)"
 msgid_plural "You have %s available upgrades (%s)"
 msgstr[0] "Έχετε %s διαθέσιμη ενημέρωσ (%s)"
 msgstr[1] "Έχετε %s διαθέσιμες ενημερώσεις (%s)"
 
-#: modules/upgrade:161
+#: modules/upgrade:130
 msgid "%s installed package scanned in %ds"
 msgid_plural "%s installed packages scanned in %ds"
 msgstr[0] "%s το εγκατεστημένο πακέτο σαρώθηκε σε %d δευτερόλεπτα"
 msgstr[1] "%s τα εγκατεστημένα πακέτα σαρώθηκαν σε %d δευτερόλεπτα"
 
-#: modules/upgrade:176
+#: modules/upgrade:145
 msgid "Do you wish to install them now? (y/N)"
 msgstr "Θέλετε να τα εγκαταστήσετε τώρα? (y/N)"
 
-#: modules/upgrade:188
+#: modules/upgrade:157
 msgid "Leaving without any upgrades installed."
 msgstr "Το αφήνετε χωρίς να έχουν εγκατασταθεί καθόλου ενημερώσεις."
 
@@ -1380,7 +1389,7 @@ msgstr "Ενέργεια του TazPkg"
 msgid "package"
 msgstr "Πακέτο"
 
-#: tazpkg-box:54 tazpanel/pkgs.cgi:254
+#: tazpkg-box:54 tazpanel/pkgs.cgi:253
 msgid "Install"
 msgstr "Εγκατάσταση"
 
@@ -1403,8 +1412,8 @@ msgstr[1] "%s εγκατεστημένα πακέτα"
 msgid "Checking packages lists - %s"
 msgstr "Γίνεται έλεγχος στις λίστες πακέτων - %s"
 
-#: tazpkg-notify:58 tazpanel/pkgs.cgi:41 tazpanel/pkgs.cgi:249
-#: tazpanel/pkgs.cgi:528
+#: tazpkg-notify:58 tazpanel/pkgs.cgi:41 tazpanel/pkgs.cgi:248
+#: tazpanel/pkgs.cgi:527
 msgid "My packages"
 msgstr "Τα πακέτα μου"
 
@@ -1446,16 +1455,16 @@ msgstr[1] "Υπάρχουν %s αναβαθμίσιμα πακέτα"
 msgid "System is up to date - %s"
 msgstr "Το σύστημα είναι ενημερωμένο - %s"
 
-#: tazpanel/pkgs.cgi:38 tazpanel/pkgs.cgi:195
+#: tazpanel/pkgs.cgi:38 tazpanel/pkgs.cgi:194
 #, fuzzy
 msgid "Packages"
 msgstr "Πακέτο"
 
-#: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:1674
+#: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:1671
 msgid "Summary"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:247
+#: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:246
 msgid "Recharge list"
 msgstr "Ανανέωση λίστας"
 
@@ -1464,407 +1473,407 @@ msgstr "Ανανέωση λίστας"
 msgid "Check updates"
 msgstr "Έλεγχος αναβαθμίσεων"
 
-#: tazpanel/pkgs.cgi:44 tazpanel/pkgs.cgi:252 tazpanel/pkgs.cgi:1090
-#: tazpanel/pkgs.cgi:1334
+#: tazpanel/pkgs.cgi:44 tazpanel/pkgs.cgi:251 tazpanel/pkgs.cgi:1087
+#: tazpanel/pkgs.cgi:1331
 msgid "Administration"
 msgstr "Διαχείριση"
 
-#: tazpanel/pkgs.cgi:181
+#: tazpanel/pkgs.cgi:180
 msgid "Receipt for package %s unavailable"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:248
+#: tazpanel/pkgs.cgi:247
 msgid "Check upgrades"
 msgstr "Έλεγχος αναβαθμίσεων"
 
-#: tazpanel/pkgs.cgi:250 tazpanel/pkgs.cgi:1026
+#: tazpanel/pkgs.cgi:249 tazpanel/pkgs.cgi:1023
 msgid "Tags"
 msgstr "Ετικέτες"
 
-#: tazpanel/pkgs.cgi:251 tazpanel/pkgs.cgi:587
+#: tazpanel/pkgs.cgi:250 tazpanel/pkgs.cgi:586
 msgid "Linkable packages"
 msgstr "Πακέτα με δυνατότητα διασυνδέσης (linkable)"
 
-#: tazpanel/pkgs.cgi:253
+#: tazpanel/pkgs.cgi:252
 msgid "Install (Non Free)"
 msgstr "Εγκατάσταση (Μη ελεύθερο)"
 
-#: tazpanel/pkgs.cgi:255
+#: tazpanel/pkgs.cgi:254
 msgid "Remove"
 msgstr "Απομάκρυνση"
 
-#: tazpanel/pkgs.cgi:256
+#: tazpanel/pkgs.cgi:255
 msgid "Link"
 msgstr "Σύνδεσμος"
 
-#: tazpanel/pkgs.cgi:257
+#: tazpanel/pkgs.cgi:256
 msgid "Block"
 msgstr "Μπλοκάρισμα"
 
-#: tazpanel/pkgs.cgi:258
+#: tazpanel/pkgs.cgi:257
 msgid "Unblock"
 msgstr "Ξεμπλοκάρισμα"
 
-#: tazpanel/pkgs.cgi:259
+#: tazpanel/pkgs.cgi:258
 #, fuzzy
 msgid "(Un)block"
 msgstr "Ξεμπλοκάρισμα"
 
-#: tazpanel/pkgs.cgi:260
+#: tazpanel/pkgs.cgi:259
 msgid "Repack"
 msgstr "Επανασυσκευασία"
 
-#: tazpanel/pkgs.cgi:261
+#: tazpanel/pkgs.cgi:260
 msgid "Save configuration"
 msgstr "Αποθήκευση διαμόρφωσης"
 
-#: tazpanel/pkgs.cgi:262
+#: tazpanel/pkgs.cgi:261
 msgid "List configuration files"
 msgstr "Εμφάνιση αρχείων διαμόρφωσης"
 
-#: tazpanel/pkgs.cgi:263
+#: tazpanel/pkgs.cgi:262
 msgid "Quick check"
 msgstr "Γρήγορος έλεγχος"
 
-#: tazpanel/pkgs.cgi:264
+#: tazpanel/pkgs.cgi:263
 msgid "Full check"
 msgstr "Ολοκληρωμένος έλεγχος"
 
-#: tazpanel/pkgs.cgi:265
+#: tazpanel/pkgs.cgi:264
 msgid "Clean"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:266
+#: tazpanel/pkgs.cgi:265
 msgid "Set link"
 msgstr "Ορισμός συνδέσμου"
 
-#: tazpanel/pkgs.cgi:267
+#: tazpanel/pkgs.cgi:266
 msgid "Remove link"
 msgstr "Απομάκρυνση συνδέσμου"
 
-#: tazpanel/pkgs.cgi:268
+#: tazpanel/pkgs.cgi:267
 #, fuzzy
 msgid "Add mirror"
 msgstr "καθρέπτης"
 
-#: tazpanel/pkgs.cgi:269
+#: tazpanel/pkgs.cgi:268
 #, fuzzy
 msgid "Add repository"
 msgstr "Αποθετήριο: %s"
 
-#: tazpanel/pkgs.cgi:270
+#: tazpanel/pkgs.cgi:269
 #, fuzzy
 msgid "Toggle all"
 msgstr "Εναλλαγή όλων"
 
-#: tazpanel/pkgs.cgi:292 tazpanel/pkgs.cgi:1008 tazpanel/pkgs.cgi:1268
+#: tazpanel/pkgs.cgi:291 tazpanel/pkgs.cgi:1005 tazpanel/pkgs.cgi:1265
 msgid "Name"
 msgstr "Όνομα"
 
-#: tazpanel/pkgs.cgi:294 tazpanel/pkgs.cgi:1018
+#: tazpanel/pkgs.cgi:293 tazpanel/pkgs.cgi:1015
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: tazpanel/pkgs.cgi:332 tazpanel/pkgs.cgi:1209
+#: tazpanel/pkgs.cgi:331 tazpanel/pkgs.cgi:1206
 msgid "Repository: %s"
 msgstr "Αποθετήριο: %s"
 
-#: tazpanel/pkgs.cgi:342 tazpanel/pkgs.cgi:417
+#: tazpanel/pkgs.cgi:341 tazpanel/pkgs.cgi:416
 #, fuzzy
 msgid "Pages:"
 msgstr "Πακέτο"
 
-#: tazpanel/pkgs.cgi:493
+#: tazpanel/pkgs.cgi:492
 msgid "Web search tool"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:495
+#: tazpanel/pkgs.cgi:494
 msgid "Search"
 msgstr "Αναζήτηση"
 
-#: tazpanel/pkgs.cgi:496
+#: tazpanel/pkgs.cgi:495
 msgid "Files"
 msgstr "Αρχεία"
 
-#: tazpanel/pkgs.cgi:529
+#: tazpanel/pkgs.cgi:528
 #, fuzzy
 msgid "All packages"
 msgstr "Διαθέσιμα πακέτα"
 
-#: tazpanel/pkgs.cgi:533
+#: tazpanel/pkgs.cgi:532
 msgid "Categories"
 msgstr "Κατηγορίες"
 
-#: tazpanel/pkgs.cgi:554
+#: tazpanel/pkgs.cgi:553
 msgid "Public"
 msgstr "Δημόσια"
 
-#: tazpanel/pkgs.cgi:558
+#: tazpanel/pkgs.cgi:557
 msgid "Any"
 msgstr "Οποιοδήποτε"
 
-#: tazpanel/pkgs.cgi:565
+#: tazpanel/pkgs.cgi:564
 msgid "All tags..."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:566
+#: tazpanel/pkgs.cgi:565
 #, fuzzy
 msgid "All categories..."
 msgstr "Κατηγορίες"
 
-#: tazpanel/pkgs.cgi:588
+#: tazpanel/pkgs.cgi:587
 msgid "Listing linkable packages..."
 msgstr "Καταγραφή πακέτων με δυνατότητα διασυνδέσης (linkable)..."
 
-#: tazpanel/pkgs.cgi:592
+#: tazpanel/pkgs.cgi:591
 #, fuzzy
 msgid "Selection:"
 msgstr "Περιγραφή:"
 
-#: tazpanel/pkgs.cgi:622
+#: tazpanel/pkgs.cgi:621
 #, fuzzy
 msgid "Categories list"
 msgstr "Κατηγορίες"
 
-#: tazpanel/pkgs.cgi:631 tazpanel/pkgs.cgi:1016
+#: tazpanel/pkgs.cgi:630 tazpanel/pkgs.cgi:1013
 msgid "Category"
 msgstr "Κατηγορία"
 
-#: tazpanel/pkgs.cgi:664 tazpanel/pkgs.cgi:718 tazpanel/pkgs.cgi:1314
+#: tazpanel/pkgs.cgi:663 tazpanel/pkgs.cgi:717 tazpanel/pkgs.cgi:1311
 #, fuzzy
 msgid "Packages list"
 msgstr "Πακέτο %s"
 
-#: tazpanel/pkgs.cgi:665 tazpanel/pkgs.cgi:719
+#: tazpanel/pkgs.cgi:664 tazpanel/pkgs.cgi:718
 msgid "Listing packages..."
 msgstr "Καταγραφή πακέτων..."
 
-#: tazpanel/pkgs.cgi:672
+#: tazpanel/pkgs.cgi:671
 #, fuzzy
 msgid "All packages of category \"%s\""
 msgstr "Εγκατεστημένα πακέτα στην κατηγορία: %s"
 
-#: tazpanel/pkgs.cgi:676
+#: tazpanel/pkgs.cgi:675
 #, fuzzy
 msgid "Installed packages of category \"%s\" in repository \"%s\""
 msgstr "Εγκατεστημένα πακέτα στην κατηγορία: %s"
 
-#: tazpanel/pkgs.cgi:677
+#: tazpanel/pkgs.cgi:676
 #, fuzzy
 msgid "All packages of category \"%s\" in repository \"%s\""
 msgstr "Εγκατεστημένα πακέτα στην κατηγορία: %s"
 
-#: tazpanel/pkgs.cgi:686
+#: tazpanel/pkgs.cgi:685
 msgid "You can not view a list of all packages until recharging lists."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:690 tazpanel/pkgs.cgi:731 tazpanel/pkgs.cgi:769
-#: tazpanel/pkgs.cgi:852 tazpanel/pkgs.cgi:1446 tazpanel/pkgs.cgi:1474
+#: tazpanel/pkgs.cgi:689 tazpanel/pkgs.cgi:730 tazpanel/pkgs.cgi:768
+#: tazpanel/pkgs.cgi:851 tazpanel/pkgs.cgi:1443 tazpanel/pkgs.cgi:1471
 #, fuzzy
 msgid "Selected packages:"
 msgstr "Μπλοκαρισμένα πακέτα:"
 
-#: tazpanel/pkgs.cgi:726
+#: tazpanel/pkgs.cgi:725
 #, fuzzy
 msgid "Packages suggested by %s"
 msgstr "Γίνεται εξαγωγή του %s στο: %s"
 
-#: tazpanel/pkgs.cgi:761
+#: tazpanel/pkgs.cgi:760
 msgid "Search packages"
 msgstr "Αναζήτηση πακέτων"
 
-#: tazpanel/pkgs.cgi:762
+#: tazpanel/pkgs.cgi:761
 msgid "Searching packages..."
 msgstr "Αναζήτηση πακέτων..."
 
-#: tazpanel/pkgs.cgi:784
+#: tazpanel/pkgs.cgi:783
 msgid "File"
 msgstr "Αρχείο"
 
-#: tazpanel/pkgs.cgi:822
+#: tazpanel/pkgs.cgi:821
 msgid "Recharge"
 msgstr "Ανανέωση"
 
-#: tazpanel/pkgs.cgi:823
+#: tazpanel/pkgs.cgi:822
 msgid "Recharging lists..."
 msgstr "Ανανέωση λιστών..."
 
-#: tazpanel/pkgs.cgi:826
+#: tazpanel/pkgs.cgi:825
 msgid "Recharge checks for new or updated packages"
 msgstr "Η ανανέωση ελέγχει για νέα ή αναβαθμισμένα πακέτα"
 
-#: tazpanel/pkgs.cgi:830
+#: tazpanel/pkgs.cgi:829
 #, fuzzy
 msgid "Recharging log"
 msgstr "Ανανέωση λιστών..."
 
-#: tazpanel/pkgs.cgi:834
+#: tazpanel/pkgs.cgi:833
 msgid "Recharging packages list"
 msgstr "Ανανέωση λίστας πακέτων"
 
-#: tazpanel/pkgs.cgi:837
+#: tazpanel/pkgs.cgi:836
 msgid "Packages lists are up-to-date. You should check for upgrades now."
 msgstr ""
 "Οι λίστες πακέτων είναι ενημερωμένες. Τώρα θα πρέπει να ελέγξετε για "
 "αναβαθμίσεις."
 
-#: tazpanel/pkgs.cgi:847
+#: tazpanel/pkgs.cgi:846
 msgid "Up packages"
 msgstr "Αναβαθμίσιμα πακέτα"
 
-#: tazpanel/pkgs.cgi:848
+#: tazpanel/pkgs.cgi:847
 msgid "Checking for upgrades..."
 msgstr "Έλεγχος για αναβαθμίσεις..."
 
-#: tazpanel/pkgs.cgi:896
+#: tazpanel/pkgs.cgi:888
 #, fuzzy
 msgid "Installing: %s"
 msgstr "Εγκατεστημένα αρχεία: %s"
 
-#: tazpanel/pkgs.cgi:897
+#: tazpanel/pkgs.cgi:889
 #, fuzzy
 msgid "Removing: %s"
 msgstr "Γίνεται απομάκρυνση του: %s"
 
-#: tazpanel/pkgs.cgi:898
+#: tazpanel/pkgs.cgi:890
 #, fuzzy
 msgid "Linking: %s"
 msgstr "Λείπουν: %s"
 
-#: tazpanel/pkgs.cgi:899
+#: tazpanel/pkgs.cgi:891
 #, fuzzy
 msgid "Blocking: %s"
 msgstr "Γίνεται μεταφόρτωση: $pkg"
 
-#: tazpanel/pkgs.cgi:900
+#: tazpanel/pkgs.cgi:892
 #, fuzzy
 msgid "Unblocking: %s"
 msgstr "Γίνεται μεταφόρτωση: $pkg"
 
-#: tazpanel/pkgs.cgi:901
+#: tazpanel/pkgs.cgi:893
 #, fuzzy
 msgid "(Un)blocking: %s"
 msgstr "Γίνεται μεταφόρτωση: $pkg"
 
-#: tazpanel/pkgs.cgi:902
+#: tazpanel/pkgs.cgi:894
 #, fuzzy
 msgid "Repacking: %s"
 msgstr "Γίνεται ξαναπακετάρισμα στο: %s"
 
-#: tazpanel/pkgs.cgi:923
+#: tazpanel/pkgs.cgi:920
 #, fuzzy
 msgid "Package info"
 msgstr "Πακέτο"
 
-#: tazpanel/pkgs.cgi:924
+#: tazpanel/pkgs.cgi:921
 msgid "Getting package info..."
 msgstr "Συγκέντρωση πληροφοριών πακέτων..."
 
-#: tazpanel/pkgs.cgi:1012
+#: tazpanel/pkgs.cgi:1009
 #, fuzzy
 msgid "State"
 msgstr "Κατάσταση"
 
-#: tazpanel/pkgs.cgi:1020
+#: tazpanel/pkgs.cgi:1017
 msgid "Maintainer"
 msgstr "Συντηρητής"
 
-#: tazpanel/pkgs.cgi:1022
+#: tazpanel/pkgs.cgi:1019
 msgid "License"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1024
+#: tazpanel/pkgs.cgi:1021
 msgid "Website"
 msgstr "Ιστοσελίδα"
 
-#: tazpanel/pkgs.cgi:1028
+#: tazpanel/pkgs.cgi:1025
 msgid "Sizes"
 msgstr "Μέγεθος"
 
-#: tazpanel/pkgs.cgi:1030
+#: tazpanel/pkgs.cgi:1027
 #, fuzzy
 msgid "Depends"
 msgstr "Εξαρτήσεις:"
 
-#: tazpanel/pkgs.cgi:1032
+#: tazpanel/pkgs.cgi:1029
 #, fuzzy
 msgid "Provide"
 msgstr "Πακέτο           : %s"
 
-#: tazpanel/pkgs.cgi:1034
+#: tazpanel/pkgs.cgi:1031
 msgid "Suggested"
 msgstr "Προτεινόμενα"
 
-#: tazpanel/pkgs.cgi:1039
+#: tazpanel/pkgs.cgi:1036
 msgid "View receipt"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1040
+#: tazpanel/pkgs.cgi:1037
 #, fuzzy
 msgid "Improve package"
 msgstr "Αναβαθμίσιμα πακέτα"
 
-#: tazpanel/pkgs.cgi:1063
+#: tazpanel/pkgs.cgi:1060
 msgid "Installed files"
 msgstr "Εγκατεστημένα αρχεία"
 
-#: tazpanel/pkgs.cgi:1065
+#: tazpanel/pkgs.cgi:1062
 msgid "Please wait"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1128
+#: tazpanel/pkgs.cgi:1125
 msgid "TazPkg administration and settings"
 msgstr "Διαχείριση και ρυθμίσεις TazPkg"
 
-#: tazpanel/pkgs.cgi:1137
+#: tazpanel/pkgs.cgi:1134
 msgid "Creating the package..."
 msgstr "Δημιουργία του πακέτου..."
 
-#: tazpanel/pkgs.cgi:1141
+#: tazpanel/pkgs.cgi:1138
 msgid "Path:"
 msgstr "Διαδρομή:"
 
-#: tazpanel/pkgs.cgi:1155
+#: tazpanel/pkgs.cgi:1152
 msgid "Checking packages consistency..."
 msgstr "Έλεγχος συνοχής πακέτου..."
 
-#: tazpanel/pkgs.cgi:1159
+#: tazpanel/pkgs.cgi:1156
 msgid "Full packages check..."
 msgstr "Πλήρης έλεγχος πακέτου..."
 
-#: tazpanel/pkgs.cgi:1168 tazpanel/pkgs.cgi:1179
+#: tazpanel/pkgs.cgi:1165 tazpanel/pkgs.cgi:1176
 msgid "%s is installed on /mnt/packages"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1192
+#: tazpanel/pkgs.cgi:1189
 msgid "Packages cache"
 msgstr "Προσωρινή μνήμη πακέτων"
 
-#: tazpanel/pkgs.cgi:1194
+#: tazpanel/pkgs.cgi:1191
 msgid "Packages in the cache: %s (%s)"
 msgstr "Πακέτα στην προσωρινή μνήμη: %s (%s)"
 
-#: tazpanel/pkgs.cgi:1201
+#: tazpanel/pkgs.cgi:1198
 msgid "Current mirror list"
 msgstr "Τρέχουσα λίστα καθρεπτών"
 
-#: tazpanel/pkgs.cgi:1224 tazpanel/pkgs.cgi:1256
+#: tazpanel/pkgs.cgi:1221 tazpanel/pkgs.cgi:1253
 msgid "Delete"
 msgstr "Διαγραφή"
 
-#: tazpanel/pkgs.cgi:1246
+#: tazpanel/pkgs.cgi:1243
 msgid "Private repositories"
 msgstr "Ιδιωτικά αποθετήρια"
 
-#: tazpanel/pkgs.cgi:1269
+#: tazpanel/pkgs.cgi:1266
 msgid "URL:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1279
+#: tazpanel/pkgs.cgi:1276
 msgid "Link to another SliTaz installation"
 msgstr "Σύνδεσμος σε άλλη εγκατάσταση SliTaz"
 
-#: tazpanel/pkgs.cgi:1282
+#: tazpanel/pkgs.cgi:1279
 msgid ""
 "This link points to the root of another SliTaz installation. You will be "
 "able to install packages using soft links to it."
@@ -1872,11 +1881,11 @@ msgstr ""
 "Αυτός ο σύνδεσμος δείχνει στη ρίζα μιας άλλης εγκατάστασης του SliTaz. Θα "
 "είστε σε θέση να εγκαταστήσει πακέτα χρησιμοποιόντας soft links σε αυτό."
 
-#: tazpanel/pkgs.cgi:1293
+#: tazpanel/pkgs.cgi:1290
 msgid "SliTaz packages DVD"
 msgstr "DVD πακέτων SliTaz"
 
-#: tazpanel/pkgs.cgi:1296
+#: tazpanel/pkgs.cgi:1293
 msgid ""
 "A bootable DVD image of all available packages for the %s version is "
 "generated every day. It also contains a copy of the website and can be used "
@@ -1888,180 +1897,229 @@ msgstr ""
 "μπορεί να χρησιμοποιηθεί χωρίς σύνδεση στο internet. Αυτή η εικόνα μπορεί να "
 "εγκατασταθεί σε ένα DVD ή ένα κλειδί USB."
 
-#: tazpanel/pkgs.cgi:1299
+#: tazpanel/pkgs.cgi:1296
 msgid "Install from ISO image:"
 msgstr "Εγκατάσταση από εικόνα ISO:"
 
-#: tazpanel/pkgs.cgi:1306
+#: tazpanel/pkgs.cgi:1303
 msgid "Download DVD image"
 msgstr "Κατέβασμα εικόνας DVD"
 
-#: tazpanel/pkgs.cgi:1308
+#: tazpanel/pkgs.cgi:1305
 msgid "Install from DVD/USB key"
 msgstr "Εγκατάσταση από DVD/USB key"
 
-#: tazpanel/pkgs.cgi:1317
+#: tazpanel/pkgs.cgi:1314
 msgid ""
 "Long list of packages is paginated. Here you can set the page size (default: "
 "100, turning off the pager: 0)."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1322
+#: tazpanel/pkgs.cgi:1319
 msgid "Set"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1348
+#: tazpanel/pkgs.cgi:1345
 #, fuzzy
 msgid "Licenses for package %s"
 msgstr "Χάθηκαν αρχεία από το %s:"
 
-#: tazpanel/pkgs.cgi:1369
+#: tazpanel/pkgs.cgi:1366
 msgid "%s license on %s website"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1370
+#: tazpanel/pkgs.cgi:1367
 msgid "Read online:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1370
+#: tazpanel/pkgs.cgi:1367
 msgid "Read local:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1411
+#: tazpanel/pkgs.cgi:1408
 #, fuzzy
 msgid "Tags list"
 msgstr "Ανανέωση λίστας"
 
-#: tazpanel/pkgs.cgi:1415
+#: tazpanel/pkgs.cgi:1412
 #, fuzzy
 msgid "List of tags in all repositories"
 msgstr "Λίστα όλων των εγκατεστημένων πακέτων"
 
-#: tazpanel/pkgs.cgi:1416
+#: tazpanel/pkgs.cgi:1413
 msgid "List of tags in repository \"%s\""
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1442
+#: tazpanel/pkgs.cgi:1439
 #, fuzzy
 msgid "Tag \"%s\""
 msgstr "Γίνεται ξαναπακετάρισμα στο: %s"
 
-#: tazpanel/pkgs.cgi:1470
+#: tazpanel/pkgs.cgi:1467
 #, fuzzy
 msgid "Blocked packages list"
 msgstr "Μπλοκαρισμένα πακέτα"
 
-#: tazpanel/pkgs.cgi:1508 tazpanel/pkgs.cgi:1585
+#: tazpanel/pkgs.cgi:1505 tazpanel/pkgs.cgi:1582
 #, fuzzy
 msgid "Improve package \"%s\""
 msgstr "Γίνεται απομάκρυνση του: %s"
 
-#: tazpanel/pkgs.cgi:1543
+#: tazpanel/pkgs.cgi:1540
 msgid "Please log in using your TazBug account."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1547
+#: tazpanel/pkgs.cgi:1544
 msgid "Login:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1549
+#: tazpanel/pkgs.cgi:1546
 msgid "Password:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1552
+#: tazpanel/pkgs.cgi:1549
 msgid "Remember me"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1554
+#: tazpanel/pkgs.cgi:1551
 msgid "Log in"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1558
+#: tazpanel/pkgs.cgi:1555
 msgid "Create new account"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1586 tazpanel/pkgs.cgi:1643
+#: tazpanel/pkgs.cgi:1583 tazpanel/pkgs.cgi:1640
 msgid "Back"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1609
+#: tazpanel/pkgs.cgi:1606
 msgid "How can you help:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1611
+#: tazpanel/pkgs.cgi:1608
 msgid "Please select an action"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1612
+#: tazpanel/pkgs.cgi:1609
 #, fuzzy
 msgid "Report new version"
 msgstr "Νέα έκδοση %s"
 
-#: tazpanel/pkgs.cgi:1613
+#: tazpanel/pkgs.cgi:1610
 msgid "Improve short description"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1614
+#: tazpanel/pkgs.cgi:1611
 msgid "Translate short description"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1615
+#: tazpanel/pkgs.cgi:1612
 msgid "Add or improve description"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1616
+#: tazpanel/pkgs.cgi:1613
 #, fuzzy
 msgid "Translate description"
 msgstr "Περιγραφή"
 
-#: tazpanel/pkgs.cgi:1617
+#: tazpanel/pkgs.cgi:1614
 #, fuzzy
 msgid "Improve category"
 msgstr "%s κατηγορία"
 
-#: tazpanel/pkgs.cgi:1618
+#: tazpanel/pkgs.cgi:1615
 msgid "Add or improve tags"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1619
+#: tazpanel/pkgs.cgi:1616
 msgid "Add application icon"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1620
+#: tazpanel/pkgs.cgi:1617
 msgid "Add application screenshot"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1621
+#: tazpanel/pkgs.cgi:1618
 msgid "Improve receipt"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1622
+#: tazpanel/pkgs.cgi:1619
 msgid "Other"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1633
+#: tazpanel/pkgs.cgi:1630
 msgid "Send"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1642
+#: tazpanel/pkgs.cgi:1639
 msgid "Thank you!"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1695
+#: tazpanel/pkgs.cgi:1692
 msgid "It is recommended to [recharge] the lists."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1700
+#: tazpanel/pkgs.cgi:1697
 msgid "You need to [download] the lists for further work."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1732
+#: tazpanel/pkgs.cgi:1729
 msgid "Latest log entries"
 msgstr "Τελευταίες καταχωρήσεις καταγραφής"
 
-#: tazpanel/pkgs.cgi:1734
+#: tazpanel/pkgs.cgi:1731
 msgid "Show"
 msgstr ""
+
+#~ msgid "Checking post install dependencies..."
+#~ msgstr ""
+#~ "Μετά την ολοκλήρωση της εγκατάστασης, γίνεται έλεγχος για τις "
+#~ "εξαρτήσεις..."
+
+#~ msgid "Please run \"%s\" in / and retry."
+#~ msgstr ""
+#~ "Παρακαλώ εκτελέστε την εντολή '%s'\n"
+#~ "στον αρχικό κατάλογο συστήματος / και, κατόπιν, ξαναπροσπαθήστε."
+
+#~ msgid "Removing old package..."
+#~ msgstr "Γίνεται απομάκρυνση του παλιού..."
+
+#~ msgid "Unable to find package \"%s\" in the mirrored packages list."
+#~ msgstr ""
+#~ "Αδύνατη η ανεύρεση του: %s στη λίστα πακέτων που βρίσκονται στον mirror."
+
+#~ msgid "Adding implicit depends \"%s\"..."
+#~ msgstr "Γίνεται προσθήκη δεδηλωμένων εξαρτήσεων στο %s..."
+
+#~ msgid "Unable to find the list \"%s\""
+#~ msgstr "Αδύνατη ανεύρεση της λίστας: %s"
+
+#~ msgid ""
+#~ "You must probably run '%s' as root to get the latest list of packages "
+#~ "available on the mirror."
+#~ msgstr ""
+#~ "Μάλλον πρέπει να εκτελέσετε το '%s' ως διαχειριστής συστήματος, για να "
+#~ "λάβετε την πιο πρόσφατη λίστα πακέτων που είναι διαθέσιμη στον mirror."
+
+#~ msgid "Unable to find list \"%s\""
+#~ msgstr "Αδύνατη η ανεύρεση του: %s"
+
+#~ msgid "rootconfig needs --root= option used."
+#~ msgstr "Το rootconfig πρέπει να χρησιμοποιήσει την επιλογή --root= option"
+
+#~ msgid "Install package with \"%s\" or \"%s\""
+#~ msgstr "Εγκαταστήστε το πακέτο με το '%s' ή το '%s'"
+
+#~ msgid "Usage: tazpkg link package_name slitaz_root"
+#~ msgstr "χρήση: tazpkg link όνομα_πακέτου καταλόγου_συστήματος_του_slitaz"
+
+#~ msgid "Example:"
+#~ msgstr "Παράδειγμα:"
+
+#~ msgid "\"%s\" will use less than 100k in your running system RAM."
+#~ msgstr ""
+#~ "Το '%s' θα χρησιμοποιήσει λιγώτερα από 100KB στο σύστημα που τρέχετε."
 
 #~ msgid "Usage for command up:"
 #~ msgstr "Χρήση του TazPkg για την εντολή up:"
@@ -2101,10 +2159,6 @@ msgstr ""
 #~ "Παρακαλώ καθορίστε ένα μοντέλο (pattern) ή ένα όνομα πακέτου για το "
 #~ "οποίο\n"
 #~ "να γίνει αναζήτηση."
-
-#~ msgid "Please specify a pattern or file name to search for."
-#~ msgstr ""
-#~ "Παρακαλώ καθορίστε ένα pattern ή ένα όνομα αρχείου για να γίνει αναζήτηση."
 
 #~ msgid "List \"%s\" is older than one week... Recharging."
 #~ msgstr ""

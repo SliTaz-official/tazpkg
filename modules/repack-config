@@ -1,0 +1,52 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# repack-config - TazPkg module
+# Create SliTaz package archive from configuration files
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+TMP_DIR="$(mktemp -d)"
+cd "$TMP_DIR"
+
+CONFIG_VERSION='1.0'
+
+mkdir "config-$CONFIG_VERSION"
+cd "config-$CONFIG_VERSION"
+
+for i in $INSTALLED/*/volatile.cpio.gz; do
+	zcat "$i" | cpio -t --quiet
+done > files.list
+
+mkdir fs
+cd fs
+
+( cd / ; cpio -o -H newc --quiet ) < ../files.list | cpio -idm --quiet > /dev/null
+
+mkdir -p etc/tazlito
+awk -F$'\t' '{print $1"-"$2}' "$PKGS_DB/installed.info" > etc/tazlito/config-packages.list
+cd ..
+echo "etc/tazlito/config-packages.list" >> files.list
+
+cat > receipt <<EOT
+# SliTaz package receipt.
+
+PACKAGE="config"
+VERSION="$CONFIG_VERSION"
+CATEGORY="base-system"
+SHORT_DESC="$(_n 'User configuration backup on date %s' "$(date +"%x %X")")"
+DEPENDS="$(ls $INSTALLED)"
+EOT
+
+cd ..
+tazpkg pack "config-$CONFIG_VERSION"
+cp "config-$CONFIG_VERSION.tazpkg" "$TOP_DIR"
+cd "$TOP_DIR"
+rm -rf "$TMP_DIR"

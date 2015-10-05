@@ -14,7 +14,10 @@
 
 
 PACKAGE="$1"
+TAZPKG_PACK="$2"
+
 cd "$PACKAGE"
+
 if [ ! -f 'receipt' ]; then
 	_ 'Receipt is missing. Please read the documentation.'
 	exit 0
@@ -65,9 +68,14 @@ find . -print | cpio -o -H newc --quiet > "../$PACKAGE.tazpkg"
 status
 
 action 'Restoring original package tree...'
-unlzma < fs.cpio.lzma | cpio -idm --quiet
+case "$TAZPKG_PACK" in
+	gzip) gzip -d < fs.cpio.gz;;
+	*) unlzma < fs.cpio.lzma;;
+esac | cpio -idm --quiet
 status
+rm fs.cpio.*
 
-rm fs.cpio.lzma && cd ..
+cd ..
+
 footer "$(_ 'Package "%s" compressed successfully.' "$PACKAGE")"
 _ 'Size: %s' "$(ls -lh "$PACKAGE.tazpkg" | awk '{print $5}')"

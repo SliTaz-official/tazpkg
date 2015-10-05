@@ -1,0 +1,27 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# set-release - TazPkg module
+# Change current release and upgrade packages
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+echo "$1" > "$root/etc/slitaz-release"
+
+rm "$PKGS_DB/mirror"
+
+tazpkg recharge && tazpkg upgrade
+
+# Install missing depends
+cd "$INSTALLED"
+
+for dep in $(awk -F$'\t' '{print $8}' $PKGS_DB/installed.info | tr ' ' '\n' | sort -u); do
+	[ ! -d "$dep" ] && tazpkg get-install "$dep"
+done

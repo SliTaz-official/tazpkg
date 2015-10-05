@@ -1,0 +1,583 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# install - TazPkg module
+# Install packages
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+. /usr/lib/slitaz/libpkg.sh
+
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+# $CACHE_DIR will change, it based on unchanged value of $SAVE_CACHE_DIR
+SAVE_CACHE_DIR="$CACHE_DIR"
+
+
+. @@MODULES@@/find-depends
+
+
+
+
+# Log TazPkg activity
+
+log_pkg() {
+	debug "\nlog_pkg('$1')\n  PACKAGE='$PACKAGE'\n  VERSION='$VERSION'\n  EXTRAVERSION='$EXTRAVERSION'"
+
+	local extra
+
+	[ "$1" == 'Installed' ] && \
+	extra=" - $(fgrep " $PACKAGE-$VERSION" "$PKGS_DB/installed.$SUM" | awk '{print $1}')"
+	debug "  extra='$extra'"
+
+	[ -w "$LOG" ] &&
+	echo "$(date +'%F %T') - $1 - $PACKAGE ($VERSION$EXTRAVERSION)$extra" >> $LOG
+}
+
+
+# get an already installed package from packages.equiv
+
+equivalent_pkg() {
+	# input: $1 = package name (like "nano")
+	local i rep rules rule out
+
+	rules=$(for rep in $PRIORITY; do
+			grep -hs "^$1=" "$rep/packages.equiv"
+		done | sed "s|^$1=||")
+	debug "  >rules='$rules'"
+
+	for rule in $rules; do
+		debug "  >rule='$rule'"
+		case $rule in
+			*:*)
+				debug '-- x:x'
+				# format 'alternative:newname'
+				# if alternative is installed then substitute newname
+				out="${rule#*:}"
+				awk -F$'\t' -vp="${rule%:*}" '$1==p{exit 1}' "$PKGS_DB/installed.info" || break
+				debug '-- x:x /'
+				;;
+			*)
+				debug '-- x'
+				# unconditional substitution
+				out="$rule"
+				awk -F$'\t' -vp="$rule" '$1==p{exit 1}' "$PKGS_DB/installed.info" || break
+				debug '-- x /'
+				;;
+		esac
+		unset out
+	done
+	debug '--'
+	# if not found in packages.equiv then no substitution
+	echo "${out:-$1}"
+}
+
+
+# Check and install all missing deps.
+# Auto install or ask user then install all missing deps from local dir, CD-ROM,
+# media or from the mirror.
+
+install_all_deps() {				# READY!!!
+	# input: $1 = package file to check/install missing dependencies
+	# ROOT READY
+	# dep: equivalent_pkg.
+
+	debug "\ninstall_all_deps('$1')"
+
+	local TMP_DIR DEPENDS num missing_packages equiv pkg answer dir found pkgfile
+
+	# Check for missing deps listed in a receipt packages.
+
+	# Get the receipt's variable DEPENDS
+	DEPENDS=$(
+		TMP_DIR=$(mktemp -d); cd "$TMP_DIR"
+		cpio --quiet -i receipt >/dev/null 2>&1
+		. receipt; echo $DEPENDS
+		rm -rf "$TMP_DIR"
+	) < "$1"
+
+	unset num missing_packages
+	for depend in $DEPENDS; do
+		debug "  depend='$depend'"
+		equiv=$(equivalent_pkg $depend)
+		debug "  equiv='$equiv'\n"
+		if [ ! -d "$INSTALLED/$equiv" ]; then
+			missing_packages="$missing_packages $equiv"
+			num=$((num+1))
+		elif [ ! -f "$INSTALLED/$equiv/receipt" ]; then
+			_ 'WARNING! Dependency loop between "%s" and "%s".' "$PACKAGE" "$equiv"
+		fi
+	done
+
+	# Nothing to install, exit function
+	[ -z "$num" ] && return
+
+
+	title "$(_ 'Tracking dependencies for package "%s"' "$PACKAGE")"
+
+	# Individual messages for each missing package
+	for pkg in $missing_packages; do
+		_ 'Missing package "%s"' "$pkg"
+	done
+
+	footer "$(_p \
+		'%s missing package to install.' \
+		'%s missing packages to install.' "$num" \
+		"$num")"
+
+
+	if [ "$AUTO_INSTALL_DEPS" == 'yes' ]; then
+		answer=0
+	else
+		newline
+		confirm "$(_ 'Install all missing dependencies? (y/N)')"
+		answer=$?
+		newline
+	fi
+	debug "  answer='$answer'"
+
+	dir="$(dirname "$1")"
+	debug "  dir='$dir'"
+
+	# We can install packages from /home/boot/packages at a boot time
+	# Also we can prefer local packages over mirrored/cached using '--local' option
+	[ "$dir" == '/home/boot/packages' ] && local='yes'
+	debug "  local='$local'"
+	[ -n "$local" ] && tazpkg mkdb "$dir" --forced >/dev/null
+
+
+	# "--nodeps" option prevents to install dependencies
+	if [ "$answer" -eq 0 -a -z "$nodeps" ]; then
+		debug "  let's install missing packages"
+		for pkg in $missing_packages; do
+			debug "  pkg='$pkg'"
+			if [ ! -d "$INSTALLED/$pkg" ]; then
+				# Package not installed
+
+				found='0'
+				# Prefer local packages
+				if [ -n "$local" ]; then
+					_ 'Checking if package "%s" exists in local list...' "$pkg"
+					pkgfile=$(awk -F$'\t' -vp="$pkg" '
+						$1==p{printf "%s-%s.tazpkg", $1, $2; exit 1}
+						' "$dir/packages.info")
+					if [ -n "$pkgfile" ]; then
+						found='1'
+						tazpkg install "$dir/$pkgfile"
+					fi
+				fi
+				debug "    found='$found'"
+
+				# Install package from the mirror
+				[ "$found" -eq 0 ] && tazpkg get-install "$pkg"
+			fi
+		done
+	else
+		# Answered 'No' to install dependencies, or '--nodeps' option given
+		newline
+		_ 'Leaving dependencies for package "%s" unresolved.' "$PACKAGE"
+		_ 'The package is installed but will probably not work.'
+		newline
+	fi
+}
+
+
+# Extract a package with cpio and gzip/lzma.
+
+extract_package() {
+	# input: $1 - path to package to be extracted; package should be in the current dir
+	# ROOT INDEPENDENT
+	action 'Extracting package...'
+
+	# Extract "outer layer": cpio; remove the original package file
+	cpio -idm --quiet < "$1" && rm -f "$1"
+
+	# "Inner layer" may vary
+	if [ -f fs.cpio.lzma ]; then
+		# "Plain" cpio.lzma
+		unlzma < fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
+	elif [ -f fs.cpio.gz ]; then
+		# "Fast" cpio.gz (used to pack-then-install process in most of get-packages)
+		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
+	fi
+
+	status
+}
+
+
+# Print short package description
+
+print_short_description() {
+	# TODO: undigest repo support? priority...
+	# ROOT READY
+	local short_desc=''
+
+	# Try to find localized short description
+	for LC in $LANG ${LANG%_*}; do
+		[ -e "$PKGS_DB/packages-desc.$LC" ] &&
+			short_desc=$(awk -F$'\t' -vp="$1" '$1==p{print $2; exit}' "$PKGS_DB/packages-desc.$LC")
+	done
+
+	# Try to find short description for mirrored package
+	[ -z "$short_desc" -a -s "$PKGS_DB/packages.info" ] &&
+		short_desc=$(awk -F$'\t' -vp="$1" '$1==p{print $4; exit}' "$PKGS_DB/packages.info")
+
+	[ -z "$short_desc" ] && short_desc="$SHORT_DESC"
+
+	longline "$short_desc"
+}
+
+
+grepesc() {
+	sed 's/\[/\\[/g'
+}
+
+
+
+
+#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*
+
+# Block of receipt function callers
+# Why? "Bad" receipt sourcing can redefine some vital TazPkg variables.
+# Few receipts function should be patched now.
+
+# Input: $1 = path to the receipt to be processed
+
+# Pre-install commands
+call_pre_install() {
+	local tmp
+	if grep -q '^pre_install()' "$1"; then
+		action 'Execute pre-install commands...'
+		tmp="$(mktemp)"
+		cp "$1" "$tmp"
+		sed -i 's|$1/*$INSTALLED|$INSTALLED|g' "$tmp"
+		( . "$tmp"; pre_install "$root" )
+		status
+		rm "$tmp"
+	fi
+
+}
+
+call_post_install() {
+	local tmp
+	if grep -q '^post_install()' "$1"; then
+		action 'Execute post-install commands...'
+		tmp="$(mktemp)"
+		cp "$1" "$tmp"
+		sed -i 's|$1/*$INSTALLED|$INSTALLED|g' "$tmp"
+		( . "$tmp"; post_install "$root" )
+		status
+		rm "$tmp"
+	fi
+}
+
+
+#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*
+
+
+# This function installs a package in the rootfs.
+
+install_package() {
+	# input: $1 = path to package to be installed
+	# dep: install_all_deps, print_short_description, extract_package, grepesc.
+
+	debug "\ninstall_package('$1')"
+	local dir
+
+	PACKAGE_FILE="$1"
+	TMP_DIR="$(mktemp -d)"
+
+	# Get receipt's variables and functions
+	{ cd "$TMP_DIR"; cpio --quiet -i receipt >/dev/null 2>&1; } < "$PACKAGE_FILE"
+	# Why next code? "Bad" receipt sourcing can redefine some vital TazPkg variables.
+	(
+		. "$TMP_DIR/receipt"
+		cat > "$TMP_DIR/receipt.var" <<EOT
+PACKAGE="$PACKAGE"
+VERSION="$VERSION"
+EXTRAVERSION="$EXTRAVERSION"
+CATEGORY="$CATEGORY"
+SHORT_DESC="$SHORT_DESC"
+WEB_SITE="$WEB_SITE"
+TAGS="$TAGS"
+DEPENDS="$DEPENDS"
+CONFIG_FILES="$CONFIG_FILES"
+PACKED_SIZE="$PACKED_SIZE"
+UNPACKED_SIZE="$UNPACKED_SIZE"
+EOT
+		rm "$TMP_DIR/receipt"
+	)
+	. "$TMP_DIR/receipt.var"
+
+
+	# Make sure folder exists on new installs or upgrades
+	mkdir -p "$INSTALLED/$PACKAGE"
+
+	# Keep "modifiers" and "files.list" on upgrade
+	find "$INSTALLED/$PACKAGE" -type f \( ! -name modifiers ! -name files.list \) -delete
+
+	# Update "installed.md5"
+	# TODO: discontinue using 'installed.md5'
+	touch "$PKGS_DB/installed.$SUM"
+	sed -i "/ $(basename "$PACKAGE_FILE")$/d" "$PKGS_DB/installed.$SUM" 2>/dev/null
+	cd "$(dirname "$PACKAGE_FILE")"
+	$CHECKSUM "$(basename "$PACKAGE_FILE")" >> "$PKGS_DB/installed.$SUM"
+
+	# Resolve package dependencies before package installation
+	install_all_deps "$PACKAGE_FILE"
+
+
+	# TODO: why this list-processed in the $PKGS_DB?
+	#[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> "$PKGS_DB/$INSTALL_LIST-processed"
+
+	if [ -n "$sequence" ]; then
+		title 'Installation of package "%s" (%s)' "$PACKAGE" "$sequence"
+	else
+		title 'Installation of package "%s"' "$PACKAGE"
+	fi
+
+	print_short_description "$PACKAGE"
+	separator '-'
+
+	action 'Copying package...'
+	cp "$PACKAGE_FILE" "$TMP_DIR"
+	status
+
+	cd "$TMP_DIR"
+	extract_package "$(basename "$PACKAGE_FILE")"
+
+	# Include temporary receipt to get the right variables
+	. "$TMP_DIR/receipt.var"
+
+	cd "$INSTALLED"
+
+
+	# Get files to remove if upgrading
+	# IFS here modified temporarily for processing filenames with spaces
+	IFS=$'\n'
+	if [ -f "$PACKAGE/files.list" ]; then
+		while read file; do
+			grep -q "^$(echo "$file" | grepesc)$" "$TMP_DIR/files.list" && continue
+			for i in $(cat "$PACKAGE/modifiers" 2>/dev/null;
+				fgrep -sl "$PACKAGE" */modifiers | cut -d/ -f1); do
+				grep -qs "^$(echo "$file" | grepesc)$" "$i/files.list" && continue 2
+			done
+			echo "$file"
+		done < "$PACKAGE/files.list" > "$TMP_DIR/files2remove.list"
+	fi
+	unset IFS
+
+
+	# Remember modified packages
+	action 'Remember modified packages...'
+	{
+		check=false
+		# TODO: why '[' the special?
+		# FIXME: we have files with spaces in our packages!
+		for i in $(fgrep -v [ $TMP_DIR/files.list); do
+			[ -e "$root$i" ] || continue
+			[ -d "$root$i" ] && continue
+			echo "- $i"
+			check=true
+		done ;
+		$check && \
+		for i in *; do
+			[ "$i" == "$PACKAGE" ] && continue
+			[ -s "$i/files.list" ] || continue
+			awk "{ printf \"$i %s\\n\",\$1 }" < "$i/files.list"
+		done;
+	} | awk '
+{
+	if ($1 == "-" || file[$2] != "") {
+		file[$2] = file[$2] " " $1
+		if ($1 != "-") {
+			if (pkg[$1] == "") all = all " " $1
+			pkg[$1] = pkg[$1] " " $2
+		}
+	}
+}
+END {
+	for (i = split(all, p, " "); i > 0; i--)
+		for (j = split(pkg[p[i]], f, " "); j > 0; j--)
+			printf "%s %s\n",p[i],f[j];
+}
+		' | while read dir file; do
+		if grep -qs "^$dir$" "$PACKAGE/modifiers"; then
+			# Do not overload an overloaded file !
+			rm "$TMP_DIR/$file" 2>/dev/null
+			continue
+		fi
+		grep -qs "^$PACKAGE$" "$dir/modifiers" && continue
+		if [ -s "$dir/volatile.cpio.gz" ]; then
+			# We can modify backed up files without notice
+			zcat "$dir/volatile.cpio.gz" | cpio -t --quiet | \
+				grep -q "^${file#/}$" && continue
+		fi
+		echo "$PACKAGE" >> "$dir/modifiers"
+	done
+	status
+
+
+	cd "$TMP_DIR"
+	# Copy receipt, etc.
+	for file in receipt files.list description.txt $CHECKSUM; do
+		[ -f "$file" ] && cp "$file" "$INSTALLED/$PACKAGE"
+	done
+
+
+	# Pre-install commands
+	call_pre_install "$INSTALLED/$PACKAGE/receipt"
+
+
+	if [ -n "$CONFIG_FILES" ]; then
+		# Save "official" configuration files
+		action 'Saving configuration files...'
+		debug "\n"
+
+		cd fs
+		local config_file
+		for config_file in $CONFIG_FILES; do
+			debug "  config_file: '$config_file'"
+			find ${config_file#/} -type f 2>/dev/null
+		done | cpio -o -H newc --quiet | gzip -9 > "$INSTALLED/$PACKAGE/volatile.cpio.gz"
+		cd ..
+
+		if [ -z "$newconf" ]; then
+			debug "  no '--newconf': clean official config files"
+			# Keep user configuration files: remove "official" from fs tree
+			for config_file in $CONFIG_FILES; do
+				debug "    remove '$config_file'"
+				[ -d "fs$config_file" ] && rm -r "fs$config_file"
+				[ -e "fs$config_file" ] && rm    "fs$config_file"
+			done
+		fi
+		# always '[ Done ]' status, unless '--newconf' is passed or not
+		:; status
+	fi
+
+
+	action 'Installing package...'
+	[ -n "$(busybox ls fs/* 2>/dev/null)" ] && cp -aLf fs/* "$root/"
+	status
+
+
+	if [ -s files2remove.list ]; then
+		action 'Removing old files...'
+		while read file; do
+			dir="$root$file"
+			# Remove specified file
+			rm -f "$dir"
+			# Recursive remove non-empty up-dirs
+			while [ "$dir" != "$root/" ]; do
+				dir=$(dirname "$dir")
+				rmdir "$dir" 2>/dev/null || break
+			done
+		done < files2remove.list
+		true
+		status
+	fi
+
+
+	# Remove the temporary random directory.
+	action "Removing all tmp files..."
+	cd ..; rm -rf "$TMP_DIR"
+	status
+
+
+	# Post install commands
+	call_post_install "$INSTALLED/$PACKAGE/receipt"
+
+
+
+
+	# Update system databases
+	# Updating DBs is important process, so not to hide such errors (localized):
+	# chroot: can't execute '/usr/bin/***': No such file or directory
+
+	local fl="$INSTALLED/$PACKAGE/files.list" upd=0 ud um ui us uk
+
+	fgrep    /usr/share/applications/ "$fl" | fgrep -q .desktop && udesk='yes'
+	fgrep -q /usr/share/mime "$fl" && umime='yes'
+	fgrep -q /usr/share/icon/hicolor "$fl" && uicon='yes'
+	fgrep -q /usr/share/glib-2.0/schemas "$fl" && uschm='yes'
+	fgrep    /usr/lib/gdk-pixbuf "$fl" | fgrep -q .so && upixb='yes'
+	fgrep -q /lib/modules "$fl" && ukrnl='yes'
+
+	if [ -n "$udesk$umime$uicon$uschm$upixb$ukrnl" ]; then
+		action 'Update system databases...'
+		upd=1
+	fi
+
+	# package 'desktop-file-utils'
+	[ -n "$udesk" ] && chroot "$root/" /usr/bin/update-desktop-database /usr/share/applications
+	# package 'shared-mime-info'
+	[ -n "$umime" ] && chroot "$root/" /usr/bin/update-mime-database /usr/share/mime
+	# packages 'gtk+', 'gtk+3'
+	[ -n "$uicon" ] && chroot "$root/" /usr/bin/gtk-update-icon-cache /usr/share/icons/hicolor
+	# package 'glib'
+	[ -n "$uschm" ] && chroot "$root/" /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
+	# package 'gdk-pixbuf'
+	[ -n "$upixb" ] && chroot "$root/" /usr/bin/gdk-pixbuf-query-loaders --update-cache
+	# packages 'busybox', 'kmod', 'depmod'
+	[ -n "$ukrnl" ] && chroot "$root/" /sbin/depmod -a
+
+	[ "$upd" -eq 1 ] && status
+
+
+
+
+	# Update installed.info
+	SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
+	# Remove newlines from some receipts
+	DEPENDS=$(echo $DEPENDS)
+	PKG_SUM="$(fgrep " $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" "$PKGS_DB/installed.$SUM" | cut -d' ' -f1)"
+	ii="$PKGS_DB/installed.info"
+	# Remove old entry
+	sed -i "/^$PACKAGE	/d" "$ii"
+	cat >> "$ii" <<EOT
+$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS	$PKG_SUM
+EOT
+	#awk -F$'\t' -vp="$PACKAGE" '$1==p' "$PKGS_DB/packages.info" > $ii
+	TEMP_FILE="$(mktemp)"
+	sort "$ii" > "$TEMP_FILE"; mv -f "$TEMP_FILE" "$ii"; chmod a+r "$ii"; unset ii
+
+	cd "$CUR_DIR"
+	footer "$(_ 'Package "%s" (%s) is installed.' "$PACKAGE" "$VERSION$EXTRAVERSION")"
+
+	# Log this activity
+	log_pkg Installed
+
+	# Remove package from upgrade list
+	[ -s "$UP_LIST" ] && sed -i "/^$PACKAGE\$/d" "$UP_LIST"
+}
+
+
+
+
+#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*
+
+
+PACKAGE=$(
+	tmp_dir=$(mktemp -d); cd "$tmp_dir"
+	cpio --quiet -i receipt >/dev/null 2>&1
+	. receipt; echo $PACKAGE
+	rm -rf "$tmp_dir"
+) < "$1"
+
+if [ -z "$forced" ]; then
+	# Check if a package is already installed
+	debug "\ncheck for installed package '$PACKAGE'"
+
+	awk -F$'\t' -vpv="$PACKAGE" '$1==pv { exit 1 }' "$PKGS_DB/installed.info"
+
+	if [ "$?" -eq 1 ]; then
+		newline
+		_ '"%s" package is already installed.' "$(colorize 34 "$PACKAGE")"
+		longline "$(_ 'You can use the --forced option to force installation.')"
+		newline
+		exit 1
+	fi
+fi
+
+install_package "$(realpath "$1")"

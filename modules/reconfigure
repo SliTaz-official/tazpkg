@@ -1,0 +1,27 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# reconfigure - TazPkg module
+# Replay post_install from receipt
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+# Get TazPkg working environment
+. @@MODULES@@/getenv
+
+
+
+
+PACKAGE="$1"
+
+# Check for post_install
+if grep -q ^post_install "$INSTALLED/$PACKAGE/receipt"; then
+	. "$INSTALLED/$PACKAGE/receipt"
+	post_install "$root"
+	# Log this activity
+	tazpkg call log_pkg Reconfigured
+else
+	newline
+	_ 'Nothing to do for package "%s".' "$PACKAGE"
+fi

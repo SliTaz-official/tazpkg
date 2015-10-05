@@ -45,6 +45,39 @@ log_pkg() {
 im() { tty -s; }
 
 
+# Block of receipt function callers
+# Why? "Bad" receipt sourcing can redefine some vital TazPkg variables.
+# Few receipts function should be patched now.
+
+# Input: $1 = path to the receipt to be processed
+
+call_pre_remove() {
+	local tmp
+	if grep -q '^pre_remove()' "$1"; then
+		action 'Execute pre-remove commands...'
+		tmp="$(mktemp)"
+		cp "$1" "$tmp"
+		sed -i 's|$1/*$INSTALLED|$INSTALLED|g' "$tmp"
+		( . "$tmp"; pre_remove "$root" )
+		status
+		rm "$tmp"
+	fi
+}
+
+call_post_remove() {
+	local tmp
+	if grep -q '^post_remove()' "$1"; then
+		action 'Execute post-remove commands...'
+		tmp="$(mktemp)"
+		cp "$1" "$tmp"
+		sed -i 's|$1/*$INSTALLED|$INSTALLED|g' "$tmp"
+		( . "$tmp"; post_remove "$root" )
+		status
+		rm "$tmp"
+	fi
+}
+
+
 
 
 PACKAGE="$1"
@@ -88,11 +121,8 @@ fi
 title 'Removing package "%s"' "$PACKAGE"
 
 # [1/4] Pre-remove commands
-if grep -q ^pre_remove "$INSTALLED/$PACKAGE/receipt"; then
-	action 'Execution of pre-remove commands...'
-	pre_remove
-	status
-fi
+call_pre_remove "$INSTALLED/$PACKAGE/receipt"
+
 
 # [2/4] Removing files
 action 'Removing all files installed...'
@@ -115,11 +145,7 @@ fi
 status
 
 # [3/4] Post-remove commands
-if grep -q ^post_remove "$INSTALLED/$PACKAGE/receipt"; then
-	action 'Execution of post-remove commands...'
-	post_remove
-	status
-fi
+call_post_remove "$INSTALLED/$PACKAGE/receipt"
 
 # [4/4] Remove package receipt and remove it from databases
 action 'Removing package receipt...'

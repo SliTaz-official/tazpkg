@@ -64,17 +64,17 @@ case " $(GET) " in
 		cd "$PKGS_DB"
 
 		header
+		echo -n '<pre>'
 		if [ -f "$INSTALLED/$pkg/files.list" ]; then
 			files=$(wc -l < "$INSTALLED/$pkg/files.list")
-			cat <<EOT
-	<pre class="scroll">$(sort "$INSTALLED/$pkg/files.list")</pre>
-	<footer>$(_p '%s file' '%s files' "$files" "$files")</footer>
-EOT
+			sort "$INSTALLED/$pkg/files.list"
+			echo -n '</pre><footer>'
+			_p '%s file' '%s files' "$files" "$files"
+			echo '</footer>'
 		else
-			cat <<EOT
-	<pre class="scroll">$(lzcat files.list.lzma undigest/*/files.list.lzma \
-		2>/dev/null | awk -vp="$pkg:" '$1==p{print $2}' | sort)</pre>
-EOT
+			lzcat files.list.lzma undigest/*/files.list.lzma 2>/dev/null | \
+			awk -vp="$pkg:" '$1==p{print $2}' | sort
+			echo '</pre>'
 		fi
 		exit 0 ;;
 
@@ -551,9 +551,9 @@ EOT
 
 	<select id="repo" onchange="setCookie('repo')">
 		<option value="Public">$(_ 'Public')</option>
-		$(for i in $(ls "$PKGS_DB/undigest"); do
+		$(IFS=$'\n'; for i in $(ls "$PKGS_DB/undigest"); do
 			echo "<option value=\"$i\">$i</option>"
-		done)
+		done; unset IFS)
 		<option value="Any">$(_ 'Any')</option>
 	</select>
 	<script type="text/javascript">setValue('repo', "$repo")</script>
@@ -900,10 +900,15 @@ EOT
 		# Do the command for all asked packages
 		cd /tmp
 		export output='html'
+		pkgs_total=$(echo $pkgs | wc -w)
+		pkg_current='1'
+		unset sequence
 
 		for pkg in $pkgs; do
+			[ "$pkgs_total" -ne 1 ] && sequence="$pkg_current/$pkgs_total"
 			#echo $(_n 'y') | 
-			tazpkg $cmd $pkg $opt 2>/dev/null | filter_taztools_msgs
+			tazpkg $cmd $pkg $opt --sequence="$sequence" 2>/dev/null | filter_taztools_msgs
+			pkg_current=$((pkg_current+1))
 		done
 		;;
 
@@ -1005,7 +1010,7 @@ EOT
 
 	$([ -n "$VERSION" ] && echo "<tr><td><b>$(_ 'Version')</b></td><td>$VERSION</td></tr>")
 
-	<tr><td><b>$(_ 'Category')</b></td><td><a href="?list&amp;cat=$CATEGORY">$CATEGORY</a></td></tr>
+	<tr><td><b>$(_ 'Category')</b></td><td><a href="?list&amp;cat=$CATEGORY">$(_n "$CATEGORY")</a></td></tr>
 
 	<tr><td><b>$(_ 'Description')</b></td><td>$SHORT_DESC</td></tr>
 
@@ -1036,8 +1041,8 @@ EOT
 EOT
 
 		# Show description
-		DESC="$(tazpkg desc $pkg)"
-		[ -n "$DESC" ] && echo "<section><pre class=\"pre-wrap\">$DESC</pre></section>"
+		DESC="$(@@MODULES@@/description "$pkg")"
+		[ -n "$DESC" ] && echo "<section id=\"desc\">$DESC</section>"
 
 		# Show configuration files list
 		CONFIGS="$(tazpkg list-config $pkg | sed 's|\(.*\)|\1 \1|')"

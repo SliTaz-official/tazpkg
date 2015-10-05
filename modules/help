@@ -127,12 +127,8 @@ fi
 title=$(echo $commands | grep -oe ":$T\(,[^:]*\)*:" | tr -d : | sed 's|,|, |g')
 
 
-# style: <h3 id="TOPIC">
-HLP=$(sed "/id=\"$T\"/,/<h3/!d; /<h3/d; /<\/h3/d; /<h2/,\$d" $DOC)
-if [ -z "$HLP" ]; then
-	# style: <a name="TOPIC"></a>
-	HLP=$(sed "/name=\"$T\"/,/name=/!d; /name=/d; /<h3/d; /<h2/,\$d" $DOC)
-fi
+# style: <article id="TOPIC">
+HLP=$(sed "/article id=\"$T\"/,/<\/article/!d; /<article/d; /<\/article/d" $DOC)
 
 if [ -z "$HLP" ]; then
 	_ 'Sorry, no help for "%s"' "$QUERY"
