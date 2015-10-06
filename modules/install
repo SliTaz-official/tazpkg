@@ -177,7 +177,7 @@ install_all_deps() {				# READY!!!
 		# Answered 'No' to install dependencies, or '--nodeps' option given
 		newline
 		_ 'Leaving dependencies for package "%s" unresolved.' "$PACKAGE"
-		_ 'The package is installed but will probably not work.'
+		_ 'The package will be installed but will probably not work.'
 		newline
 	fi
 }
@@ -457,9 +457,24 @@ END {
 	fi
 
 
-	action 'Installing package...'
-	[ -n "$(busybox ls fs/* 2>/dev/null)" ] && cp -aLf fs/* "$root/"
-	status
+	if [ -n "$(busybox ls fs/* 2>/dev/null)" ]; then
+		action 'Installing package...'
+
+		debug '\n  resolving destination links in source'
+		IFS=$'\n'
+		for dir in $(find fs -type d | sed 's|^fs||;/^$/d'); do
+			if ldir=$(busybox readlink -n $root$dir); then
+				debug "  * mv 'fs$dir'\n    -> 'fs${dir%/*}/$ldir'"
+				mkdir -p "fs${dir%/*}/${ldir%/*}"
+				mv "fs$dir" "fs${dir%/*}/$ldir"
+			fi
+		done
+		unset IFS
+
+		debug '  copying folders and files to destination'
+		cp -af fs/* "$root/"
+		status
+	fi
 
 
 	if [ -s files2remove.list ]; then

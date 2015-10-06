@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-05 03:48+0300\n"
+"POT-Creation-Date: 2015-10-06 15:41+0300\n"
 "PO-Revision-Date: 2014-02-16 14:06+0100\n"
 "Last-Translator: Christophe Lincoln <pankso@slitaz.org>\n"
 "Language-Team: French\n"
@@ -712,7 +712,8 @@ msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "Dépendances pour %s non résolues."
 
 #: modules/install:180
-msgid "The package is installed but will probably not work."
+#, fuzzy
+msgid "The package will be installed but will probably not work."
 msgstr "Le paquet est installé mais ne va probablement pas fonctionner."
 
 #: modules/install:251
@@ -746,33 +747,33 @@ msgstr "Suppression de l'ancien paquet..."
 msgid "Saving configuration files..."
 msgstr "Sauvegarde des fichiers de configuration..."
 
-#: modules/install:460
+#: modules/install:461
 msgid "Installing package..."
 msgstr "Installation du paquet..."
 
-#: modules/install:466
+#: modules/install:481
 #, fuzzy
 msgid "Removing old files..."
 msgstr "Suppression des fichiers temporaires..."
 
-#: modules/install:483
+#: modules/install:498
 msgid "Removing all tmp files..."
 msgstr "Suppression des fichiers temporaires..."
 
-#: modules/install:508
+#: modules/install:523
 #, fuzzy
 msgid "Update system databases..."
 msgstr "Restoration des fichiers d'index..."
 
-#: modules/install:546
+#: modules/install:561
 msgid "Package \"%s\" (%s) is installed."
 msgstr "Le paquet %s (%s) est installé."
 
-#: modules/install:576
+#: modules/install:591
 msgid "\"%s\" package is already installed."
 msgstr "Le paquet « %s » est déjà installé."
 
-#: modules/install:577
+#: modules/install:592
 msgid "You can use the --forced option to force installation."
 msgstr "Vous pouvez utiliser l'option --forced pour forcer son installation."
 

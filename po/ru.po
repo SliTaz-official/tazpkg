@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-05 03:48+0300\n"
+"POT-Creation-Date: 2015-10-06 15:41+0300\n"
 "PO-Revision-Date: 2015-10-05 03:50+0300\n"
 "Last-Translator: Aleksej Bobylev <al.bobylev@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -714,8 +714,8 @@ msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "Зависимости пакета «%s» оставлены нерешенными."
 
 #: modules/install:180
-msgid "The package is installed but will probably not work."
-msgstr "Пакет установлен, но, возможно, не будет работать."
+msgid "The package will be installed but will probably not work."
+msgstr "Пакет будет установлен, но, возможно, не будет работать."
 
 #: modules/install:251
 msgid "Execute pre-install commands..."
@@ -745,31 +745,31 @@ msgstr "Определение измененных пакетов…"
 msgid "Saving configuration files..."
 msgstr "Сохранение конфигурационных файлов…"
 
-#: modules/install:460
+#: modules/install:461
 msgid "Installing package..."
 msgstr "Установка пакета…"
 
-#: modules/install:466
+#: modules/install:481
 msgid "Removing old files..."
 msgstr "Удаление устаревших файлов…"
 
-#: modules/install:483
+#: modules/install:498
 msgid "Removing all tmp files..."
 msgstr "Удаление всех временных файлов…"
 
-#: modules/install:508
+#: modules/install:523
 msgid "Update system databases..."
 msgstr "Обновление системных баз данных…"
 
-#: modules/install:546
+#: modules/install:561
 msgid "Package \"%s\" (%s) is installed."
 msgstr "Пакет «%s» (%s) установлен."
 
-#: modules/install:576
+#: modules/install:591
 msgid "\"%s\" package is already installed."
 msgstr "Пакет «%s» уже был установлен."
 
-#: modules/install:577
+#: modules/install:592
 msgid "You can use the --forced option to force installation."
 msgstr "Используйте опцию --forced, чтобы принудительно установить пакет."
 

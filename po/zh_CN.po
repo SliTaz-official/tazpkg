@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-05 03:48+0300\n"
+"POT-Creation-Date: 2015-10-06 15:41+0300\n"
 "PO-Revision-Date: 2015-07-24 19:08+0800\n"
 "Last-Translator: Wenyu Zhang <jame987165702@gmail.com>\n"
 "Language-Team: rhsky <rhsky@qq.com>\n"
@@ -715,7 +715,8 @@ msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "放任 %s 依赖软件包不管。"
 
 #: modules/install:180
-msgid "The package is installed but will probably not work."
+#, fuzzy
+msgid "The package will be installed but will probably not work."
 msgstr "软件会被安装但是可能不会正常运行。"
 
 #: modules/install:251
@@ -749,33 +750,33 @@ msgstr "正在卸载旧版本..."
 msgid "Saving configuration files..."
 msgstr "正在储存 的配置文件"
 
-#: modules/install:460
+#: modules/install:461
 msgid "Installing package..."
 msgstr "正在安装..."
 
-#: modules/install:466
+#: modules/install:481
 #, fuzzy
 msgid "Removing old files..."
 msgstr "正在移除所有暂存文件..."
 
-#: modules/install:483
+#: modules/install:498
 msgid "Removing all tmp files..."
 msgstr "正在移除所有暂存文件..."
 
-#: modules/install:508
+#: modules/install:523
 #, fuzzy
 msgid "Update system databases..."
 msgstr "还原数据库文件..."
 
-#: modules/install:546
+#: modules/install:561
 msgid "Package \"%s\" (%s) is installed."
 msgstr "软件包%s (%s) 软件包已安装。"
 
-#: modules/install:576
+#: modules/install:591
 msgid "\"%s\" package is already installed."
 msgstr "\"%s\" 软件包已经被安装"
 
-#: modules/install:577
+#: modules/install:592
 msgid "You can use the --forced option to force installation."
 msgstr "你可以用 --forced 选项强制安装"
 

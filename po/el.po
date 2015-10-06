@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-05 03:48+0300\n"
+"POT-Creation-Date: 2015-10-06 15:41+0300\n"
 "PO-Revision-Date: 2012-12-23 14:08+0200\n"
 "Last-Translator: Constantine Mousafiris <kvisitor@gnugr.org>\n"
 "Language-Team: Kostis Mousafiris\n"
@@ -747,7 +747,8 @@ msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "Κάποιες εξαρτήσεις για το %s έμειναν ανεπίλυτες."
 
 #: modules/install:180
-msgid "The package is installed but will probably not work."
+#, fuzzy
+msgid "The package will be installed but will probably not work."
 msgstr "Το πακέτο εγκαταστάθηκε, αλλά μάλλον δε θα δουλέψει."
 
 #: modules/install:251
@@ -784,33 +785,33 @@ msgstr "Γίνεται απομάκρυνση του παλιού..."
 msgid "Saving configuration files..."
 msgstr "Γίνεται αποθήκευση των αρχείων ρυθμίσεως..."
 
-#: modules/install:460
+#: modules/install:461
 msgid "Installing package..."
 msgstr "Γίνεται εγκατάσταση..."
 
-#: modules/install:466
+#: modules/install:481
 #, fuzzy
 msgid "Removing old files..."
 msgstr "Γίνεται απομάκρυνση όλων των προσωρινών αρχείων temp..."
 
-#: modules/install:483
+#: modules/install:498
 msgid "Removing all tmp files..."
 msgstr "Γίνεται απομάκρυνση όλων των προσωρινών αρχείων temp..."
 
-#: modules/install:508
+#: modules/install:523
 #, fuzzy
 msgid "Update system databases..."
 msgstr "Γίνεται απομάκρυνση όλων των προσωρινών αρχείων temp..."
 
-#: modules/install:546
+#: modules/install:561
 msgid "Package \"%s\" (%s) is installed."
 msgstr "Το πακέτο %s (%s) δεν έχει εγκατασταθεί."
 
-#: modules/install:576
+#: modules/install:591
 msgid "\"%s\" package is already installed."
 msgstr "Το πακέτο \"%s\" είναι ήδη εγκατεστημένο."
 
-#: modules/install:577
+#: modules/install:592
 msgid "You can use the --forced option to force installation."
 msgstr ""
 "Μπορείτε να χρησιμοποιήσετε την επιλογή --forced για να κάνετε υποχρεωτική\n"

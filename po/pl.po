@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-05 03:48+0300\n"
+"POT-Creation-Date: 2015-10-06 15:41+0300\n"
 "PO-Revision-Date: 2013-08-07 13:34+0100\n"
 "Last-Translator: Paweł Pyrczak <tkr.tkr.pl@gmail.com>\n"
 "Language-Team: Paweł Pyrczak <support@pyrczak.pl>\n"
@@ -758,7 +758,8 @@ msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "Pozostawianie nierozwiązanych zależności dla %s."
 
 #: modules/install:180
-msgid "The package is installed but will probably not work."
+#, fuzzy
+msgid "The package will be installed but will probably not work."
 msgstr "Pakiet jest zainstalowany ale prawdopodobnie nie będzie działał."
 
 #: modules/install:251
@@ -793,33 +794,33 @@ msgstr "Usuwanie starej wersji..."
 msgid "Saving configuration files..."
 msgstr "Zachowywanie plików konfiguracyjnych..."
 
-#: modules/install:460
+#: modules/install:461
 msgid "Installing package..."
 msgstr "Instalowanie..."
 
-#: modules/install:466
+#: modules/install:481
 #, fuzzy
 msgid "Removing old files..."
 msgstr "Usuwanie wszystkich tymczasowych plików tmp..."
 
-#: modules/install:483
+#: modules/install:498
 msgid "Removing all tmp files..."
 msgstr "Usuwanie wszystkich tymczasowych plików tmp..."
 
-#: modules/install:508
+#: modules/install:523
 #, fuzzy
 msgid "Update system databases..."
 msgstr "Usuwanie wszystkich tymczasowych plików tmp..."
 
-#: modules/install:546
+#: modules/install:561
 msgid "Package \"%s\" (%s) is installed."
 msgstr "Pakiet %s (%s) nie jest zainstalowany."
 
-#: modules/install:576
+#: modules/install:591
 msgid "\"%s\" package is already installed."
 msgstr "Pakiet \"%s\" już jest zainstalowany."
 
-#: modules/install:577
+#: modules/install:592
 msgid "You can use the --forced option to force installation."
 msgstr ""
 "Można użyć opcji --forced aby wymusić instalację, albo usunąć\n"

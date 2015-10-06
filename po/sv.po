@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-05 03:48+0300\n"
+"POT-Creation-Date: 2015-10-06 15:41+0300\n"
 "PO-Revision-Date: 2012-07-11 11:33-0000\n"
 "Last-Translator: Emil Eklund <emileklund123@gmail.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -737,7 +737,7 @@ msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr ""
 
 #: modules/install:180
-msgid "The package is installed but will probably not work."
+msgid "The package will be installed but will probably not work."
 msgstr ""
 
 #: modules/install:251
@@ -770,33 +770,33 @@ msgstr "Letar paket..."
 msgid "Saving configuration files..."
 msgstr ""
 
-#: modules/install:460
+#: modules/install:461
 msgid "Installing package..."
 msgstr ""
 
-#: modules/install:466
+#: modules/install:481
 #, fuzzy
 msgid "Removing old files..."
 msgstr "Listar relaterade paket..."
 
-#: modules/install:483
+#: modules/install:498
 msgid "Removing all tmp files..."
 msgstr ""
 
-#: modules/install:508
+#: modules/install:523
 #, fuzzy
 msgid "Update system databases..."
 msgstr "Listar relaterade paket..."
 
-#: modules/install:546
+#: modules/install:561
 msgid "Package \"%s\" (%s) is installed."
 msgstr ""
 
-#: modules/install:576
+#: modules/install:591
 msgid "\"%s\" package is already installed."
 msgstr ""
 
-#: modules/install:577
+#: modules/install:592
 msgid "You can use the --forced option to force installation."
 msgstr ""
 

@@ -339,7 +339,7 @@ get_pkg() {
 	# Make sure we downloaded what we want with checksum
 
 	if [ "$($CHECKSUM "$namever.tazpkg" | cut -d' ' -f1)" != "$pkgsum" ]; then
-		_ 'Checksum error for "%s"' "$namever.tazpkg"
+		_ 'Checksum error for "%s"' "$namever.tazpkg" >&2
 		rm "$namever.tazpkg"
 
 		# Recharge DBs and try again; prevent looping with 'redo'
