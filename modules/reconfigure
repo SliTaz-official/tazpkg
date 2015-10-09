@@ -15,10 +15,19 @@
 
 PACKAGE="$1"
 
-# Check for post_install
-if grep -q ^post_install "$INSTALLED/$PACKAGE/receipt"; then
-	. "$INSTALLED/$PACKAGE/receipt"
-	post_install "$root"
+# Receipt function caller
+# Why? "Bad" receipt sourcing can redefine some vital TazPkg variables.
+# Few receipts function should be patched now.
+
+# Check for post_install function
+if grep -q '^post_install()' "$INSTALLED/$PACKAGE/receipt"; then
+	action 'Execute post-install commands...'
+	tmp="$(mktemp)"
+	cp "$1" "$tmp"
+	sed -i 's|$1/*$INSTALLED|$INSTALLED|g' "$tmp"
+	( . "$tmp"; post_install "$root" )
+	status
+	rm "$tmp"
 	# Log this activity
 	tazpkg call log_pkg Reconfigured
 else

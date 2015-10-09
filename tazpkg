@@ -90,7 +90,12 @@ im() { tty -s; }
 
 
 # Show debug messages
-debug() { if [ -n "$debug" ]; then colorize 036 "$@" >&2; fi; }
+debug() {
+	if [ -n "$debug" ]; then
+		colorize 036 "$@" >&2
+		echo -e "$(date +%f) $@" >> "${LOG/.log/.debug}"
+	fi
+}
 
 
 # Check if dir exists

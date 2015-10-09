@@ -46,7 +46,7 @@ rdep_scan() {
 	DB='installed'; [ -n "$all" ] && DB='packages'
 
 	awk -F$'\t' '$8 {print $1 " " $8}' "$PKGS_DB/$DB.info" | \
-	busybox awk -F' ' -v search="$SEARCH" '
+	awk -F' ' -v search="$SEARCH" '
 function show_deps(pkg, space,   i, n, mydeps) {
 	if (processed[pkg]) return
 	processed[pkg] = 1;

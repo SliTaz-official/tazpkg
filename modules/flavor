@@ -19,7 +19,7 @@ download_from() {
 	case "$1" in
 		# Mirror URL can have a trailing slash or not.
 		http://* | https://* | ftp://*)
-			busybox wget -c -q -T 30 -U $UA ${1%/}/$2 2>/dev/null && break ;;
+			wget -c -q -T 30 -U $UA ${1%/}/$2 2>/dev/null && break ;;
 		*)
 			ln -sf ${1%/}/$2 . && break ;;
 	esac

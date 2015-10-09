@@ -211,7 +211,7 @@ md5sum "$DBf.lzma" | cut -d' ' -f1 | tr -d $'\n' > files-list.md5
 
 # Make bundle to fast recharge
 [ -f 'bundle.tar.lzma' ] && rm 'bundle.tar.lzma'
-busybox tar -chaf bundle.tar.lzma \
+tar -chaf bundle.tar.lzma \
 	files-list.md5 packages.info descriptions.txt packages.equiv
 
 # Clean up

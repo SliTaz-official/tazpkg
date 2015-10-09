@@ -153,7 +153,7 @@ if [ -n "$full" ]; then
 				esac
 			done
 			echo "$md5  $f"
-		done < "$file" | busybox $CHECKSUM -c - 2>/dev/null | grep -v OK$ | sed "s/: FAILED$//"
+		done < "$file" | $CHECKSUM -c - 2>/dev/null | grep -v OK$ | sed "s/: FAILED$//"
 	done
 	footer
 

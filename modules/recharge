@@ -29,7 +29,7 @@
 get_from_mirror() {
 	case "$mirror" in
 		http://* | https://* | ftp://*)
-			busybox wget -c -q -T 30 -U "$UA" "$mirror$1" 2>/dev/null;;
+			wget -c -q -T 30 -U "$UA" "$mirror$1" 2>/dev/null;;
 		*)
 			ln -sf "$mirror$1" .;;
 	esac
@@ -70,7 +70,7 @@ case "$REPO" in
 esac
 
 for path in $repo_to_recharge; do
-	[ ! -f "$path/mirror" ] && continue	# skip
+	[ ! -s "$path/mirror" ] && continue	# skip
 	cd "$path"
 	# Mirror URL will have a trailing slash
 	mirror=$(cat mirror); mirror="${mirror%/}/"
@@ -119,7 +119,7 @@ for path in $repo_to_recharge; do
 	action 'Getting "%s"...' "$bundle"
 	get_from_mirror "$bundle"
 	if [ -f "$bundle" ]; then
-		busybox tar -xaf "$bundle"; rm "$bundle"
+		tar -xaf "$bundle"; rm "$bundle"
 	else
 		recharging_failed "$path"; continue
 	fi

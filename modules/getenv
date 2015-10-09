@@ -21,7 +21,12 @@ done
 die() { longline "$(_ "$@")" >&2; exit 1; }
 
 # Show debug messages
-debug() { if [ -n "$debug" ]; then colorize 036 "$@" >&2; fi; }
+debug() {
+	if [ -n "$debug" ]; then
+		colorize 036 "$@" >&2
+		echo -e "$(date +%f) $@" >> "${LOG/.log/.debug}"
+	fi
+}
 
 debug "\n========\n$0 '$1' '$2' '$3' '$4'"
 

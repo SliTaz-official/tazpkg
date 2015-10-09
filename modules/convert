@@ -12,12 +12,10 @@ TARGET_DIR="$2"
 TMP_DIR=$(mktemp -d)
 TOP_DIR="$(pwd)"
 
-. /etc/slitaz/slitaz.conf
-. /lib/libtaz.sh
 . @@MODULES@@/find-depends
 
-# Internationalization.
-export TEXTDOMAIN='tazpkg'
+# Get TazPkg working environment
+. @@MODULES@@/getenv
 
 
 # FIXME: what does this mean?
@@ -213,7 +211,7 @@ EOT
 
 convert_nutyx() {
 	mkdir -p "$TMP_DIR/fs"
-	busybox tar -xf "$PACKAGE_FILE" -C "$TMP_DIR/fs"
+	tar -xf "$PACKAGE_FILE" -C "$TMP_DIR/fs"
 	if [ -f "$TMP_DIR/fs/.META" ]; then
 		package=$(sed '/^N/!d;s/^.//' fs/.META)
 		version=$(sed '/^V/!d;s/^.//' fs/.META)
@@ -248,7 +246,7 @@ EOT
 
 convert_arch() {
 	mkdir -p "$TMP_DIR/fs"
-	busybox tar -xf "$PACKAGE_FILE" -C "$TMP_DIR/fs"
+	tar -xf "$PACKAGE_FILE" -C "$TMP_DIR/fs"
 	if [ -f "$TMP_DIR/fs/.PKGINFO" ]; then
 		cd "$TMP_DIR"
 		package=$(   sed '/^pkgname/!d;s/.*= //'  fs/.PKGINFO)

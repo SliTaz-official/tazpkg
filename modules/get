@@ -93,9 +93,9 @@ download_from() {
 	case "$1" in
 		# Mirror URL can have a trailing slash or not.
 		http://* | https://* | ftp://*)
-			debug "  busybox wget -c -q -T 30 -U $UA ${1%/}/$2"
+			debug "  wget -c -q -T 30 -U $UA ${1%/}/$2"
 			# TODO: display abridged wget status
-			busybox wget -c -q -T 30 -U $UA ${1%/}/$2
+			wget -c -q -T 30 -U $UA ${1%/}/$2
 			;;
 		*)
 			debug "  ln -sf ${1%/}/$2 ."
@@ -173,7 +173,7 @@ get_pkg_extra() {
 
 	# Try converted extra-packages first
 	# FIXME: Workaround to get packages filenames (even better to have names and versions separate)
-	converted="$(busybox wget -O - http://mirror1.slitaz.org/packages/extra/ 2>/dev/null | \
+	converted="$(wget -O - http://mirror1.slitaz.org/packages/extra/ 2>/dev/null | \
 		tr \'\" $'\n' | grep "$1-.*\.tazpkg$" | sort -u)"
 	debug "converted='$converted'"
 	if [ -n "$converted" ]; then
@@ -181,8 +181,8 @@ get_pkg_extra() {
 			http://*|https://*|ftp://*)
 				# Default 'http://mirror.slitaz.org/packages/cooking/'
 				#      -> 'http://mirror.slitaz.org/packages/extra/'
-				debug "busybox wget -q -T 30 -U '$UA' '${mirror%packages/*}packages/extra/$converted'"
-				busybox wget -q -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted";;
+				debug "wget -q -T 30 -U '$UA' '${mirror%packages/*}packages/extra/$converted'"
+				wget -q -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted";;
 		esac
 		if [ -f "$converted" ]; then
 			echo "$extra_cache/$converted"; exit 0
@@ -196,8 +196,8 @@ get_pkg_extra() {
 		http://*|https://*|ftp://*)
 			# Default 'http://mirror.slitaz.org/packages/cooking/'
 			#      -> 'http://mirror.slitaz.org/packages/get/'
-			debug "busybox wget -q -T 30 -U '$UA' '${mirror%packages/*}packages/get/$1'"
-			busybox wget -q -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1";;
+			debug "wget -q -T 30 -U '$UA' '${mirror%packages/*}packages/get/$1'"
+			wget -q -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1";;
 	esac
 
 	if [ ! -f "$1" ]; then

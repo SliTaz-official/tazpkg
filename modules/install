@@ -78,7 +78,7 @@ equivalent_pkg() {
 # Auto install or ask user then install all missing deps from local dir, CD-ROM,
 # media or from the mirror.
 
-install_all_deps() {				# READY!!!
+install_all_deps() {
 	# input: $1 = package file to check/install missing dependencies
 	# ROOT READY
 	# dep: equivalent_pkg.
@@ -258,7 +258,7 @@ call_pre_install() {
 	fi
 
 }
-
+# Post-install commands
 call_post_install() {
 	local tmp
 	if grep -q '^post_install()' "$1"; then
@@ -457,13 +457,13 @@ END {
 	fi
 
 
-	if [ -n "$(busybox ls fs/* 2>/dev/null)" ]; then
+	if [ -n "$(ls fs/* 2>/dev/null)" ]; then
 		action 'Installing package...'
 
 		debug '\n  resolving destination links in source'
 		IFS=$'\n'
 		for dir in $(find fs -type d | sed 's|^fs||;/^$/d'); do
-			if ldir=$(busybox readlink -n $root$dir); then
+			if ldir=$(readlink -n $root$dir); then
 				debug "  * mv 'fs$dir'\n    -> 'fs${dir%/*}/$ldir'"
 				mkdir -p "fs${dir%/*}/${ldir%/*}"
 				mv "fs$dir" "fs${dir%/*}/$ldir"
