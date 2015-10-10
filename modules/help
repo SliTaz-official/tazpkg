@@ -72,6 +72,7 @@ $(optlist "\
      list-undigest		$(_ 'List undigest mirrors')
      add-undigest		$(_ 'Add an undigest mirror')
      remove-undigest	$(_ 'Remove an undigest mirror')
+     mkdb				$(_ 'Make TazPkg database for folder with *.tazpkg packages')
 ")
 EOT
 }
