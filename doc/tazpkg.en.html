@@ -334,7 +334,7 @@ scratch”, and upgrade SliTaz packages remotely.</x-details></p>
 	<li><a href="#list-undigest">list-undigest</a>: list undigest mirrors</li>
 	<li><a href="#add-undigest">add-undigest</a>: add an undigest mirror</li>
 	<li><a href="#remove-undigest">remove-undigest</a>: remove an undigest mirror</li>
-	<li><a href="#mkdb">mkdb</a>: make TazPkg database for folder with *.tazpkg packages</li>
+	<li><a href="#mkdb">mkdb</a>: make a TazPkg database for a folder with *.tazpkg packages</li>
 </ul>
 </article>
 </section>
@@ -542,10 +542,10 @@ want to download or use <tt><a href="#get-list">get-list</a></tt> command.</p>
 package. Option <tt>--nodeps</tt> allows you to install only a specified package without its
 dependencies.</p>
 
-<p>When TazPkg installs package dependencies, it will prefer local packages (i.e. dependent packages
-located in the same folder as installed package) over mirrored/cached with <tt>--local</tt> option.
-It is useful when you want to install a lot of already downloaded packages with its dependencies
-without the need of network connection.</p>
+<p>When TazPkg installs package dependencies, it prefers local packages (i.e. dependent packages
+located in the same folder as installed packages) over mirrored/cached packages with the <tt>--local</tt> option.
+It is useful when you want to install a lot of already downloaded packages and their dependencies
+without the need of a network connection.</p>
 
 <p>You can specify multiple packages on the command line or give tazpkg a list of the packages you
 want to install or use <tt><a href="#get-list">install-list</a></tt> command.</p>
@@ -989,11 +989,11 @@ $ tazpkg list-undigest --box
 
 <article id="mkdb"><h3>mkdb</h3>
 
-<p>Make TazPkg database for selected folder with *.tazpkg packages.</p>
+<p>Make a TazPkg database for a selected folder with *.tazpkg packages.</p>
 
-<p>Next files describing packages will be created inside selected folder: <tt>packages.info</tt>,
+<p>The following files describing packages will be created inside the selected folder: <tt>packages.info</tt>,
 <tt>packages.equiv</tt>, <tt>descriptions.txt</tt>, <tt>files.list.lzma</tt>, <tt>IDs</tt>.
-Do nothing if database already exists; you can force database files rebuilding with
+Do nothing if the database already exists; you can also force database files rebuilding with the
 <tt>--forced</tt> option.</p>
 
 <pre>
