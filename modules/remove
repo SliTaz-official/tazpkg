@@ -133,13 +133,13 @@ if [ -f "$INSTALLED/$PACKAGE/modifiers" ]; then
 			[ $(grep "^$(echo $file | grepesc)$" "$INSTALLED/$mod/files.list" | wc -l) -gt 1 ] && \
 			continue 2
 		done
-		[ -n "$debug" ] && echo "remove_with_path $root$file"
-		remove_with_path $root$file
+		debug "remove_with_path ($root$file)"
+		remove_with_path "$root$file"
 	done
 else
 	for file in $(cat "$INSTALLED/$PACKAGE/files.list"); do
-		[ -n "$debug" ] && echo "remove_with_path $root$file"
-		remove_with_path $root$file
+		debug "remove_with_path ($root$file)"
+		remove_with_path "$root$file"
 	done
 fi
 status
@@ -190,7 +190,10 @@ if [ -n "$REFRESH" ]; then
 	if [ "$answer" -eq 0 ]; then
 		for i in $REFRESH; do
 			if [ "$(wc -l < "$INSTALLED/$i")" -gt 1 ]; then
-				_ 'Check %s for reinstallation' "$INSTALLED/$i"
+				_ 'Package "%s" was modified by "%s" and other packages. It will not be reinstalled.' \
+					"${i%/modifiers}" "$PACKAGE"
+				_ 'Check "%s" for reinstallation.' "$INSTALLED/$i"
+
 				continue
 			fi
 			rm -r "$INSTALLED/$i"

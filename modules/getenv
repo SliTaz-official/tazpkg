@@ -24,7 +24,8 @@ die() { longline "$(_ "$@")" >&2; exit 1; }
 debug() {
 	if [ -n "$debug" ]; then
 		colorize 036 "$@" >&2
-		echo -e "$(date +%f) $@" >> "${LOG/.log/.debug}"
+		# $LOG is unavailable at the early stage on 'getenv'
+		[ -n "$LOG" ] && echo -e "$(date +%f) $@" >> "${LOG/.log/.debug}"
 	fi
 }
 

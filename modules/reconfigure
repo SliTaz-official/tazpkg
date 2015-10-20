@@ -23,7 +23,7 @@ PACKAGE="$1"
 if grep -q '^post_install()' "$INSTALLED/$PACKAGE/receipt"; then
 	action 'Execute post-install commands...'
 	tmp="$(mktemp)"
-	cp "$1" "$tmp"
+	cp "$INSTALLED/$PACKAGE/receipt" "$tmp"
 	sed -i 's|$1/*$INSTALLED|$INSTALLED|g' "$tmp"
 	( . "$tmp"; post_install "$root" )
 	status
