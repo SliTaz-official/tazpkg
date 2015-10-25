@@ -13,6 +13,18 @@
 
 
 
+# Log TazPkg activity
+
+log_pkg() {
+	local extra
+	[ -e "$LOG" ] || touch $LOG
+	[ -w "$LOG" ] &&
+	echo "$(date +'%F %T') - $1 - $PACKAGE ($VERSION$EXTRAVERSION)$extra" >> $LOG
+}
+
+
+
+
 PACKAGE="$1"
 
 # Receipt function caller
@@ -29,7 +41,7 @@ if grep -q '^post_install()' "$INSTALLED/$PACKAGE/receipt"; then
 	status
 	rm "$tmp"
 	# Log this activity
-	tazpkg call log_pkg Reconfigured
+	log_pkg Reconfigured
 else
 	newline
 	_ 'Nothing to do for package "%s".' "$PACKAGE"
