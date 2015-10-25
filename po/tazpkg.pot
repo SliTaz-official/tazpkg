@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-06 15:41+0300\n"
+"POT-Creation-Date: 2015-10-25 22:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,115 +18,115 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: tazpkg:100
+#: tazpkg:105
 msgid "Creating folder \"%s\"..."
 msgstr ""
 
-#: tazpkg:136
+#: tazpkg:141
 msgid "Please specify a package name on the command line."
 msgstr ""
 
-#: tazpkg:139
+#: tazpkg:144
 msgid "Please specify a list name on the command line."
 msgstr ""
 
-#: tazpkg:142
+#: tazpkg:147
 msgid "Please specify a flavor name on the command line."
 msgstr ""
 
-#: tazpkg:145
+#: tazpkg:150
 msgid "Please specify a release name on the command line."
 msgstr ""
 
-#: tazpkg:148
+#: tazpkg:153
 msgid "Unable to find file \"%s\""
 msgstr ""
 
-#: tazpkg:151
+#: tazpkg:156
 msgid "Please specify an existing folder name on the command line."
 msgstr ""
 
-#: tazpkg:154
+#: tazpkg:159
 msgid "Please specify a pattern to search for."
 msgstr ""
 
-#: tazpkg:157
+#: tazpkg:162
 msgid "Unable to find the receipt \"%s\""
 msgstr ""
 
-#: tazpkg:225 modules/extract:19 modules/install:191 modules/recompress:19
+#: tazpkg:230 modules/extract:19 modules/install:191 modules/recompress:19
 msgid "Extracting package..."
 msgstr ""
 
-#: tazpkg:239 modules/list:44
+#: tazpkg:244 modules/list:44
 msgid "base-system"
 msgstr ""
 
-#: tazpkg:239 modules/list:44
+#: tazpkg:244 modules/list:44
 msgid "x-window"
 msgstr ""
 
-#: tazpkg:240 modules/list:45
+#: tazpkg:245 modules/list:45
 msgid "utilities"
 msgstr ""
 
-#: tazpkg:240 modules/list:45
+#: tazpkg:245 modules/list:45
 msgid "network"
 msgstr ""
 
-#: tazpkg:241 modules/list:46
+#: tazpkg:246 modules/list:46
 msgid "graphics"
 msgstr ""
 
-#: tazpkg:241 modules/list:46
+#: tazpkg:246 modules/list:46
 msgid "multimedia"
 msgstr ""
 
-#: tazpkg:242 modules/list:47
+#: tazpkg:247 modules/list:47
 msgid "office"
 msgstr ""
 
-#: tazpkg:242 modules/list:47
+#: tazpkg:247 modules/list:47
 msgid "development"
 msgstr ""
 
-#: tazpkg:243 modules/list:48
+#: tazpkg:248 modules/list:48
 msgid "system-tools"
 msgstr ""
 
-#: tazpkg:243 modules/list:48
+#: tazpkg:248 modules/list:48
 msgid "security"
 msgstr ""
 
-#: tazpkg:244 modules/list:49
+#: tazpkg:249 modules/list:49
 msgid "games"
 msgstr ""
 
-#: tazpkg:244 modules/list:49
+#: tazpkg:249 modules/list:49
 msgid "misc"
 msgstr ""
 
-#: tazpkg:244 modules/list:49
+#: tazpkg:249 modules/list:49
 msgid "meta"
 msgstr ""
 
-#: tazpkg:245 modules/list:50
+#: tazpkg:250 modules/list:50
 msgid "non-free"
 msgstr ""
 
-#: tazpkg:430
+#: tazpkg:435
 msgid "Done: %s"
 msgstr ""
 
-#: tazpkg:502
+#: tazpkg:507
 msgid "TazPkg SHell."
 msgstr ""
 
-#: tazpkg:503
+#: tazpkg:508
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr ""
 
-#: tazpkg:512
+#: tazpkg:517
 msgid "You are already running a TazPkg SHell."
 msgstr ""
 
@@ -240,37 +240,37 @@ msgstr ""
 msgid "Check completed."
 msgstr ""
 
-#: modules/convert:29
+#: modules/convert:27
 msgid "No dependency for:"
 msgstr ""
 
-#: modules/convert:32
+#: modules/convert:30
 msgid "WARNING: unknown dependency for %s"
 msgstr ""
 
-#: modules/convert:86 modules/convert:240 modules/convert:278
-#: modules/convert:343 modules/convert:376 modules/convert:458
-#: modules/convert:701 modules/convert:722
+#: modules/convert:84 modules/convert:238 modules/convert:276
+#: modules/convert:341 modules/convert:374 modules/convert:456
+#: modules/convert:699 modules/convert:720
 msgid "File \"%s\" does not look like %s package!"
 msgstr ""
 
-#: modules/convert:205 modules/convert:515
+#: modules/convert:203 modules/convert:513
 msgid "Invalid target: %s (expected i386)"
 msgstr ""
 
-#: modules/convert:565
+#: modules/convert:563
 msgid "Unable to extract the RPM using standard tools (rpm2cpio)."
 msgstr ""
 
-#: modules/convert:566
+#: modules/convert:564
 msgid "Do you want to install \"%s\" package? (y/N)"
 msgstr ""
 
-#: modules/convert:605
+#: modules/convert:603
 msgid "Arch \"%s\" not supported."
 msgstr ""
 
-#: modules/convert:752
+#: modules/convert:750
 msgid "Unsupported format"
 msgstr ""
 
@@ -318,7 +318,7 @@ msgstr ""
 msgid "Can't find flavor \"%s\". Abort."
 msgstr ""
 
-#: modules/get:137 modules/getenv:53
+#: modules/get:137 modules/getenv:59
 msgid "File \"%s\" empty."
 msgstr ""
 
@@ -342,19 +342,19 @@ msgstr ""
 msgid "Please wait until the mirror synchronization is complete and try again."
 msgstr ""
 
-#: modules/getenv:35 modules/getenv:43 modules/link:31
+#: modules/getenv:41 modules/getenv:49 modules/link:31
 msgid "Missing: %s"
 msgstr ""
 
-#: modules/getenv:35 modules/getenv:43 modules/getenv:53 modules/getenv:154
+#: modules/getenv:41 modules/getenv:49 modules/getenv:59 modules/getenv:160
 msgid "Please run tazpkg as root."
 msgstr ""
 
-#: modules/getenv:115 modules/getenv:140
+#: modules/getenv:121 modules/getenv:146
 msgid "File \"%s\" generated. Please wait..."
 msgstr ""
 
-#: modules/getenv:154
+#: modules/getenv:160
 msgid "Old \"%s\"."
 msgstr ""
 
@@ -554,17 +554,21 @@ msgstr ""
 msgid "Remove an undigest mirror"
 msgstr ""
 
-#: modules/help:103 modules/help:134
+#: modules/help:75
+msgid "Make a TazPkg database for a folder with *.tazpkg packages"
+msgstr ""
+
+#: modules/help:104 modules/help:135
 msgid "Sorry, no help for \"%s\""
 msgstr ""
 
-#: modules/help:110
+#: modules/help:111
 msgid "%d help topic available:"
 msgid_plural "%d help topics available:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/help:164
+#: modules/help:165
 msgid "%s"
 msgstr ""
 
@@ -704,7 +708,7 @@ msgstr ""
 msgid "Execute pre-install commands..."
 msgstr ""
 
-#: modules/install:265
+#: modules/install:265 modules/reconfigure:36
 msgid "Execute post-install commands..."
 msgstr ""
 
@@ -1057,7 +1061,7 @@ msgstr ""
 msgid "Creating new package..."
 msgstr ""
 
-#: modules/reconfigure:26
+#: modules/reconfigure:47
 msgid "Nothing to do for package \"%s\"."
 msgstr ""
 
@@ -1110,7 +1114,13 @@ msgid "Reinstall packages modified by package \"%s\"? (y/N)"
 msgstr ""
 
 #: modules/remove:193
-msgid "Check %s for reinstallation"
+msgid ""
+"Package \"%s\" was modified by \"%s\" and other packages. It will not be "
+"reinstalled."
+msgstr ""
+
+#: modules/remove:195
+msgid "Check \"%s\" for reinstallation."
 msgstr ""
 
 #: modules/repack:16
