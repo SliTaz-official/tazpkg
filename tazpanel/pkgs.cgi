@@ -87,10 +87,11 @@ case " $(GET) " in
 		orig_pkg=''
 		# Small hack to get 'pkgi' symbol:
 		data_icon="pkgi"; pkgi="$data_icon"
+		responce='i'
 
 		if ! grep -q "^$pkg"$'\t' "$PKGS_DB/installed.info"; then
 			# Package not installed
-			data_icon="pkg"
+			data_icon="pkg"; responce='n'
 			equivs=$(grep "^$pkg=" "$PKGS_DB/packages.equiv")
 			if [ "$(GET pkg)" == "$pkg" -a -n "$equivs" ]; then
 				# Check equivalent packages
@@ -100,12 +101,14 @@ case " $(GET) " in
 							if grep -q "^${equiv%:*}"$'\t' "$PKGS_DB/installed.info" &&
 							   grep -q "^${equiv#*:}"$'\t' "$PKGS_DB/installed.info"; then
 								# Equivalent installed
-								orig_pkg="$pkg→"; pkg="${equiv#*:}"; data_icon="pkgi"; break
+								orig_pkg="$pkg→"; pkg="${equiv#*:}"
+								data_icon="pkgi"; responce='i'; break
 							fi;;
 						*)
 							if grep -q "^$equiv"$'\t' "$PKGS_DB/installed.info"; then
 								# Equivalent installed
-								orig_pkg="$pkg→"; pkg="$equiv"; data_icon="pkgi"; break
+								orig_pkg="$pkg→"; pkg="$equiv"
+								data_icon="pkgi"; responce='i'; break
 							fi;;
 					esac
 				done
@@ -115,9 +118,19 @@ case " $(GET) " in
 		# Installed and blocked?
 		[ "$data_icon" == "$pkgi" ] && grep -q "^$pkg$" "$BLOCKED" && data_icon="pkgib"
 
-		header
-		echo -n "<a data-icon=\"$data_icon\" href=\"?info=${pkg//+/%2B}\">$orig_pkg$pkg</a>"
-		exit 0 ;;
+		if [ $(GET web) == 'y' ]; then
+			# Request from page http://pkgs.slitaz.org/ for example:
+			# http://127.0.0.1:82/pkgs.cgi?status&web=y&pkg=nano
+			# Allow http://pkgs.slitaz.org/ to get information from tazpanel server
+			header "Access-Control-Allow-Origin: http://pkgs.slitaz.org"
+			echo -n "$responce"
+		else
+			# Local request: don't check CORS (fails for cross domain requests unconditionally)
+			header
+			echo -n "<a data-icon=\"$data_icon\" href=\"?info=${pkg//+/%2B}\">$orig_pkg$pkg</a>"
+		fi
+		exit 0
+		;;
 
 
 	*\ app_img\ * )
@@ -489,7 +502,7 @@ tazpanel_header() {
 
 	cat <<EOT
 <form class="search">
-	<a data-icon="web" href="http://pkg.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a>
+	<a data-icon="web" href="http://pkgs.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a>
 	<input type="search" name="search" value="$(GET search)" results="5" autosave="pkgsearch" autocomplete="on"><!--
 	--><button type="submit">$(_n 'Search')</button><!--
 	--><button name="files" value="yes">$(_n 'Files')</button><!--
