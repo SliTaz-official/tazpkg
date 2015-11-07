@@ -7,5 +7,5 @@ Name[pt_BR]=Gerenciador de Pacotes
 Name[ru]=Менеджер пакетов
 TryExec=tazweb
 Exec=sh -c 'tazweb root:$$@127.0.0.1:82/user/pkgs.cgi'
-Icon=tazpkg
+Icon=system-software-installer
 Categories=Settings;PackageManager;
