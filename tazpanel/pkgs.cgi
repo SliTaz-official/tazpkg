@@ -1155,7 +1155,11 @@ EOT
 				echo "<ul>"
 				tazpkg list-config | while read file; do
 					if [ -e $file ]; then
-						echo "<li><a href=\"index.cgi?file=$file\">$file</a></li>"
+						echo -n "<li><a href=\"index.cgi?file=$file\">$file</a>"
+						md5file="$(grep -l "  $file$" $INSTALLED/*/md5sum)"
+						[ "$(grep -h "  $file$" $md5file)" != "$(md5sum $file)" ] &&
+							stat -c " %y" $file
+						echo "</li>"
 					else
 						echo "<li>$file</li>"
 					fi
