@@ -15,7 +15,7 @@
 
 case $1 in
 	clean)
-		num=$(find "$CACHE_DIR" -name *.tazpkg | wc -l)
+		num=$(find "$CACHE_DIR" -name '*.tazpkg' | wc -l)
 		size=$(du -hs "$CACHE_DIR" | cut -f1 | sed 's|\.0||')
 		[ "$num" -eq 0 ] && size="0K"
 
