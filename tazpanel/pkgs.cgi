@@ -468,7 +468,7 @@ for (index = 0; index < pkgs.length; index++) {
 		theForm.appendChild(hInput);
 	}
 }
-document.getElementById('countSelected').innerText = pkgs.length;
+document.getElementById('countSelected').textContent = pkgs.length;
 </script>
 EOT
 	fi
@@ -1082,7 +1082,7 @@ EOT
 	for (var i = 0; i < links.length; i++) {
 		if (links[i].dataset.icon=="clock") {
 			links[i].parentNode.id = 'link' + i;
-			pkg = links[i].innerText.replace(/\+/g, '%2B');
+			pkg = links[i].textContent.replace(/\+/g, '%2B');
 			ajax('?status&pkg=' + pkg, '1', 'link' + i);
 		}
 	}
