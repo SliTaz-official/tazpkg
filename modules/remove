@@ -13,25 +13,6 @@
 
 
 
-remove_with_path() {
-	# Avoid dirname errors by checking for argument.
-	[ -n "$1" ] || return
-
-	local dir
-	rm -f $1 2>/dev/null
-	dir="$1"
-	while [ "$dir" != "/" ]; do
-		dir="$(dirname "$dir")"
-		rmdir "$dir" 2>/dev/null || break
-	done
-}
-
-
-grepesc() {
-	sed 's/\[/\\[/g'
-}
-
-
 # Log activity
 
 log_pkg() {
@@ -126,22 +107,74 @@ call_pre_remove "$INSTALLED/$PACKAGE/receipt"
 
 # [2/4] Removing files
 action 'Removing all files installed...'
+
+# NOTE: package 'faenza-icon-theme' install time: 12s; removing time ~ 11min on my system  o_O
+# After optimization: 6s! (Long) for-loops are (big) evil ;)
+
+# NOTE: many packages contains filenames with spaces:
+#   lzcat /var/lib/tazpkg/files.list.lzma | awk -F" " '{if(NF>2)print $1}' | sed 's|:$||' | uniq
+# Redefine IFS to only-new-line field separator:
+IFS=$'\n'
+
+files2remove="$(mktemp)"
+dirs2remove="$(mktemp)"
+
+debug '\nDetermine which files to remove...'
 if [ -f "$INSTALLED/$PACKAGE/modifiers" ]; then
-	for file in $(cat "$INSTALLED/$PACKAGE/files.list"); do
-		for mod in $(cat "$INSTALLED/$PACKAGE/modifiers"); do
-			[ -f "$INSTALLED/$mod/files.list" ] && \
-			[ $(grep "^$(echo $file | grepesc)$" "$INSTALLED/$mod/files.list" | wc -l) -gt 1 ] && \
-			continue 2
-		done
-		debug "remove_with_path ($root$file)"
-		remove_with_path "$root$file"
+	debug '  (modifiers detected)'
+
+	mods="$(mktemp)"
+	for mod in $(cat "$INSTALLED/$PACKAGE/modifiers"); do
+		cat "$INSTALLED/$mod/files.list" >> "$mods" 2>/dev/null
 	done
+
+	awk -vroot="$root" -vfl="$INSTALLED/$PACKAGE/files.list" '
+	{
+		if (FILENAME == fl)
+			f[$0] = 1;
+		else
+			f[$0] = "";
+	}
+	END {
+		for (i in f) {
+			if (f[i] == 1) printf "%s%s\n", root, i;
+		}
+	}' "$INSTALLED/$PACKAGE/files.list" "$mods" > "$files2remove"
+	rm "$mods"
 else
-	for file in $(cat "$INSTALLED/$PACKAGE/files.list"); do
-		debug "remove_with_path ($root$file)"
-		remove_with_path "$root$file"
-	done
+	debug '  (modifiers not detected)'
+
+	awk -vroot="$root" '{ printf "%s%s\n", root, $0; }' \
+		"$INSTALLED/$PACKAGE/files.list" > "$files2remove"
 fi
+
+debug 'Removing files...'
+xargs rm -f < "$files2remove"
+
+debug 'Determine which folders to remove...'
+awk '
+BEGIN {
+	FS = "/"; OFS = "/";
+}
+{
+	# removing filename beyond the last "/"
+	$NF = "";
+	if (! a[$0]) {
+		a[$0] = 1; print;
+	}
+}' "$files2remove" | sed 's|/$||' > "$dirs2remove"
+
+debug 'Removing folders...'
+for dir2r in $(cat "$dirs2remove"); do
+	dir="$dir2r"
+	while [ -n "$dir" ]; do
+		rmdir "$dir" 2>/dev/null || break
+		dir="${dir%/*}"
+	done
+done
+rm "$files2remove" "$dirs2remove"
+unset IFS
+
 status
 
 # [3/4] Post-remove commands

@@ -27,10 +27,14 @@
 # Download a file from specified mirror
 
 get_from_mirror() {
+	debug "get_from_mirror($1)"
+	debug "  mirror='$mirror'"
 	case "$mirror" in
 		http://* | https://* | ftp://*)
+			debug "  wget -c -q -T 30 -U '$UA' '$mirror$1'"
 			wget -c -q -T 30 -U "$UA" "$mirror$1" 2>/dev/null;;
 		*)
+			debug "  ln -sf '$mirror$1' ."
 			ln -sf "$mirror$1" .;;
 	esac
 	status
