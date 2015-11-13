@@ -391,6 +391,8 @@ show_list() {
 		[ "$cat" == 'extra' ] || [ $1 == 'my' ] || cat "$i/packages.info"
 		[ "$cat" == 'extra' ] &&
 		sed 's,\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\).*,\1\t\5\textra\t\2\thttp://mirror.slitaz.org/packages/get/\1\t-\t-\t-\t-,' "$PKGS_DB/extra.list"
+		# Last list entry will miss, so add fake line
+		echo 'zzzzzzzz'
 	} | sort -t$'\t' -k1,1 | sed '/^$/d' | awk -F$'\t' -vc="${cat:--}" -vt="${tag:--}" '
 {
 	if (PKG && PKG != $1) {
