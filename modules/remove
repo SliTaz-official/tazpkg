@@ -109,7 +109,7 @@ call_pre_remove "$INSTALLED/$PACKAGE/receipt"
 action 'Removing all files installed...'
 
 # NOTE: package 'faenza-icon-theme' install time: 12s; removing time ~ 11min on my system  o_O
-# After optimization: 6s! (Long) for-loops are (big) evil ;)
+# After optimization: 3s! (Long) for-loops are (big) evil ;)
 
 # NOTE: many packages contains filenames with spaces:
 #   lzcat /var/lib/tazpkg/files.list.lzma | awk -F" " '{if(NF>2)print $1}' | sed 's|:$||' | uniq
@@ -117,7 +117,6 @@ action 'Removing all files installed...'
 IFS=$'\n'
 
 files2remove="$(mktemp)"
-dirs2remove="$(mktemp)"
 
 debug '\nDetermine which files to remove...'
 if [ -f "$INSTALLED/$PACKAGE/modifiers" ]; then
@@ -151,7 +150,7 @@ fi
 debug 'Removing files...'
 xargs rm -f < "$files2remove"
 
-debug 'Determine which folders to remove...'
+debug 'Removing folders...'
 awk '
 BEGIN {
 	FS = "/"; OFS = "/";
@@ -162,17 +161,9 @@ BEGIN {
 	if (! a[$0]) {
 		a[$0] = 1; print;
 	}
-}' "$files2remove" | sed 's|/$||' > "$dirs2remove"
+}' "$files2remove" | xargs rmdir -p 2>/dev/null
 
-debug 'Removing folders...'
-for dir2r in $(cat "$dirs2remove"); do
-	dir="$dir2r"
-	while [ -n "$dir" ]; do
-		rmdir "$dir" 2>/dev/null || break
-		dir="${dir%/*}"
-	done
-done
-rm "$files2remove" "$dirs2remove"
+rm "$files2remove"
 unset IFS
 
 status
