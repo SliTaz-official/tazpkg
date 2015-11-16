@@ -530,7 +530,7 @@ END {
 	fi
 
 	# package 'desktop-file-utils'
-	[ -n "$udesk" ] && chroot "$root/" /usr/bin/update-desktop-database /usr/share/applications
+	[ -n "$udesk" ] && chroot "$root/" /usr/bin/update-desktop-database /usr/share/applications 2>/dev/null
 	# package 'shared-mime-info'
 	[ -n "$umime" ] && chroot "$root/" /usr/bin/update-mime-database /usr/share/mime
 	# packages 'gtk+', 'gtk+3'

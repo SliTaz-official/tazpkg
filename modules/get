@@ -93,9 +93,9 @@ download_from() {
 	case "$1" in
 		# Mirror URL can have a trailing slash or not.
 		http://* | https://* | ftp://*)
-			debug "  wget -c -q -T 30 -U $UA ${1%/}/$2"
+			debug "  wget -c -T 30 -U $UA ${1%/}/$2"
 			# TODO: display abridged wget status
-			wget -c -q -T 30 -U $UA ${1%/}/$2
+			wget -c -T 30 -U $UA ${1%/}/$2
 			;;
 		*)
 			debug "  ln -sf ${1%/}/$2 ."
@@ -181,8 +181,8 @@ get_pkg_extra() {
 			http://*|https://*|ftp://*)
 				# Default 'http://mirror.slitaz.org/packages/cooking/'
 				#      -> 'http://mirror.slitaz.org/packages/extra/'
-				debug "wget -q -T 30 -U '$UA' '${mirror%packages/*}packages/extra/$converted'"
-				wget -q -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted";;
+				debug "wget -T 30 -U '$UA' '${mirror%packages/*}packages/extra/$converted'"
+				wget -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted";;
 		esac
 		if [ -f "$converted" ]; then
 			echo "$extra_cache/$converted"; exit 0
@@ -196,8 +196,8 @@ get_pkg_extra() {
 		http://*|https://*|ftp://*)
 			# Default 'http://mirror.slitaz.org/packages/cooking/'
 			#      -> 'http://mirror.slitaz.org/packages/get/'
-			debug "wget -q -T 30 -U '$UA' '${mirror%packages/*}packages/get/$1'"
-			wget -q -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1";;
+			debug "wget -T 30 -U '$UA' '${mirror%packages/*}packages/get/$1'"
+			wget -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1";;
 	esac
 
 	if [ ! -f "$1" ]; then
