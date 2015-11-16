@@ -540,7 +540,7 @@ END {
 	# package 'gdk-pixbuf'
 	[ -n "$upixb" ] && chroot "$root/" /usr/bin/gdk-pixbuf-query-loaders --update-cache
 	# packages 'busybox', 'kmod', 'depmod'
-	[ -n "$ukrnl" ] && /sbin/depmod -b "$root/"
+	[ -n "$ukrnl" ] && chroot "$root/" /sbin/depmod -a "$VERSION-slitaz"
 
 	[ "$upd" -eq 1 ] && status
 

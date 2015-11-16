@@ -98,8 +98,8 @@ download_from() {
 			wget -c -T 30 -U $UA ${1%/}/$2
 			;;
 		*)
-			debug "  ln -sf ${1%/}/$2 ."
-			ln -sf ${1%/}/$2 .;;
+			debug "  cp ${1%/}/$2 ."
+			cp ${1%/}/$2 .;;
 	esac
 }
 
