@@ -114,7 +114,7 @@ info_path="$PKGS_DB/installed.info"
 missing_file "$info_path"
 if [ ! -s "$info_path" ]; then
 	# Empty installed.info
-	if [ -n "$(ls "$INSTALLED")" ]; then
+	if [ -n "$(find "$INSTALLED" -name 'receipt')" ]; then
 		# Some packages are installed
 		if [ "$(id -u)" -eq 0 ]; then
 			# Root can re-create installed.info

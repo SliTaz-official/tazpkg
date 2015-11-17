@@ -94,8 +94,8 @@ download_from() {
 		# Mirror URL can have a trailing slash or not.
 		http://* | https://* | ftp://*)
 			debug "  wget -c -T 30 -U $UA ${1%/}/$2"
-			# TODO: display abridged wget status
-			wget -c -T 30 -U $UA ${1%/}/$2
+			# Display abridged wget status (skip info about connections)
+			wget -c -T 30 -U $UA ${1%/}/$2 2>&1 | awk 'BEGIN{RS="\r"}$0~"%"{printf "%s\r",$0}' >&2
 			;;
 		*)
 			debug "  cp ${1%/}/$2 ."
@@ -182,7 +182,8 @@ get_pkg_extra() {
 				# Default 'http://mirror.slitaz.org/packages/cooking/'
 				#      -> 'http://mirror.slitaz.org/packages/extra/'
 				debug "wget -T 30 -U '$UA' '${mirror%packages/*}packages/extra/$converted'"
-				wget -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted";;
+				wget -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted" \
+					2>&1 | awk 'BEGIN{RS="\r"}$0~"%"{printf "%s\r",$0}' >&2;;
 		esac
 		if [ -f "$converted" ]; then
 			echo "$extra_cache/$converted"; exit 0
@@ -197,7 +198,8 @@ get_pkg_extra() {
 			# Default 'http://mirror.slitaz.org/packages/cooking/'
 			#      -> 'http://mirror.slitaz.org/packages/get/'
 			debug "wget -T 30 -U '$UA' '${mirror%packages/*}packages/get/$1'"
-			wget -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1";;
+			wget -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1" \
+				2>&1 | awk 'BEGIN{RS="\r"}$0~"%"{printf "%s\r",$0}' >&2;;
 	esac
 
 	if [ ! -f "$1" ]; then
@@ -359,6 +361,20 @@ get_pkg() {
 
 
 
+
+# Command 'get-install' calls 'get', then 'install' modules. Check package presence here, on the
+# first stage, if '--forced' option not given
+if [ "$tazpkg_command" == 'get-install' -a -z "$forced" ]; then
+	awk -F$'\t' -vpv="$i" '$1==pv { exit 1 }' "$PKGS_DB/installed.info"
+	if [ "$?" -eq 1 ]; then
+		newline
+		_ '"%s" package is already installed.' "$(colorize 34 "$i")"
+		longline "$(_ 'You can use the --forced option to force installation.')"
+		newline
+		# Prevent execution 'install' stage:
+		exit 1
+	fi
+fi
 
 if [ -n "$extra" ]; then
 	# When '--extra' option given, extra-package has priority over 'regular' packages

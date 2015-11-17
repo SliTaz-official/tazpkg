@@ -453,18 +453,9 @@ case "$COMMAND" in
 	get-install|-gi)
 		# Download and install a package.
 		check_cmd su pkg; shift
+		export tazpkg_command='get-install'
 		# Get and install all the packages given on command line
 		for i in $@; do
-
-			awk -F$'\t' -vpv="$i" '$1==pv { exit 1 }' "$PKGS_DB/installed.info"
-			if [ "$?" -eq 1 ]; then
-				newline
-				_ '"%s" package is already installed.' "$(colorize 34 "$i")"
-				longline "$(_ 'You can use the --forced option to force installation.')"
-				newline
-				continue
-			fi
-
 			pkg="$(@@MODULES@@/get $i)" && @@MODULES@@/install "$pkg"
 		done
 		# Get and install all the packages listed in the file
