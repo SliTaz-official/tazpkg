@@ -364,15 +364,24 @@ get_pkg() {
 
 # Command 'get-install' calls 'get', then 'install' modules. Check package presence here, on the
 # first stage, if '--forced' option not given
-if [ "$tazpkg_command" == 'get-install' -a -z "$forced" ]; then
-	awk -F$'\t' -vpv="$i" '$1==pv { exit 1 }' "$PKGS_DB/installed.info"
-	if [ "$?" -eq 1 ]; then
-		newline
-		_ '"%s" package is already installed.' "$(colorize 34 "$i")"
-		longline "$(_ 'You can use the --forced option to force installation.')"
-		newline
-		# Prevent execution 'install' stage:
+if [ "$tazpkg_command" == 'get-install' ]; then
+	if grep -qs "^$1$" "$BLOCKED"; then
+		_ 'Package "%s" blocked.' "$1" >&2
 		exit 1
+	fi
+
+	if [ -z "$forced" ]; then
+		awk -F$'\t' -vpv="$1" '$1==pv { exit 1 }' "$PKGS_DB/installed.info"
+		if [ "$?" -eq 1 ]; then
+			(
+				newline
+				_ '"%s" package is already installed.' "$(colorize 34 "$1")"
+				longline "$(_ 'You can use the --forced option to force installation.')"
+				newline
+			) >&2
+			# Prevent execution 'install' stage:
+			exit 1
+		fi
 	fi
 fi
 

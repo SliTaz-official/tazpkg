@@ -283,6 +283,8 @@ $ tazpkg info --root=<em>/mnt/sda6</em> nano <em>--color</em></pre>
             denières actions de TazPkg</li>
           <li><a href="#clean-cache">clean-cache</a>&nbsp;: efface tous
             les paquets téléchargés dans le répertoire cache</li>
+          <li><a href="#list-cache">list-cache</a>: list all packages downloaded
+            in cache directory</li>
           <li><a href="#shell">shell</a>&nbsp;: lancer le shell
             interactif de TazPkg</li>
         </ul>
@@ -441,6 +443,14 @@ $ tazpkg -a --nb=<em>20</em>
           paquets.</p>
         <pre># tazpkg clean-cache
 # tazpkg -cc
+</pre>
+      </article>
+
+      <article id="list-cache"><h3>list-cache</h3>
+        <p>List *.tazpkg packages downloaded to the cache. Displays a list of
+          file names and their sizes, as well as the total amount and size.</p>
+        <pre>
+# tazpkg list-cache
 </pre>
       </article>
 

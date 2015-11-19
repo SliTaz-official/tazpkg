@@ -475,6 +475,9 @@ case "$COMMAND" in
 	clean-cache|-cc)
 		# Remove all downloaded packages.
 		check_cmd su; @@MODULES@@/cache clean;;
+	list-cache)
+		# List of packages in the cache.
+		@@MODULES@@/cache list;;
 
 
 	list-undigest)

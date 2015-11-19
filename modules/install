@@ -585,6 +585,11 @@ PACKAGE=$(
 	rm -rf "$tmp_dir"
 ) < "$1"
 
+if grep -qs "^$PACKAGE$" "$BLOCKED"; then
+	_ 'Package "%s" blocked.' "$PACKAGE"
+	exit 1
+fi
+
 if [ -z "$forced" ]; then
 	# Check if a package is already installed
 	debug "\ncheck for installed package '$PACKAGE'"

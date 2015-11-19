@@ -261,6 +261,7 @@ $ tazpkg info --root=<em>/mnt/sda6</em> nano <em>--color</em>
 	<li><a href="#help">help</a>: справка по выбранной команде</li>
 	<li><a href="#activity">activity</a>: журнал действий TazPkg</li>
 	<li><a href="#clean-cache">clean-cache</a>: очистить кэш загруженных пакетов</li>
+	<li><a href="#list-cache">list-cache</a>: список пакетов, находящихся в кеше</li>
 	<li><a href="#shell">shell</a>: запустить интерактивную оболочку TazPkg</li>
 </ul>
 </article>
@@ -405,6 +406,17 @@ $ tazpkg -a --nb=<em>20</em>
 <pre>
 # tazpkg clean-cache
 # tazpkg -cc
+</pre>
+</article>
+
+
+<article id="list-cache"><h3>list-cache</h3>
+
+<p>Список пакетов *.tazpkg, находящихся в кэше. Будет отображен список имен файлов и их размеров,
+а также общее количество фалов и размер.</p>
+
+<pre>
+# tazpkg list-cache
 </pre>
 </article>
 

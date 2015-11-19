@@ -201,6 +201,13 @@ msgstr[0] "Usunięto %s plik z pamięci podręcznej (%s)."
 msgstr[1] "Usunięto %s plik z pamięci podręcznej (%s)."
 msgstr[2] "Usunięto %s plik z pamięci podręcznej (%s)."
 
+#: modules/cache:37
+msgid "%s file (%s)"
+msgid_plural "%s files (%s)"
+msgstr[0] "%s plik (%s)"
+msgstr[1] "%s pliki (%s)"
+msgstr[2] "%s plików (%s)"
+
 #: modules/check:20 tazpanel/pkgs.cgi:948
 msgid "Package %s"
 msgstr "Pakiet %s"

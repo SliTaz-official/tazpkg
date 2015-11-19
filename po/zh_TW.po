@@ -190,6 +190,11 @@ msgid "%s file removed from cache (%s)."
 msgid_plural "%s files removed from cache (%s)."
 msgstr[0] "%s 個文件已在緩存中被刪除 (%s)"
 
+#: modules/cache:37
+msgid "%s file (%s)"
+msgid_plural "%s files (%s)"
+msgstr[0] "%s文件 (%s)"
+
 #: modules/check:20 tazpanel/pkgs.cgi:948
 msgid "Package %s"
 msgstr "包 %s"
