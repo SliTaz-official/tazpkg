@@ -227,16 +227,23 @@ i18n_desc() {
 }
 
 
+select_package_icon() {
+	if [ -d "$INSTALLED/$1" ]; then
+		if grep -q "^$1$" "$BLOCKED"
+			then echo "pkgib"
+			else echo "pkgi"
+		fi
+		else echo "pkg"
+	fi
+}
+
+
 # We need packages information for list and search
 
 parse_packages_info() {
 	IFS=$'\t'
 	while read PACKAGE VERSION CATEGORY SHORT_DESC WEB_SITE TAGS SIZES DEPENDS; do
-		data_icon="pkg"
-		if grep -q "^$PACKAGE"$'\t' "$PKGS_DB/installed.info"; then
-			data_icon="pkgi"
-			grep -q "^$PACKAGE$" "$BLOCKED" && data_icon="pkgib"
-		fi
+		data_icon="$(select_package_icon "$PACKAGE")"
 		i18n_desc "$PACKAGE"
 		cat <<EOT
 <tr>
@@ -474,6 +481,14 @@ document.getElementById('countSelected').textContent = pkgs.length;
 </script>
 EOT
 	fi
+}
+
+
+# Show a single package link
+
+show_package_link() {
+	echo -n "<span><a data-icon=\"$(select_package_icon "$1")\" "
+	echo "href=\"?info=${1//+/%2B}\">$1</a></span> "
 }
 
 
@@ -803,11 +818,7 @@ EOT
 			lzcat $(repo_list /files.list.lzma) | grep -Ei ": .*$(GET search)" | \
 			while read PACKAGE FILE; do
 				PACKAGE=${PACKAGE%:}
-				data_icon="pkg"
-				if [ -d $INSTALLED/$PACKAGE ]; then
-					data_icon="pkgi"
-					grep -q "^$PACKAGE$" "$BLOCKED" && data_icon="pkgib"
-				fi
+				data_icon="$(select_package_icon "$PACKAGE")"
 				cat <<EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$data_icon")</td>
@@ -943,19 +954,30 @@ EOT
 		elif [ -e "$PKGS_DB/packages.info" -a \
 			-n "$(awk -F$'\t' -vp="$pkg" '$1==p{print $1}' "$PKGS_DB/packages.info")" ]; then
 			STATE="$(_ 'mirrored package')"
+		elif grep -qs "^$pkg=" $PKGS_DB/packages.equiv; then
+			cat <<EOT
+<section>
+	<header>
+		<span data-icon="pkg">$(_ 'Packages providing %s' "$pkg")</span>
+	</header>
+EOT
+			for pkg in $(sed "/^$pkg=/!d;s/^$pkg=//" $PKGS_DB/packages.equiv); do
+				name=${pkg#*:}
+				echo "<p>"
+				show_package_link "$name"
+				condition=${pkg%:*}
+				[ "$name" == "$condition" ] ||
+				echo "($(_ "if") $(show_package_link "$condition")$(_ "is installed")) "
+				echo "</p>"
+			done
+			xhtml_footer; exit 0
 		else
 			msg err "$(_ 'Package "%s" not available.' "$pkg")"
 			xhtml_footer; exit 0
 		fi
 
 		# Symbolic icon
-		if [ -d "$INSTALLED/$pkg" ]; then
-			if grep -q "^$pkg$" "$BLOCKED"
-				then data_icon="pkgib"
-				else data_icon="pkgi"
-			fi
-			else data_icon="pkg"
-		fi
+		data_icon="$(select_package_icon "$pkg")"
 
 		cat <<EOT
 <section>
