@@ -1336,7 +1336,7 @@ EOT
 
 		<form method="post" action='?admin&amp;action=dvdimage'>
 			$(_ 'Install from ISO image:')
-			$(dir_chooser "dvdimage" "/root/packages-$version.iso")
+			$(file_chooser "dvdimage" "/root/packages-$version.iso")
 		</form>
 	</div>
 
