@@ -15,7 +15,7 @@ export TEXTDOMAIN='tazpkg'
 text="<b>$(_ 'SliTaz Package Action')</b>"
 icon="system-software-install"
 opts="--window-icon=$icon --image=$icon --image-on-top --center --on-top \
---height=350 --width=520 --title=TazPkg"
+--height=350 --width=570 --title=TazPkg"
 
 
 usage() {
@@ -36,7 +36,7 @@ EOT
 # Nice GTK output for install and extract.
 
 output() {
-	yad --text-info $opts --tail --margins='4' --text="$text" \
+	yad --text-info $opts --tail --margins='4' --text="$text" --fontname='monospace,8' \
 		--button='gtk-close:0'
 }
 

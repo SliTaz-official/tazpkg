@@ -21,6 +21,7 @@ export TEXTDOMAIN='tazpkg'
 
 fifo=/tmp/$(basename $0).fifo
 doc="file:///usr/share/doc/tazpkg/tazpkg.html"
+tp='http://127.0.0.1:82/user/pkgs.cgi'
 
 installed=$(wc -l < "$PKGS_DB/installed.info")
 text="$(_p \
@@ -30,6 +31,19 @@ text="$(_p \
 
 [ -f "$PKGS_DB/IDs" ] && mtime=$(find "$PKGS_DB/IDs" -mtime +10;)
 up=0; [ -f "$PKGS_DB/packages.up" ] && up=$(wc -l < "$PKGS_DB/packages.up")
+
+
+# Standard notification, if available
+
+notify() {
+	if [ -n "$(which notify-send)" ]; then
+		case $2 in
+			info) icon='dialog-information'; urgency='normal';;
+			*)    icon='dialog-warning';     urgency='critical';;
+		esac
+		notify-send -i $icon -u $urgency 'TazPkg' "$1" &
+	fi
+}
 
 
 # Notification icon
@@ -42,8 +56,9 @@ listen() {
 	exec 3<> $fifo
 
 	# Notification icon
-	yad --notification --listen --image='software-update-available' \
-		--text="$(_ 'Checking packages lists - %s' "$text")" <&3
+	tooltip="$(_ 'Checking packages lists - %s' "$text")"
+	notify "$tooltip" 'info' &
+	yad --notification --listen --image='software-update-available' --text="$tooltip" <&3
 
 	# Clean-up
 	rm -f $fifo
@@ -81,6 +96,7 @@ case $1 in
 		# Missing packages list
 		if [ ! -f "$PKGS_DB/packages.info" ]; then
 			tooltip="$(_ 'No packages list found - %s' "$text")"
+			notify "$tooltip\n<a href=\"$tp?recharge\">$(_n 'Recharge lists')</a>" &
 			(echo "action:tazbox su tazpanel pkgs#recharge"
 			 echo "tooltip:$tooltip"
 			 echo "icon:software-update-urgent") > $fifo
@@ -90,6 +106,7 @@ case $1 in
 		# Too old packages list
 		if [ -n "$mtime" ]; then
 			tooltip="$(_ 'Your packages list is older than 10 days')"
+			notify "$tooltip\n<a href=\"$tp?recharge\">$(_n 'Recharge lists')</a>" &
 			(echo "action:tazbox su tazpanel pkgs#recharge"
 			 echo "action:quit"
 			 echo "tooltip:$tooltip"
@@ -103,6 +120,7 @@ case $1 in
 				'There is %s upgradeable package' \
 				'There are %s upgradeable packages' "$up" \
 				"<b>$up</b>")"
+			notify "$tooltip\n<a href=\"$tp?up\">$(_n 'Check upgrade')</a>" &
 			(echo "action:tazbox su tazpanel pkgs#up"
 			 echo "tooltip:$tooltip"
 			 echo "icon:software-update-urgent") > $fifo
@@ -111,6 +129,7 @@ case $1 in
 
 		# Nothing to do, close notification
 		tooltip="$(_ 'System is up to date - %s' "$text")"
+		notify "$tooltip" 'info' &
 		echo "tooltip:$tooltip" > $fifo
 		sleep 10
 		echo "quit" > $fifo
