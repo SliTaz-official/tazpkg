@@ -1320,8 +1320,7 @@ EOT
 		<div>
 			$(_ "This link points to the root of another SliTaz installation. You will be able to install packages using soft links to it.")
 		</div>
-		<span id="link"><input type="text" name="link" value="$(readlink $PKGS_DB/fslink 2> /dev/null)"/></span>
-		<button data-icon="setlink" onclick="ajax('index.cgi?do=dir-selection&name=link', '1', 'link'); return false"/>
+		$(dir_chooser "link" "$(readlink $PKGS_DB/fslink 2> /dev/null)")
 		<footer>
 			$(show_button admin=setlink admin=removelink)
 		</footer>
@@ -1337,8 +1336,7 @@ EOT
 
 		<form method="post" action='?admin&amp;action=dvdimage'>
 			$(_ 'Install from ISO image:')
-			<span id="dvdimage"><input type="text" name="dvdimage" size="40" value="/root/packages-$version.iso" /></span>
-			<button data-icon="cd" onclick="ajax('index.cgi?do=dir-selection&name=dvdimage', '1', 'dvdimage'); return false"/>
+			$(dir_chooser "dvdimage" "/root/packages-$version.iso")
 		</form>
 	</div>
 
