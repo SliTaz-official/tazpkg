@@ -290,7 +290,7 @@ virtual_pkg() {
 		if echo $i | fgrep -q : ; then
 			# format 'alternative:newname'
 			# if alternative is installed then substitute newname
-			if [ -f $2/installed/${i%:*}/receipt ]; then
+			if [ -f $INSTALLED/${i%:*}/receipt ]; then
 				# substitute package dependency
 				echo ${i#*:}
 				return
