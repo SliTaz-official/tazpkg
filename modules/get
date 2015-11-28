@@ -278,6 +278,31 @@ EOT
 }
 
 
+# return possible name for a virtual package name
+
+virtual_pkg() {
+	# input:  $1 virtual package name
+	#         $2 repository db directory
+	# outout: display possible package name
+
+	local i
+	for i in $(grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"); do
+		if echo $i | fgrep -q : ; then
+			# format 'alternative:newname'
+			# if alternative is installed then substitute newname
+			if [ -f $2/installed/${i%:*}/receipt ]; then
+				# substitute package dependency
+				echo ${i#*:}
+				return
+			fi
+		else
+			# unconditional substitution
+			echo $i
+			return
+		fi
+	done
+}
+
 # Download package file to the cache
 
 get_pkg() {
@@ -293,8 +318,8 @@ get_pkg() {
 	for rep in $PRIORITY; do
 		[ ! -f "$rep/packages.info" ] && continue
 		# If found, output string "<name>-<ver>:<sum>"
-		line=$(awk -F$'\t' -vpkg="$1" \
-			'$1==pkg || $1"-"$2==pkg {printf "%s-%s:%s", $1, $2, $9; exit}' "$rep/packages.info")
+		line=$(awk -F$'\t' -vpkg="$1" -vvpkg="$(virtual_pkg "$1" "$rep")" \
+			'$1==pkg || $1"-"$2==pkg || $1==vpkg || $1"-"$2==vpkg {printf "%s-%s:%s", $1, $2, $9; exit}' "$rep/packages.info")
 		if [ -n "$line" ]; then
 			namever=${line%:*}; pkgsum=${line#*:}
 			break
