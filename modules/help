@@ -27,6 +27,7 @@ $(optlist "\
 -h   help				$(_ 'Show help on the TazPkg commands')
 -a   activity			$(_ 'Show TazPkg activity log')
 -cc  clean-cache		$(_ 'Clean all packages downloaded in cache directory')
+     list-cache			$(_ 'List *.tazpkg packages downloaded to the cache')
      shell				$(_ 'Run interactive TazPkg shell')
  
 -l   list				$(_ 'List installed packages on the system')
