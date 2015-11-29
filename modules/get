@@ -159,7 +159,7 @@ get_pkg_extra() {
 		if [ -f 'packages.info' ]; then
 			awk -F$'\t' -vp="$1" '$1==p{exit 1}' packages.info
 			if [ "$?" -eq 1 ]; then
-				_ 'Package "%s" already in the cache' "$1" >&2
+				[ -z "$quiet" ] && _ 'Package "%s" already in the cache' "$1" >&2
 				echo -n "$(pwd)/"
 				awk -F$'\t' -vp="$1" '$1==p{printf "%s-%s.tazpkg\n", $1, $2; exit}' packages.info
 				exit 0
@@ -283,7 +283,7 @@ EOT
 virtual_pkg() {
 	# input:  $1 virtual package name
 	#         $2 repository db directory
-	# outout: display possible package name
+	# output: display possible package name
 
 	local i
 	for i in $(grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"); do
@@ -351,11 +351,11 @@ get_pkg() {
 
 	# Check if package already downloaded
 	if [ -f "$namever.tazpkg" ]; then
-		[ -z "$nocache" ] && _ 'Package "%s" already in the cache' "$namever" >&2
+		[ -z "$nocache" -a -z "$quiet" ] && _ 'Package "%s" already in the cache' "$namever" >&2
 
 		# Check if downloading complete, resume it not complete
 		if ! tail -c 2k "$namever.tazpkg" | fgrep -q '00000000TRAILER'; then
-			_ 'Continuing package "%s" download' "$namever" >&2
+			[ -z "$quiet" ] && _ 'Continuing package "%s" download' "$namever" >&2
 			download_from "$(cat "$rep/mirror")" "$namever.tazpkg"
 		fi
 	else
