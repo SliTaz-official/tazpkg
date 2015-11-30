@@ -94,8 +94,9 @@ download_from() {
 		# Mirror URL can have a trailing slash or not.
 		http://* | https://* | ftp://*)
 			debug "  wget -c -T 30 -U $UA ${1%/}/$2"
+			q=''; [ -n "$quiet" ] && q='-q'
 			# Display abridged wget status (skip info about connections)
-			wget -c -T 30 -U $UA ${1%/}/$2 2>&1 | awk 'BEGIN{RS="\r"}$0~"%"{printf "%s\r",$0}' >&2
+			wget -c $q -T 30 -U $UA ${1%/}/$2 2>&1 | awk 'BEGIN{RS="\r"}$0~"%"{printf "%s\r",$0}' >&2
 			;;
 		*)
 			debug "  cp ${1%/}/$2 ."
@@ -182,7 +183,8 @@ get_pkg_extra() {
 				# Default 'http://mirror.slitaz.org/packages/cooking/'
 				#      -> 'http://mirror.slitaz.org/packages/extra/'
 				debug "wget -T 30 -U '$UA' '${mirror%packages/*}packages/extra/$converted'"
-				wget -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted" \
+				q=''; [ -n "$quiet" ] && q='-q'
+				wget $q -T 30 -U "$UA" "${mirror%packages/*}packages/extra/$converted" \
 					2>&1 | awk 'BEGIN{RS="\r"}$0~"%"{printf "%s\r",$0}' >&2;;
 		esac
 		if [ -f "$converted" ]; then
@@ -198,7 +200,8 @@ get_pkg_extra() {
 			# Default 'http://mirror.slitaz.org/packages/cooking/'
 			#      -> 'http://mirror.slitaz.org/packages/get/'
 			debug "wget -T 30 -U '$UA' '${mirror%packages/*}packages/get/$1'"
-			wget -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1" \
+			q=''; [ -n "$quiet" ] && q='-q'
+			wget $q -T 30 -U "$UA" "${mirror%packages/*}packages/get/$1" \
 				2>&1 | awk 'BEGIN{RS="\r"}$0~"%"{printf "%s\r",$0}' >&2;;
 	esac
 
