@@ -114,20 +114,21 @@ install_all_deps() {
 	[ -z "$num" ] && return
 
 
-	title "$(_ 'Tracking dependencies for package "%s"' "$PACKAGE")"
+	qtitle "$(_ 'Tracking dependencies for package "%s"' "$PACKAGE")"
 
 	# Individual messages for each missing package
+	[ -z "$quiet" ] && \
 	for pkg in $missing_packages; do
 		_ 'Missing package "%s"' "$pkg"
 	done
 
-	footer "$(_p \
+	qfooter "$(_p \
 		'%s missing package to install.' \
 		'%s missing packages to install.' "$num" \
 		"$num")"
 
 
-	if [ "$AUTO_INSTALL_DEPS" == 'yes' ]; then
+	if [ "$AUTO_INSTALL_DEPS" == 'yes' -o -n "$quiet" ]; then
 		answer=0
 	else
 		newline
