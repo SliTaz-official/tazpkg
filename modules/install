@@ -599,10 +599,12 @@ if [ -z "$forced" ]; then
 	awk -F$'\t' -vpv="$PACKAGE" '$1==pv { exit 1 }' "$PKGS_DB/installed.info"
 
 	if [ "$?" -eq 1 ]; then
-		newline
-		_ '"%s" package is already installed.' "$(colorize 34 "$PACKAGE")"
-		longline "$(_ 'You can use the --forced option to force installation.')"
-		newline
+		if [ -z "$quiet" ]; then
+			newline
+			_ '"%s" package is already installed.' "$(colorize 34 "$PACKAGE")"
+			longline "$(_ 'You can use the --forced option to force installation.')"
+			newline
+		fi
 		exit 1
 	fi
 fi
