@@ -193,32 +193,4 @@ debug "UA          = '$UA'"
 CUR_DIR="$(pwd)"
 
 
-# Quiet functions
-
-saved_action=''
-qaction() {
-	saved_action="$1"
-	[ -z "$quiet" ] && action "$1";
-}
-
-qstatus() {
-	local ret_code=$?
-	if [ -z "$quiet" ]; then
-		test "$ret_code" -eq 0; status
-	elif [ "$ret_code" -ne 0 ]; then
-		# Show both action and it's status in the silent mode if error
-		action "$saved_action"
-		test 1 -eq 2; status
-	fi
-}
-
-qtitle() {
-	[ -z "$quiet" ] && title "$@";
-}
-
-qfooter() {
-	[ -z "$quiet" ] && footer "$@";
-}
-
-
 debug '-- end getenv --'

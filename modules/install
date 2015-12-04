@@ -106,7 +106,7 @@ install_all_deps() {
 			missing_packages="$missing_packages $equiv"
 			num=$((num+1))
 		elif [ ! -f "$INSTALLED/$equiv/receipt" ]; then
-			_ 'WARNING! Dependency loop between "%s" and "%s".' "$PACKAGE" "$equiv"
+			[ -z "$quiet" ] && _ 'WARNING! Dependency loop between "%s" and "%s".' "$PACKAGE" "$equiv"
 		fi
 	done
 
@@ -114,7 +114,7 @@ install_all_deps() {
 	[ -z "$num" ] && return
 
 
-	qtitle "$(_ 'Tracking dependencies for package "%s"' "$PACKAGE")"
+	title "$(_ 'Tracking dependencies for package "%s"' "$PACKAGE")"
 
 	# Individual messages for each missing package
 	[ -z "$quiet" ] && \
@@ -122,7 +122,7 @@ install_all_deps() {
 		_ 'Missing package "%s"' "$pkg"
 	done
 
-	qfooter "$(_p \
+	footer "$(_p \
 		'%s missing package to install.' \
 		'%s missing packages to install.' "$num" \
 		"$num")"
@@ -189,7 +189,7 @@ install_all_deps() {
 extract_package() {
 	# input: $1 - path to package to be extracted; package should be in the current dir
 	# ROOT INDEPENDENT
-	qaction 'Extracting package...'
+	action 'Extracting package...'
 
 	# Extract "outer layer": cpio; remove the original package file
 	cpio -idm --quiet < "$1" && rm -f "$1"
@@ -203,7 +203,7 @@ extract_package() {
 		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
 	fi
 
-	qstatus
+	status
 }
 
 
@@ -249,12 +249,12 @@ grepesc() {
 call_pre_install() {
 	local tmp
 	if grep -q '^pre_install()' "$1"; then
-		qaction 'Execute pre-install commands...'
+		action 'Execute pre-install commands...'
 		tmp="$(mktemp)"
 		cp "$1" "$tmp"
 		sed -i 's|$1/*$INSTALLED|$INSTALLED|g' "$tmp"
 		( . "$tmp"; pre_install "$root" )
-		qstatus
+		status
 		rm "$tmp"
 	fi
 
@@ -263,12 +263,12 @@ call_pre_install() {
 call_post_install() {
 	local tmp
 	if grep -q '^post_install()' "$1"; then
-		qaction 'Execute post-install commands...'
+		action 'Execute post-install commands...'
 		tmp="$(mktemp)"
 		cp "$1" "$tmp"
 		sed -i 's|$1/*$INSTALLED|$INSTALLED|g' "$tmp"
 		( . "$tmp"; post_install "$root" )
-		qstatus
+		status
 		rm "$tmp"
 	fi
 }
@@ -333,9 +333,9 @@ EOT
 	#[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> "$PKGS_DB/$INSTALL_LIST-processed"
 
 	if [ -n "$sequence" ]; then
-		qtitle 'Installation of package "%s" (%s)' "$PACKAGE" "$sequence"
+		title 'Installation of package "%s" (%s)' "$PACKAGE" "$sequence"
 	else
-		qtitle 'Installation of package "%s"' "$PACKAGE"
+		title 'Installation of package "%s"' "$PACKAGE"
 	fi
 
 	if [ -z "$quiet" ]; then
@@ -343,9 +343,9 @@ EOT
 		separator '-'
 	fi
 
-	qaction 'Copying package...'
+	action 'Copying package...'
 	cp "$PACKAGE_FILE" "$TMP_DIR"
-	qstatus
+	status
 
 	cd "$TMP_DIR"
 	extract_package "$(basename "$PACKAGE_FILE")"
@@ -373,7 +373,7 @@ EOT
 
 
 	# Remember modified packages
-	qaction 'Remember modified packages...'
+	action 'Remember modified packages...'
 	{
 		check=false
 		# TODO: why '[' the special?
@@ -419,7 +419,7 @@ END {
 		fi
 		echo "$PACKAGE" >> "$dir/modifiers"
 	done
-	qstatus
+	status
 
 
 	cd "$TMP_DIR"
@@ -435,7 +435,7 @@ END {
 
 	if [ -n "$CONFIG_FILES" ]; then
 		# Save "official" configuration files
-		qaction 'Saving configuration files...'
+		action 'Saving configuration files...'
 		debug "\n"
 
 		cd fs
@@ -461,12 +461,12 @@ END {
 			done
 		fi
 		# always '[ Done ]' status, unless '--newconf' is passed or not
-		:; qstatus
+		:; status
 	fi
 
 
 	if [ -n "$(ls fs/* 2>/dev/null)" ]; then
-		qaction 'Installing package...'
+		action 'Installing package...'
 
 		debug '\n  resolving destination links in source'
 		IFS=$'\n'
@@ -481,12 +481,12 @@ END {
 
 		debug '  copying folders and files to destination'
 		cp -af fs/* "$root/"
-		qstatus
+		status
 	fi
 
 
 	if [ -s files2remove.list ]; then
-		qaction 'Removing old files...'
+		action 'Removing old files...'
 		while read file; do
 			dir="$root$file"
 			# Remove specified file
@@ -497,14 +497,14 @@ END {
 				rmdir "$dir" 2>/dev/null || break
 			done
 		done < files2remove.list
-		:; qstatus
+		:; status
 	fi
 
 
 	# Remove the temporary random directory.
-	qaction "Removing all tmp files..."
+	action "Removing all tmp files..."
 	cd ..; rm -rf "$TMP_DIR"
-	qstatus
+	status
 
 
 	# Post install commands
@@ -527,7 +527,7 @@ END {
 	fgrep -q /lib/modules "$fl" && ukrnl='yes'
 
 	if [ -n "$udesk$umime$uicon$uschm$upixb$ukrnl" ]; then
-		qaction 'Update system databases...'
+		action 'Update system databases...'
 		upd=1
 	fi
 
@@ -544,7 +544,7 @@ END {
 	# packages 'busybox', 'kmod', 'depmod'
 	[ -n "$ukrnl" ] && grep '/lib/modules' "$fl" | cut -d'/' -f4 | uniq | xargs chroot "$root/" /sbin/depmod -a
 
-	[ "$upd" -eq 1 ] && qstatus
+	[ "$upd" -eq 1 ] && status
 
 
 
@@ -565,7 +565,7 @@ EOT
 	sort "$ii" > "$TEMP_FILE"; mv -f "$TEMP_FILE" "$ii"; chmod a+r "$ii"; unset ii
 
 	cd "$CUR_DIR"
-	qfooter "$(_ 'Package "%s" (%s) is installed.' "$PACKAGE" "$VERSION$EXTRAVERSION")"
+	footer "$(_ 'Package "%s" (%s) is installed.' "$PACKAGE" "$VERSION$EXTRAVERSION")"
 
 	# Log this activity
 	log_pkg Installed

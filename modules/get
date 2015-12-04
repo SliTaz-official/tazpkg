@@ -403,7 +403,7 @@ if [ "$tazpkg_command" == 'get-install' ]; then
 	if [ -z "$forced" ]; then
 		awk -F$'\t' -vpv="$1" '$1==pv { exit 1 }' "$PKGS_DB/installed.info"
 		if [ "$?" -eq 1 ]; then
-			(
+			[ -z "$quiet" ] && (
 				newline
 				_ '"%s" package is already installed.' "$(colorize 34 "$1")"
 				longline "$(_ 'You can use the --forced option to force installation.')"
