@@ -243,7 +243,11 @@ select_package_icon() {
 parse_packages_info() {
 	IFS=$'\t'
 	while read PACKAGE VERSION CATEGORY SHORT_DESC WEB_SITE TAGS SIZES DEPENDS; do
-		data_icon="$(select_package_icon "$PACKAGE")"
+		data_icon="pkg"
+		if grep -q "^$PACKAGE"$'\t' "$PKGS_DB/installed.info"; then
+			data_icon="pkgi"
+			grep -q "^$PACKAGE$" "$BLOCKED" && data_icon="pkgib"
+		fi
 		i18n_desc "$PACKAGE"
 		cat <<EOT
 <tr>
@@ -818,7 +822,11 @@ EOT
 			lzcat $(repo_list /files.list.lzma) | grep -Ei ": .*$(GET search)" | \
 			while read PACKAGE FILE; do
 				PACKAGE=${PACKAGE%:}
-				data_icon="$(select_package_icon "$PACKAGE")"
+				data_icon="pkg"
+				if [ -d $INSTALLED/$PACKAGE ]; then
+					data_icon="pkgi"
+					grep -q "^$PACKAGE$" "$BLOCKED" && data_icon="pkgib"
+				fi
 				cat <<EOT
 <tr>
 	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$data_icon")</td>
@@ -977,7 +985,13 @@ EOT
 		fi
 
 		# Symbolic icon
-		data_icon="$(select_package_icon "$pkg")"
+		if [ -d "$INSTALLED/$pkg" ]; then
+			if grep -q "^$pkg$" "$BLOCKED"
+				then data_icon="pkgib"
+				else data_icon="pkgi"
+			fi
+			else data_icon="pkg"
+		fi
 
 		cat <<EOT
 <section>
