@@ -107,8 +107,8 @@ for PACKAGE in $PACKAGES; do
 
 	MSG="$(_n 'Files lost from package:')\n"
 	while read file; do
-		[ -e "$file" ] && continue
-		if [ -L "$file" ]; then
+		[ -e "$root$file" ] && continue
+		if [ -L "$root$file" ]; then
 			MSG="$MSG  $(_n 'target of symlink')"
 		fi
 		print_pkgname

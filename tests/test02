@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+. /lib/libtaz.sh
+check_root
+ROOT='/tmp/test'
+
+title 'Test #02'
+colorize 033 "$(longline "Install package without dependencies.")"
+newline
+
+########
+tazpkg --root=$ROOT --nodeps -gi nano
+########
+
+installed="$(ls $ROOT/var/lib/tazpkg/installed)"
+if [ "$installed" != 'nano' ]; then
+	colorize 31 "ERROR. Expected package 'nano' installed. Given: '$installed' Exit test"
+	exit 1
+fi
+
+footer "$(colorize 32 'Test #02 passed')"
+exit 0

@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+. /lib/libtaz.sh
+check_root
+ROOT='/tmp/test'
+
+title 'Test #04'
+colorize 033 "$(longline "Remove package.")"
+newline
+
+########
+echo y | tazpkg --root=$ROOT -r nano
+########
+
+installed="$(ls $ROOT/var/lib/tazpkg/installed)"
+if [ -n "$installed" ]; then
+	colorize 31 "ERROR. Expected package 'nano' removed. Given: '$installed' Exit test"
+	exit 1
+fi
+
+footer "$(colorize 32 'Test #04 passed')"
+exit 0

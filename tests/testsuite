@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+. /lib/libtaz.sh
+check_root
+
+for test in $(find . -name 'test[0-9]*' | sort); do
+	$test
+done
+
+footer "$(colorize 32 'All tests passed')"
+rm -rf /tmp/test
+exit 0

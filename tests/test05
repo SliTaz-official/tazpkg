@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+. /lib/libtaz.sh
+check_root
+ROOT='/tmp/test'
+
+title 'Test #05'
+colorize 033 "$(longline "Test equivalent package rule")"
+newline
+
+########
+tazpkg --root=$ROOT --nodeps -gi pam
+tazpkg --root=$ROOT --nodeps -gi dropbear
+tazpkg --root=$ROOT -l
+########
+
+installeddropbear="$(ls $ROOT/var/lib/tazpkg/installed | fgrep dropbear)"
+
+if [ "$installeddropbear" != 'dropbear-pam' ]; then
+	colorize 31 "ERROR. Expected package 'dropbear-pam' installed. Given: '$installeddropbear' Exit test"
+	exit 1
+fi
+
+footer "$(colorize 32 'Test #05 passed')"
+exit 0

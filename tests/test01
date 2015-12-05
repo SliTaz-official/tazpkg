@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+. /lib/libtaz.sh
+check_root
+ROOT='/tmp/test'
+
+title 'Test #01'
+colorize 033 "$(longline "Check that tazpkg created all the base files and folders needed from \
+scratch. Working in the folder $ROOT")"
+newline
+
+[ -d "$ROOT" ] && rm -rf "$ROOT"
+
+########
+tazpkg --root=$ROOT
+########
+
+dirnum=$(find "$ROOT" -type d | wc -l)
+if [ "$dirnum" -ne 11 ]; then
+	colorize 35 "WARNING. Expected 11 folders; found $dirnum"
+	WARNING=1
+fi
+
+filenum=$(find "$ROOT" -type f | wc -l)
+if [ "$filenum" -ne 21 ]; then
+	colorize 35 "WARNING. Expected 21 files; found $filenum"
+	WARNING=1
+fi
+
+for dir in /etc/slitaz /var/cache/tazpkg /var/lib/tazpkg/installed /var/log/slitaz; do
+	if [ ! -d "$ROOT$dir" ]; then
+		colorize 31 "ERROR. Folder $dir absent. Exit test"
+		exit 1
+	fi
+done
+
+for file in \
+	/etc/slitaz-release \
+	/etc/slitaz/slitaz.conf \
+	/etc/slitaz/tazpkg.conf \
+	/var/lib/tazpkg/mirrors \
+	/var/lib/tazpkg/packages.info \
+	/var/lib/tazpkg/descriptions.txt \
+	/var/lib/tazpkg/packages.equiv \
+	/var/lib/tazpkg/extra.list \
+	/var/lib/tazpkg/packages.list \
+	/var/lib/tazpkg/ID \
+	/var/lib/tazpkg/files.list.lzma \
+	/var/lib/tazpkg/files-list.md5 \
+	/var/lib/tazpkg/packages.up \
+	/var/lib/tazpkg/packages.txt \
+	/var/lib/tazpkg/packages.md5 \
+	/var/lib/tazpkg/mirror \
+	/var/lib/tazpkg/blocked-packages.list \
+	/var/lib/tazpkg/packages.desc \
+	/var/lib/tazpkg/installed.info \
+	/var/lib/tazpkg/IDs \
+	/var/log/slitaz/tazpkg.log
+do
+	if [ ! -f "$ROOT$file" ]; then
+		colorize 31 "ERROR. File $file absent. Exit test"
+		exit 1
+	fi
+done
+
+[ -n "$WARNING" ] && warning='(with warnings)'
+footer "$(colorize 32 "Test #01 passed $warning")"
+exit 0

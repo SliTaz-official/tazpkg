@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+. /lib/libtaz.sh
+check_root
+ROOT='/tmp/test'
+
+title 'Test #03'
+colorize 033 "$(longline "Don't install already installed package without --forced option.")"
+newline
+
+########
+tazpkg --root=$ROOT --nodeps -gi nano 2>&1 | tee /tmp/test1
+########
+
+if ! fgrep -q -e '--forced' /tmp/test1; then
+	colorize 31 "ERROR. TazPkg should write warning. Exit test"
+	rm /tmp/test1
+	exit 1
+fi
+rm /tmp/test1
+
+footer "$(colorize 32 'Test #03 passed')"
+exit 0
