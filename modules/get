@@ -298,7 +298,8 @@ virtual_pkg() {
 				echo ${i#*:}
 				return
 			fi
-		elif ! grep -q "^$1$" "$2/packages.txt" ; then
+		elif ! grep -q "^$1$" "$2/packages.txt" ||
+		     [ -f $INSTALLED/$i/receipt ]; then
 			# unconditional substitution
 			echo $i
 			return
