@@ -288,7 +288,9 @@ virtual_pkg() {
 	#         $2 repository db directory
 	# output: display possible package name
 
+	debug "\nvirtual_pkg('$1', '$2')"
 	local i
+	unset IFS
 	for i in $(grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"); do
 		if echo $i | fgrep -q : ; then
 			# format 'alternative:newname'
@@ -298,8 +300,7 @@ virtual_pkg() {
 				echo ${i#*:}
 				return
 			fi
-		elif ! grep -q "^$1$" "$2/packages.txt" ||
-		     [ -f $INSTALLED/$i/receipt ]; then
+		elif ! grep -q "^$1	" "$2/packages.info" || [ -f "$INSTALLED/$i/receipt" ]; then
 			# unconditional substitution
 			echo $i
 			return
@@ -308,6 +309,7 @@ virtual_pkg() {
 	# the real package name
 	echo $1
 }
+
 
 # Download package file to the cache
 

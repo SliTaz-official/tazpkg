@@ -59,9 +59,43 @@ call_post_remove() {
 }
 
 
+# return possible name for a virtual package name
+
+virtual_pkg() {
+	# input:  $1 virtual package name
+	#         $2 repository db directory
+	# output: display possible package name
+
+	debug "\nvirtual_pkg('$1', '$2')"
+	local i
+	unset IFS
+	for i in $(grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"); do
+		if echo $i | fgrep -q : ; then
+			# format 'alternative:newname'
+			# if alternative is installed then substitute newname
+			if [ -f $INSTALLED/${i%:*}/receipt ]; then
+				# substitute package dependency
+				echo ${i#*:}
+				return
+			fi
+		elif ! grep -q "^$1	" "$2/packages.info" || [ -f "$INSTALLED/$i/receipt" ]; then
+			# unconditional substitution
+			echo $i
+			return
+		fi
+	done
+	# the real package name
+	echo $1
+}
 
 
-PACKAGE="$1"
+
+
+for rep in $PRIORITY; do
+	[ ! -f "$rep/packages.info" ] && continue
+	PACKAGE="$(virtual_pkg "$1" "$rep")"
+	[ "$PACKAGE" != "$1" ] && break
+done
 
 if [ ! -f "$INSTALLED/$PACKAGE/receipt" ]; then
 	newline; _ 'Package "%s" is not installed.' "$PACKAGE"
@@ -101,11 +135,11 @@ fi
 # Removing package
 title 'Removing package "%s"' "$PACKAGE"
 
-# [1/4] Pre-remove commands
+# [1/5] Pre-remove commands
 call_pre_remove "$INSTALLED/$PACKAGE/receipt"
 
 
-# [2/4] Removing files
+# [2/5] Removing files
 action 'Removing all files installed...'
 
 # NOTE: package 'faenza-icon-theme' install time: 12s; removing time ~ 11min on my system  o_O
@@ -168,10 +202,41 @@ unset IFS
 
 status
 
-# [3/4] Post-remove commands
+# [3/5] Post-remove commands
 call_post_remove "$INSTALLED/$PACKAGE/receipt"
 
-# [4/4] Remove package receipt and remove it from databases
+# [4/5] Update system databases
+local fl="$INSTALLED/$PACKAGE/files.list" upd=0 udesk umime uicon uschm ukrnl
+
+fgrep    /usr/share/applications/ "$fl" | fgrep -q .desktop && udesk='yes'
+fgrep -q /usr/share/mime "$fl" && umime='yes'
+fgrep -q /usr/share/icon/hicolor "$fl" && uicon='yes'
+fgrep -q /usr/share/glib-2.0/schemas "$fl" && uschm='yes'
+fgrep    /usr/lib/gdk-pixbuf "$fl" | fgrep -q .so && upixb='yes'
+fgrep -q /lib/modules "$fl" && ukrnl='yes'
+
+if [ -n "$udesk$umime$uicon$uschm$upixb$ukrnl" ]; then
+	action 'Update system databases...'
+	upd=1
+fi
+
+# package 'desktop-file-utils'
+[ -n "$udesk" ] && chroot "$root/" /usr/bin/update-desktop-database /usr/share/applications 2>/dev/null
+# package 'shared-mime-info'
+[ -n "$umime" ] && chroot "$root/" /usr/bin/update-mime-database /usr/share/mime
+# packages 'gtk+', 'gtk+3'
+[ -n "$uicon" ] && chroot "$root/" /usr/bin/gtk-update-icon-cache /usr/share/icons/hicolor
+# package 'glib'
+[ -n "$uschm" ] && chroot "$root/" /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
+# package 'gdk-pixbuf'
+[ -n "$upixb" ] && chroot "$root/" /usr/bin/gdk-pixbuf-query-loaders --update-cache
+# packages 'busybox', 'kmod', 'depmod'
+[ -n "$ukrnl" ] && grep '/lib/modules' "$fl" | cut -d'/' -f4 | uniq | xargs chroot "$root/" /sbin/depmod -a
+
+[ "$upd" -eq 1 ] && status
+
+
+# [5/5] Remove package receipt and remove it from databases
 action 'Removing package receipt...'
 rm -rf "$INSTALLED/$PACKAGE"
 sed -i "/ $PACKAGE-$VERSION$EXTRAVERSION.tazpkg$/d" "$PKGS_DB/installed.$SUM"

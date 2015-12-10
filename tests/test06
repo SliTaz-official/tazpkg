@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+. /lib/libtaz.sh
+check_root
+export root='/tmp/test'
+
+title 'Test #06'
+colorize 033 "$(longline "Test virtual package rules")"
+newline
+
+########
+boldify '1/4. Install "ssh"'
+tazpkg --nodeps -gi pam
+tazpkg --nodeps -gi ssh
+tazpkg -l
+########
+
+installedssh="$(ls $root/var/lib/tazpkg/installed | fgrep ssh)"
+
+if [ "$installedssh" != 'openssh-pam' ]; then
+	colorize 31 "ERROR. Expected package 'openssh-pam' installed. Given: '$installedssh' Exit test"
+	exit 1
+fi
+
+########
+boldify '2/4. Install "openssh"'
+tazpkg --nodeps -gi openssh
+tazpkg -l
+########
+
+if [ -d "$root/var/lib/tazpkg/installed/openssh" ]; then
+	colorize 31 "ERROR. Expected package 'openssh' NOT installed. Exit test"
+	exit 1
+fi
+
+########
+boldify '3/4. Remove "pam", "openssh-pam"; install "ssh"'
+yes y | tazpkg -r pam
+yes y | tazpkg -r openssh-pam
+tazpkg --nodeps -gi ssh
+tazpkg -l
+########
+
+if [ ! -d "$root/var/lib/tazpkg/installed/openssh" ]; then
+	colorize 31 "ERROR. Expected package 'openssh' installed. Exit test"
+	exit 1
+fi
+
+########
+boldify '4/4. Remove "ssh"'
+yes y | tazpkg -r ssh
+tazpkg -l
+########
+
+if [ -d "$root/var/lib/tazpkg/installed/openssh" ]; then
+	colorize 31 "ERROR. Expected package 'openssh' NOT installed. Exit test"
+	exit 1
+fi
+
+
+footer "$(colorize 32 'Test #06 passed')"
+exit 0

@@ -517,7 +517,7 @@ END {
 	# Updating DBs is important process, so not to hide such errors (localized):
 	# chroot: can't execute '/usr/bin/***': No such file or directory
 
-	local fl="$INSTALLED/$PACKAGE/files.list" upd=0 ud um ui us uk
+	local fl="$INSTALLED/$PACKAGE/files.list" upd=0 udesk umime uicon uschm ukrnl
 
 	fgrep    /usr/share/applications/ "$fl" | fgrep -q .desktop && udesk='yes'
 	fgrep -q /usr/share/mime "$fl" && umime='yes'
