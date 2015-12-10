@@ -42,16 +42,7 @@ substitute_icons() {
 	msg				\n	msgerr			\n	msgwarn			\n	msgup	
 	msgtip			\n	vpn			" | \
 	while read icon symbol; do
-		echo -n "s|data-icon=\"$icon\"|data-icon=\"$symbol\"|g; " >> "$sed_script"
-		echo -n "s|data_icon=\"$icon\"|data_icon=\"$symbol\"|g; " >> "$sed_script"
-		echo -n "s|repo_icon=\"$icon\"|repo_icon=\"$symbol\"|g; " >> "$sed_script"
-		case $icon in
-			clock)
-				echo -n "s|dataset\.icon==\"$icon\"|dataset.icon==\"$symbol\"|g; " >> "$sed_script";;
-			pkg|pkgi|pkgib)
-				echo -n "s|data-icon=\\\\\"$icon\\\\\"|data-icon=\\\\\"$symbol\\\\\"|g; " >> "$sed_script";;
-		esac
-		echo -n "s|data-img=\"$icon\"|data-img=\"$symbol\"|g; " >> "$sed_script"
+		echo -n "s|@$icon@|$symbol|g; " >> "$sed_script"
 	done
 	echo "' @@@" >> "$sed_script"
 
@@ -62,20 +53,34 @@ echo -e "\nStrip shell scripts"
 for CGI in $(ls | grep -v \.css$ | grep -v \.js$); do
 	echo "Processing $CGI"
 
-	mv $CGI $CGI.old
-	# Copy initial comment (down to empty line)
-	sed '1,/^$/!d' $CGI.old > $CGI
-	# Remove initial tabs, other comments and empty lines
-	sed 's|^\t*||;/^ *#/d;/^$/d' $CGI.old >> $CGI
-	rm $CGI.old
+	case $CGI in
+		tazpkg.*.html)
+			# doc/tazpkg.*.html
+			substitute_icons $CGI
+			if [ -n "$(which tidy)" ]; then
+				tidy  -m  -q  -w 0  -utf8  --new-inline-tags x-details  --quote-nbsp n  \
+					--tidy-mark n  $CGI
+			else
+				sed -i 's|[ 	][ 	]*| |g; s|^ ||' $CGI
+			fi
+			;;
+		*)
+			mv $CGI $CGI.old
+			# Copy initial comment (down to empty line)
+			sed '1,/^$/!d' $CGI.old > $CGI
+			# Remove initial tabs, other comments and empty lines
+			sed 's|^\t*||;/^ *#/d;/^$/d' $CGI.old >> $CGI
+			rm $CGI.old
 
-	substitute_icons $CGI
+			substitute_icons $CGI
 
-	sed -i 's|" *>|">|g' $CGI
-	sed -i "s|' *)|')|g" $CGI
-	sed -i 's| *;;|;;|g' $CGI
+			sed -i 's|" *>|">|g' $CGI
+			sed -i "s|' *)|')|g" $CGI
+			sed -i 's| *;;|;;|g' $CGI
 
-	chmod a+x $CGI
+			chmod a+x $CGI
+			;;
+	esac
 
 done
 

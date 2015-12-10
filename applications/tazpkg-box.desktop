@@ -6,6 +6,6 @@ Name[pt]=Gerenciador de Pacotes TazPkg
 Name[pt_BR]=Gerenciador de Pacotes TazPkg
 Name[ru]=Менеджер пакетов TazPkg
 Exec=tazbox su tazpkg-box actions %f
-Icon=tazpkg
+Icon=system-software-installer
 NoDisplay=true
 MimeType=application/x-tazpkg;

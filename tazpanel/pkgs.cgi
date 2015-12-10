@@ -37,11 +37,11 @@ case "$1" in
 <li tabindex="0">
 	<span>$(gettext 'Packages')</span>
 	<menu>
-		<li><a data-icon="info" href="pkgs.cgi">$(gettext 'Summary')</a></li>
-		<li><a data-icon="list" href="pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
-		<li><a data-icon="refresh" href="pkgs.cgi?recharge" data-root>$(gettext 'Recharge list')</a></li>
-		<li><a data-icon="upgrade" href="pkgs.cgi?up" data-root>$(gettext 'Check updates')</a></li>
-		<li><a data-icon="admin"   href="pkgs.cgi?admin" data-root>$(gettext 'Administration')</a></li>
+		<li><a data-icon="@info@" href="pkgs.cgi">$(gettext 'Summary')</a></li>
+		<li><a data-icon="@list@" href="pkgs.cgi?list&amp;my=my&amp;cat=all&amp;repo=Any">$(gettext 'My packages')</a></li>
+		<li><a data-icon="@refresh@" href="pkgs.cgi?recharge" data-root>$(gettext 'Recharge list')</a></li>
+		<li><a data-icon="@upgrade@" href="pkgs.cgi?up" data-root>$(gettext 'Check updates')</a></li>
+		<li><a data-icon="@admin@"   href="pkgs.cgi?admin" data-root>$(gettext 'Administration')</a></li>
 	</menu>
 </li>
 EOT
@@ -85,13 +85,12 @@ case " $(GET) " in
 		# Space at end is flag -> do not check equivalents
 		pkg=$(GET pkg | tr -d ' ')
 		orig_pkg=''
-		# Small hack to get 'pkgi' symbol:
-		data_icon="pkgi"; pkgi="$data_icon"
+		data_icon="@pkgi@"
 		responce='i'
 
 		if ! grep -q "^$pkg"$'\t' "$PKGS_DB/installed.info"; then
 			# Package not installed
-			data_icon="pkg"; responce='n'
+			data_icon="@pkg@"; responce='n'
 			equivs=$(grep "^$pkg=" "$PKGS_DB/packages.equiv")
 			if [ "$(GET pkg)" == "$pkg" -a -n "$equivs" ]; then
 				# Check equivalent packages
@@ -102,13 +101,13 @@ case " $(GET) " in
 							   grep -q "^${equiv#*:}"$'\t' "$PKGS_DB/installed.info"; then
 								# Equivalent installed
 								orig_pkg="$pkg→"; pkg="${equiv#*:}"
-								data_icon="pkgi"; responce='i'; break
+								data_icon="@pkgi@"; responce='i'; break
 							fi;;
 						*)
 							if grep -q "^$equiv"$'\t' "$PKGS_DB/installed.info"; then
 								# Equivalent installed
 								orig_pkg="$pkg→"; pkg="$equiv"
-								data_icon="pkgi"; responce='i'; break
+								data_icon="@pkgi@"; responce='i'; break
 							fi;;
 					esac
 				done
@@ -116,7 +115,7 @@ case " $(GET) " in
 		fi
 
 		# Installed and blocked?
-		[ "$data_icon" == "$pkgi" ] && grep -q "^$pkg$" "$BLOCKED" && data_icon="pkgib"
+		[ "$data_icon" == "@pkgi@" ] && grep -q "^$pkg$" "$BLOCKED" && data_icon="@pkgib@"
 
 		if [ $(GET web) == 'y' ]; then
 			# Request from page http://pkgs.slitaz.org/ for example:
@@ -230,10 +229,10 @@ i18n_desc() {
 select_package_icon() {
 	if [ -d "$INSTALLED/$1" ]; then
 		if grep -q "^$1$" "$BLOCKED"
-			then echo "pkgib"
-			else echo "pkgi"
+			then echo "@pkgib@"
+			else echo "@pkgi@"
 		fi
-		else echo "pkg"
+		else echo "@pkg@"
 	fi
 }
 
@@ -243,15 +242,10 @@ select_package_icon() {
 parse_packages_info() {
 	IFS=$'\t'
 	while read PACKAGE VERSION CATEGORY SHORT_DESC WEB_SITE TAGS SIZES DEPENDS; do
-		data_icon="pkg"
-		if grep -q "^$PACKAGE"$'\t' "$PKGS_DB/installed.info"; then
-			data_icon="pkgi"
-			grep -q "^$PACKAGE$" "$BLOCKED" && data_icon="pkgib"
-		fi
 		i18n_desc "$PACKAGE"
 		cat <<EOT
 <tr>
-	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$data_icon")</td>
+	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$(select_package_icon "$PACKAGE")")</td>
 	<td>$VERSION</td>
 	<td>$SHORT_DESC</td>
 </tr>
@@ -267,35 +261,35 @@ show_button() {
 	for button in $@; do
 		class=''; misc=''
 		case $button in
-		recharge)		data_icon="refresh";	label=$(_ 'Recharge list'); misc=' data-root';;
-		up)				data_icon="upgrade";	label=$(_ 'Check upgrades'); misc=' data-root';;
-		list)			data_icon="list";		label=$(_ 'My packages');;
-		tags)			data_icon="tags";		label=$(_ 'Tags');;
-		linkable)		data_icon="link";		label=$(_ 'Linkable packages');;
-		admin)			data_icon="admin";		label=$(_ 'Administration'); misc=' data-root';;
-		*Install*nf*)	data_icon="install";	label=$(_ 'Install (Non Free)');;
-		*Install*)		data_icon="install";	label=$(_ 'Install');;
-		*Remove*)		data_icon="remove";		label=$(_ 'Remove');;
-		*Link*)			data_icon="link";		label=$(_ 'Link');;
-		*Block*)		data_icon="lock";		label=$(_ 'Block');;
-		*Unblock*)		data_icon="unlock";		label=$(_ 'Unblock');;
-		*Chblock*)		data_icon="chlock";		label=$(_ '(Un)block');;
-		*Repack*)		data_icon="repack";		label=$(_ 'Repack');;
-		*saveconf*)		data_icon="save";		label=$(_ 'Save configuration');;
-		*listconf*)		data_icon="list";		label=$(_ 'List configuration files');;
-		*quickcheck*)	data_icon="check";		label=$(_ 'Quick check');;
-		*fullcheck*)	data_icon="check";		label=$(_ 'Full check');;
-		*clean*)		data_icon="remove";		label=$(_ 'Clean');;
-		*setlink*)		data_icon="link";		label=$(_ 'Set link');;
-		*removelink*)	data_icon="unlink";		label=$(_ 'Remove link');;
-		*add-mirror)	data_icon="add";		label=$(_n 'Add mirror');;
-		*add-repo)		data_icon="add";		label=$(_n 'Add repository');;
-		toggle)			data_icon="toggle";		label=$(_n 'Toggle all');;
+			recharge)		icon="@refresh@";	label=$(_ 'Recharge list'); misc=' data-root';;
+			up)				icon="@upgrade@";	label=$(_ 'Check upgrades'); misc=' data-root';;
+			list)			icon="@list@";		label=$(_ 'My packages');;
+			tags)			icon="@tags@";		label=$(_ 'Tags');;
+			linkable)		icon="@link@";		label=$(_ 'Linkable packages');;
+			admin)			icon="@admin@";		label=$(_ 'Administration'); misc=' data-root';;
+			*Install*nf*)	icon="@install@";	label=$(_ 'Install (Non Free)');;
+			*Install*)		icon="@install@";	label=$(_ 'Install');;
+			*Remove*)		icon="@remove@";	label=$(_ 'Remove');;
+			*Link*)			icon="@link@";		label=$(_ 'Link');;
+			*Block*)		icon="@lock@";		label=$(_ 'Block');;
+			*Unblock*)		icon="@unlock@";	label=$(_ 'Unblock');;
+			*Chblock*)		icon="@chlock@";	label=$(_ '(Un)block');;
+			*Repack*)		icon="@repack@";	label=$(_ 'Repack');;
+			*saveconf*)		icon="@save@";		label=$(_ 'Save configuration');;
+			*listconf*)		icon="@list@";		label=$(_ 'List configuration files');;
+			*quickcheck*)	icon="@check@";		label=$(_ 'Quick check');;
+			*fullcheck*)	icon="@check@";		label=$(_ 'Full check');;
+			*clean*)		icon="@remove@";	label=$(_ 'Clean');;
+			*setlink*)		icon="@link@";		label=$(_ 'Set link');;
+			*removelink*)	icon="@unlink@";	label=$(_ 'Remove link');;
+			*add-mirror)	icon="@add@";		label=$(_n 'Add mirror');;
+			*add-repo)		icon="@add@";		label=$(_n 'Add repository');;
+			toggle)			icon="@toggle@";	label=$(_n 'Toggle all');;
 		esac
 		if [ "$button" == 'toggle' ]; then
-			echo -n "<span class=\"float-right\"><button data-icon=\"$data_icon\" onclick=\"checkBoxes()\">$label</button></span>"
+			echo -n "<span class=\"float-right\"><button data-icon=\"$icon\" onclick=\"checkBoxes()\">$label</button></span>"
 		else
-			echo -n "<button data-icon=\"$data_icon\" name=\"${button%%=*}\" value=\"${button#*=}\"$misc>$label</button>"
+			echo -n "<button data-icon=\"$icon\" name=\"${button%%=*}\" value=\"${button#*=}\"$misc>$label</button>"
 		fi
 	done
 }
@@ -412,9 +406,9 @@ show_list() {
 			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\" id=\"%s\">", PKG, PKG
 
 			if (INS) {
-				if (BLK)	printf "<a data-icon=\"pkgib\" ";
-				else		printf "<a data-icon=\"pkgi\" ";
-			} else			printf "<a data-icon=\"pkg\" ";
+				if (BLK)	printf "<a data-icon=\"@pkgib@\" ";
+				else		printf "<a data-icon=\"@pkgi@\" ";
+			} else			printf "<a data-icon=\"@pkg@\" ";
 
 			printf "href=\"?info=%s\">%s</a></td>", gensub(/\+/, "%2B", "g", PKG), PKG
 
@@ -500,14 +494,14 @@ show_package_link() {
 
 show_info_links() {
 	if [ -n "$1" ]; then
-		if [ "$3" == 'tag' ]; then data_icon="tag"; else data_icon="clock"; fi
+		if [ "$3" == 'tag' ]; then icon="@tag@"; else icon="@clock@"; fi
 		case "$4" in
 			provide) echo -n "<tr><td><b>$2</b></td><td>"; noeq=' ';;
 			'')      echo -n "<tr><td><b>$2</b></td><td>"; noeq='';;
 			*)       echo -n "<tr><td><b><a href=\"?suggested=${4//+/%2B}\">$2</a></b></td><td>";;
 		esac
 
-		echo $1 | tr ' ' $'\n' | awk -vt="$3" -vi="$data_icon" -vnoeq="$noeq" '{
+		echo $1 | tr ' ' $'\n' | awk -vt="$3" -vi="$icon" -vnoeq="$noeq" '{
 			printf "<span><a data-icon=\"%s\" ", i;
 			printf "href=\"?%s=%s\">%s%s</a></span>", t, gensub(/\+/, "%2B", "g", $1), $1, noeq
 		}'
@@ -523,7 +517,7 @@ tazpanel_header() {
 
 	cat <<EOT
 <form class="search">
-	<a data-icon="web" href="http://pkgs.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a>
+	<a data-icon="@web@" href="http://pkgs.slitaz.org/" target="_blank" title="$(_n 'Web search tool')"></a>
 	<input type="search" name="search" value="$(GET search)" results="5" autosave="pkgsearch" autocomplete="on"><!--
 	--><button type="submit">$(_n 'Search')</button><!--
 	--><button name="files" value="yes">$(_n 'Files')</button><!--
@@ -595,8 +589,8 @@ EOT
 	fi
 
 	cat <<EOT
-	<a data-icon="tags" href="?tags">$(_ 'All tags...')</a><br/>
-	<a data-icon="list" href="?cats">$(_ 'All categories...')</a>
+	<a data-icon="@tags@" href="?tags">$(_ 'All tags...')</a><br/>
+	<a data-icon="@list@" href="?cats">$(_ 'All categories...')</a>
 </div>
 </form>
 EOT
@@ -633,10 +627,10 @@ EOT
 			i18n_desc "$pkg"
 			cat <<EOT
 <tr>
-	<td><input type="checkbox" name="pkg" value="$pkg" /><a data-icon="pkg" href="?info=${pkg//+/%2B}">$pkg</a></td>
+	<td><input type="checkbox" name="pkg" value="$pkg" /><a data-icon="@pkg@" href="?info=${pkg//+/%2B}">$pkg</a></td>
 	<td>$VERSION</td>
 	<td>$SHORT_DESC</td>
-	<td><a data-img="web" href="$WEB_SITE"></a></td>
+	<td><a data-img="@web@" href="$WEB_SITE"></a></td>
 </tr>
 EOT
 		done
@@ -822,14 +816,9 @@ EOT
 			lzcat $(repo_list /files.list.lzma) | grep -Ei ": .*$(GET search)" | \
 			while read PACKAGE FILE; do
 				PACKAGE=${PACKAGE%:}
-				data_icon="pkg"
-				if [ -d $INSTALLED/$PACKAGE ]; then
-					data_icon="pkgi"
-					grep -q "^$PACKAGE$" "$BLOCKED" && data_icon="pkgib"
-				fi
 				cat <<EOT
 <tr>
-	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$data_icon")</td>
+	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$(select_package_icon "$PACKAGE")")</td>
 	<td>$(echo "$FILE" | sed "s|$pkg|<span class=\"diff-add\">&</span>|gI")</td>
 </tr>
 EOT
@@ -941,7 +930,7 @@ EOT
 		for pkg in $pkgs; do
 			[ "$pkgs_total" -ne 1 ] && sequence="$pkg_current/$pkgs_total"
 			#echo $(_n 'y') | 
-			tazpkg $cmd $pkg $opt --sequence="$sequence" 2>/dev/null | filter_taztools_msgs
+			tazpkg $cmd $pkg $opt --sequence="$sequence"
 			pkg_current=$((pkg_current+1))
 		done
 		;;
@@ -984,19 +973,10 @@ EOT
 			xhtml_footer; exit 0
 		fi
 
-		# Symbolic icon
-		if [ -d "$INSTALLED/$pkg" ]; then
-			if grep -q "^$pkg$" "$BLOCKED"
-				then data_icon="pkgib"
-				else data_icon="pkgi"
-			fi
-			else data_icon="pkg"
-		fi
-
 		cat <<EOT
 <section>
 	<header>
-		<span data-icon="$data_icon">$(_ 'Package %s' "$pkg")</span>
+		<span data-icon="$(select_package_icon "$pkg")">$(_ 'Package %s' "$pkg")</span>
 		<form>
 			<input type="hidden" name="pkg" value="${pkg#get-}"/>
 EOT
@@ -1084,8 +1064,8 @@ EOT
 </table>
 
 	<footer>
-		<a data-icon="text" href="?show_receipt=$pkg">$(_ 'View receipt')</a>
-		<a data-icon="slitaz" href="?improve=$pkg">$(_ 'Improve package')</a>
+		<a data-icon="@text@" href="?show_receipt=$pkg">$(_ 'View receipt')</a>
+		<a data-icon="@slitaz@" href="?improve=$pkg">$(_ 'Improve package')</a>
 	</footer>
 </section>
 
@@ -1110,7 +1090,7 @@ EOT
 <section>
 	<header>$(_ 'Installed files')</header>
 	<span id="fileList">
-		<div style="text-align: center;"><span data-icon="clock">$(_ 'Please wait')</span></div>
+		<div style="text-align: center;"><span data-icon="@clock@">$(_ 'Please wait')</span></div>
 	</span>
 </section>
 
@@ -1118,7 +1098,7 @@ EOT
 <script type="text/javascript">
 	var links = document.getElementById('infoTable').getElementsByTagName('a');
 	for (var i = 0; i < links.length; i++) {
-		if (links[i].dataset.icon=="clock") {
+		if (links[i].dataset.icon=="@clock@") {
 			links[i].parentNode.id = 'link' + i;
 			pkg = links[i].textContent.replace(/\+/g, '%2B');
 			ajax('?status&pkg=' + pkg, '1', 'link' + i);
@@ -1273,8 +1253,8 @@ EOT
 					<input type="radio" name="mirror" id="$line" value="$line" onchange="this.form.submit()"
 					$([ "$line" == "$default_mirror/" ] && echo -n 'checked="checked"')>
 					<label for="$line"><code>$line</code></label></td>
-				<td><a data-img="web"    href="$line" target="_blank"></a></td>
-				<td><a data-img="remove" href="?admin=rm-mirror&amp;mirror=$line&amp;file=$i" title="$(_ 'Delete')"></a></td>
+				<td><a data-img="@web@"    href="$line" target="_blank"></a></td>
+				<td><a data-img="@remove@" href="?admin=rm-mirror&amp;mirror=$line&amp;file=$i" title="$(_ 'Delete')"></a></td>
 			</tr>
 EOT
 			done < $i
@@ -1306,7 +1286,7 @@ EOT
 				cat <<EOT
 		<tr>
 			<td><code>$repo</code></td>
-			<td><a data-img="remove" href="?admin=rm-repo&amp;repository=$repo" title="$(_ 'Delete')"></a></td>
+			<td><a data-img="@remove@" href="?admin=rm-repo&amp;repository=$repo" title="$(_ 'Delete')"></a></td>
 		</tr>
 EOT
 			done
@@ -1355,9 +1335,9 @@ EOT
 	</div>
 
 	<footer>
-		<button data-icon="download" onclick='http://mirror.slitaz.org/iso/$version/packages-$version.iso'>
+		<button data-icon="@download@" onclick='http://mirror.slitaz.org/iso/$version/packages-$version.iso'>
 			$(_ 'Download DVD image')</button>
-		<button data-icon="link" onclick='?admin&amp;action=dvdusbkey'>
+		<button data-icon="@link@" onclick='?admin&amp;action=dvdusbkey'>
 			$(_ 'Install from DVD/USB key')</button>
 	</footer>
 </section>
@@ -1372,7 +1352,7 @@ EOT
 		<input type="hidden" name="admin" value="pager"/>
 		<input type="number" name="pager" value="$pager" min="0" step="10" size="4"/>
 		<footer>
-			<button data-icon="ok" type="submit">$(_ 'Set')</button>
+			<button data-icon="@ok@" type="submit">$(_ 'Set')</button>
 		</footer>
 	</form>
 </section>
@@ -1535,10 +1515,10 @@ EOT
 EOT
 		table_head
 		for i in $(cat "$BLOCKED"); do
-			awk -F$'\t' -vp="$i" -vi='data-icon="pkgib"' '
+			awk -F$'\t' -vp="$i" '
 			$1 == p {
 				printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\">", $1
-				printf "<a %s href=\"?info=%s\">%s</a>", i, gensub(/\+/, "%2B", "g", $1), $1
+				printf "<a data-icon=\"@pkgib@\" href=\"?info=%s\">%s</a>", gensub(/\+/, "%2B", "g", $1), $1
 				printf "</td><td>%s</td><td>%s</td><td>", $2, $4
 				printf "<a href=\"%s\"></a></td></tr>\n", $5
 			}
@@ -1604,7 +1584,7 @@ EOT
 			<tr><td colspan="2">
 				<label><input type="checkbox" name="rememberme"/>$(_ 'Remember me')</label></td></tr>
 			<tr><td colspan="2">
-				<button type="submit" data-icon="user">$(_ 'Log in')</button></td></tr>
+				<button type="submit" data-icon="@user@">$(_ 'Log in')</button></td></tr>
 		</table>
 	</form>
 	<footer>
@@ -1636,7 +1616,7 @@ EOT
 <section>
 	<header>
 		$(_ 'Improve package "%s"' $pkg)
-		<form><button name="info" value="$pkg" data-icon="back">$(_ 'Back')</button></form>
+		<form><button name="info" value="$pkg" data-icon="@back@">$(_ 'Back')</button></form>
 	</header>
 
 	<div style="display:none">
@@ -1683,7 +1663,7 @@ EOT
 
 		<textarea name="text" id="improveText" style="width:100%; resize: vertical; min-height:10rem"></textarea>
 		<footer>
-			<button type="submit" data-icon="slitaz">$(_ 'Send')</button>
+			<button type="submit" data-icon="@slitaz@">$(_ 'Send')</button>
 		</footer>
 	</form>
 </section>
@@ -1693,7 +1673,7 @@ EOT
 <section>
 	<header>
 		$(_ 'Thank you!')
-		<form><button name="info" value="$pkg" data-icon="back">$(_ 'Back')</button></form>
+		<form><button name="info" value="$pkg" data-icon="@back@">$(_ 'Back')</button></form>
 	</header>
 <div>The following information was sent to SliTaz developers:</div>
 <pre class="scroll"><b>User:</b> $user
@@ -1746,12 +1726,12 @@ EOT
 			[2-9]) echo $ago;;
 			*) echo "<span style='color:red'>$ago</span>"
 				_ 'It is recommended to [recharge] the lists.' | \
-				sed 's|\[|<a data-icon="refresh" href="?recharge">|;s|\]|</a>|';;
+				sed 's|\[|<a data-icon="@refresh@" href="?recharge">|;s|\]|</a>|';;
 		esac
 	else
 		_ 'never.'
 		_ 'You need to [download] the lists for further work.' | \
-		sed 's|\[|<a data-icon="download" href="?recharge" data-root>|;s|\]|</a>|'
+		sed 's|\[|<a data-icon="@download@" href="?recharge" data-root>|;s|\]|</a>|'
 	fi)</td></tr>
 		<tr>
 			<td>$(_ 'Installed packages:')</td>
@@ -1784,7 +1764,7 @@ EOT
 	<header>
 		$(_ 'Latest log entries')
 		<form action="index.cgi">
-			<button name="file" value="$LOG" data-icon="view">$(_ 'Show')</button>
+			<button name="file" value="$LOG" data-icon="@view@">$(_ 'Show')</button>
 		</form>
 	</header>
 	<pre>$(tail -n 5 $LOG | tac | fgrep "-" | awk '{print $1, $2, $3, $4, $5, "<a href=\"?info=" $6 "\">" $6 "</a>", $7}')</pre>

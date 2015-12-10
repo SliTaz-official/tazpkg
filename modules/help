@@ -130,7 +130,7 @@ title=$(echo $commands | grep -oe ":$T\(,[^:]*\)*:" | tr -d : | sed 's|,|, |g')
 
 
 # style: <article id="TOPIC">
-HLP=$(sed "/article id=\"$T\"/,/<\/article/!d; /<article/d; /<\/article/d" $DOC)
+HLP=$(sed "/article id=\"$T\"/,/<\/article/!d; s|</*article[^>]*>||; s|<h3>.*</h3>||" $DOC)
 
 if [ -z "$HLP" ]; then
 	_ 'Sorry, no help for "%s"' "$QUERY"

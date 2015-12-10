@@ -15,7 +15,7 @@ export TEXTDOMAIN='tazpkg'
 text="<b>$(_ 'SliTaz Package Action')</b>"
 icon="system-software-install"
 opts="--window-icon=$icon --image=$icon --image-on-top --center --on-top \
---height=350 --width=570 --title=TazPkg"
+--height=350 --width=550 --title=TazPkg"
 
 
 usage() {
@@ -36,7 +36,7 @@ EOT
 # Nice GTK output for install and extract.
 
 output() {
-	yad --text-info $opts --tail --margins='4' --text="$text" --fontname='monospace,8' \
+	yad --text-info $opts --tail --margins='4' --text="$text" --fontname='monospace,10' \
 		--button='gtk-close:0'
 }
 
@@ -66,8 +66,8 @@ actions() {
 	# Deal with --button values
 	case "$?" in
 		1) exit 0 ;;
-		2) tazpkg extract "$pkg" . --output='raw' | output ;;
-		3) tazpkg -i "$pkg" . --forced --output='raw' | output ;;
+		2) tazpkg extract "$pkg" . --output='raw' --cols=65 | output ;;
+		3) tazpkg -i "$pkg" . --forced --output='raw' --cols=65 | output ;;
 	esac
 }
 
@@ -79,7 +79,7 @@ dl_inst() {
 	_ 'Downloading: %s' "$pkg"; newline
 	TMP_DIR=$(mktemp); cd "$TMP_DIR"
 	wget "$url" 2>&1
-	tazpkg -i "$TMP_DIR/$pkg" --forced --output='raw' 2>&1
+	tazpkg -i "$TMP_DIR/$pkg" --forced --output='raw' --cols=65 2>&1
 	rm -f "$TMP_DIR"
 }
 

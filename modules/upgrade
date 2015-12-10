@@ -90,8 +90,8 @@ case "$output" in
 	<tbody>
 EOT
 		sort -t$'\t' -k1,3 "$tmp_up_list" | awk -F$'\t' '{
-			if($4=="Main"){repo_icon="slitaz"}else{repo_icon="web"}
-			if($6=="b"){data_icon="pkgib"}else{data_icon="pkgi"}
+			if($4=="Main"){repo_icon="@slitaz@"}else{repo_icon="@web@"}
+			if($6=="b"){data_icon="@pkgib@"}else{data_icon="@pkgi@"}
 
 			printf "<tr><td><input type=\"checkbox\" name=\"pkg\" value=\"%s\"/>", $1;
 			printf "<a data-icon=\"%s\" href=\"?info=%s\">%s</a></td>", data_icon, $1, $1;

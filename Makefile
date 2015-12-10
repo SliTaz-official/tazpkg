@@ -27,7 +27,7 @@ all: msgfmt
 	mkdir build
 	cp -a tazpkg tazpkg-box tazpkg-notify \
 		modules/* tazpanel/pkgs.cgi tazpanel/pkgs.css \
-		build
+		doc/tazpkg.*.html build
 	./stripall.sh
 
 	# Substitute "@@MODULES@@" with modules path
@@ -85,7 +85,8 @@ install: msgfmt
 
 	# Documentation
 	install -m 0755 -d $(DESTDIR)$(docdir)
-	cp -a doc/*        $(DESTDIR)$(docdir)
+	cp -a build/tazpkg.*.html $(DESTDIR)$(docdir)
+	ln -sf tazpkg.en.html $(DESTDIR)$(docdir)/tazpkg.html
 
 	# TazPanel files
 	install -m 0755 -d             $(DESTDIR)/var/www/tazpanel/menu.d
