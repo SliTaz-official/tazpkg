@@ -450,7 +450,7 @@ END {
 			debug "  no '--newconf': clean official config files"
 			# Keep user configuration files: remove "official" from fs tree
 			for config_file in $CONFIG_FILES; do
-				for config_file_official in $(find "fs$config_file" ! -type d | sed 's|^fs||'); do
+				for config_file_official in $(find "fs$config_file" ! -type d 2>/dev/null | sed 's|^fs||'); do
 					if [ -e "$root$config_file_official" ]; then
 						debug "    official '$config_file_official' will be skipped"
 						rm "fs$config_file_official"
