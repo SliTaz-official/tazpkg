@@ -338,7 +338,7 @@ get_pkg() {
 	debug "  rep='$rep'\n  namever='$namever'\n  pkgsum='$pkgsum'"
 
 	if [ -z "$line" ]; then
-		_ 'Unable to find package "%s" in the mirrored packages list.' "$(boldify $1)" >&2
+		_ 'Unable to find package "%s" in the mirrored packages list.' "$1" >&2
 		# Retry with "get-package"; prevent looping with 'redo'
 		if [ "$2" != 'redo' ]; then
 			get_pkg "get-$1" 'redo'; exit 0
