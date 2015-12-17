@@ -145,8 +145,6 @@ install_all_deps() {
 	# Also we can prefer local packages over mirrored/cached using '--local' option
 	[ "$dir" == '/home/boot/packages' ] && local='yes'
 	debug "  local='$local'"
-	[ -n "$local" ] && tazpkg mkdb "$dir" --forced >/dev/null
-
 
 	# "--nodeps" option prevents to install dependencies
 	if [ "$answer" -eq 0 -a -z "$nodeps" ]; then
@@ -159,14 +157,22 @@ install_all_deps() {
 				found='0'
 				# Prefer local packages
 				if [ -n "$local" ]; then
-					_ 'Checking if package "%s" exists in local list...' "$pkg"
-					pkgfile=$(awk -F$'\t' -vp="$pkg" '
-						$1==p{printf "%s-%s.tazpkg", $1, $2; exit 1}
-						' "$dir/packages.info")
-					if [ -n "$pkgfile" ]; then
-						found='1'
-						tazpkg install "$dir/$pkgfile"
-					fi
+					[ -z "$quiet" ] && _ 'Checking if package "%s" exists in local list...' "$pkg"
+					# Find local package
+					tempd="$(mktemp -d)"; cd "$tempd"
+					for pkgfile in $dir/$pkg-*.tazpkg; do
+						# Extract receipt from each matched package
+						cpio -F "$pkgfile" -i receipt >/dev/null 2>&1
+						name=$(. receipt; echo $PACKAGE)
+						rm receipt
+						if [ "$name" == "$pkg" ]; then
+							found='1'
+							# Install the first matched package: normally there is only one package
+							# with the $PACKAGE matched in the receipt
+							tazpkg install "$pkgfile"
+						fi
+					done
+					rm -r "$tempd"
 				fi
 				debug "    found='$found'"
 
