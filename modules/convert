@@ -61,12 +61,12 @@ WEB_SITE="$url"
 MAINTAINER="$maintainer"
 DEPENDS="$(find_depends)"
 EOT
-		[ -s "$file/var/lib/upkg/files/*.config.bz2" ] &&
+		[ -s $file/var/lib/upkg/files/*.config.bz2 ] &&
 			cat >> "$file/receipt" <<EOT
 CONFIG_FILES="$(bzcat $file/var/lib/upkg/files/*.config.bz2)"
 EOT
 		while read ext func; do
-			[ -s "$file/fs/var/lib/upkg/scripts/*.$ext" ] || continue
+			[ -s $file/fs/var/lib/upkg/scripts/*.$ext ] || continue
 			cat >> "$file/receipt" <<EOT
 
 $func()
@@ -231,7 +231,7 @@ MAINTAINER="nobody@slitaz.org"
 DEPENDS="$(find_depends)"
 EOT
 		show_unresolved_lib "$file/receipt"
-		rm -f "$file/fs/".[A-Z]*
+		rm -f $file/fs/.[A-Z]*
 		tazpkg pack "$file"
 		mv "$file.tazpkg" "$TOP_DIR"
 	else
@@ -269,7 +269,7 @@ MAINTAINER="$maintainer"
 DEPENDS="$(find_depends)"
 EOT
 		show_unresolved_lib "$file/receipt"
-		rm -f "$file/fs/".[A-Z]*
+		rm -f $file/fs/.[A-Z]*
 		tazpkg pack "$file"
 		mv "$file.tazpkg" "$TOP_DIR"
 	else
@@ -359,9 +359,9 @@ convert_pet() {
 	cd "$TMP_DIR"
 	parse_pkgname .pet
 	tar -xzf "$PACKAGE_FILE" 2>/dev/null
-	. "$package"*/*.specs
+	. $package*/*.specs
 	desc="$PETMENUDESCR"
-	mv "$package"*/ fs
+	mv $package*/ fs
 	finish_convert_puppy
 }
 
@@ -394,13 +394,13 @@ MAINTAINER="nobody@slitaz.org"
 DEPENDS="$(find_depends)"
 EOT
 	show_unresolved_lib "$file/receipt"
-	[ -f "$file/fs/var/log/scripts/$package"* ] && cat >> "$file/receipt" <<EOM
+	[ -f $file/fs/var/log/scripts/$package* ] && cat >> "$file/receipt" <<EOM
 
 post_install()
 {
 chroot \$1/ sh - << EOT
 cd /
-$(cat "$file/fs/var/log/scripts/$package"* | sed -e 's/\\/\\\\/g' | sed -e 's/\$/\\$/g')
+$(cat $file/fs/var/log/scripts/$package* | sed -e 's/\\/\\\\/g' | sed -e 's/\$/\\$/g')
 EOT
 }
 EOM
@@ -487,7 +487,7 @@ WEB_SITE="${homepage:-http://packages.debian.org/search?keywords=$package}"
 MAINTAINER="nobody@slitaz.org"
 EOT
 		LICENSE=$(grep /usr/share/common-licenses/ \
-		  "$PACKAGE_FILE" "$TMP_DIR/$file/fs/usr/share/doc/"*"/copyright" | \
+		  "$PACKAGE_FILE" $TMP_DIR/$file/fs/usr/share/doc/*/copyright | \
 		  sed 's|.*common-licenses/\([-\.A-Za-z0-9]*\).*|\1|;s|[-\.]$||;q')
 		[ -n "$LICENSE" ] && echo "LICENSE=\"$LICENSE\"" >> "$file/receipt"
 		echo "DEPENDS=\"$(find_depends)\"" >> "$file/receipt"
