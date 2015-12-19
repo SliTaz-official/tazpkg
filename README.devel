@@ -105,3 +105,66 @@ test cases (emulate package database changes), also provide both main and few
 undigest repositories. We can set up special scripts and test repository on the
 existing server (cook.slitaz.org).
 
+
+HTML terminal converter
+-----------------------
+
+In the module "help" was an attempt to write code that could easily display the
+HTML-help in a terminal. The idea is to re-use TazPkg help files, which are
+intended for display in the browser.
+
+I'll tell you about the most interesting and complex part of the script that
+starts like this:
+
+    PRE=$(echo "$HLP" | sed ...
+
+Here $HLP is a part of the HTML page that we are going to show. Next the chain
+of sed commands are transformed this HTML source in the next way.
+
+  * `/^$/d;` remove blank lines;
+  * `/<pre>/,/<\/pre\>/{s|.*|  &|; s| |·|g};` prepend lines within <pre>*</pre>
+    tags with two unbreakable spaces, temporarily change spaces to middle dot;
+  * `s|^  </*pre>$||; s|<pre>||; s|</pre>||;` remove "<pre>" tags;
+  * `s|  ·#|  #|;` remove specified extra-space (converted to middle dot);
+  * `tr '\n' ' '` convert all the newlines to spaces. Now we get one long line.
+    Note that we already marked beginning of the pre-lines with two unbreakable
+    spaces;
+  * `s|[ 	][ 	]*| |g;` combine all the successive spaces and/or tabs into
+    single space;
+  * `s|[ 	]*<dl>|O\n|g;` change opening tag "<dl>" into "O<backspace>".
+    Note, here and below I use "<backspace>" character because later I'll break
+    long lines using function "longline()" from libtaz.sh, which in turn uses
+    Busybox function "fold". In the final step sequences like "O<backspace>"
+    will be changed to "invisible" color codes, and they should have "zero
+    width" when they are processed by `fold` to break long lines in the right
+    places. Fortunately, Busybox `fold` knows about "<backspace>" character and
+    processes it correctly, so sequence like "O<backspace>" have "zero width"
+    for `fold`;
+  * `s|[ 	]*</dl>|L\n|g;` change closing tag "</dl>" into "L<backspace>";
+  * `s|[ 	]*</*dt>||g;` remove opening and closing tags "<dt>";
+  * `s|[ 	]*<dd>|	|g; s|</dd>|\n|g;` now lines within tags "<dd>" are
+    prepended by tabulation;
+  * `s|<h4>|<b>|g; s|</h4>|</b>\n|g` change header "<h4>" into separate line
+    with code `<b>...</b>\n`;
+  * `s|[ 	]*<p>[ 	]*||g;` remove opening tag "<p>" both with extra-space;
+  * `s|[ 	]*</p>|\n \n|g;` remove closing tag "</p>" and append it with
+    "<newline><single unbreakable space><newline>";
+  * `s|  |\n  |g` prepend each line of the <pre> block (marked before with the
+    double unbreakable spaces) with <newline>;
+  * Now we have: individual lines prepended by two unbreakable spaces for <pre>
+    block, individual lines for paragraphs, as well for content of "<dt>" tag,
+    individual lines prepended by tabulation for content of "<dd>" tag,
+    individual lines "O<backspace>" and "L<backspace>" for begin and end of the
+    "<dl>" block;
+  * `s|<a [^>]*>||g; s|</a>||g;` remove links, leaving only link text;
+  * `s|·| |g` change back middle dots into spaces;
+  * `s|</*nobr>||g; s|&shy;||g;` remove tags "<nobr>" and soft hyphens;
+  * `s|^[ 	]*||` remove space in the beginning of each line;
+  * `/^$/d` remove empty lines. Note, we already have line with the single
+    unbreakable space as separator between paragraphs;
+  * `s|<tt>|A|g; s|<code>|A|g;` change open tags to "A<backspace>"; in the
+    final step it will be changed to the color code;
+  * `s|<em>|B|g; s|<strong>|B|g;` other color code;
+  * `s|</tt>|D|g; s|</code>|D|g; s|</em>|D|g;` here will be code that
+    cancel previous color code;
+  * `s|DD|D|g;` clean doubles.

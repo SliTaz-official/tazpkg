@@ -139,7 +139,6 @@ fi
 
 PRE=$(echo "$HLP" | sed "/^$/d; /<pre>/,/<\/pre\>/{s|.*|  &|; s| |·|g}; \
 	s|^  </*pre>$||; s|<pre>||; s|</pre>||; s|  ·#|  #|;" | tr '\n' ' ' | \
-	sed '/^[ 	]*$/d' | \
 	sed 's|[ 	][ 	]*| |g;' | \
 	sed 's|[ 	]*<dl>|O\n|g; s|[ 	]*</dl>|L\n|g; s|[ 	]*</*dt>||g;' | \
 	sed 's|[ 	]*<dd>|	|g; s|</dd>|\n|g;' | \
@@ -164,5 +163,5 @@ PRE2=$(echo "$OPT0" | sed "s|$OPTA|$OPTB|" | tr '@' '\n' | sed '/O/d; s|L||')
 [ ! -z "$TA" ] && T="$T, $TA"
 
 title '%s' "$title"
-emsg "$(longline "$PRE2" | sed 's|A|<c 33>|g; s|B|<c 36>|g; s|C|<b>|g; s|D|</c>|g; ')"
+emsg "$(longline "$PRE2" | sed 's|A|<c 33>|g; s|B|<c 36>|g; s|C|</b>|g; s|D|</c>|g; ')"
 newline
