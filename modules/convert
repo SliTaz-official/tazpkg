@@ -366,16 +366,24 @@ convert_pet() {
 	parse_pkgname .pet
 	busybox tar -xzf "$PACKAGE_FILE"
 
-	PET_SPECS="$(find $TMP_DIR -maxdepth 2 -name 'pet.specs')"
+	# Get package description
+	PET_SPECS="$(find $TMP_DIR -maxdepth 2 -type f -name 'pet.specs')"
 	if [ -e "$PET_SPECS" ]; then
 		debug "pet.specs with '|'"
 		desc="$(awk -F'|' '{print $10}' $PET_SPECS)"
-		debug "desc='$desc'"
 	else
-		# TODO: I need to have '.pet' file that will work this way!
-		. $package*/*.specs
-		desc="$PETMENUDESCR"
+		PET_SPECS="$(find $TMP_DIR -maxdepth 2 -type f -name '*.pet.specs')"
+		if [ -e "$PET_SPECS" ]; then
+			desc="$(. "$PET_SPECS"; echo "$PETMENUDESCR")"
+		else
+			DESKTOP="$(find $TMP_DIR -type f -name '*.desktop' | head -n1)"
+			if [ -n "$DESKTOP" ]; then
+				desc="$(awk -F'=' '($1=="Name"){print $2}' $DESKTOP)"
+			fi
+		fi
 	fi
+	[ -z "$desc" ] && desc="$package"
+	debug "desc='$desc'"
 	mv $package*/ fs
 	finish_convert_puppy
 }
