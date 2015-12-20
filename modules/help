@@ -142,6 +142,7 @@ PRE=$(echo "$HLP" | sed "/^$/d; /<pre>/,/<\/pre\>/{s|.*|  &|; s| |·|g}; \
 	sed 's|[ 	][ 	]*| |g;' | \
 	sed 's|[ 	]*<dl>|O\n|g; s|[ 	]*</dl>|L\n|g; s|[ 	]*</*dt>||g;' | \
 	sed 's|[ 	]*<dd>|	|g; s|</dd>|\n|g;' | \
+	sed 's|[ 	]*<ul>|O\n|g; s|[ 	]*</ul>|L\n|g; s|[ 	]*<li>|*	|g; s|</li>|\n|g;' | \
 	sed 's|<h4>|<b>|g; s|</h4>|</b>\n|g' | \
 	sed 's|[ 	]*<p>[ 	]*||g; s|[ 	]*</p>|\n \n|g; s|  |\n  |g' | \
 	sed 's|<a [^>]*>||g; s|</a>||g; s|·| |g' | \
@@ -155,8 +156,8 @@ OPT=$(echo "$PRE" | sed '/O/,/L/!d; /[OL]/d')
 OPTLIST=$(optlist "$OPT")
 
 OPT0=$(echo "$PRE" | tr '\n' '@')
-OPTA=$(echo "$OPT" | tr '\n' '@')
-OPTB=$(echo "$OPTLIST" | tr '\n' '@')
+OPTA=$(echo "$OPT" | tr '\n' '@' | sed 's|\*|\\*|g;')
+OPTB=$(echo "$OPTLIST" | tr '\n' '@' | sed 's|\*|\\*|g;')
 
 PRE2=$(echo "$OPT0" | sed "s|$OPTA|$OPTB|" | tr '@' '\n' | sed '/O/d; s|L||')
 
