@@ -227,7 +227,9 @@ fi
 # packages 'gtk+', 'gtk+3'
 [ -n "$uicon" ] && chroot "$root/" /usr/bin/gtk-update-icon-cache /usr/share/icons/hicolor
 # package 'glib'
-[ -n "$uschm" ] && chroot "$root/" /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
+# hide messages like next because they are unresolved (we may to patch glib to hide them, almost the same)
+# warning: Schema '*' has path '*'.  Paths starting with '/apps/', '/desktop/' or '/system/' are deprecated.
+[ -n "$uschm" ] && chroot "$root/" /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas 2>&1 | fgrep -v '/apps/'
 # package 'gdk-pixbuf'
 [ -n "$upixb" ] && chroot "$root/" /usr/bin/gdk-pixbuf-query-loaders --update-cache
 # packages 'busybox', 'kmod', 'depmod'
