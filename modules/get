@@ -251,6 +251,7 @@ EOT
 
 	# Add dependencies which was found to already defined dependencies
 	DEPENDS="$(unset DEPENDS; . "$PACKAGE-$VERSION/receipt"; echo $DEPENDS)"
+	TMP_DIR="$tmp_dir"
 	for i in $(find_depends "$PACKAGE-$VERSION/fs"); do
 		case " $DEPENDS " in
 			*\ $i\ *) continue;;

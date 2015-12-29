@@ -13,7 +13,9 @@ find_depends() {
 
 	for i in "$PKGS_DB/files.list.lzma" \
 		"$PKGS_DB/undigest/"*"/files.list.lzma"; do
-		[ -f "$i" ] && lzma d "$i" -so >> "$TMP_DIR/files.list"
+		# Extract files.list.lzma to find dependencies
+		# only lines with .so libs produces much faster search
+		[ -f "$i" ] && lzma d "$i" -so | fgrep '.so' | fgrep '/lib/' >> "$TMP_DIR/files.list"
 	done
 
 	_ 'Find depends...' 1>&2
@@ -27,6 +29,7 @@ find_depends() {
 		esac
 
 		for lib in $(LD_TRACE_LOADED_OBJECTS=1 /lib/ld*.so "$chkfile" 2>/dev/null | sed '/=>/!d;s/ =>.*//'); do
+			debug "lib='$lib'"
 			case " $libs_found " in
 				*\ $lib\ *) continue;;
 			esac
@@ -40,6 +43,7 @@ find_depends() {
 			echo -ne '                   \r' 1>&2
 
 			for dep in $(fgrep "$lib" "$TMP_DIR/files.list" | cut -d: -f1); do
+				debug "  dep='$dep'"
 				case " $DEFAULT_DEPENDS " in
 					*\ $dep\ *) continue 2;;
 				esac
@@ -47,8 +51,10 @@ find_depends() {
 			done
 
 			if [ -n "$dep" ]; then
+				debug "  add '$dep' to depends"
 				echo "$dep" >> "$TMP_DIR/depends"
 			else
+				debug "  add '$lib' to unresolved"
 				grep -qs ^$lib$ "$TMP_DIR/unresolved" ||
 					echo "$lib" >> "$TMP_DIR/unresolved"
 			fi
