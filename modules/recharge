@@ -74,7 +74,8 @@ case "$REPO" in
 esac
 
 for path in $repo_to_recharge; do
-	[ ! -s "$path/mirror" ] && continue	# skip
+	# skip?
+	[ ! -s "$path/mirror" ] && continue
 	cd "$path"
 	# Mirror URL will have a trailing slash
 	mirror=$(cat mirror); mirror="${mirror%/}/"
@@ -92,13 +93,16 @@ for path in $repo_to_recharge; do
 	if [ -h ID  ]; then mv -f ID  ID.lnk;  cat ID.lnk  > ID;  rm ID.lnk;  fi
 	if [ -h IDs ]; then mv -f IDs IDs.lnk; cat IDs.lnk > IDs; rm IDs.lnk; fi
 
-	[ -f ID ]  && mv ID  ID.bak					# Compatibility with "old" ID
+	# Compatibility with "old" ID
+	[ -f ID ]  && mv ID  ID.bak
 	[ -f IDs ] && mv IDs IDs.bak
 	action 'Checking...'
 	get_from_mirror IDs
 
-	[ -e 'IDs' ] && awk '{print $1}' IDs > ID	# Compatibility with "old" ID
-	[ -e 'IDs' ] && _ 'Database timestamp: %s' "$(date -d "@$(awk '{print $2}' IDs)" "+%x %R")"
+	# Compatibility with "old" ID
+	[ -e 'IDs' ] && awk '{print $1}' IDs > ID
+	[ -e 'IDs' -a -z "$quiet" ] && \
+		_ 'Database timestamp: %s' "$(date -d "@$(awk '{print $2}' IDs)" "+%x %R")"
 
 	# Check if recharging is needed
 	if [ -f 'IDs' ] && [ -f 'packages.info' ] && [ -f 'files.list.lzma' ] && \

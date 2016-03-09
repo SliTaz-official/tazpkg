@@ -21,7 +21,9 @@ export TEXTDOMAIN='tazpkg'
 
 fifo=/tmp/$(basename $0).fifo
 doc="file:///usr/share/doc/tazpkg/tazpkg.html"
-tp='http://127.0.0.1:82/user/pkgs.cgi'
+alias notify=/usr/libexec/tazpkg-notification
+cmd_recharge='tazbox su tazpanel pkgs#recharge'
+cmd_up='tazbox su tazpanel pkgs#up'
 
 installed=$(wc -l < "$PKGS_DB/installed.info")
 text="$(_p \
@@ -33,50 +35,16 @@ text="$(_p \
 up=0; [ -f "$PKGS_DB/packages.up" ] && up=$(wc -l < "$PKGS_DB/packages.up")
 
 
-# Standard notification, if available
-
-notify() {
-	if [ -n "$(which notify-send)" ]; then
-		case $2 in
-			info) icon='dialog-information'; urgency='normal';;
-			*)    icon='dialog-warning';     urgency='critical';;
-		esac
-		notify-send -i $icon -u $urgency 'TazPkg' "$1" &
-	fi
+set_yad_action() {
+	echo -e "action:$1\ntooltip:$2\nicon:software-update-urgent" > $fifo
 }
 
 
-# Notification icon
-
-listen() {
-	# Manage the I/O redirection from SHell
-	rm -f $fifo; mkfifo $fifo
-
-	# Attach a file descriptor
-	exec 3<> $fifo
-
-	# Notification icon
-	tooltip="$(_ 'Checking packages lists - %s' "$text")"
-	notify "$tooltip" 'info' &
-	yad --notification --listen --image='software-update-available' --text="$tooltip" <&3
-
+quit() {
+	echo "quit" > $fifo
 	# Clean-up
 	rm -f $fifo
-}
-
-
-# Notification menu (right click)
-
-menu() {
-	cat << EOT
-menu:\
-$(_n 'My packages'       )!tazpanel pkgs#list!package-x-generic|\
-$(_n 'Recharge lists'    )!tazbox su tazpanel pkgs#recharge!system-software-update|\
-$(_n 'Check upgrade'     )!tazbox su tazpanel pkgs#up!system-software-install|\
-$(_n 'TazPkg SHell'      )!terminal -e tazpkg shell!utilities-terminal|\
-$(_n 'TazPkg manual'     )!tazweb --notoolbar $doc!slitaz-doc|\
-$(_n 'Close notification')!quit!gtk-close
-EOT
+	exit 0
 }
 
 
@@ -85,33 +53,40 @@ case $1 in
 		_n "Usage:"; echo " $(basename $0)"
 		;;
 	*)
-		# Sleep before displaying the notification icon and
-		# sleep to let user read the tooltips.
+		# Sleep before displaying the notification icon
 		sleep 4
-		listen &
-		sleep 2
-		menu > $fifo
-		sleep 6
+		# Manage the I/O redirection from shell
+		rm -f $fifo; mkfifo $fifo
+		# Attach a file descriptor
+		exec 3<> $fifo
+		# Notification icon
+		yad --notification --listen --image='software-update-available' <&3 &
+
+		# Notification menu (right click)
+		cat > $fifo << EOT
+menu:\
+$(_n 'My packages'       )!tazpanel pkgs#list!package-x-generic|\
+$(_n 'Recharge lists'    )!$cmd_recharge!system-software-update|\
+$(_n 'Check upgrade'     )!$cmd_up!system-software-install|\
+$(_n 'TazPkg SHell'      )!terminal -e tazpkg shell!utilities-terminal|\
+$(_n 'TazPkg manual'     )!tazweb --notoolbar $doc!slitaz-doc|\
+$(_n 'Close notification')!quit!gtk-close
+EOT
 
 		# Missing packages list
 		if [ ! -f "$PKGS_DB/packages.info" ]; then
-			tooltip="$(_ 'No packages list found - %s' "$text")"
-			notify "$tooltip\n<a href=\"$tp?recharge\">$(_n 'Recharge lists')</a>" &
-			(echo "action:tazbox su tazpanel pkgs#recharge"
-			 echo "tooltip:$tooltip"
-			 echo "icon:software-update-urgent") > $fifo
-			exit 0
+			tooltip="$(_ 'No packages list found')"
+			set_yad_action "$cmd_recharge" "$tooltip"
+			[ "$(notify "$tooltip" '1' "$(_n 'Recharge lists')")" == '1' ] && $cmd_recharge
+			quit
 		fi
 
 		# Too old packages list
 		if [ -n "$mtime" ]; then
 			tooltip="$(_ 'Your packages list is older than 10 days')"
-			notify "$tooltip\n<a href=\"$tp?recharge\">$(_n 'Recharge lists')</a>" &
-			(echo "action:tazbox su tazpanel pkgs#recharge"
-			 echo "action:quit"
-			 echo "tooltip:$tooltip"
-			 echo "icon:software-update-urgent") > $fifo
-			exit 0
+			set_yad_action "$cmd_recharge" "$tooltip"
+			[ "$(notify "$tooltip" '1' "$(_n 'Recharge lists')")" == '1' ] && $cmd_recharge
+			quit
 		fi
 
 		# Available upgrades
@@ -120,19 +95,21 @@ case $1 in
 				'There is %s upgradeable package' \
 				'There are %s upgradeable packages' "$up" \
 				"<b>$up</b>")"
-			notify "$tooltip\n<a href=\"$tp?up\">$(_n 'Check upgrade')</a>" &
-			(echo "action:tazbox su tazpanel pkgs#up"
-			 echo "tooltip:$tooltip"
-			 echo "icon:software-update-urgent") > $fifo
-			exit 0
+			set_yad_action "$cmd_up" "$tooltip"
+			[ "$(notify "$tooltip" '1' "$(_n 'Check upgrade')")" == '1' ] && $cmd_up
+			quit
 		fi
 
 		# Nothing to do, close notification
-		tooltip="$(_ 'System is up to date - %s' "$text")"
-		notify "$tooltip" 'info' &
-		echo "tooltip:$tooltip" > $fifo
+		tooltip="$(_ 'System is up to date')"
+		echo "tooltip:$tooltip\n$text" > $fifo
+		answer=$(notify "$tooltip"$'\n'"$text" '0' "$(_n 'Recharge lists')" "$(_n 'Check upgrade')")
+		case "$answer" in
+			1) $cmd_recharge;;
+			2) $cmd_up;;
+		esac
 		sleep 10
-		echo "quit" > $fifo
+		quit
 		;;
 esac
-exit 0
+quit

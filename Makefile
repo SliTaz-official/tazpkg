@@ -23,7 +23,7 @@ tarball = tazpkg-$(VERSION).tar.gz
 
 .PHONY: all pot msgmerge msgfmt install uninstall clean targz help
 
-all: msgfmt
+all: msgfmt notify
 	mkdir build
 	cp -a tazpkg tazpkg-box tazpkg-notify \
 		modules/* tazpanel/pkgs.cgi tazpanel/pkgs.css \
@@ -62,6 +62,10 @@ msgfmt:
 		fi; \
 	done;
 
+notify:
+	gcc tazpkg-notification.c -o tazpkg-notification $(CFLAGS) \
+		$(shell pkg-config --cflags --libs libnotify)
+
 
 # Installation.
 
@@ -75,8 +79,9 @@ install: msgfmt
 	$(foreach module, $(MODULES), install -m 0755 build/$(module) $(DESTDIR)$(libexecdir)/tazpkg;)
 
 	# TazPkg-box GUI
-	install -m 0777 build/tazpkg-notify $(DESTDIR)$(bindir)
-	install -m 0777 build/tazpkg-box    $(DESTDIR)$(bindir)
+	install -m 0755 build/tazpkg-notify $(DESTDIR)$(bindir)
+	install -m 0755 tazpkg-notification $(DESTDIR)$(libexecdir)
+	install -m 0755 build/tazpkg-box    $(DESTDIR)$(bindir)
 
 	# Configuration files
 	install -m 0755 -d          $(DESTDIR)$(sysconfdir)/slitaz

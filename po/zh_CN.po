@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-06 15:41+0300\n"
+"POT-Creation-Date: 2016-03-09 04:42+0200\n"
 "PO-Revision-Date: 2015-07-24 19:08+0800\n"
 "Last-Translator: Wenyu Zhang <jame987165702@gmail.com>\n"
 "Language-Team: rhsky <rhsky@qq.com>\n"
@@ -18,125 +18,125 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.8.2\n"
 
-#: tazpkg:100
+#: tazpkg:105
 msgid "Creating folder \"%s\"..."
 msgstr "正在创建文件夹\"%s\"..."
 
-#: tazpkg:136
+#: tazpkg:141
 msgid "Please specify a package name on the command line."
 msgstr "请在命令行指定软件包名称."
 
-#: tazpkg:139
+#: tazpkg:144
 #, fuzzy
 msgid "Please specify a list name on the command line."
 msgstr "请在命令行指定软件包名称."
 
-#: tazpkg:142
+#: tazpkg:147
 #, fuzzy
 msgid "Please specify a flavor name on the command line."
 msgstr "请在命令行指定软件包名称."
 
-#: tazpkg:145
+#: tazpkg:150
 #, fuzzy
 msgid "Please specify a release name on the command line."
 msgstr "请在命令行指定软件包名称."
 
-#: tazpkg:148
+#: tazpkg:153
 msgid "Unable to find file \"%s\""
 msgstr "找不到: %s"
 
-#: tazpkg:151
+#: tazpkg:156
 #, fuzzy
 msgid "Please specify an existing folder name on the command line."
 msgstr "请在命令行指定软件包名称."
 
-#: tazpkg:154
+#: tazpkg:159
 #, fuzzy
 msgid "Please specify a pattern to search for."
 msgstr "请指定一个模式串或文件名作搜索"
 
-#: tazpkg:157
+#: tazpkg:162
 msgid "Unable to find the receipt \"%s\""
 msgstr "找不到清单: %s"
 
-#: tazpkg:225 modules/extract:19 modules/install:191 modules/recompress:19
+#: tazpkg:230 modules/extract:19 modules/install:198 modules/recompress:19
 msgid "Extracting package..."
 msgstr "正在解压缩..."
 
-#: tazpkg:239 modules/list:44
+#: tazpkg:244 modules/list:44
 msgid "base-system"
 msgstr "基本系统软件包"
 
-#: tazpkg:239 modules/list:44
+#: tazpkg:244 modules/list:44
 msgid "x-window"
 msgstr "x-窗口"
 
-#: tazpkg:240 modules/list:45
+#: tazpkg:245 modules/list:45
 msgid "utilities"
 msgstr "实用程式"
 
-#: tazpkg:240 modules/list:45
+#: tazpkg:245 modules/list:45
 msgid "network"
 msgstr "网络工具"
 
-#: tazpkg:241 modules/list:46
+#: tazpkg:246 modules/list:46
 msgid "graphics"
 msgstr "图像工具"
 
-#: tazpkg:241 modules/list:46
+#: tazpkg:246 modules/list:46
 msgid "multimedia"
 msgstr "多媒体软件"
 
-#: tazpkg:242 modules/list:47
+#: tazpkg:247 modules/list:47
 msgid "office"
 msgstr "办公软件"
 
-#: tazpkg:242 modules/list:47
+#: tazpkg:247 modules/list:47
 msgid "development"
 msgstr "开发工具"
 
-#: tazpkg:243 modules/list:48
+#: tazpkg:248 modules/list:48
 msgid "system-tools"
 msgstr "系统工具"
 
-#: tazpkg:243 modules/list:48
+#: tazpkg:248 modules/list:48
 msgid "security"
 msgstr "安全工具"
 
-#: tazpkg:244 modules/list:49
+#: tazpkg:249 modules/list:49
 msgid "games"
 msgstr "游戏"
 
-#: tazpkg:244 modules/list:49
+#: tazpkg:249 modules/list:49
 msgid "misc"
 msgstr "杂项"
 
-#: tazpkg:244 modules/list:49
+#: tazpkg:249 modules/list:49
 msgid "meta"
 msgstr "元工具"
 
-#: tazpkg:245 modules/list:50
+#: tazpkg:250 modules/list:50
 msgid "non-free"
 msgstr "非自由软件"
 
-#: tazpkg:430
+#: tazpkg:435
 #, fuzzy
 msgid "Done: %s"
 msgstr "大小: %s"
 
-#: tazpkg:502
+#: tazpkg:511
 msgid "TazPkg SHell."
 msgstr "TazPkg SHell."
 
-#: tazpkg:503
+#: tazpkg:512
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
 msgstr "键入 'usage' 以列出所有可用命令或 'quit' 或 'q' 以退出"
 
-#: tazpkg:512
+#: tazpkg:521
 msgid "You are already running a TazPkg SHell."
 msgstr "你已经在运行 TazPkg SHell."
 
-#: modules/block:18 modules/remove:86
+#: modules/block:18 modules/remove:101
 msgid "Package \"%s\" is not installed."
 msgstr "未安装 %s."
 
@@ -144,7 +144,7 @@ msgstr "未安装 %s."
 msgid "Package \"%s\" is already blocked."
 msgstr "软件包“%s”已被阻止。"
 
-#: modules/block:32 modules/block:61
+#: modules/block:32 modules/block:61 modules/get:403 modules/install:599
 msgid "Package \"%s\" blocked."
 msgstr "软件包“%s”被封锁了。"
 
@@ -186,12 +186,16 @@ msgid "%s file removed from cache (%s)."
 msgid_plural "%s files removed from cache (%s)."
 msgstr[0] "%s 个文件已在缓存中被删除 (%s)"
 
-#: modules/cache:37
+#: modules/cache:34 tazpanel/pkgs.cgi:1225
+msgid "Packages cache"
+msgstr "软件包缓存"
+
+#: modules/cache:38
 msgid "%s file (%s)"
 msgid_plural "%s files (%s)"
 msgstr[0] "%s文件 (%s)"
 
-#: modules/check:20 tazpanel/pkgs.cgi:948
+#: modules/check:20 tazpanel/pkgs.cgi:979
 msgid "Package %s"
 msgstr "软件包 %s"
 
@@ -253,37 +257,37 @@ msgstr "没有软件包安装以下文件:"
 msgid "Check completed."
 msgstr "已完成检查"
 
-#: modules/convert:29
+#: modules/convert:27
 msgid "No dependency for:"
 msgstr "没有任何依赖项:"
 
-#: modules/convert:32
+#: modules/convert:30
 msgid "WARNING: unknown dependency for %s"
 msgstr "警告: %s 有未知依赖项:"
 
-#: modules/convert:86 modules/convert:240 modules/convert:278
-#: modules/convert:343 modules/convert:376 modules/convert:458
-#: modules/convert:701 modules/convert:722
+#: modules/convert:84 modules/convert:238 modules/convert:276
+#: modules/convert:346 modules/convert:397 modules/convert:479
+#: modules/convert:722 modules/convert:743
 msgid "File \"%s\" does not look like %s package!"
 msgstr "%s 并非 %s 软件包!"
 
-#: modules/convert:205 modules/convert:515
+#: modules/convert:203 modules/convert:536
 msgid "Invalid target: %s (expected i386)"
 msgstr "非法对象: %s (预计 i386)"
 
-#: modules/convert:565
+#: modules/convert:586
 msgid "Unable to extract the RPM using standard tools (rpm2cpio)."
 msgstr "无法用标准工具(rpm2cpio)解压缩RPM软件包."
 
-#: modules/convert:566
+#: modules/convert:587
 msgid "Do you want to install \"%s\" package? (y/N)"
 msgstr "你想要安装'%s'软件包？（是/否）"
 
-#: modules/convert:605
+#: modules/convert:626
 msgid "Arch \"%s\" not supported."
 msgstr "Arch(?)“%s”没有支持。"
 
-#: modules/convert:752
+#: modules/convert:776
 msgid "Unsupported format"
 msgstr "不支持的格式"
 
@@ -320,11 +324,11 @@ msgstr "正在複製原来软件包"
 msgid "Package \"%s\" is extracted to \"%s\""
 msgstr "%s 已解压缩到: %s"
 
-#: modules/find-depends:19
+#: modules/find-depends:21
 msgid "Find depends..."
 msgstr ""
 
-#: modules/find-depends:39
+#: modules/find-depends:42
 msgid "for %s"
 msgstr ""
 
@@ -332,44 +336,52 @@ msgstr ""
 msgid "Can't find flavor \"%s\". Abort."
 msgstr "找不到偏好项 %s. 放弃操作."
 
-#: modules/get:137 modules/getenv:53
+#: modules/get:138 modules/getenv:59
 msgid "File \"%s\" empty."
 msgstr ""
 
-#: modules/get:138 modules/get:144
+#: modules/get:139 modules/get:145
 #, fuzzy
 msgid "Unable to find package \"%s\" in the extra packages list."
 msgstr "在镜像软件包清单找不到: %s"
 
-#: modules/get:162 modules/get:327
+#: modules/get:163 modules/get:363
 msgid "Package \"%s\" already in the cache"
 msgstr "%s 已在缓存内"
 
-#: modules/get:331
+#: modules/get:367
 msgid "Continuing package \"%s\" download"
 msgstr "继续 %s 的下载"
 
-#: modules/get:342
+#: modules/get:378
 msgid "Checksum error for \"%s\""
 msgstr ""
 
-#: modules/get:352
+#: modules/get:388
 msgid "Please wait until the mirror synchronization is complete and try again."
 msgstr ""
 
-#: modules/getenv:35 modules/getenv:43 modules/link:31
+#: modules/get:412 modules/install:612
+msgid "\"%s\" package is already installed."
+msgstr "\"%s\" 软件包已经被安装"
+
+#: modules/get:413 modules/install:613
+msgid "You can use the --forced option to force installation."
+msgstr "你可以用 --forced 选项强制安装"
+
+#: modules/getenv:41 modules/getenv:49 modules/link:31
 msgid "Missing: %s"
 msgstr "欠缺: %s"
 
-#: modules/getenv:35 modules/getenv:43 modules/getenv:53 modules/getenv:154
+#: modules/getenv:41 modules/getenv:49 modules/getenv:59 modules/getenv:160
 msgid "Please run tazpkg as root."
 msgstr "请以root用户运行tazpkg"
 
-#: modules/getenv:115 modules/getenv:140
+#: modules/getenv:121 modules/getenv:146
 msgid "File \"%s\" generated. Please wait..."
 msgstr "档案“%s”产生。请稍候..."
 
-#: modules/getenv:154
+#: modules/getenv:160
 msgid "Old \"%s\"."
 msgstr ""
 
@@ -377,7 +389,7 @@ msgstr ""
 msgid "SliTaz package manager - Version: %s"
 msgstr "SliTaz 软件包管理员 - 版本: %s"
 
-#: modules/help:19 tazpkg-box:22 tazpkg-notify:70
+#: modules/help:19 tazpkg-box:23 tazpkg-notify:53
 msgid "Usage:"
 msgstr "用法:"
 
@@ -410,177 +422,186 @@ msgid "Clean all packages downloaded in cache directory"
 msgstr "清除所有下载到暂存目录的软件包"
 
 #: modules/help:30
+#, fuzzy
+msgid "List *.tazpkg packages downloaded to the cache"
+msgstr "清除所有下载到暂存目录的软件包"
+
+#: modules/help:31
 msgid "Run interactive TazPkg shell"
 msgstr ""
 
-#: modules/help:32
+#: modules/help:33
 msgid "List installed packages on the system"
 msgstr "在系统上安装的软件包列表"
 
-#: modules/help:33
+#: modules/help:34
 msgid "List all available packages on the mirror"
 msgstr "列出镜像上所有的可用软件包"
 
-#: modules/help:34
+#: modules/help:35
 msgid "List the configuration files"
 msgstr "显示配置文件"
 
-#: modules/help:36
+#: modules/help:37
 msgid "Search for a package by pattern or name"
 msgstr "按模式或名字搜索软件包"
 
-#: modules/help:37
+#: modules/help:38
 msgid "Search on mirror for package having a particular file"
 msgstr "在镜像上搜索有特定文件的软件包"
 
-#: modules/help:38
+#: modules/help:39
 msgid "Search for file in all installed packages files"
 msgstr "在所有已安装软件包中找寻文件"
 
-#: modules/help:40
+#: modules/help:41
 msgid "Download a package into the current directory"
 msgstr "下载软件包到当前目录"
 
-#: modules/help:41
+#: modules/help:42
 msgid "Install a local package"
 msgstr "安装本地软件包"
 
-#: modules/help:42
+#: modules/help:43
 msgid "Download and install a package from the mirror"
 msgstr "由镜像下载及安装软件包"
 
-#: modules/help:43
+#: modules/help:44
 msgid "Install all packages from a list of packages"
 msgstr "从软件软件包列表安装所有的软件软件包"
 
-#: modules/help:44
+#: modules/help:45
 msgid "Download and install a list of packages from the mirror"
 msgstr "由镜像下载及安装软件包列表"
 
-#: modules/help:45
+#: modules/help:46
 msgid "Remove the specified package and all installed files"
 msgstr "移除特定软件包及所有其安装档案"
 
-#: modules/help:46
+#: modules/help:47
 msgid "Replay post install script from package"
 msgstr "重新运行软件包的安装脚本"
 
-#: modules/help:47
+#: modules/help:48
 msgid "Link a package from another SliTaz installation"
 msgstr "由另一个安装好的SliTaz连接软件包"
 
-#: modules/help:48
+#: modules/help:49
 msgid "Change release and update packages"
 msgstr "更改版本及安装软件包"
 
-#: modules/help:49
+#: modules/help:50
 msgid "Install the flavor list of packages"
 msgstr "安装软件包偏好列表"
 
-#: modules/help:50
+#: modules/help:51
 msgid "Install the flavor list of packages and remove other ones"
 msgstr "安装并移除其他软件包偏好列表"
 
-#: modules/help:52
+#: modules/help:53
 msgid "Print information about a package"
 msgstr "显示关于软件包的资讯"
 
-#: modules/help:53
+#: modules/help:54
 msgid "Print description of a package"
 msgstr "显示软件包描述"
 
-#: modules/help:54
+#: modules/help:55
 msgid "List the files installed with a package"
 msgstr "列出会随软件包安装的文件"
 
-#: modules/help:55
+#: modules/help:56
 msgid "Block an installed package version or unblock it for upgrade"
 msgstr "封锁已安装软件包或解封以进行更新"
 
-#: modules/help:56
+#: modules/help:57
 msgid "Verify consistency of installed packages"
 msgstr "校验已安装软件包是否完整"
 
-#: modules/help:57
+#: modules/help:58
 msgid "Show known bugs in packages"
 msgstr "显示该软件包的已知bugs"
 
-#: modules/help:58
+#: modules/help:59
 msgid "Display dependencies tree"
 msgstr "显示依赖树"
 
-#: modules/help:59
+#: modules/help:60
 msgid "Display reverse dependencies tree"
 msgstr "显示反向依赖树"
 
-#: modules/help:60
+#: modules/help:61
 msgid "Extract a (*.tazpkg) package into a directory"
 msgstr "解压缩(*.tazpkg)到目录"
 
-#: modules/help:61
+#: modules/help:62
 msgid "Pack an unpacked or prepared package tree"
 msgstr "按解压生成或自行凖备的配置树打软件包"
 
-#: modules/help:62
+#: modules/help:63
 msgid "Create a package archive from an installed package"
 msgstr "由已安装软件包创建压缩档"
 
-#: modules/help:63
+#: modules/help:64
 msgid "Create a package archive with configuration files"
 msgstr "创建有配置文件的压缩安装软件包"
 
-#: modules/help:64
+#: modules/help:65
 msgid "Rebuild a package with a better compression ratio"
 msgstr "以较高压缩比重新建立软件包"
 
-#: modules/help:65
+#: modules/help:66
 msgid "Convert alien package to tazpkg"
 msgstr "将deb/rpm/tgz/pet/sfs/sb/arch/ipk软件包转换成tazpkg 格式"
 
-#: modules/help:66
+#: modules/help:67
 #, fuzzy
 msgid "Print list of suggested packages"
 msgstr "所有已安装软件包清单"
 
-#: modules/help:68
+#: modules/help:69
 msgid "Recharge your packages.list from the mirror"
 msgstr "从镜像更新packages.list"
 
-#: modules/help:69
+#: modules/help:70
 msgid "Check packages %s to list and install latest upgrades"
 msgstr "检查软件包 %s 以列出及安装最新更新"
 
-#: modules/help:70
+#: modules/help:71
 msgid "Change the mirror URL configuration"
 msgstr "更改镜像URL配置"
 
-#: modules/help:71
+#: modules/help:72
 msgid "Update an undigest mirror"
 msgstr "更新非正式镜像"
 
-#: modules/help:72
+#: modules/help:73
 msgid "List undigest mirrors"
 msgstr "列出非正式镜像"
 
-#: modules/help:73
+#: modules/help:74
 msgid "Add an undigest mirror"
 msgstr "加入非正式镜像"
 
-#: modules/help:74
+#: modules/help:75
 msgid "Remove an undigest mirror"
 msgstr "移除非正式镜像"
 
-#: modules/help:103 modules/help:134
+#: modules/help:76
+msgid "Make a TazPkg database for a folder with *.tazpkg packages"
+msgstr ""
+
+#: modules/help:105 modules/help:136
 #, fuzzy
 msgid "Sorry, no help for \"%s\""
 msgstr "%s 的搜索结果"
 
-#: modules/help:110
+#: modules/help:112
 msgid "%d help topic available:"
 msgid_plural "%d help topics available:"
 msgstr[0] ""
 
-#: modules/help:164
+#: modules/help:166
 msgid "%s"
 msgstr ""
 
@@ -589,7 +610,7 @@ msgstr ""
 msgid "local package"
 msgstr "所有软件包"
 
-#: modules/info:39 tazpanel/pkgs.cgi:927
+#: modules/info:39 tazpanel/pkgs.cgi:950
 #, fuzzy
 msgid "installed package"
 msgstr "%s 个已安装软件包"
@@ -603,12 +624,12 @@ msgstr "新版本 %s"
 msgid "(new build available)"
 msgstr ""
 
-#: modules/info:74 tazpanel/pkgs.cgi:930
+#: modules/info:74 tazpanel/pkgs.cgi:953
 #, fuzzy
 msgid "mirrored package"
 msgstr "已镜像软件包:"
 
-#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:932
+#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:972
 #, fuzzy
 msgid "Package \"%s\" not available."
 msgstr "未安装 %s."
@@ -698,92 +719,84 @@ msgstr "警告:%s 和 %s 有依赖循环."
 msgid "Tracking dependencies for package \"%s\""
 msgstr "正在追踪 %s 的软件包依赖"
 
-#: modules/install:121
+#: modules/install:122
 msgid "Missing package \"%s\""
 msgstr "欠缺: %s"
 
-#: modules/install:125
+#: modules/install:126
 msgid "%s missing package to install."
 msgid_plural "%s missing packages to install."
 msgstr[0] "有 %s 个缺少的软件包需要安装。"
 
-#: modules/install:134
+#: modules/install:135
 msgid "Install all missing dependencies? (y/N)"
 msgstr "安装所有欠缺依赖？ （是/否）"
 
-#: modules/install:161
+#: modules/install:160
 msgid "Checking if package \"%s\" exists in local list..."
 msgstr "正在检查 %s 是否在本地清单中"
 
-#: modules/install:179
+#: modules/install:186
 msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "放任 %s 依赖软件包不管。"
 
-#: modules/install:180
+#: modules/install:187
 #, fuzzy
 msgid "The package will be installed but will probably not work."
 msgstr "软件会被安装但是可能不会正常运行。"
 
-#: modules/install:251
+#: modules/install:258
 #, fuzzy
 msgid "Execute pre-install commands..."
 msgstr "执行post-install命令..."
 
-#: modules/install:265
+#: modules/install:272 modules/reconfigure:36
 msgid "Execute post-install commands..."
 msgstr "执行post-install命令..."
 
-#: modules/install:335
+#: modules/install:342
 #, fuzzy
 msgid "Installation of package \"%s\" (%s)"
 msgstr "%s 的安装过程"
 
-#: modules/install:337
+#: modules/install:344
 msgid "Installation of package \"%s\""
 msgstr "%s 的安装过程"
 
-#: modules/install:343
+#: modules/install:352
 msgid "Copying package..."
 msgstr "正在複製..."
 
-#: modules/install:373
+#: modules/install:382
 #, fuzzy
 msgid "Remember modified packages..."
 msgstr "正在卸载旧版本..."
 
-#: modules/install:435
+#: modules/install:444
 msgid "Saving configuration files..."
 msgstr "正在储存 的配置文件"
 
-#: modules/install:461
+#: modules/install:475
 msgid "Installing package..."
 msgstr "正在安装..."
 
-#: modules/install:481
+#: modules/install:495
 #, fuzzy
 msgid "Removing old files..."
 msgstr "正在移除所有暂存文件..."
 
-#: modules/install:498
+#: modules/install:511
 msgid "Removing all tmp files..."
 msgstr "正在移除所有暂存文件..."
 
-#: modules/install:523
+#: modules/install:536 modules/remove:219
 #, fuzzy
 msgid "Update system databases..."
 msgstr "还原数据库文件..."
 
-#: modules/install:561
+#: modules/install:576
 msgid "Package \"%s\" (%s) is installed."
 msgstr "软件包%s (%s) 软件包已安装。"
-
-#: modules/install:591
-msgid "\"%s\" package is already installed."
-msgstr "\"%s\" 软件包已经被安装"
-
-#: modules/install:592
-msgid "You can use the --forced option to force installation."
-msgstr "你可以用 --forced 选项强制安装"
 
 #: modules/link:20
 msgid "Package \"%s\" is already installed."
@@ -851,7 +864,7 @@ msgid "%s package installed."
 msgid_plural "%s packages installed."
 msgstr[0] "%s 个已安装软件包"
 
-#: modules/list:147 tazpanel/pkgs.cgi:670
+#: modules/list:147 tazpanel/pkgs.cgi:698
 msgid "Installed packages of category \"%s\""
 msgstr "%s 分类内的已安装软件包"
 
@@ -860,7 +873,7 @@ msgid "%s package installed of category \"%s\"."
 msgid_plural "%s packages installed of category \"%s\"."
 msgstr[0] "%2$s 分类的 %1$s 个已安装软件包"
 
-#: modules/list:167 modules/recharge:173
+#: modules/list:167 modules/recharge:181
 msgid "Mirrored packages diff"
 msgstr "与镜像软件包的差异"
 
@@ -903,7 +916,7 @@ msgstr "TazPkg 活动"
 msgid "File lost"
 msgstr "已遗失文件"
 
-#: modules/list:273 tazpanel/pkgs.cgi:1051 tazpanel/pkgs.cgi:1141
+#: modules/list:273 tazpanel/pkgs.cgi:1082 tazpanel/pkgs.cgi:1172
 msgid "Configuration files"
 msgstr "配置文件"
 
@@ -1018,57 +1031,57 @@ msgstr "成功压缩 %s 软件包"
 msgid "Size: %s"
 msgstr "大小: %s"
 
-#: modules/recharge:44
+#: modules/recharge:48
 msgid "Restoring database files..."
 msgstr "还原数据库文件..."
 
-#: modules/recharge:52
+#: modules/recharge:56
 msgid "Recharging failed"
 msgstr "还原失败"
 
-#: modules/recharge:66
+#: modules/recharge:70
 msgid "Repository \"%s\" doesn't exist."
 msgstr "%s 不存在."
 
-#: modules/recharge:82 modules/summary:33
+#: modules/recharge:87 modules/summary:33
 msgid "Undigest %s"
 msgstr "未整理软件包 %s"
 
-#: modules/recharge:85
+#: modules/recharge:90
 msgid "Recharging repository \"%s\""
 msgstr "调整数据库“%s”"
 
-#: modules/recharge:93
+#: modules/recharge:99
 #, fuzzy
 msgid "Checking..."
 msgstr "正在检查升级"
 
-#: modules/recharge:97
+#: modules/recharge:105
 msgid "Database timestamp: %s"
 msgstr "数据库时间戳：%s"
 
-#: modules/recharge:102
+#: modules/recharge:110
 msgid "Repository \"%s\" is up to date."
 msgstr "%s 已是最新."
 
-#: modules/recharge:108
+#: modules/recharge:116
 msgid "Creating backup of the last packages list..."
 msgstr "正在创建最新软件包清单的备份"
 
-#: modules/recharge:119 modules/recharge:134 modules/recharge:138
+#: modules/recharge:127 modules/recharge:142 modules/recharge:146
 msgid "Getting \"%s\"..."
 msgstr "下载“%s”中..."
 
-#: modules/recharge:153
+#: modules/recharge:161
 msgid "Last database is ready to use."
 msgstr "最后一个数据库就可以使用了。"
 
-#: modules/recharge:176
+#: modules/recharge:184
 msgid "%s new package on the mirror."
 msgid_plural "%s new packages on the mirror."
 msgstr[0] "镜像上有 %s 个新软件包."
 
-#: modules/recharge:181
+#: modules/recharge:189
 msgid ""
 "Note that next time you recharge the list, a list of differences will be "
 "displayed to show new and upgradeable packages."
@@ -1086,62 +1099,69 @@ msgstr "正在重新压缩文件系统..."
 msgid "Creating new package..."
 msgstr "创建新软件包..."
 
-#: modules/reconfigure:26
+#: modules/reconfigure:47
 msgid "Nothing to do for package \"%s\"."
 msgstr "对 %s 没有可进行动作"
 
-#: modules/remove:57
+#: modules/remove:38
 #, fuzzy
 msgid "Execute pre-remove commands..."
 msgstr "执行预删除命令..."
 
-#: modules/remove:70
+#: modules/remove:51
 #, fuzzy
 msgid "Execute post-remove commands..."
 msgstr "执行后删除命令..."
 
-#: modules/remove:96
+#: modules/remove:111
 msgid "The following packages depend on package \"%s\":"
 msgstr "以下软件包依赖 %s:"
 
-#: modules/remove:104
+#: modules/remove:119
 msgid "The following packages have been modified by package \"%s\":"
 msgstr "以下软件包已被 %s 更改:"
 
-#: modules/remove:112
+#: modules/remove:127
 msgid "Remove package \"%s\" (%s)? (y/N)"
 msgstr "移除 %s (%s)？ （是/否）"
 
-#: modules/remove:114
+#: modules/remove:129
 msgid "Uninstallation of package \"%s\" cancelled."
 msgstr "已取消卸载 %s"
 
-#: modules/remove:121
+#: modules/remove:136
 msgid "Removing package \"%s\""
 msgstr "正在移除: %s"
 
-#: modules/remove:128
+#: modules/remove:143
 msgid "Removing all files installed..."
 msgstr "正在移除所有已安装文件"
 
-#: modules/remove:151
+#: modules/remove:242
 msgid "Removing package receipt..."
 msgstr "正在移除软件包文件清单"
 
-#: modules/remove:157
+#: modules/remove:248
 msgid "Package \"%s\" (%s) removed."
 msgstr "软件包“%s”（%s）已删除。"
 
-#: modules/remove:170
+#: modules/remove:261
 msgid "Remove packages depending on package \"%s\"? (y/N)"
 msgstr "移除依赖 %s 的软件包？ （是/否）"
 
-#: modules/remove:187
+#: modules/remove:278
 msgid "Reinstall packages modified by package \"%s\"? (y/N)"
 msgstr "重新安装被 %s 更改过的软件包？ （是/否）"
 
-#: modules/remove:193
-msgid "Check %s for reinstallation"
+#: modules/remove:284
+msgid ""
+"Package \"%s\" was modified by \"%s\" and other packages. It will not be "
+"reinstalled."
+msgstr ""
+
+#: modules/remove:286
+#, fuzzy
+msgid "Check \"%s\" for reinstallation."
 msgstr "检查 %s 以重新安装"
 
 #: modules/repack:16
@@ -1168,11 +1188,11 @@ msgstr "无法重新打软件包, %s 错误."
 msgid "Package \"%s\" repacked successfully."
 msgstr "成功重新打软件包 %s 软件包"
 
-#: modules/repack-config:44
+#: modules/repack-config:46
 msgid "User configuration backup on date %s"
 msgstr "%s 的用户配置备分"
 
-#: modules/search:19 tazpanel/pkgs.cgi:632
+#: modules/search:19 tazpanel/pkgs.cgi:660
 msgid "Installed packages"
 msgstr "已安装软件包"
 
@@ -1181,7 +1201,7 @@ msgid "%s installed package found for \"%s\""
 msgid_plural "%s installed packages found for \"%s\""
 msgstr[0] "找到 %s 个已安装软件包: %s"
 
-#: modules/search:41 tazpanel/pkgs.cgi:631
+#: modules/search:41 tazpanel/pkgs.cgi:659
 msgid "Available packages"
 msgstr "可用的软件包"
 
@@ -1215,19 +1235,19 @@ msgstr "%s 软件包的搜索结果"
 msgid "Repository:"
 msgstr "库"
 
-#: modules/summary:38 tazpanel/pkgs.cgi:1675
+#: modules/summary:38 tazpanel/pkgs.cgi:1711
 msgid "Last recharge:"
 msgstr "上一次更新:"
 
-#: modules/summary:50 tazpanel/pkgs.cgi:1688
+#: modules/summary:50 tazpanel/pkgs.cgi:1724
 msgid "Today at %s."
 msgstr "今天在 %s。"
 
-#: modules/summary:51 tazpanel/pkgs.cgi:1689
+#: modules/summary:51 tazpanel/pkgs.cgi:1725
 msgid "Yesterday at %s."
 msgstr "昨天在 %s。"
 
-#: modules/summary:52 tazpanel/pkgs.cgi:1686
+#: modules/summary:52 tazpanel/pkgs.cgi:1722
 msgid "%d day ago."
 msgid_plural "%d days ago."
 msgstr[0] "%d 天前。"
@@ -1237,11 +1257,11 @@ msgstr[0] "%d 天前。"
 msgid "Database timestamp:"
 msgstr "数据库时间戳：%s"
 
-#: modules/summary:58 tazpanel/pkgs.cgi:1696
+#: modules/summary:58 tazpanel/pkgs.cgi:1732
 msgid "never."
 msgstr "从来没有。"
 
-#: modules/summary:62 tazpanel/pkgs.cgi:1706
+#: modules/summary:62 tazpanel/pkgs.cgi:1742
 msgid "Mirrored packages:"
 msgstr "已镜像软件包:"
 
@@ -1250,19 +1270,19 @@ msgstr "已镜像软件包:"
 msgid "Linked packages:"
 msgstr "可连接软件包"
 
-#: modules/summary:74 tazpanel/pkgs.cgi:1701
+#: modules/summary:74 tazpanel/pkgs.cgi:1737
 msgid "Installed packages:"
 msgstr "已安装软件包:"
 
-#: modules/summary:75 tazpanel/pkgs.cgi:1716
+#: modules/summary:75 tazpanel/pkgs.cgi:1752
 msgid "Installed files:"
 msgstr "已安装文件:"
 
-#: modules/summary:76 tazpanel/pkgs.cgi:1719
+#: modules/summary:76 tazpanel/pkgs.cgi:1755
 msgid "Blocked packages:"
 msgstr "已封锁软件包:"
 
-#: modules/summary:77 tazpanel/pkgs.cgi:1711
+#: modules/summary:77 tazpanel/pkgs.cgi:1747
 msgid "Upgradeable packages:"
 msgstr "可更新软件包:"
 
@@ -1274,16 +1294,16 @@ msgstr "新建构"
 msgid "Blocked"
 msgstr "已封锁"
 
-#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:782
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:810
 msgid "Package"
 msgstr "软件包"
 
-#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:550
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:578
 msgid "Repository"
 msgstr "库"
 
-#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:292
-#: tazpanel/pkgs.cgi:1011
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:310
+#: tazpanel/pkgs.cgi:1042
 msgid "Version"
 msgstr "版本"
 
@@ -1322,82 +1342,78 @@ msgstr "不安装任何更新就离开."
 msgid "SliTaz Package Action"
 msgstr "SliTaz 软件包行为"
 
-#: tazpkg-box:22
+#: tazpkg-box:23
 msgid "package"
 msgstr "软件包"
 
-#: tazpkg-box:54 tazpanel/pkgs.cgi:253
+#: tazpkg-box:55 tazpanel/pkgs.cgi:271
 msgid "Install"
 msgstr "安装"
 
-#: tazpkg-box:55
+#: tazpkg-box:56
 msgid "Extract"
 msgstr "解压缩"
 
-#: tazpkg-box:78
+#: tazpkg-box:79
 msgid "Downloading: %s"
 msgstr "正在下载 %s..."
 
-#: tazpkg-notify:27
+#: tazpkg-notify:30
 msgid "%s installed package"
 msgid_plural "%s installed packages"
 msgstr[0] "%s 个已安装软件包"
 
-#: tazpkg-notify:46
-msgid "Checking packages lists - %s"
-msgstr "正在检查软件包清单 - %s"
-
-#: tazpkg-notify:58 tazpanel/pkgs.cgi:41 tazpanel/pkgs.cgi:248
-#: tazpanel/pkgs.cgi:527
+#: tazpkg-notify:68 tazpanel/pkgs.cgi:41 tazpanel/pkgs.cgi:266
+#: tazpanel/pkgs.cgi:555
 msgid "My packages"
 msgstr "我的软件包"
 
-#: tazpkg-notify:59
+#: tazpkg-notify:69 tazpkg-notify:80 tazpkg-notify:88 tazpkg-notify:106
 msgid "Recharge lists"
 msgstr "更新清单"
 
-#: tazpkg-notify:60
+#: tazpkg-notify:70 tazpkg-notify:99 tazpkg-notify:106
 msgid "Check upgrade"
 msgstr "检查更新"
 
-#: tazpkg-notify:61
+#: tazpkg-notify:71
 msgid "TazPkg SHell"
 msgstr "TazPkg SHell"
 
-#: tazpkg-notify:62
+#: tazpkg-notify:72
 msgid "TazPkg manual"
 msgstr "TazPkg 手册"
 
-#: tazpkg-notify:63
+#: tazpkg-notify:73
 msgid "Close notification"
 msgstr "关闭提示"
 
-#: tazpkg-notify:83
-msgid "No packages list found - %s"
-msgstr "找不到软件包清单 - %s"
+#: tazpkg-notify:78
+msgid "No packages list found"
+msgstr "找不到软件包清单"
 
-#: tazpkg-notify:92
+#: tazpkg-notify:86
 msgid "Your packages list is older than 10 days"
 msgstr "当前的软件包清单已是十天前的版本"
 
-#: tazpkg-notify:103
+#: tazpkg-notify:95
 msgid "There is %s upgradeable package"
 msgid_plural "There are %s upgradeable packages"
 msgstr[0] "有 %s 个软件包可更新"
 
-#: tazpkg-notify:113
-msgid "System is up to date - %s"
-msgstr "系统已更新到最新 - %s"
+#: tazpkg-notify:104
+msgid "System is up to date"
+msgstr "系统已更新到最新"
 
-#: tazpanel/pkgs.cgi:38 tazpanel/pkgs.cgi:194
+#: tazpanel/pkgs.cgi:38 tazpanel/pkgs.cgi:206
 msgid "Packages"
 msgstr "软件包"
 
-#: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:1671
+#: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:1707
 msgid "Summary"
 msgstr "摘要"
 
-#: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:246
+#: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:264
 msgid "Recharge list"
 msgstr "更新清单"
 
@@ -1405,381 +1421,391 @@ msgstr "更新清单"
 msgid "Check updates"
 msgstr "检查更新"
 
-#: tazpanel/pkgs.cgi:44 tazpanel/pkgs.cgi:251 tazpanel/pkgs.cgi:1087
-#: tazpanel/pkgs.cgi:1331
+#: tazpanel/pkgs.cgi:44 tazpanel/pkgs.cgi:269 tazpanel/pkgs.cgi:1118
+#: tazpanel/pkgs.cgi:1367
 msgid "Administration"
 msgstr "系统管理"
 
-#: tazpanel/pkgs.cgi:180
+#: tazpanel/pkgs.cgi:192
 msgid "Receipt for package %s unavailable"
 msgstr "软件源 %s 不可用"
 
-#: tazpanel/pkgs.cgi:247
+#: tazpanel/pkgs.cgi:265
 msgid "Check upgrades"
 msgstr "检查更新"
 
-#: tazpanel/pkgs.cgi:249 tazpanel/pkgs.cgi:1023
+#: tazpanel/pkgs.cgi:267 tazpanel/pkgs.cgi:1054
 msgid "Tags"
 msgstr "标签"
 
-#: tazpanel/pkgs.cgi:250 tazpanel/pkgs.cgi:586
+#: tazpanel/pkgs.cgi:268 tazpanel/pkgs.cgi:614
 msgid "Linkable packages"
 msgstr "可连接软件包"
 
-#: tazpanel/pkgs.cgi:252
+#: tazpanel/pkgs.cgi:270
 msgid "Install (Non Free)"
 msgstr "安装 (非自由)"
 
-#: tazpanel/pkgs.cgi:254
+#: tazpanel/pkgs.cgi:272
 msgid "Remove"
 msgstr "移除"
 
-#: tazpanel/pkgs.cgi:255
+#: tazpanel/pkgs.cgi:273
 msgid "Link"
 msgstr "连接"
 
-#: tazpanel/pkgs.cgi:256
+#: tazpanel/pkgs.cgi:274
 msgid "Block"
 msgstr "封锁"
 
-#: tazpanel/pkgs.cgi:257
+#: tazpanel/pkgs.cgi:275
 msgid "Unblock"
 msgstr "解取封锁"
 
-#: tazpanel/pkgs.cgi:258
+#: tazpanel/pkgs.cgi:276
 msgid "(Un)block"
 msgstr "解封/封锁"
 
-#: tazpanel/pkgs.cgi:259
+#: tazpanel/pkgs.cgi:277
 msgid "Repack"
 msgstr "重新打软件包"
 
-#: tazpanel/pkgs.cgi:260
+#: tazpanel/pkgs.cgi:278
 msgid "Save configuration"
 msgstr "储存配置"
 
-#: tazpanel/pkgs.cgi:261
+#: tazpanel/pkgs.cgi:279
 msgid "List configuration files"
 msgstr "列出配置文件"
 
-#: tazpanel/pkgs.cgi:262
+#: tazpanel/pkgs.cgi:280
 msgid "Quick check"
 msgstr "快速检查"
 
-#: tazpanel/pkgs.cgi:263
+#: tazpanel/pkgs.cgi:281
 msgid "Full check"
 msgstr "完整检查"
 
-#: tazpanel/pkgs.cgi:264
+#: tazpanel/pkgs.cgi:282
 msgid "Clean"
 msgstr "清理"
 
-#: tazpanel/pkgs.cgi:265
+#: tazpanel/pkgs.cgi:283
 msgid "Set link"
 msgstr "设定连接"
 
-#: tazpanel/pkgs.cgi:266
+#: tazpanel/pkgs.cgi:284
 msgid "Remove link"
 msgstr "移除连接"
 
-#: tazpanel/pkgs.cgi:267
+#: tazpanel/pkgs.cgi:285
 msgid "Add mirror"
 msgstr "添加镜像"
 
-#: tazpanel/pkgs.cgi:268
+#: tazpanel/pkgs.cgi:286
 msgid "Add repository"
 msgstr "添加存储库"
 
-#: tazpanel/pkgs.cgi:269
+#: tazpanel/pkgs.cgi:287
 msgid "Toggle all"
 msgstr "全部切换"
 
-#: tazpanel/pkgs.cgi:291 tazpanel/pkgs.cgi:1005 tazpanel/pkgs.cgi:1265
+#: tazpanel/pkgs.cgi:309 tazpanel/pkgs.cgi:1036 tazpanel/pkgs.cgi:1301
 msgid "Name"
 msgstr "名称"
 
-#: tazpanel/pkgs.cgi:293 tazpanel/pkgs.cgi:1015
+#: tazpanel/pkgs.cgi:311 tazpanel/pkgs.cgi:1046
 msgid "Description"
 msgstr "描述"
 
-#: tazpanel/pkgs.cgi:331 tazpanel/pkgs.cgi:1206
+#: tazpanel/pkgs.cgi:349 tazpanel/pkgs.cgi:1242
 msgid "Repository: %s"
 msgstr "库: %s"
 
-#: tazpanel/pkgs.cgi:341 tazpanel/pkgs.cgi:416
+#: tazpanel/pkgs.cgi:359 tazpanel/pkgs.cgi:436
 msgid "Pages:"
 msgstr "页面："
 
-#: tazpanel/pkgs.cgi:492
+#: tazpanel/pkgs.cgi:520
 msgid "Web search tool"
 msgstr "Web 搜索工具"
 
-#: tazpanel/pkgs.cgi:494
+#: tazpanel/pkgs.cgi:522
 msgid "Search"
 msgstr "搜索"
 
-#: tazpanel/pkgs.cgi:495
+#: tazpanel/pkgs.cgi:523
 msgid "Files"
 msgstr "文件"
 
-#: tazpanel/pkgs.cgi:528
+#: tazpanel/pkgs.cgi:556
 msgid "All packages"
 msgstr "所有软件包"
 
-#: tazpanel/pkgs.cgi:532
+#: tazpanel/pkgs.cgi:560
 msgid "Categories"
 msgstr "分类"
 
-#: tazpanel/pkgs.cgi:553
+#: tazpanel/pkgs.cgi:581
 msgid "Public"
 msgstr "公开"
 
-#: tazpanel/pkgs.cgi:557
+#: tazpanel/pkgs.cgi:585
 msgid "Any"
 msgstr "任何"
 
-#: tazpanel/pkgs.cgi:564
+#: tazpanel/pkgs.cgi:592
 msgid "All tags..."
 msgstr "所有标签..."
 
-#: tazpanel/pkgs.cgi:565
+#: tazpanel/pkgs.cgi:593
 msgid "All categories..."
 msgstr "所有类别..."
 
-#: tazpanel/pkgs.cgi:587
+#: tazpanel/pkgs.cgi:615
 msgid "Listing linkable packages..."
 msgstr "正在列出可连接软件包..."
 
-#: tazpanel/pkgs.cgi:591
+#: tazpanel/pkgs.cgi:619
 msgid "Selection:"
 msgstr "选择:"
 
-#: tazpanel/pkgs.cgi:621
+#: tazpanel/pkgs.cgi:649
 msgid "Categories list"
 msgstr "分类列表"
 
-#: tazpanel/pkgs.cgi:630 tazpanel/pkgs.cgi:1013
+#: tazpanel/pkgs.cgi:658 tazpanel/pkgs.cgi:1044
 msgid "Category"
 msgstr "分类"
 
-#: tazpanel/pkgs.cgi:663 tazpanel/pkgs.cgi:717 tazpanel/pkgs.cgi:1311
+#: tazpanel/pkgs.cgi:691 tazpanel/pkgs.cgi:745 tazpanel/pkgs.cgi:1347
 msgid "Packages list"
 msgstr "软件软件包列表"
 
-#: tazpanel/pkgs.cgi:664 tazpanel/pkgs.cgi:718
+#: tazpanel/pkgs.cgi:692 tazpanel/pkgs.cgi:746
 msgid "Listing packages..."
 msgstr "正在列出软件包..."
 
-#: tazpanel/pkgs.cgi:671
+#: tazpanel/pkgs.cgi:699
 msgid "All packages of category \"%s\""
 msgstr "%s 分类内的已安装软件包"
 
-#: tazpanel/pkgs.cgi:675
+#: tazpanel/pkgs.cgi:703
 msgid "Installed packages of category \"%s\" in repository \"%s\""
 msgstr "在存储库\"%s\"中的类别\"%s\"安装软件软件包"
 
-#: tazpanel/pkgs.cgi:676
+#: tazpanel/pkgs.cgi:704
 msgid "All packages of category \"%s\" in repository \"%s\""
 msgstr "存储库\"%s\"中的类别\"%s\"中的所有软件软件包"
 
-#: tazpanel/pkgs.cgi:685
+#: tazpanel/pkgs.cgi:713
 msgid "You can not view a list of all packages until recharging lists."
 msgstr "您不可以查看所有软件软件包的列表直到休整列表。(请求更好的翻译)"
 
-#: tazpanel/pkgs.cgi:689 tazpanel/pkgs.cgi:730 tazpanel/pkgs.cgi:768
-#: tazpanel/pkgs.cgi:851 tazpanel/pkgs.cgi:1443 tazpanel/pkgs.cgi:1471
+#: tazpanel/pkgs.cgi:717 tazpanel/pkgs.cgi:758 tazpanel/pkgs.cgi:796
+#: tazpanel/pkgs.cgi:874 tazpanel/pkgs.cgi:1479 tazpanel/pkgs.cgi:1507
 msgid "Selected packages:"
 msgstr "选定的软件软件包:"
 
-#: tazpanel/pkgs.cgi:725
+#: tazpanel/pkgs.cgi:753
 #, fuzzy
 msgid "Packages suggested by %s"
 msgstr "%s 已解压缩到: %s"
 
-#: tazpanel/pkgs.cgi:760
+#: tazpanel/pkgs.cgi:788
 msgid "Search packages"
 msgstr "搜索软件包"
 
-#: tazpanel/pkgs.cgi:761
+#: tazpanel/pkgs.cgi:789
 msgid "Searching packages..."
 msgstr "正在搜索软件包..."
 
-#: tazpanel/pkgs.cgi:783
+#: tazpanel/pkgs.cgi:811
 msgid "File"
 msgstr "文件"
 
-#: tazpanel/pkgs.cgi:821
+#: tazpanel/pkgs.cgi:844
 msgid "Recharge"
 msgstr "更新"
 
-#: tazpanel/pkgs.cgi:822
+#: tazpanel/pkgs.cgi:845
 msgid "Recharging lists..."
 msgstr "正在更新清单..."
 
-#: tazpanel/pkgs.cgi:825
+#: tazpanel/pkgs.cgi:848
 msgid "Recharge checks for new or updated packages"
 msgstr "更新检查新软件包或已升级软件包"
 
-#: tazpanel/pkgs.cgi:829
+#: tazpanel/pkgs.cgi:852
 msgid "Recharging log"
 msgstr "调整日志..."
 
-#: tazpanel/pkgs.cgi:833
+#: tazpanel/pkgs.cgi:856
 msgid "Recharging packages list"
 msgstr "更新软件包清单"
 
-#: tazpanel/pkgs.cgi:836
+#: tazpanel/pkgs.cgi:859
 msgid "Packages lists are up-to-date. You should check for upgrades now."
 msgstr "软件包清单已是最新.你现在应该检查有否可用升级"
 
-#: tazpanel/pkgs.cgi:846
+#: tazpanel/pkgs.cgi:869
 msgid "Up packages"
 msgstr "升级软件包"
 
-#: tazpanel/pkgs.cgi:847
+#: tazpanel/pkgs.cgi:870
 msgid "Checking for upgrades..."
 msgstr "正在检查升级"
 
-#: tazpanel/pkgs.cgi:888
+#: tazpanel/pkgs.cgi:911
 msgid "Installing: %s"
 msgstr "正在安装 %s"
 
-#: tazpanel/pkgs.cgi:889
+#: tazpanel/pkgs.cgi:912
 msgid "Removing: %s"
 msgstr "正在移除: %s"
 
-#: tazpanel/pkgs.cgi:890
+#: tazpanel/pkgs.cgi:913
 msgid "Linking: %s"
 msgstr "链接: %s"
 
-#: tazpanel/pkgs.cgi:891
+#: tazpanel/pkgs.cgi:914
 msgid "Blocking: %s"
 msgstr "正在封锁：%s"
 
-#: tazpanel/pkgs.cgi:892
+#: tazpanel/pkgs.cgi:915
 msgid "Unblocking: %s"
 msgstr "解锁: %s"
 
-#: tazpanel/pkgs.cgi:893
+#: tazpanel/pkgs.cgi:916
 msgid "(Un)blocking: %s"
 msgstr "解封/封锁：%s"
 
-#: tazpanel/pkgs.cgi:894
+#: tazpanel/pkgs.cgi:917
 msgid "Repacking: %s"
 msgstr "正在重新打软件包: %s"
 
-#: tazpanel/pkgs.cgi:920
+#: tazpanel/pkgs.cgi:943
 #, fuzzy
 msgid "Package info"
 msgstr "软件包"
 
-#: tazpanel/pkgs.cgi:921
+#: tazpanel/pkgs.cgi:944
 msgid "Getting package info..."
 msgstr "正在取得软件包资讯..."
 
-#: tazpanel/pkgs.cgi:1009
+#: tazpanel/pkgs.cgi:958
+#, fuzzy
+msgid "Packages providing %s"
+msgstr "软件软件包列表"
+
+#: tazpanel/pkgs.cgi:967
+msgid "if"
+msgstr ""
+
+#: tazpanel/pkgs.cgi:967
+#, fuzzy
+msgid "is installed"
+msgstr "%s 个已安装软件包"
+
+#: tazpanel/pkgs.cgi:1040
 #, fuzzy
 msgid "State"
 msgstr "状态"
 
-#: tazpanel/pkgs.cgi:1017
+#: tazpanel/pkgs.cgi:1048
 msgid "Maintainer"
 msgstr "维护者"
 
-#: tazpanel/pkgs.cgi:1019
+#: tazpanel/pkgs.cgi:1050
 msgid "License"
 msgstr "许可"
 
-#: tazpanel/pkgs.cgi:1021
+#: tazpanel/pkgs.cgi:1052
 msgid "Website"
 msgstr "网站"
 
-#: tazpanel/pkgs.cgi:1025
+#: tazpanel/pkgs.cgi:1056
 msgid "Sizes"
 msgstr "大小"
 
-#: tazpanel/pkgs.cgi:1027
+#: tazpanel/pkgs.cgi:1058
 msgid "Depends"
 msgstr "依赖"
 
-#: tazpanel/pkgs.cgi:1029
+#: tazpanel/pkgs.cgi:1060
 #, fuzzy
 msgid "Provide"
 msgstr "软件包    : %s"
 
-#: tazpanel/pkgs.cgi:1031
+#: tazpanel/pkgs.cgi:1062
 msgid "Suggested"
 msgstr "建议"
 
-#: tazpanel/pkgs.cgi:1036
+#: tazpanel/pkgs.cgi:1067
 msgid "View receipt"
 msgstr "查看接收报告"
 
-#: tazpanel/pkgs.cgi:1037
+#: tazpanel/pkgs.cgi:1068
 msgid "Improve package"
 msgstr "改进软件包"
 
-#: tazpanel/pkgs.cgi:1060
+#: tazpanel/pkgs.cgi:1091
 msgid "Installed files"
 msgstr "已安装文件"
 
-#: tazpanel/pkgs.cgi:1062
+#: tazpanel/pkgs.cgi:1093
 msgid "Please wait"
 msgstr "请稍等"
 
-#: tazpanel/pkgs.cgi:1125
+#: tazpanel/pkgs.cgi:1156
 msgid "TazPkg administration and settings"
 msgstr "TazPkg 管理及配置"
 
-#: tazpanel/pkgs.cgi:1134
+#: tazpanel/pkgs.cgi:1165
 msgid "Creating the package..."
 msgstr "正在创建软件包..."
 
-#: tazpanel/pkgs.cgi:1138
+#: tazpanel/pkgs.cgi:1169
 msgid "Path:"
 msgstr "路径:"
 
-#: tazpanel/pkgs.cgi:1152
+#: tazpanel/pkgs.cgi:1188
 msgid "Checking packages consistency..."
 msgstr "正在检查软件包完整性..."
 
-#: tazpanel/pkgs.cgi:1156
+#: tazpanel/pkgs.cgi:1192
 msgid "Full packages check..."
 msgstr "检查完整软件包..."
 
-#: tazpanel/pkgs.cgi:1165 tazpanel/pkgs.cgi:1176
+#: tazpanel/pkgs.cgi:1201 tazpanel/pkgs.cgi:1212
 msgid "%s is installed on /mnt/packages"
 msgstr "已在 /mnt/packages 上安装 %s"
 
-#: tazpanel/pkgs.cgi:1189
-msgid "Packages cache"
-msgstr "软件包缓存"
-
-#: tazpanel/pkgs.cgi:1191
+#: tazpanel/pkgs.cgi:1227
 msgid "Packages in the cache: %s (%s)"
 msgstr "缓存中的软件包: %s (%s)"
 
-#: tazpanel/pkgs.cgi:1198
+#: tazpanel/pkgs.cgi:1234
 msgid "Current mirror list"
 msgstr "当前镜像清单"
 
-#: tazpanel/pkgs.cgi:1221 tazpanel/pkgs.cgi:1253
+#: tazpanel/pkgs.cgi:1257 tazpanel/pkgs.cgi:1289
 msgid "Delete"
 msgstr "删除"
 
-#: tazpanel/pkgs.cgi:1243
+#: tazpanel/pkgs.cgi:1279
 msgid "Private repositories"
 msgstr "私有库"
 
-#: tazpanel/pkgs.cgi:1266
+#: tazpanel/pkgs.cgi:1302
 msgid "URL:"
 msgstr "网址："
 
-#: tazpanel/pkgs.cgi:1276
+#: tazpanel/pkgs.cgi:1312
 msgid "Link to another SliTaz installation"
 msgstr "连接到另一个安装好的SliTaz"
 
-#: tazpanel/pkgs.cgi:1279
+#: tazpanel/pkgs.cgi:1315
 msgid ""
 "This link points to the root of another SliTaz installation. You will be "
 "able to install packages using soft links to it."
@@ -1787,11 +1813,11 @@ msgstr ""
 "这会连接到另一个已安装SliTaz的根目录(root).你将可以用软连接(softlink) 来安装"
 "软件包."
 
-#: tazpanel/pkgs.cgi:1290
+#: tazpanel/pkgs.cgi:1326
 msgid "SliTaz packages DVD"
 msgstr "SliTaz 软件包DVD"
 
-#: tazpanel/pkgs.cgi:1293
+#: tazpanel/pkgs.cgi:1329
 msgid ""
 "A bootable DVD image of all available packages for the %s version is "
 "generated every day. It also contains a copy of the website and can be used "
@@ -1801,172 +1827,175 @@ msgstr ""
 "每日将会创建一个软件包含 %s 版本所有可用软件包的可启动(bootable) DVD映像映像"
 "亦会软件包含可离线使用的全站内容，可安装到DVD或USB设备"
 
-#: tazpanel/pkgs.cgi:1296
+#: tazpanel/pkgs.cgi:1332
 msgid "Install from ISO image:"
 msgstr "由ISO映像安装"
 
-#: tazpanel/pkgs.cgi:1303
+#: tazpanel/pkgs.cgi:1339
 msgid "Download DVD image"
 msgstr "下载DVD映像"
 
-#: tazpanel/pkgs.cgi:1305
+#: tazpanel/pkgs.cgi:1341
 msgid "Install from DVD/USB key"
 msgstr "由DVD/USB设备安装"
 
-#: tazpanel/pkgs.cgi:1314
+#: tazpanel/pkgs.cgi:1350
 msgid ""
 "Long list of packages is paginated. Here you can set the page size (default: "
 "100, turning off the pager: 0)."
 msgstr ""
 "分页显示长的软件包列表。在这里你可以设置的页面大小 (默认: 100，关闭: 0)。"
 
-#: tazpanel/pkgs.cgi:1319
+#: tazpanel/pkgs.cgi:1355
 msgid "Set"
 msgstr "设置"
 
-#: tazpanel/pkgs.cgi:1345
+#: tazpanel/pkgs.cgi:1381
 msgid "Licenses for package %s"
 msgstr "%s的许可证"
 
-#: tazpanel/pkgs.cgi:1366
+#: tazpanel/pkgs.cgi:1402
 msgid "%s license on %s website"
 msgstr "%s 网站上的许可证%s"
 
-#: tazpanel/pkgs.cgi:1367
+#: tazpanel/pkgs.cgi:1403
 msgid "Read online:"
 msgstr "在线读取:"
 
-#: tazpanel/pkgs.cgi:1367
+#: tazpanel/pkgs.cgi:1403
 msgid "Read local:"
 msgstr "在线读取:"
 
-#: tazpanel/pkgs.cgi:1408
+#: tazpanel/pkgs.cgi:1444
 msgid "Tags list"
 msgstr "标签列表"
 
-#: tazpanel/pkgs.cgi:1412
+#: tazpanel/pkgs.cgi:1448
 msgid "List of tags in all repositories"
 msgstr "所有存储库中的标签列表"
 
-#: tazpanel/pkgs.cgi:1413
+#: tazpanel/pkgs.cgi:1449
 msgid "List of tags in repository \"%s\""
 msgstr "存储库\"%s\"中的标签列表"
 
-#: tazpanel/pkgs.cgi:1439
+#: tazpanel/pkgs.cgi:1475
 msgid "Tag \"%s\""
 msgstr "标签%s"
 
-#: tazpanel/pkgs.cgi:1467
+#: tazpanel/pkgs.cgi:1503
 msgid "Blocked packages list"
 msgstr "阻止的软件包列表"
 
-#: tazpanel/pkgs.cgi:1505 tazpanel/pkgs.cgi:1582
+#: tazpanel/pkgs.cgi:1541 tazpanel/pkgs.cgi:1618
 msgid "Improve package \"%s\""
 msgstr "改进软件包\"%s\""
 
-#: tazpanel/pkgs.cgi:1540
+#: tazpanel/pkgs.cgi:1576
 msgid "Please log in using your TazBug account."
 msgstr "请使用您的 TazBug 帐户登录。"
 
-#: tazpanel/pkgs.cgi:1544
+#: tazpanel/pkgs.cgi:1580
 msgid "Login:"
 msgstr "登录："
 
-#: tazpanel/pkgs.cgi:1546
+#: tazpanel/pkgs.cgi:1582
 msgid "Password:"
 msgstr "密码:"
 
-#: tazpanel/pkgs.cgi:1549
+#: tazpanel/pkgs.cgi:1585
 msgid "Remember me"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1551
+#: tazpanel/pkgs.cgi:1587
 msgid "Log in"
 msgstr "登录"
 
-#: tazpanel/pkgs.cgi:1555
+#: tazpanel/pkgs.cgi:1591
 msgid "Create new account"
 msgstr "创建新账户"
 
-#: tazpanel/pkgs.cgi:1583 tazpanel/pkgs.cgi:1640
+#: tazpanel/pkgs.cgi:1619 tazpanel/pkgs.cgi:1676
 msgid "Back"
 msgstr "返回"
 
-#: tazpanel/pkgs.cgi:1606
+#: tazpanel/pkgs.cgi:1642
 msgid "How can you help:"
 msgstr "你能帮上什么忙:"
 
-#: tazpanel/pkgs.cgi:1608
+#: tazpanel/pkgs.cgi:1644
 msgid "Please select an action"
 msgstr "请选择一个操作"
 
-#: tazpanel/pkgs.cgi:1609
+#: tazpanel/pkgs.cgi:1645
 msgid "Report new version"
 msgstr "报告的新版本"
 
-#: tazpanel/pkgs.cgi:1610
+#: tazpanel/pkgs.cgi:1646
 msgid "Improve short description"
 msgstr "改进的简短描述"
 
-#: tazpanel/pkgs.cgi:1611
+#: tazpanel/pkgs.cgi:1647
 msgid "Translate short description"
 msgstr "翻译的简短描述"
 
-#: tazpanel/pkgs.cgi:1612
+#: tazpanel/pkgs.cgi:1648
 msgid "Add or improve description"
 msgstr "添加或改善描述"
 
-#: tazpanel/pkgs.cgi:1613
+#: tazpanel/pkgs.cgi:1649
 msgid "Translate description"
 msgstr "翻译说明"
 
-#: tazpanel/pkgs.cgi:1614
+#: tazpanel/pkgs.cgi:1650
 msgid "Improve category"
 msgstr "完善分类"
 
-#: tazpanel/pkgs.cgi:1615
+#: tazpanel/pkgs.cgi:1651
 msgid "Add or improve tags"
 msgstr "添加或改善标签"
 
-#: tazpanel/pkgs.cgi:1616
+#: tazpanel/pkgs.cgi:1652
 msgid "Add application icon"
 msgstr "添加应用程序图标"
 
-#: tazpanel/pkgs.cgi:1617
+#: tazpanel/pkgs.cgi:1653
 msgid "Add application screenshot"
 msgstr "添加应用程序的屏幕截图"
 
-#: tazpanel/pkgs.cgi:1618
+#: tazpanel/pkgs.cgi:1654
 msgid "Improve receipt"
 msgstr "提高接收报告"
 
-#: tazpanel/pkgs.cgi:1619
+#: tazpanel/pkgs.cgi:1655
 msgid "Other"
 msgstr "其他"
 
-#: tazpanel/pkgs.cgi:1630
+#: tazpanel/pkgs.cgi:1666
 msgid "Send"
 msgstr "发送"
 
-#: tazpanel/pkgs.cgi:1639
+#: tazpanel/pkgs.cgi:1675
 msgid "Thank you!"
 msgstr "谢谢！"
 
-#: tazpanel/pkgs.cgi:1692
+#: tazpanel/pkgs.cgi:1728
 msgid "It is recommended to [recharge] the lists."
 msgstr "建议[recharge]的列表。"
 
-#: tazpanel/pkgs.cgi:1697
+#: tazpanel/pkgs.cgi:1733
 msgid "You need to [download] the lists for further work."
 msgstr "您需要下载列表为进一步的工作。"
 
-#: tazpanel/pkgs.cgi:1729
+#: tazpanel/pkgs.cgi:1765
 msgid "Latest log entries"
 msgstr "最新日志项"
 
-#: tazpanel/pkgs.cgi:1731
+#: tazpanel/pkgs.cgi:1767
 msgid "Show"
 msgstr "显示"
+
+#~ msgid "Checking packages lists - %s"
+#~ msgstr "正在检查软件包清单 - %s"
 
 #~ msgid "Checking post install dependencies..."
 #~ msgstr "正在检查安装后依赖..."
