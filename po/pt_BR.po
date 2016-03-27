@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-09 04:42+0200\n"
-"PO-Revision-Date: 2016-03-27 05:40-0300\n"
+"PO-Revision-Date: 2016-03-27 05:43-0300\n"
 "Last-Translator: Leonardo Laporte <hackdorte@sapo.pt>\n"
 "Language-Team: Brazilian Portuguese <i18n@slitaz.org>\n"
 "Language: pt_BR\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: tazpkg:105
 msgid "Creating folder \"%s\"..."
-msgstr "Criando \"%s\"..."
+msgstr "Criando diretório \"%s\"..."
 
 #: tazpkg:141
 msgid "Please specify a package name on the command line."
