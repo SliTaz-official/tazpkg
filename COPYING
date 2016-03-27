@@ -54,5 +54,19 @@ TazpPg распространяется в надежде, что он буде�
 Вы должны были получить копию GNU General Public License вместе с TazPkg.
 Если нет, смотрите <http://www.gnu.org/licenses/>.
 
+Português
+---------
+
+TazPkg é um software livre: você pode redistribuí-lo e/ou modificá-lo sob os
+termos da GNU General Public License que é publicada pela Free Software
+Foundation, tanto na versão 3, ou (a seu critério) qualquer versão posterior.
+
+Tazpkg é distribuído na esperança que possa ser útil, mas SEM QUALQUER
+GARANTIA; mesmo sem a garantia implícita de COMERCIALIZAÇÃO ou ADEQUAÇÃO A
+UM DETERMINADO PROPÓSITO. Veja a GNU General Public License para mais detalhes.
+
+Você deve ter recebido uma cópia da GNU General Public License junto com o
+TazPkg. Se não, veja <http://www.gnu.org/licenses/>.
+
 ===============================================================================
                                                          http://www.slitaz.org/
