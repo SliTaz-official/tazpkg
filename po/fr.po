@@ -37,7 +37,7 @@ msgstr "Veuillez spécifier un nom de saveur sur la ligne de commandes."
 
 #: tazpkg:150
 msgid "Please specify a release name on the command line."
-msgstr "Veuillez spécifier une version de Slitaz sur la ligne de commandes."
+msgstr "Veuillez spécifier une version de SliTaz sur la ligne de commandes."
 
 #: tazpkg:153
 msgid "Unable to find file \"%s\""

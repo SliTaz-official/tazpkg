@@ -1241,27 +1241,28 @@ EOT
 			if [ $i != $PKGS_DB/mirrors ]; then
 				echo "<h4>$(_ 'Repository: %s' "$(repo_name $(dirname $i))")</h4>"
 			fi
+			awk -vdm="$default_mirror/" -vd="$(_ 'Delete')" -vi="$i" '
+			BEGIN {
+				printf "<form class=\"wide\">";
+				printf "<input type=\"hidden\" name=\"admin\" value=\"select-mirror\"/>";
+				printf "<table class=\"wide zebra\">";
+			}
+			{
+				printf "<tr><td>";
+				printf "<input type=\"radio\" name=\"mirror\" id=\"%s\" value=\"%s\" onchange=\"this.form.submit()\"", $0, $0;
+				if ($0 == dm)
+					printf " checked=\"checked\"";
+				printf ">";
+				printf "<label for=\"%s\"><code>%s</code></label></td>", $0, $0;
+				printf "<td><a data-img=\"@web@\"    href=\"$0\" target=\"_blank\"></a></td>";
+				printf "<td><a data-img=\"@remove@\" href=\"?admin=rm-mirror&amp;mirror=%s&amp;file=%s\" title=\"%s\"></a></td>", $0, i, d;
+				printf "</tr>";
+			}
+			END {
+				printf "</table></form>";
+			}
+			' < $i
 			cat <<EOT
-	<form class="wide">
-		<input type="hidden" name="admin" value="select-mirror"/>
-		<table class="wide zebra">
-EOT
-			while read line; do
-				cat <<EOT
-			<tr>
-				<td>
-					<input type="radio" name="mirror" id="$line" value="$line" onchange="this.form.submit()"
-					$([ "$line" == "$default_mirror/" ] && echo -n 'checked="checked"')>
-					<label for="$line"><code>$line</code></label></td>
-				<td><a data-img="@web@"    href="$line" target="_blank"></a></td>
-				<td><a data-img="@remove@" href="?admin=rm-mirror&amp;mirror=$line&amp;file=$i" title="$(_ 'Delete')"></a></td>
-			</tr>
-EOT
-			done < $i
-			cat <<EOT
-		</table>
-	</form>
-
 	<form class="wide">
 		<footer>
 			<input type="hidden" name="file" value="$i" />

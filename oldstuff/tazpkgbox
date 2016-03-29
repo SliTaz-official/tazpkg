@@ -82,7 +82,7 @@ mouse clicks."
 		<text wrap="false">
 			<label>"
 Tazpkgbox est une interface graphique au gestionnaire de paquet
-de Slitaz aka Tazpkg. Simple et facile à utiliser, vous pouvez
+de SliTaz aka Tazpkg. Simple et facile à utiliser, vous pouvez
 installer, télécharger ou supprimer des paquets en double-cliquant
 sur sa ligne. La fonction de recherche permet de facilement trouver
 et installer des logiciels ou fichiers."
@@ -113,7 +113,7 @@ export SETUP_DVD="
 	<frame English>
 		<text wrap=\"false\">
 			<label>\"
-An ISO image with all $(cat /etc/slitaz-release) packages is available on Slitaz mirrors.
+An ISO image with all $(cat /etc/slitaz-release) packages is available on SliTaz mirrors.
 You can burn it onto a DVD or install it on an USB key and each
 package becomes installable without an Internet connection.\"
 			</label>
@@ -124,7 +124,7 @@ package becomes installable without an Internet connection.\"
 		<text wrap=\"false\">
 			<label>\"
 Une image ISO installable sur clé USB ou gravable sur DVD est
-disponible sur les mirroirs Slitaz. Elle contient tous les paquets
+disponible sur les mirroirs SliTaz. Elle contient tous les paquets
 de la version $(cat /etc/slitaz-release) pour pouvoir installer des paquets sans
 connexion Internet.\"
 			</label>
@@ -487,7 +487,7 @@ The cache directory is used to store downloaded or repacked packages.
 				</button>
 			</hbox>
 		</frame>
-		<frame Filesystem link (to install packages as a soft link from another mounted Slitaz)>
+		<frame Filesystem link (to install packages as a soft link from another mounted SliTaz)>
 			<hbox>
 				<entry>
 					<input>readlink /var/lib/tazpkg/fslink</input>
