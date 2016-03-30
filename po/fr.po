@@ -1056,7 +1056,7 @@ msgstr "Création d'une sauvegarde de la dernière liste de paquets..."
 
 #: modules/recharge:127 modules/recharge:142 modules/recharge:146
 msgid "Getting \"%s\"..."
-msgstr "Obtention de « %s »..."
+msgstr "Acquisition de « %s »..."
 
 #: modules/recharge:161
 msgid "Last database is ready to use."
@@ -1686,7 +1686,7 @@ msgstr "Informations sur le paquet"
 
 #: tazpanel/pkgs.cgi:944
 msgid "Getting package info..."
-msgstr "Obtention des informations sur le paquet..."
+msgstr "Acquisition des informations sur le paquet..."
 
 #: tazpanel/pkgs.cgi:958
 #, fuzzy
