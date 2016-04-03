@@ -311,7 +311,7 @@ case "$COMMAND" in
 		check_cmd pkg; @@MODULES@@/description "$2";;
 
 
-	search|-s|-si|-sl|-sm)
+	search|-s|-si|-sl)
 		# Search for a package by pattern or name.
 		check_cmd pattern
 
@@ -320,7 +320,7 @@ case "$COMMAND" in
 			case "$i" in
 				-i|-si) export installed='yes';;
 				-l|-sl) export list='yes';;
-				-m|-sm) export mirror='yes';;
+				-m)     export mirror='yes';;
 			esac
 		done
 
