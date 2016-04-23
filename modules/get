@@ -110,7 +110,9 @@ download_from() {
 abort_package() {
 	cd "$CUR_DIR"
 	rm -rf "$tmp_dir"
-	echo "${1:-Abort $PACKAGE.}"
+	msg="${1:-Abort $PACKAGE.}"
+	shift
+	printf "$msg" $@
 	exit 1
 }
 
