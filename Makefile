@@ -11,6 +11,7 @@ libdir      ?= $(exec_prefix)/lib
 localedir   ?= $(datarootdir)/locale
 iconsdir    ?= $(datarootdir)/icons
 
+CC	?= gcc
 DESTDIR ?=
 LINGUAS ?= el es fr pl pt_BR ru sv zh_CN zh_TW
 MODULES := $(shell ls modules)
@@ -63,7 +64,7 @@ msgfmt:
 	done;
 
 notify:
-	gcc tazpkg-notification.c -o tazpkg-notification $(CFLAGS) \
+	$(CC) tazpkg-notification.c -o tazpkg-notification $(CFLAGS) \
 		$(shell pkg-config --cflags --libs libnotify)
 
 
