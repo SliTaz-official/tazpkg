@@ -739,7 +739,7 @@ convert_tce() {
 
 convert_tcz() {
 	[ -n "$(which unsquashfs)" ] || tazpkg get-install squashfs
-	if ! unsquashfs -l "$PACKAGE_FILE" | grep -q squashfs-root/$ ; then
+	if ! unsquashfs -l "$PACKAGE_FILE" | grep -q squashfs-root/ ; then
 		_ 'File "%s" does not look like %s package!' "$PACKAGE_FILE" 'Tinycore'
 		return 1
 	fi
