@@ -57,8 +57,8 @@ href="file:///usr/share/licenses/gpl.txt" target="_blank">GPL V3</a>.</p>
 		language</x-details></li>
 	<li><tt>LC_TIME</tt>: defines the date format in the <a href="#activity">activity</a>
 		command</li>
-	<li><tt>root</tt>: if defined it points to the root of file system where TazPkg should work.
-		Note, value defined using <tt>--root=</tt> option has precedence over this environment
+	<li><tt>root</tt>: if defined, points to the root of a file system where TazPkg should work.
+		Note, a value defined using <tt>--root=</tt> option has precedence over this environment
 		variable</li>
 </ul>
 </section>
@@ -167,7 +167,7 @@ href="file:///usr/share/licenses/gpl.txt" target="_blank">GPL V3</a>.</p>
 		list of the repositories priority.
 		<x-details>One repository name per line. Undigest repositories are called by their names and
 		main repository by “main”. If priority list absent, then default priority is: main
-		repository and all existing undigest repositories in the alphabetical
+		repository and all existing undigest repositories in alphabetical
 		order.</x-details></li>
 </ul>
 
@@ -205,7 +205,7 @@ different repositories.
 <article><header>Misc files</header>
 
 <p>File with default placement <tt><a href="file:///var/log/slitaz/tazpkg.log"
-target="_blank">/var/log/slitaz/tazpkg.log</a></tt> stores TazPkg activity log.
+target="_blank">/var/log/slitaz/tazpkg.log</a></tt> stores the TazPkg activity log.
 <x-details>Log stores five types of actions: installing, uninstalling, blocking, unblocking,
 reconfiguring packages.</x-details></p>
 
@@ -238,11 +238,11 @@ $ tazpkg --root=<em>/mnt/sda6</em> info nano
 $ tazpkg info --root=<em>/mnt/sda6</em> nano <em>--color</em>
 </pre>
 
-<p>You can add global option <tt>--root=…</tt> to any TazPkg command. This option allows to work
-with other SliTaz installations. Option points to the root of mounted file system from other SliTaz
+<p>You can add global option <tt>--root=…</tt> to any TazPkg command. This option allows you to work
+with other SliTaz installations and can point to the root of a mounted file system from another SliTaz
 installation.
 <x-details>By the way, using this option allows to install SliTaz to the other file system “from
-scratch”, and upgrade SliTaz packages remotely.</x-details></p>
+scratch” and upgrade SliTaz packages remotely.</x-details></p>
 
 
 <article><header>Service commands</header>
