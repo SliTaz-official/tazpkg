@@ -292,6 +292,18 @@ virtual_pkg() {
 	# output: display possible package name
 
 	debug "\nvirtual_pkg('$1', '$2')"
+
+	if [ "$tazpkg_command" != 'get-install' ]; then
+		# 'get' command: download any package
+		if [ -z "$(awk -F$'\t' -vp="$1" '{if ($1 == p) print p}' "$2/packages.info")" ]; then
+			# This package not exists in the list, it may be virtual package
+			grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"
+		else
+			echo $1
+		fi
+		return
+	fi
+
 	local i
 	unset IFS
 	for i in $(grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"); do
