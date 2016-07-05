@@ -110,9 +110,9 @@ download_from() {
 abort_package() {
 	cd "$CUR_DIR"
 	rm -rf "$tmp_dir"
-	msg="${1:-Abort $PACKAGE.}"
-	shift
-	printf "$msg" $@
+	[ -n "$1" ] ||
+	set -- 'Could not download "%s" from "%s". Exiting.' "${TARBALL:-$PACKAGE}" "${WGET_URL:-$WEB_SITE}"
+	printf "$@"
 	exit 1
 }
 
@@ -223,9 +223,7 @@ get_pkg_extra() {
 	. "$script"
 	set +e
 
-	if [ ! -d "$PACKAGE-$VERSION" ]; then
-		abort_package 'Could not download "%s" from "%s". Exiting.' "${TARBALL:-$PACKAGE}" "${WGET_URL:-$WEB_SITE}"
-	fi
+	[ -d "$PACKAGE-$VERSION" ] || abort_package
 
 	if [ ! -s "$PACKAGE-$VERSION/receipt" ]; then
 		# Create receipt (if script not created it early) using variables from script
