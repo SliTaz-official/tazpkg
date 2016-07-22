@@ -123,14 +123,14 @@ if [ -n "$REFRESH" ]; then
 fi
 
 # Confirmation
-if im && [ -z "$auto" ]; then
+if [ -n "$noconfirm$yes" ] || im && [ -z "$auto" ]; then
 	confirm "$(_ 'Remove package "%s" (%s)? (y/N)' "$PACKAGE" "$VERSION$EXTRAVERSION")"
 	if [ "$?" -ne 0 ]; then
 		newline; _ 'Uninstallation of package "%s" cancelled.' "$PACKAGE"
 		exit 0
 	fi
 fi
-# We are here: non-interactive mode, or --auto, or answer 'y'
+# We are here: non-interactive mode, or --auto, or --yes, or answer 'y'
 
 # Removing package
 title 'Removing package "%s"' "$PACKAGE"

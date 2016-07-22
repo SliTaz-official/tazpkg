@@ -128,9 +128,14 @@ install_all_deps() {
 		"$num")"
 
 
-	if [ "$AUTO_INSTALL_DEPS" == 'yes' -o -n "$quiet" ]; then
+	if [ -n "$quiet" ]; then
+		# Quietly not display anything. Assume 'yes' unless '--noconfirm' is provided
 		answer=0
+		[ -n "$noconfirm" ] && answer=1
 	else
+		[ "$AUTO_INSTALL_DEPS" == 'yes' ] && yes='yes'
+
+		# Display question; wait for answer or print auto-answer
 		newline
 		confirm "$(_ 'Install all missing dependencies? (y/N)')"
 		answer=$?
