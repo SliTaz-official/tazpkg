@@ -239,6 +239,22 @@ select_package_icon() {
 
 # We need packages information for list and search
 
+parse_extra() {
+	IFS=$'\t'
+	while read PACKAGE SHORT_DESC WEB_SITE CATEGORY VERSION LICENSE; do
+		i18n_desc "$PACKAGE"
+		cat <<EOT
+<tr>
+	<td><input type="checkbox" name="pkg" value="$PACKAGE">$(pkg_info_link "$PACKAGE" "$(select_package_icon "$PACKAGE")")</td>
+	<td>$VERSION</td>
+	<td>$SHORT_DESC</td>
+</tr>
+EOT
+	done
+	unset IFS
+}
+
+
 parse_packages_info() {
 	IFS=$'\t'
 	while read PACKAGE VERSION CATEGORY SHORT_DESC WEB_SITE TAGS SIZES DEPENDS; do
@@ -827,6 +843,8 @@ EOT
 			table_head
 			awk -F$'\t' 'BEGIN{IGNORECASE = 1}
 			$1 " " $4 ~ /'$pkg'/{print $0}' $(repo_list /packages.info) | parse_packages_info
+			awk -F$'|' 'BEGIN{IGNORECASE = 1}
+			$1 " " $2 ~ /'$pkg'/{print $0}' $(repo_list /extra.list) | parse_extra
 		fi
 		cat <<EOT
 	</tbody>
