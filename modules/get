@@ -223,7 +223,11 @@ get_pkg_extra() {
 	. "$script"
 	set +e
 
-	[ -d "$PACKAGE-$VERSION" ] || abort_package
+	[ "$PWD" != "$tmp_dir" ] && mv $PACKAGE* $tmp_dir
+	cd $tmp_dir
+	[ -n "$VERSION" ] || VERSION="$(date +%Y%m%d)"
+	[ -d "$PACKAGE-$VERSION" ] || mv $PACKAGE $PACKAGE-$VERSION || abort_package
+	[ -n "$TARBALL" ] || TARBALL="$(basename $WGET_URL)"
 
 	if [ ! -s "$PACKAGE-$VERSION/receipt" ]; then
 		# Create receipt (if script not created it early) using variables from script
@@ -231,13 +235,13 @@ get_pkg_extra() {
 # SliTaz package receipt.
 
 PACKAGE="$PACKAGE"
-VERSION="${VERSION:-unknown}"
+VERSION="$VERSION"
 CATEGORY="${CATEGORY:-non-free}"
 WEB_SITE="$WEB_SITE"
-SHORT_DESC="${SHORT_DESC:-$PACKAGE}"
+SHORT_DESC="${SHORT_DESC:-The $PACKAGE software package of SliTaz}"
 MAINTAINER="${MAINTAINER:-nobody@slitaz.org}"
 LICENSE="${LICENSE:-unknown}"
-TARBALL="${TARBALL:-$(basename $WGET_URL)}"
+TARBALL="$TARBALL"
 WGET_URL="$WGET_URL"
 CONFIG_FILES="$CONFIG_FILES"
 SUGGESTED="$SUGGESTED"
