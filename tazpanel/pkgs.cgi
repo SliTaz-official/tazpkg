@@ -240,7 +240,7 @@ select_package_icon() {
 # We need packages information for list and search
 
 parse_extra() {
-	IFS=$'|'
+	IFS='|'
 	while read PACKAGE SHORT_DESC WEB_SITE CATEGORY VERSION LICENSE; do
 		i18n_desc "$PACKAGE"
 		cat <<EOT

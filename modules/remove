@@ -206,7 +206,7 @@ status
 call_post_remove "$INSTALLED/$PACKAGE/receipt"
 
 # [4/5] Update system databases
-fl="$INSTALLED/$PACKAGE/files.list" upd=0 udesk umime uicon uschm ukrnl
+fl="$INSTALLED/$PACKAGE/files.list"; upd=0
 
 fgrep    /usr/share/applications/ "$fl" | fgrep -q .desktop && udesk='yes'
 fgrep -q /usr/share/mime "$fl" && umime='yes'
