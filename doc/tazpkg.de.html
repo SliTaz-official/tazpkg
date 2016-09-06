@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<title>TazPkg-Handbuch</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="stylesheet" href="../slitaz-doc.css">
+	<script src="../slitaz-doc.js"></script>
+</head>
+<body>
+
+<header>
+	<h1>TazPkg-Handbuch</h1>
+</header>
+
+
+
+
+<section><header>Name</header>
+
+<p>TazPkg — SliTaz-Paketverwaltung.</p>
+</section>
+
+
+<section><header>Syntax</header>
+
+<pre>
+tazpkg [command] [options...]
+</pre>
+</section>
+
+
+<section><header>Beschreibung</header>
+
+<p>TazPkg ist eine ressourcenschonende Paketverwaltung zur Installation, zum Auflisten, Transferieren,
+Aktualisieren oder Entfernen von Paketen in einem GNU/Linux-System. TazPkg bietet auch Kommandos zum Suchen und
+Erzeugen von Paketen und wurde unabhängig für die Anforderungen von SliTaz entwickelt.
+Pakete mit der *.tazpkg-Endung sind
+cpio-Archive, die ein mit lzms komprimiertes Dateisystem enthalten, ein Rezept und optional eine Beschreibung.
+TazPkg verwaltet auch Abhängigkeiten basierend auf Paket-Rezepten. Jedes Rezept enthält alle
+Informationen über ein Paket und kann Vor- und Nach-Installationsfunktionen enthalten. Dasselbe
+Rezept wird von <a href="../cookutils/cookutils.en.html" target="_blank">Cookutils</a> verwendet, um
+Quellprogramme zu übersetzen und ein .tazpkg-Paket zu erzeugen.</p>
+
+<p>TazPkg ist von Grund auf als "bash"-kompatible Kommandoprozedur ("shell script") erstellt worden; diese läuft
+unter "Ash" — einem Teil des "Busybox"-Projekts. TazPkg wird unter der freien GNU-Lizenz
+<a href="file:///usr/share/licenses/gpl.txt" target="_blank">GPL V3</a> verbreitet.</p>
+</section>
+
+
+<section><header>Umgebung</header>
+
+<p>TazPkg verwendet die folgenden Umgebungsvariablen:</p>
+
+<ul>
+	<li><tt>LANGUAGE</tt>: bestimmt die Sprache für Ausgaben und Bestätigungen des Benutzers.
+		<x-details>Hinweis: Die Umgebungsvariablen <tt>LANG</tt> und <tt>LC_ALL</tt> haben auch
+		Auswirkungen auf die Ausgabesprache (anderer Programme)</x-details></li>
+	<li><tt>LC_TIME</tt>: bestimmt das Format des Datums im <a href="#activity">activity</a>-Kommando</li>
+	<li><tt>root</tt>: gibt, wenn gesetzt, die Wurzel eines Dateisystems an, in dem TazPkg operieren soll.
+		Ein Wert, der mit der Option <tt>--root=</tt> gesetzt wird, hat Vorrang vor dem Wert
+		der Umgebungsvariablen <tt>root</tt>.</li>
+</ul>
+</section>
+
+
+<section><header>Dateien</header>
+
+
+<article><header>Konfigurationsdateien</header>
+
+<ul>
+	<li><tt><a href="file:///etc/slitaz/slitaz.conf"
+		target="_blank">/etc/slitaz/slitaz.conf</a></tt></li>
+	<li><tt><a href="file:///etc/slitaz/tazpkg.conf"
+		target="_blank">/etc/slitaz/tazpkg.conf</a></tt></li>
+</ul>
+</article>
+
+
+<article><header>Dateien der Paket-Datenbank</header>
+
+<p>Standardmäßig befindet sich die Paket-Datenbank im Verzeichnis <tt>/var/lib/tazpkg</tt>.</p>
+
+<ul>
+	<li><tt><a href="file:///var/lib/tazpkg/ID" target="_blank">ID</a></tt> (obsolet): Indikator
+		für den aktuellen Zustand des SliTaz-Depots.
+		<x-details>Der Wert ändert sich, wenn neue oder aktualisierte Pakete im Depot
+		auftauchen.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/IDs" target="_blank">IDs</a></tt>: Indikator für den
+		aktuellen Zustand des SliTaz-Depots und einen UNIX-Zeitstempel.
+		<x-details>Der Wert ändert sich, wenn neue oder aktualisierte Pakete im Depot
+		auftauchen. Der Zeitstempel ermöglicht es den Zeitpunkt der letzten
+		Änderung des Depots festzustellen und wie aktuell die Spiegel-Depots sind.
+		(Der UNIX-Zeitstempel kann in ein Datum umgesetzt werden mit:
+		<code>date -d@<em>timestamp</em></code>)</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/mirror" target="_blank">mirror</a></tt>: URL des aktuell
+		benutzten Spiegel-Depots.
+		<x-details>URL ist die Adresse des fernen Verzeichnisses, das Pakete und Datenbank-Dateien
+		enthält.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/mirrors" target="_blank">mirrors</a></tt>: Liste von URLs
+		verfügbarer Spiegel-Depots.
+		<x-details>Im Gegensatz zum vorgenannten URL müssen die URL in dieser Datei mit
+		<tt>packages/<em>version</em>/</tt> erweitert werden, wobei <em>version</em> z.B. <em>4.0</em>
+		oder <tt><em>cooking</em></tt> sein kann.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.list" target="_blank">packages.list </a></tt>
+		(obsolet): Liste von Paketnamen mit Versionsnummern die in dem Depot enthalten sind.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.desc" target="_blank">packages.desc</a></tt>
+		(obsolet): Liste von Paketnamen, Version, Kurzbeschreibung, Kategorie und "upstream
+		URL".</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.txt" target="_blank">packages.txt</a></tt>
+		(obsolet): Liste von Paketnamen, Version, Kurzbeschreibung und zwei Paketgrößen
+		<x-details>(erstens — Transfergröße, zweitens — Speicherplatzbedarf des installierten
+		Pakets)</x-details>.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.md5" target="_blank">packages.md5</a></tt>
+		(obsolet): Liste von MD5-Prüfsummen mit Paket-Dateinamen.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.info" target="_blank">packages.info</a></tt>:
+		Diese Liste ersetzt und erweitert die letzten vier Listen.
+		<x-details>Für jedes Paket im Depot enthält sie: Paketname, Version,
+		Kategorie, Kurzbeschreibung, "upstream URL", Markierungen ("tags"), Paketgrößen, Abhängigkeiten und
+		MD5-Prüfsumme.
+		Bei fortschreitender Entwicklung kann die Liste wenn nötig um andere Felder erweitert
+		werden.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.equiv" target="_blank">packages.equiv</a></tt>:
+		Liste äquivalenter Pakete im Depot.
+		<x-details>Das Format eines Listeneintrags ist: <tt><em>package</em>=<em>rule rule…</em></tt>.<br>
+		Es gibt zwei Formate für Regeln:
+		<ul>
+		 <li><tt><em>alternative:newname</em></tt> — falls das Paket <tt><em>alternative</em></tt>
+		installiert ist, wird das Paket <tt><em>newname</em></tt> statt des Paketes
+		<tt><em>package</em></tt> installiert werden.</li>
+		 <li>Der Teil <tt><em>alternative:</em></tt> fehlt — in diesem
+		Fall <em>kann</em> <tt><em>newname</em></tt> statt
+		<tt><em>package</em></tt> (nach Wahl des Benutzers) installiert werden.</li>
+		</ul>
+		</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.diff" target="_blank">packages.diff</a></tt>:
+		Diese Datei wird vom <tt><a href="#recharge">recharge</a></tt>-Kommando erzeugt.
+		<x-details>Liste von Paketnamen und Versionen neuer Pakete in dem Depot, auf das
+		das letzte "recharge" angewendet wurde.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.up" target="_blank">packages.up</a></tt>:
+		Diese Datei wird vom <tt><a href="#upgrade">upgrade</a></tt>-Kommando erzeugt.
+		<x-details>Liste von Paketnamen, die nach dem letzten "recharge" aktualisiert werden
+		können.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/descriptions.txt"
+		target="_blank">descriptions.txt</a></tt>: List der ausführlichen Beschreibungen aller
+		Pakete im Depot.</li>
+	<li><tt>packages-desc.<em>language</em></tt> — optionale Liste von übersetzten Kurzbeschreibungen
+		von Paketen <x-details>(siehe das Paket tazpkg-desc-ru)</x-details>.</li>
+	<li><tt>descriptions.<em>language</em>.txt</tt> — optionale Liste von übersetzten
+		ausführlichen Beschreibungen von Paketen
+		<x-details>(siehe das Paket tazpkg-desc-ru)</x-details>.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/packages.icons">packages.icons</a></tt> — optionale Liste
+		von Paketsymbolen für TazPanel.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/blocked-packages.list"
+		target="_blank">blocked-packages.list</a></tt>: optionale Liste von Paketen, die für
+		Aktualisierungen gesperrt sind.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/extra.list" target="_blank">extra.list</a></tt>: Liste von
+		Extra-Paketen
+		<x-details>(nicht-freie Pakete; freie Pakete, die nicht aus Quellprogrammen übersetzt wurden).
+		Die Listeneinträge bestehen aus
+		Paketname, Kurzbeschreibung, "upstream URL",Kategorie, Version und Lizenz.</x-details></li>
+	<li><a href="file:///var/lib/tazpkg/files.list.lzma"><tt>files.list.lzma</tt></a>: sehr große,
+		komprimierte Liste, die die Namen aller Dateien aller Pakete des Depots enthält
+		<x-details>(zur Zeit etwa 5.000 Pakete und etwa 700.000 Dateien)</x-details>.</li>
+	<li><a href="file:///var/lib/tazpkg/files-list.md5"><tt>files-list.md5</tt></a>: MD5-Prüfsumme von
+		<tt>files.list.lzma</tt>.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/installed.info" target="_blank">installed.info</a></tt>:
+		Liste der installierten Pakete im selben Format wie die Datei <tt>packages.info</tt>.
+		<x-details>Dahinter steckt die Idee, bei der Paketinstallation einfach ein Listenelement
+		aus <tt>packages.info</tt> nach	<tt>installed.info</tt> zu kopieren.</x-details></li>
+	<li><tt><a href="file:///var/lib/tazpkg/installed.md5" target="_blank">installed.md5</a></tt>
+		(obsolet): Liste von MD5-Prüfsummen mit Dateinamen aller installierten Pakete.</li>
+	<li><tt><a href="file:///var/lib/tazpkg/priority" target="_blank">priority</a></tt>: optionale
+		Liste von Prioritäten von Depots.
+		<x-details>Jede Zeile enthält den Namen eines Depots. Inoffizielle Depots werden über ihre Namen
+		angesprochen, das Haupt-Depot heißt “main”. Wenn es keine Prioritätenliste gibt, ist die
+		Standard-Priorität: Haupt-Depot und alle vorhandenen inoffiziellen Depots in lexikographischer
+		Reihenfolge.</x-details></li>
+</ul>
+
+<p>Alle obsoleten Dateien werden gelöscht werden, wenn sichergestellt ist, dass sie von keinem Programm mehr
+benutzt werden.</p>
+
+<p>Zusätzlich zu den oben genannten gemeinsamen Paket-Datenbankdateien gibt es auch individuelle Verzeichnisse
+für jedes installierte Paket, die standardmäßig <tt>/var/lib/tazpkg/installed/<em>package</em></tt> heissen.
+Jedes dieser Verzeichnisse kann die folgenden Dateien enthalten:</p>
+
+<ul>
+	<li><tt>receipt</tt> (obligatorisch) — das Paket-Rezept</li>
+	<li><tt>files.list</tt> (obligatorisch) — Liste der Dateien des Paketes</li>
+	<li><tt>md5sum</tt> (obligatorisch) — MD5-Prüfsumme der Dateien des Paketes; andere Prüfsummen-Dateien
+		können mit den Parametern: <tt>cksum</tt> (CRC32), <tt>md5sum</tt> (MD5), <tt>sha1sum</tt>
+		(SHA1), <tt>sha256sum</tt> (SHA256), <tt>sha512sum</tt> (SHA512), <tt>sha3sum</tt>
+		(SHA3-512) spezifiziert werden.</li>
+	<li><tt>description.txt</tt> (optional) — ausführliche Beschreibung</li>
+	<li><tt>modifiers</tt> (optional) — Liste von Paketen, die einige Dateien dieses Paketes ersetzt
+		haben</li>
+	<li><tt>volatile.cpio.gz</tt> (optional) — Archiv “offizieller” Konfigurationsdateien</li>
+</ul>
+</article>
+
+
+<article><header>Zwischenspeicher</header>
+
+<p>Standardmäßig werden Pakete im Verzeichnis <tt>/var/cache/tazpkg</tt> mit Unterverzeichnissen für die
+verschiedenen Depots zwischengespeichert.
+<x-details> Für die <tt><em>cooking</em></tt>-basierte SliTaz-Version ist dies das Verzeichnis
+<tt>/var/cache/tazpkg/<em>cooking</em>/packages</tt>.</x-details></p>
+</article>
+
+
+<article><header>Verschiedene Dateien</header>
+
+<p>In der Datei mit Standardnamen <tt><a href="file:///var/log/slitaz/tazpkg.log"
+target="_blank">/var/log/slitaz/tazpkg.log</a></tt> protokolliert TazPkg seine Aktivitäten.
+<x-details>Es werden fünf Typen von Aktionen protokolliert: Installation, Deinstallation, Blockierung,
+Entblockierung und Rekonfiguration von Paketen.</x-details></p>
+
+<p>Gemeinsame MIME-Informationen, die das “Vermuten” von SliTaz-Paketdateien, Paket-Rezepten und
+SliTaz-Varianten-Dateien ermöglichen.
+<x-details>Diese Datei heißt: <tt><a href="file:///usr/share/mime/packages/tazpkg.xml"
+target="_blank">/usr/share/mime/packages/tazpkg.xml</a></tt>.</x-details></p>
+
+<p>Das Zusatzprogram ("plug-in") für TazPanel (SliTaz-Verwaltungs- und -konfigurations-Oberfläche)
+<tt>/var/www/tazpanel/pkgs.cgi</tt> ermöglicht die Verwaltung von SliTaz-Paketen in der <a
+href="http://127.0.0.1:82/pkgs.cgi" target="_blank">"web"-Anwendung</a>.</p>
+
+<p>Die Dokumentation von TazPkg befindet sich im Verzeichnis <a href="file:///usr/share/doc/tazpkg">
+<tt>/usr/share/doc/tazpkg</tt></a>.</p>
+</article>
+</section>
+
+
+
+
+<section><header>Kommandos</header>
+
+<p>Der erste Parameter von <tt>tazpkg</tt> ist ein Kommando, dem weitere im folgenden beschriebene
+Parameter folgen können. Optionen haben zwei Bindestriche am Anfang und können in beliebiger
+Reihenfolge und an jeder Stelle stehen, sogar vor dem Kommando. Unbekannte und unpassende Optionen werden
+ignoriert. Die folgenden Kommandos sind gleichwertig:</p>
+
+<pre>
+$ tazpkg info nano --root=<em>/mnt/sda6</em>
+$ tazpkg --root=<em>/mnt/sda6</em> info nano
+$ tazpkg info --root=<em>/mnt/sda6</em> nano <em>--color</em>
+</pre>
+
+<p>Die globale Option <tt>--root=…</tt> kann in jedem TazPkg-Kommando angegeben werden. Diese Option ermöglicht das
+Operieren auf anderen SliTaz-Installationen, indem sie auf die Wurzel eines eingehängten Dateisystems einer
+anderen SliTaz-Installation zeigt.
+<x-details>Diese Option ermöglicht insbesondere die Installation von SliTaz in einem anderen, leeren
+Dateisystem und das Aktualisieren von SliTaz-Paketen auf einem fernen System.</x-details></p>
+
+
+<article><header>Service-Kommandos</header>
+
+<ul>
+	<li><a href="#usage">usage</a>: kurze Anwendungshilfe ausgeben</li>
+	<li><a href="#help">help</a>: Anwendungshilfe für die TazPkg-Kommandos ausgeben</li>
+	<li><a href="#activity">activity</a>: TazPkg-Ablaufprotokoll ausgeben</li>
+	<li><a href="#clean-cache">clean-cache</a>: alle Pakete im Zwischenspeicher löschen</li>
+	<li><a href="#list-cache">list-cache</a>: alle Pakete im Zwischenspeicher auflisten</li>
+	<li><a href="#shell">shell</a>: den interaktiven TazPkg-Kommandointerpreter starten</li>
+</ul>
+</article>
+
+
+<article><header>Listen erstellen</header>
+
+<ul>
+	<li><a href="#list">list</a>: im System installierte Pakete auflisten</li>
+	<li><a href="#list-mirror">list-mirror</a>: alle in einem Depot enthaltenen Pakete auflisten</li>
+	<li><a href="#list-config">list-config</a>: die System-Konfigurationsdateien auflisten</li>
+</ul>
+</article>
+
+
+<article><header>Suchen</header>
+
+<ul>
+	<li><a href="#search">search</a>: ein Paket über seinen Namen oder ein Muster suchen</li>
+	<li><a href="#search-pkgname">search-pkgname</a>: im Depot nach einem Paket suchen, das
+		eine bestimmte Datei enthält</li>
+	<li><a href="#search-file">search-file</a>: in allen installierten Paketen nach einer Datei suchen</li>
+</ul>
+</article>
+
+
+<article><header>Installion und Deinstallation von Paketen</header>
+
+<ul>
+	<li><a href="#get">get</a>: ein Paket in das aktuelle Verzeichnis transferieren ("download")</li>
+	<li><a href="#install">install</a>: ein Paket aus einer lokalen *.tazpkg-Datei installieren</li>
+	<li><a href="#get-install">get-install</a>: ein Paket aus einem Depot transferieren und installieren</li>
+	<li><a href="#get-list">get-list</a>: eine Menge von Paketen eines Depots gemäß einer Liste transferieren</li>
+	<li><a href="#get-list">install-list</a>: alle Pakete aus einer Liste von Paketen installieren</li>
+	<li><a href="#get-list">get-install-list</a>: alle Pakete aus einer Liste von Paketen von einem Depot
+		transferieren und installieren</li>
+	<li><a href="#remove">remove</a>: das angegebene Paket deinstallieren und alle installierten Dateien löschen</li>
+	<li><a href="#reconfigure">reconfigure</a>: die Nachinstallationsprozedur des Pakets erneut zum Ablauf bringen</li>
+	<li><a href="#link">link</a>: ein Paket einer anderen SliTaz-Installation verknüpfen</li>
+	<li><a href="#set-release">set-release</a>: den Freigabestand ändern und alle Pakete entsprechend aktualisieren</li>
+	<li><a href="#add-flavor">add-flavor</a>: alle Pakete einer SliTaz-Variante installieren</li>
+	<li><a href="#add-flavor">install-flavor</a>: alle Pakete einer SliTaz-Variante installieren und andere
+		deinstallieren</li>
+</ul>
+</article>
+
+
+<article><header>Verwaltung von Paketen</header>
+
+<ul>
+	<li><a href="#info">info</a>: Information über ein Paket ausgeben</li>
+	<li><a href="#desc">desc</a>: Beschreibung eines Pakets ausgeben</li>
+	<li><a href="#list-files">list-files</a>: die Namen der Dateien eines installierten Paketes ausgeben</li>
+	<li><a href="#block">block, unblock</a>: die Version eines installierten Paketes für Aktualisierungen
+		sperren oder entsperren</li>
+	<li><a href="#check">check</a>: die Konsistenz installierter Pakete prüfen</li>
+	<li><a href="#bugs">bugs</a>: bekannte Fehler in Paketen anzeigen</li>
+	<li><a href="#depends">depends</a>: den Abhängigkeitsbaum ausgeben</li>
+	<li><a href="#depends">rdepends</a>: den umgekehrten Abhängigkeitsbaum ausgeben</li>
+	<li><a href="#extract">extract</a>: ein (*.tazpkg)-Paket in ein Verzeichnis entpacken</li>
+	<li><a href="#pack">pack</a>: ein entpacktes Paket oder ein vorbereitetes Paket aus einem Verzeichnis packen</li>
+	<li><a href="#repack">repack</a>: ein Paket aus den Dateien eines installierten Paketes packen</li>
+	<li><a href="#repack-config">repack-config</a>: ein Paket aus den Dateien eines installierten Paketes und
+		den System-Konfigurationsdateien packen</li>
+	<li><a href="#recompress">recompress</a>: ein Paket erneut mit einer höheren Kompressionsrate packen</li>
+	<li><a href="#convert">convert</a>: ein Fremdpaket in das tazpkg-Format umsetzen</li>
+	<li><a href="#list-suggested">list-suggested</a>: eine Liste vorgeschlagener Pakete ausgeben</li>
+</ul>
+</article>
+
+
+<article><header>Verwaltung von Depots</header>
+
+<ul>
+	<li><a href="#recharge">recharge</a>: die Paket-Datenbank aus einem Spiegel-Depot aktualisieren</li>
+	<li><a href="#upgrade">upgrade</a>: Pakete prüfen, letzte Aktualisierungen anzeigen und installieren</li>
+	<li><a href="#setup-mirror">setup-mirror</a>: die Adresse (URL) eines Depots ändern</li>
+	<li><a href="#add-undigest">setup-undigest</a>: die Adresse (URL) eines inoffiziellen Depots ändern</li>
+	<li><a href="#list-undigest">list-undigest</a>: inoffizielle Depots auflisten</li>
+	<li><a href="#add-undigest">add-undigest</a>: ein inoffizielles Depot hinzufügen</li>
+	<li><a href="#remove-undigest">remove-undigest</a>: ein inoffizielles Depot entfernen</li>
+	<li><a href="#mkdb">mkdb</a>: eine TazPkg-Datenbank für ein Verzeichnis mit *.tazpkg-Paketen erzeugen</li>
+</ul>
+</article>
+</section>
+
+
+Ausführliche Beschreibung der Kommandos
+
+<section><header>Service Kommandos</header>
+
+
+<article id="usage"><h3>usage</h3>
+
+<p>Die vollständige Liste der TazPkg-Kommandos mit einer Kurzbeschreibung ausgeben.</p>
+
+<pre>
+$ tazpkg usage
+</pre>
+</article>
+
+
+<article id="help"><h3>help</h3>
+
+<p>Anwendungshilfe für das angegebene Kommando ausgeben (<tt>help</tt> oder <tt>-h</tt>).
+Es kann ein Kurzname des Kommandos, der vollständige Kommandoname oder ein Teil davon angegeben werden.
+Bindestriche am Anfang des Kurznamens brauchen nicht eingegeben zu werden.
+Wenn der eingegebene Teil eines vollständigen Kommandonamens auf mehrere Kommandos paßt, wird nachgefragt.</p>
+
+<pre>
+$ tazpkg help <em>-gi</em>
+$ tazpkg -h <em>us</em>
+</pre>
+</article>
+
+
+<article id="activity"><h3>activity</h3>
+
+<p>TazPkg-Ablaufprotokoll ausgeben (<tt>activity</tt> oder <tt>log</tt> oder <tt>-a</tt>). Mit dem optionalen
+Parameter <tt>--nb=</tt> kann die Anzahl der anzuzeigenden Zeilen festgelegt werden.</p>
+
+<pre>
+$ tazpkg activity
+$ tazpkg -a --nb=<em>20</em>
+</pre>
+</article>
+
+
+<article id="clean-cache"><h3>clean-cache</h3>
+
+<p>TazPkg-Pakete im Zwischenspeicher löschen (<tt>clean-cache</tt> oder <tt>-cc</tt>). Bei der
+Installation hält TazPkg Kopien der über das Netzwerk transferierten Pakete im Zwischenspeicher,
+damit im Fall einer erneuten Installation des Paketes keine Netzlast erzeugt wird.
+Wenn dieser Speicherplatz freigegeben werden oder die Pakete erneut transferiert werden sollen, kann
+dieses Kommando verwendet werden.</p>
+
+<pre>
+# tazpkg clean-cache
+# tazpkg -cc
+</pre>
+</article>
+
+
+<article id="list-cache"><h3>list-cache</h3>
+
+<p>*.tazpkg-Pakete im Zwischenspeicher auflisten. Es wird eine Liste von Dateinamen und -größen ausgegeben,
+wie auch die Gesamtzahl und -größe.</p>
+
+<pre>
+# tazpkg list-cache
+</pre>
+</article>
+
+
+<article id="shell"><h3>shell</h3>
+
+<p>Den interaktiven TazPkg-Kommandointerpreter starten. Damit können alle oben angeführten TazPkg-Kommandos
+eingegeben werden. Darüberhinaus kann auch das Kommando su eingegeben werden.</p>
+
+<pre>
+$ tazpkg shell
+# tazpkg shell
+</pre>
+</article>
+</section>
+
+
+
+
+<section><header>Listen erstellen</header>
+
+
+<article id="list"><h3>list</h3>
+
+<p>Im System installierte Pakete auflisten (<tt>list</tt> oder <tt>-l</tt>). Es wird eine
+Liste aller installierten Pakete ausgegeben. Es ist auch möglich, eine Liste der Kategorien (<tt>c</tt> oder
+<tt>cat</tt> oder <tt>categories</tt>), von Paketen einer Kategorie und von blockierten Paketen
+(<tt>b</tt> oder <tt>blocked</tt>) auszugeben. Sollen Pakete mit einem bestimmen Namen(smuster) ausgegeben
+werden, so kann das Kommando <tt><a href="#search">search</a></tt> verwendet werden.</p>
+
+<pre>
+$ tazpkg list
+$ tazpkg list cat
+$ tazpkg list <em>games</em>
+$ tazpkg list blocked
+</pre>
+</article>
+
+
+<article id="list-mirror"><h3>list-mirror</h3>
+
+<p>Alle in einem Depot enthaltenen Pakete auflisten (<tt>list-mirror</tt> oder <tt>-lm</tt>). Es wird
+eine vom Depot neu transferierte Liste der Pakete (packages.list) ausgegeben. Existiert diese nicht, werden Sie
+aufgefordert, als Administrator (root) mit <code>tazpkg <a href="#recharge">recharge</a></code>
+eine neue Liste zu transferieren.
+Mit der Option <tt>--diff</tt> können die Unterschiede zwischen der vorherigen und der aktuellen
+Liste der Pakete angezeigt werden.</p>
+
+<pre>
+$ tazpkg list-mirror
+$ tazpkg -lm --diff
+</pre>
+</article>
+
+
+<article id="list-config"><h3>list-config</h3>
+
+<p>Die System-Konfigurationsdateien auflisten. Die Option <tt>--box</tt> bewirkt die Ausgabe in Tabellenform.
+Wird ein Paketname angegeben, werden nur die Konfigurationsdateien dieses Paketes aufgelistet.</p>
+
+<pre>
+$ tazpkg list-config
+$ tazpkg list-config --box
+$ tazpkg list-config <em>slim</em>
+$ tazpkg list-config <em>slim</em> --box
+</pre>
+</article>
+</section>
+
+
+
+
+<section><header>Suchen</header>
+
+
+<article id="search"><h3>search</h3>
+
+<p>ein Paket über seinen Namen oder ein Muster suchen (<tt>search</tt> oder <tt>-s</tt>). Es wird nach
+Paketen gesucht, deren Name die angegebene Zeichenfolge enthält, und zwar unter den installierten Paketen
+(<tt>-i</tt> oder <tt>--installed</tt>) und in der Liste der Pakete eines Depots (<tt>-l</tt> oder
+<tt>--list</tt>).</p>
+
+<p>Um eine aktuelle Liste der installierbaren Pakete eines Depots zu erhalten, ist <code>tazpkg
+recharge</code> vor der Suche auszuführen.</p>
+
+<pre>
+$ tazpkg search <em>gcc</em>
+$ tazpkg search <em>mt</em> -i
+$ tazpkg search <em>bit</em> -l
+</pre>
+</article>
+
+
+<article id="search-pkgname"><h3>search-pkgname</h3>
+
+<p>In einem Depot nach einem Paket suchen, das eine bestimmte Datei enthält (<tt>search-pkgname</tt> oder
+<tt>-sp</tt>).</p>
+
+<pre>
+$ tazpkg search-pkgname <em>libnss</em>
+$ tazpkg -sp <em>/usr/share/fonts</em>
+</pre>
+</article>
+
+
+<article id="search-file"><h3>search-file</h3>
+
+<p>In allen installierten Paketen nach einer Datei suchen (<tt>search-file</tt> oder
+<tt>-sf</tt>). Dieses Kommando ist sehr hilfreich um den vollständigen Pfadnamen einer Datei zu finden und
+festzustellen, ob eine Datei im System vorhanden ist. Die Option <tt>--mirror</tt> ermöglicht die Suche
+nach einer Datei in einem Depot.</p>
+
+<pre>
+$ tazpkg search-file <em>libnss</em>
+$ tazpkg -sf <em>/usr/share/fonts</em> --mirror
+</pre>
+</article>
+</section>
+
+
+
+
+<section><header>Installation und Deinstallation von Paketen</header>
+
+
+<article id="get"><h3>get</h3>
+
+<p>Pakete von einem Depot transferieren (<tt>get</tt> or <tt>-g</tt>). Die Pakete werden in das
+aktuelle Verzeichnis transferiert. Wenn mit dem Namen kein offizielles Paket gefunden wird,
+wird ein Paket mit dem Präfix get- oder ein Extra-Paket (in dieser Reihenfolge) gesucht und transferiert.
+Die Option <tt>--extra</tt> bewirkt, dass nur ein Extra-Paket transferiert wird.</p>
+
+<p>Es können auch mehrere Paketnamen im tazpkg-Kommando angegeben werden oder (mit der Option <tt>--list</tt>)
+eine Datei, die eine Liste von Paketnamen enthält.
+Alternativ kann dass Kommando <tt><a href="#get-list">get-list</a></tt> verwendet werden.</p>
+
+<pre>
+# tazpkg get <em>grub</em>
+# tazpkg get <em>nano</em> --root=<em>/mnt/sda6</em>
+# tazpkg get <em>palemoon</em> --extra
+# tazpkg -g <em>nano mc</em>
+# tazpkg -g --list=<em>/tmp/office</em>
+</pre>
+</article>
+
+
+<article id="install"><h3>install</h3>
+
+<p>Mit diesem Kommando können Pakete aus lokalen Dateien mit der Endung <tt>.tazpkg</tt> installiert werden
+(<tt>install</tt> oder <tt>-i</tt>).</p>
+
+<p>Mit der Option <tt>--forced</tt> kann ein bereits installiertes Paket aktualisiert werden. Mit der Option
+<tt>--newconf</tt> können alle Konfigurationsdateien aus den Konfigurationsdateien des
+Paketes neu erstellt werden. Mit der Option <tt>--nodeps</tt> ist es möglich, nur das angegebene Paket ohne
+Berücksichtigung von Abhängigkeiten zu installieren.</p>
+
+<p>Mit der Option <tt>--local</tt> bevorzugt TazPkg bei der Installation von Paketen zur Auflösung von
+Abhängigkeiten Pakete aus lokalen Dateien (d.h. Pakete aus demselben Verzeichnis wie das zu installierende Paket)
+gegenüber Paketen aus dem Zwischenspeicher oder einem Depot.
+Dies ermöglicht es, eine Anzahl bereits lokal gespeicherter Pakete mitsamt der Pakete von denen sie
+abhängen zu installieren, ohne dass dabei eine Netzwerk-Verbindung benötigt wird.</p>
+
+<p>Es können mehrere Paketnamen im tazpkg-Kommando angegeben werden oder (mit der Option <tt>--list</tt>)
+eine Datei, die eine Liste von Paketnamen enthält.
+Alternativ kann dass Kommando <tt><a href="#get-list">install-list</a></tt> verwendet werden.</p>
+
+<p>Wie ein Paket über das Netzwerk installiert wird, ist bei <tt><a href="#get-install">get-install</a></tt>
+beschrieben.</p>
+
+<pre>
+# tazpkg install <em>package-1.0.tazpkg</em>
+# tazpkg -i <em>path/to/package-1.0.tazpkg</em> --forced
+# tazpkg -i <em>path/to/package-1.0.tazpkg</em> --root=<em>/mnt/rootfs</em>
+# tazpkg -i <em>nano-2.4.0.tazpkg mc-4.8.14.tazpkg</em>
+# tazpkg -i --list=<em>/tmp/development</em>
+# cd <em>/home/boot/packages</em>; tazpkg -i <em>nano-2.4.0.tazpkg</em> --local
+</pre>
+</article>
+
+
+<article id="get-install"><h3>get-install</h3>
+
+<p>Pakete aus einem Depot über das Netzwerk transferieren und installieren
+(<tt>get-install</tt> oder <tt>-gi</tt>).
+Zunächst wird geprüft, ob das Paket in dem Depot vorhanden ist und ob es bereits transferiert
+wurde.</p>
+
+<p>Mit der Option <tt>--forced</tt> kann ein bereits installiertes Paket aktualisiert werden. Mit der Option
+<tt>--newconf</tt> können alle Konfigurationsdateien aus den Konfigurationsdateien des
+Paketes neu erstellt werden. Mit der Option <tt>--nodeps</tt> ist es möglich, nur das angegebene Paket ohne
+Berücksichtigung von Abhängigkeiten zu installieren.</p>
+
+<p>Es können mehrere Paketnamen angegeben werden oder (mit der Option <tt>--list</tt>) eine Datei,
+die eine Liste von Paketnamen enthält.
+Alternativ kann dass Kommando <tt><a href="#get-list">get-install-list</a></tt> verwendet werden.</p>
+
+<p>Um eine Liste der Pakete im Depot zu erhalten, kann das Kommando
+<tt><a href="#list-mirror">list-mirror</a></tt> verwendet werden.</p>
+
+<pre>
+# tazpkg get-install <em>grub</em>
+# tazpkg -gi <em>grub</em> --forced
+# tazpkg -gi <em>nano</em> --root=<em>/mnt/sda6</em>
+# tazpkg -gi <em>nano mc</em>
+# tazpkg -gi --list=<em>/tmp/multimedia</em>
+</pre>
+</article>
+
+
+<article id="get-list"><h3>get-list, install-list, get-install-list</h3>
+
+<p>Pakete aus einem Depot transferieren oder installieren, deren Namen in einer Datei enthalten sind.
+Damit ist es möglich, mehrere Pakete mit einem einzigen Kommando zu bearbeiten.</p>
+
+<p>Die Optionen sind dieselben wie bei den entsprechenden einfachen Kommandos: <tt><a href="#get">get</a></tt>,
+<tt><a href="#install">install</a></tt> und <tt><a href="#get-install">get-install</a></tt>.</p>
+
+<pre>
+# tazpkg install-list <em>my-packages.list</em>
+# tazpkg get-install-list <em>my-packages.list</em> --forced
+</pre>
+</article>
+
+
+<article id="remove"><h3>remove</h3>
+
+<p>Ein Paket deinstallieren (<tt>remove</tt> oder <tt>-r</tt>). Es wird nach einer Bestätigung gefragt (j/N) für
+die Deinstallation sowohl des Paketes als auch von Paketen, die von diesem Paket abhängen und für
+die Reinstallation von Paketen, die von diesem Paket modifiziert wurden.
+Mit diesem Kommando werden alle Dateien gelöscht, die mit dem Paket installiert wurden
+(siehe <a href="#list-files"><tt>list-files</tt></a>).</p>
+
+<p>Mit der Option <tt>--auto</tt> wird bewirkt, dass keine Bestätigung angefordert wird.</p>
+
+<pre>
+# tazpkg remove <em>bc</em>
+# tazpkg -r <em>gtk+-3</em> --root=<em>/mnt/sda6</em>
+# tazpkg -r <em>nano</em> --auto
+</pre>
+</article>
+
+
+<article id="reconfigure"><h3>reconfigure</h3>
+
+<p>Die Nachinstallationsprozedur des Pakets wird erneut zum Ablauf gebracht.</p>
+
+<pre>
+# tazpkg reconfigure <em>gcc</em>
+# tazpkg reconfigure <em>gcc</em> --root=<em>/mnt/sda6</em>
+</pre>
+</article>
+
+
+<article id="link"><h3>link</h3>
+
+<p>Mit diesem Kommando wird die Installation eines Paketes ermöglicht, das bereits auf einem anderen Datenträger
+installiert ist.
+Dazu werden symbolische Verknüpfungen (von Dateinamen) verwendet, so dass sehr wenig Speicher
+benötigt wird. Dieses Verfahren wird generell von einem System im Arbeitsspeicher zur
+Installation von Zusatz-Produkten von USB-Speichermedien verwendet.</p>
+
+<pre>
+# tazpkg link <em>openoffice /media/usbdisk</em>
+</pre>
+</article>
+
+
+<article id="set-release"><h3>set-release</h3>
+
+<p>Mit diesem Kommando wird der Freigabestand aktualisiert und alle Pakete werden auf den neuesten
+Stand gebracht.</p>
+
+<pre>
+# tazpkg set-release <em>cooking</em>
+</pre>
+</article>
+
+
+<article id="add-flavor"><h3>add-flavor, install-flavor</h3>
+
+<p>Installation aller Pakete einer SliTaz-Variante. Darüberhinaus deinstalliert <tt>install-flavor</tt> alle
+anderen installierten Pakete.</p>
+
+<pre>
+# tazpkg add-flavor <em>gtkonly</em>
+# tazpkg install-flavor <em>justx</em>
+</pre>
+</article>
+</section>
+
+
+
+
+<section><header>Pakete verwalten</header>
+
+
+<article id="info"><h3>info</h3>
+
+<p>Alle verfügbare Information über ein Paket ausgeben. Angegeben werden kann der Name eines
+installierten Paketes oder eines Paketes, das noch nicht installiert, aber im Depot vorhanden ist.
+Es können auch die Informationen aus einer lokalen Paketdatei angezeigt werden, indem ein absoluter oder relativer
+Pfadname der <tt>.tazpkg</tt>-Datei eingegeben wird. Die Informationen werden der
+TazPkg-Datenbank und dem Paket-Rezept entnommen, welches letztere Version, Kategorie, Betreuer, "website" und alle
+Abhängigkeiten enthält (siehe auch <a href="../cookutils/cookutils.en.html" target="_blank">Cookutils</a>
+für weitere Informationen über Rezepte).</p>
+
+<pre>
+$ tazpkg info <em>busybox</em>
+$ tazpkg info <em>minitube</em>
+$ tazpkg info <em>packages/comix-4.0.4.tazpkg</em>
+</pre>
+</article>
+
+
+<article id="desc"><h3>desc</h3>
+
+<p>Beschreibung eines Paketes ausgeben (<tt>desc</tt> oder <tt>-d</tt>).
+Es wird der Inhalt der Datei <tt>description.txt</tt> ausgegeben, die optional für jedes Paket
+existieren kann.</p>
+
+<pre>
+$ tazpkg desc <em>busybox</em>
+</pre>
+</article>
+
+
+<article id="list-files"><h3>list-files</h3>
+
+<p>Die Namen der Dateien eines installierten Paketes ausgeben (<tt>list-files</tt> oder <tt>-lf</tt>).
+Mit diesem Kommando wird einfach die Datei <tt>files.list</tt> gelesen und ausgegeben, die bei der
+Paketerzeugung automatisch erstellt wird. Diese Datei wird auch verwendet, um die Dateien bei der Deinstallation
+eines Paketes zu löschen.</p>
+
+<pre>
+$ tazpkg list-files <em>bc</em>
+</pre>
+</article>
+
+
+<article id="block"><h3>block, unblock, chblock</h3>
+
+<p>Mit den Kommandos <tt>block</tt> (oder <tt>-b</tt>) und <tt>unblock</tt> (oder <tt>-u</tt>) können
+installierte Paket-Versionen gesperrt werden, so dass sie vom Kommando <tt><a href="#upgrade">upgrade</a></tt>
+übergangen werden und entsperrt werden. Mit dem Kommando <tt>chblock</tt> kann der
+Blockierzustand des Paketes invertiert werden.
+Die Datei <tt>/var/lib/tazpkg/blocked-packages.list</tt> enthält die Namen der blockierten Pakete.
+Diese Datei kann auch manuell bearbeitet werden.</p>
+
+<pre>
+# tazpkg block <em>grub</em>
+# tazpkg unblock <em>grub</em>
+# tazpkg chblock <em>grub</em>
+</pre>
+</article>
+
+
+<article id="check"><h3>check</h3>
+
+<p>Die Abhängigkeiten installierter Pakete prüfen und ob alle Dateien für ein erneutes Packen des
+Paketes vorhanden sind. Ist kein Paketname angegeben, so werden alle installierten Pakete geprüft.
+Mit der Option <tt>--full</tt> werden einige Prüfungen mehr durchgeführt, weshalb auch mehr Zeit benötigt wird.</p>
+
+<pre>
+$ tazpkg check
+$ tazpkg check --full
+$ tazpkg check <em>nano</em>
+$ tazpkg check <em>sakura</em> --full
+</pre>
+</article>
+
+
+<article id="bugs"><h3>bugs</h3>
+
+<p>Es wird eine Liste bekannter Fehler in einem Paket angezeigt. Ist kein Paketname angegeben, so werden die
+bekannten Fehler aller Pakete angezeigt.</p>
+
+<pre>
+$ tazpkg bugs
+$ tazpkg bugs <em>nano</em>
+</pre>
+</article>
+
+
+<article id="depends"><h3>depends, rdepends</h3>
+
+<p>Gibt den Abhängigkeitsbaum, bzw. den umgekehrten Abhängigkeitsbaum eines Paketes aus.</p>
+
+<p>Mit dem Kommando <code>depends</code> wird eine Liste der Pakete ausgegeben, von denen das Paket abhängt, die
+also nötig sind, damit das Paket funktioniert.
+Im <code>depends</code>-Kommando bewirkt die Option <tt>--mark</tt>, dass installierte Pakete mit einem
+Plus-Zeichen und nicht installierte Pakete mit einem Minus-Zeichen markiert werden.
+Die Option <tt>--total</tt> bewirkt, dass Anzahl und Größe der Pakete ausgegeben werden.
+Werden beide Optionen zusammen eingegeben, so werden Anzahl und Größe der Pakete ausgegeben, die zu
+installieren sind.</p>
+
+<p>Mit dem Kommando <code>rdepends</code> wird eine Liste der Pakete ausgegeben, die von diesem Paket abhängen,
+die also nur richtig funktionieren, wenn das Paket installiert ist.
+Wird das <code>rdepends</code>-Kommando <em>ohne</em> die Option <tt>--all</tt> eingegeben, werden nur die
+installierten Pakete angezeigt, die von dem Paket abhängen, <em>mit</em> dieser Option eine List aller 
+verfügbaren Pakete, die von dem Paket abhängen.
+Mit der Option <tt>--mark</tt> werden die Pakete wie beim <code>depends</code>-Kommando markiert.</p>
+
+<pre>
+$ tazpkg depends <em>mpd</em>
+$ tazpkg rdepends <em>mpd</em>
+</pre>
+</article>
+
+
+<article id="extract"><h3>extract</h3>
+
+<p>Ein Paket in ein Verzeichnis mit Namen <tt><em>package-version</em></tt> entpacken
+(<tt>extract</tt> oder <tt>-e</tt>). Wird kein Ziel-Verzeichnis angegeben, wird dieses Unterverzeichnis
+im aktuellen Verzeichnis angelegt.</p>
+
+<pre>
+$ tazpkg extract <em>package.tazpkg</em>
+$ tazpkg extract <em>package.tazpkg target/dir</em>
+</pre>
+</article>
+
+
+<article id="pack"><h3>pack</h3>
+
+<p>Ein entpacktes Paket oder ein vorbereitetes Paket aus einem Verzeichnis packen.
+Es kann manuell ein <tt>.tazpkg</tt>-Paket erzeugt werden (siehe die Dokumentation
+<a href="../cookutils/cookutils.en.html" target="_blank">Cookutils</a> zur automatischen Paketerzeugung).</p>
+
+<pre>
+# tazpkg pack <em>package-version</em>
+</pre>
+</article>
+
+
+<article id="repack"><h3>repack</h3>
+
+<p>Ein Paket aus den Dateien eines installierten Paketes packen.</p>
+
+<pre>
+# tazpkg repack <em>package</em>
+</pre>
+</article>
+
+
+<article id="repack-config"><h3>repack-config</h3>
+
+<p>Ein Paket aus den Konfigurationsdateien des Systems packen (siehe
+<tt><a href="#list-config">list-config</a></tt>). Zur Wiederherstellung der aktuellen Konfiguration
+genügt es, dieses Paket zu installieren.</p>
+
+<pre>
+# tazpkg repack-config
+</pre>
+</article>
+
+
+<article id="recompress"><h3>recompress</h3>
+
+<p>Ein <tt>.tazpkg</tt>-Paket (cpio-Archiv) erneut mittels lzma mit einer höheren Kompressionsrate packen.</p>
+
+<pre>
+# tazpkg recompress <em>package.tazpkg</em>
+</pre>
+</article>
+
+
+<article id="convert"><h3>convert</h3>
+
+<p>Ein Fremdpaket in ein SliTaz-Paket (tazpkg-Format) umsetzen (<tt>convert</tt> oder <tt>-c</tt>).</p>
+
+<p>Die unterstützten Fremdpaketformate sind:</p>
+
+<ul>
+	<li><a href="https://packages.debian.org/search" target="_blank">Debian-Pakete</a>
+		(<tt>*.deb</tt>, <tt>*.udeb</tt>)</li>
+	<li><a href="http://rpmfind.net/linux/rpm2html/search.php" target="_blank">RPM-Pakete</a>
+		(<tt>*.rpm</tt>)</li>
+	<li><a href="http://www.slax.org/" target="_blank">Slax-Pakete</a>
+		(<tt>*.sb</tt>)</li>
+	<li><a href="http://puppylinux.org/" target="_blank">Puppy-Pakete</a>
+		(<tt>*.sfs</tt>, <tt>*.pet</tt>)</li>
+	<li><a href="http://www.slackware.com/packages/" target="_blank">Slackware-Pakete</a>
+		(<tt>*.tgz</tt>)</li>
+	<li><a href="http://www.nutyx.org/" target="_blank">NuTyX-Pakete</a>
+		(<tt>*.cards.tar.xz</tt>)</li>
+	<li><a href="https://www.archlinux.org/packages/" target="_blank">Arch Linux-</a> bzw.
+		<a href="http://pkgs.alpinelinux.org/packages" target="_blank">Alpine Linux -Pakete</a>
+		(<tt>*.apk</tt>, <tt>*.pkg.tar.gz</tt>, <tt>*.pkg.tar.xz</tt>)</li>
+	<li><a href="http://wiki.openwrt.org/doc/packages" target="_blank">OpenWrt-Pakete</a>
+		(<tt>*.ipk</tt>, <tt>*.opk</tt>)</li>
+	<li><a href="http://0.tuxfamily.org/doku.php/paquets/start" target="_blank">0Linux-Pakete</a>
+		(<tt>*.spack</tt>)</li>
+	<li><a href="http://www.paldo.org/index-section-packages.html" target="_blank">paldo-Pakete</a>
+		(<tt>*.tar.bz2</tt>)</li>
+	<li><a href="http://www.voidlinux.eu/packages/" target="_blank">Void-Pakete</a>
+		(<tt>*.xbps</tt>)</li>
+	<li><a href="http://tinycorelinux.net/" target="_blank">Tinycore-Pakete</a>
+		(<tt>*.tce</tt>, <tt>*.tcel</tt>, <tt>*.tcem</tt>, <tt>*.tcz</tt>)</li>
+</ul>
+
+<pre>
+# tazpkg convert <em>alien-package-file</em>
+</pre>
+</article>
+
+
+<article id="list-suggested"><h3>list-suggested</h3>
+
+<p>Eine Liste vorgeschlagener Pakete für jedes installierte Paket ausgeben. Mit der Option <tt>--all</tt> werden
+alle vorgeschlagenen Pakete ausgegeben, ohne nur die nicht installierten vorgeschlagenen Pakete.</p>
+
+<pre>
+$ tazpkg list-suggested
+$ tazpkg list-suggested --all
+</pre>
+</article>
+</section>
+
+
+
+
+<section><header>Verwaltung von Depots</header>
+
+
+<article id="recharge"><h3>recharge</h3>
+
+<p>Die Paket-Datenbank aus einem Depot aktualisieren. Zunächst wird die alte Paket-Datenbank
+gesichert, dann wird die neueste Paket-Datenbank der verfügbaren Pakete vom Depot transferiert.
+Wenn die Datenbank aktualisiert ist, können die Kommandos <tt><a href="#list">list</a></tt> und
+<tt><a href="#search">search</a></tt> verwendet werden. Um Unterschiede zu entdecken, kann
+<tt><a href="#list-mirror">list-mirror</a> --diff</tt> verwendet werden;
+zum Ansehen und Aktualisieren von Paketen kann einfach <tt><a href="#upgrade">upgrade</a></tt>
+eingegeben werden.</p>
+
+<p>Ohne weitere Optionen werden die Paket-Datenbanken aller definierten Depots aktualisiert. Es kann auch
+das Depot angegeben werden, aus dem aktualisiert werden soll: “main” für das Haupt-Depot 
+oder der Name eines inoffiziellen Depots.</p>
+
+<pre>
+# tazpkg recharge
+# tazpkg recharge main
+# tazpkg recharge <em>My_Undigest</em>
+# tazpkg recharge --root=<em>/mnt/sda6</em>
+</pre>
+</article>
+
+
+<article id="upgrade"><h3>upgrade</h3>
+<p>Es werden alle installierten Pakete aktualisiert, die in einem Depot enthalten sind
+(<tt>upgrade</tt> oder <tt>up</tt>). Die Aktualisierung von Paketen ist ein wichtiger Beitrag zur
+Systemsicherheit: mit den neuesten Aktualisierungen und Korrekturen bleibt das System sicher.
+Das SliTaz-Projekt, auch wenn es klein ist, bietet regelmäßig Sicherheitsaktualisierungen und
+generell die neuesten Versionen von Software. Dies Funktion ist für Anwender gedacht, die
+SliTaz auf Platte installiert haben. Im "Live CD"-Modus aktualisierte Pakete sind nach Systembeendigung
+("shutdown") verloren!</p>
+
+<p>Zunächst wird die Paket-Datenbank automatisch aktualisiert (<tt><a href="#recharge">recharge</a></tt>)
+um eine aktuelle Liste der Pakete zu erhalten, die aktualisiert werden können.</p>
+
+<p>Ohne Optionen läuft die Aktualisierung im interaktiven Modus und fragt vor der Installation.
+Mit der Option <tt>-c</tt> oder <tt>--check</tt> wird nur nach verfügbaren Aktualisierungen gesucht;
+mit der Option <tt>-i</tt> oder <tt>--install</tt> wird nach verfügbaren Aktualisierungen gesucht und diese
+werden alle installiert.</p>
+
+<pre>
+# tazpkg upgrade
+# tazpkg up --check
+# tazpkg up -i
+</pre>
+</article>
+
+
+<article id="setup-mirror"><h3>setup-mirror</h3>
+
+<p>Die Adresse (URL) eines Depots ändern(<tt>setup-mirror</tt> oder <tt>-sm</tt>). Der
+URL des neuen Depots wird nachgefragt. Es können mehrere URL, durch Leerzeichen getrennt, eingegeben
+werden. Stattdessen kann auch die Datei
+<a href="file:///var/lib/tazpkg/mirror"><tt>/var/lib/tazpkg/mirror</tt></a> direkt geändert werden.
+Der URL muss die Adresse des Verzeichnisses sein, das die Paketliste
+<a href="file:///var/lib/tazpkg/packages.info"><tt>packages.info</tt></a> und
+die Pakete enthält.</p>
+
+<pre>
+# tazpkg setup-mirror
+</pre>
+</article>
+
+
+<article id="add-undigest"><h3>add-undigest, setup-undigest</h3>
+
+<p>Den URL eines inoffiziellen Depots hinzufügen, um Pakete zu testen, die noch nicht in einem
+offiziellen Depot enthalten sind. Stattdessen kann auch die Datei
+<tt>/var/lib/tazpkg/undigest/<em>repository</em>/mirror</tt> manuell bearbeitet werden.
+Der URL muss die Adresse des Verzeichnisses sein, das die Paketliste <tt>packages.info</tt> und
+die Pakete enthält.</p>
+
+<pre>
+# tazpkg add-undigest <em>public-repository http://my.home.org/slitaz</em>
+# tazpkg setup-undigest <em>local-repository /home/slitaz/packages</em>
+</pre>
+</article>
+
+
+<article id="list-undigest"><h3>list-undigest</h3>
+
+<p>Inoffizielle Depots auflisten. Mit der Option <tt>--box</tt> wird die Liste tabellarisch ausgegeben.</p>
+
+<pre>
+$ tazpkg list-undigest
+$ tazpkg list-undigest --box
+</pre>
+</article>
+
+
+<article id="remove-undigest"><h3>remove-undigest</h3>
+
+<p>Den URL eines inoffizielles Depots entfernen. Es wird nach einer Bestätigung gefragt.</p>
+
+<pre>
+# tazpkg remove-undigest <em>my-repository</em>
+</pre>
+</article>
+
+
+<article id="mkdb"><h3>mkdb</h3>
+
+<p>Eine TazPkg-Datenbank für ein Verzeichnis mit *.tazpkg-Paketen erzeugen.</p>
+
+<p>Die folgenden Dateien, die die Pakete beschreiben, werden in dem angegebenen Verzeichnis erstellt:
+<tt>packages.info</tt>, <tt>packages.equiv</tt>, <tt>descriptions.txt</tt>, <tt>files.list.lzma</tt>, <tt>IDs</tt>.
+Wenn die Datenbank bereits existiert, wird nichts geändert; die Neuerstellung der Datenbank-Dateien kann mit der
+Option <tt>--forced</tt> bewirkt werden.</p>
+
+<pre>
+# tazpkg mkdb <em>/home/boot/packages</em>
+# tazpkg mkdb <em>/home/boot/packages</em> --forced
+</pre>
+</article>
+</section>
+
+
+
+
+<section><header>Betreuer</header>
+
+<p>Christophe Lincoln &lt;pankso at slitaz.org&gt;</p>
+</section>
+
+
+
+    <section>
+      <p>Deutsche Übersetzung erstellt 2016-09-05.</p>
+    </section>
+
+
+<footer>
+	Copyright © 2015 <a href="http://www.slitaz.org/en/">SliTaz GNU/Linux</a>
+</footer>
+
+</body>
+</html>
