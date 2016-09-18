@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-09 04:42+0200\n"
-"PO-Revision-Date: 2015-10-24 23:00+0200\n"
-"Last-Translator: Lucas Levrel <llevrel@yahoo.fr>\n"
+"PO-Revision-Date: 2016-09-18 11:00+0200\n"
+"Last-Translator: Pascal Bellard <pascal.bellard@slitaz.org>\n"
 "Language-Team: French\n"
 "Language: French\n"
 "MIME-Version: 1.0\n"
@@ -135,7 +135,7 @@ msgstr "Vous êtes déjà dans un SHell TazPkg."
 
 #: modules/block:18 modules/remove:101
 msgid "Package \"%s\" is not installed."
-msgstr "« %s » n'est pas installé."
+msgstr "Le paquet « %s » n'est pas installé."
 
 #: modules/block:27
 msgid "Package \"%s\" is already blocked."
@@ -416,9 +416,8 @@ msgid "Clean all packages downloaded in cache directory"
 msgstr "Effacer tous les paquets téléchargés dans le répertoire cache"
 
 #: modules/help:30
-#, fuzzy
 msgid "List *.tazpkg packages downloaded to the cache"
-msgstr "Effacer tous les paquets téléchargés dans le répertoire cache"
+msgstr "Lister tous les paquets téléchargés dans le répertoire cache"
 
 #: modules/help:31
 msgid "Run interactive TazPkg shell"
@@ -530,7 +529,7 @@ msgstr "Extraire un paquet (*.tazpkg) dans un répertoire"
 
 #: modules/help:62
 msgid "Pack an unpacked or prepared package tree"
-msgstr "Empaqueter l'arborescence d'un paquet décompressé ou préparé"
+msgstr "Empaqueter l'arborescence d'un paquet décompressé ou préparé à la main"
 
 #: modules/help:63
 msgid "Create a package archive from an installed package"
@@ -1689,18 +1688,16 @@ msgid "Getting package info..."
 msgstr "Acquisition des informations sur le paquet..."
 
 #: tazpanel/pkgs.cgi:958
-#, fuzzy
 msgid "Packages providing %s"
-msgstr "Liste des paquets"
+msgstr "Paquets fournissant %s"
 
 #: tazpanel/pkgs.cgi:967
 msgid "if"
-msgstr ""
+msgstr "si"
 
 #: tazpanel/pkgs.cgi:967
-#, fuzzy
 msgid "is installed"
-msgstr "%s paquet installé"
+msgstr "est installé"
 
 #: tazpanel/pkgs.cgi:1040
 msgid "State"
@@ -2111,7 +2108,6 @@ msgstr "Voir"
 #~ msgid "Add package \"%s\" to: %s..."
 #~ msgstr "Ajout de %s à : %s..."
 
-#, fuzzy
 #~ msgid "Removing package \"%s\" from: %s..."
 #~ msgstr "Suppression de %s dans : %s..."
 
@@ -2175,7 +2171,6 @@ msgstr "Voir"
 #~ msgid "$PACKAGE_FILE does not look like a Slackware package!"
 #~ msgstr "$PACKAGE_FILE ne semble pas être un paquet Slackware !"
 
-#, fuzzy
 #~ msgid "Leaving dependencies unresolved for: $PACKAGE"
 #~ msgstr "Les dépendance pour $PACKAGE ne seront pas résolues."
 
@@ -2199,18 +2194,15 @@ msgstr "Voir"
 #~ msgid "Unable to find: \"%s\""
 #~ msgstr "Ne peut trouver : %s"
 
-#, fuzzy
 #~ msgid "0 files found for: $pkg"
 #~ msgstr "0 fichiers trouvés pour : $pkg"
 
-#, fuzzy
 #~ msgid "No available packages found for \"%s\""
-#~ msgstr "0 paquets installés pour : %s"
+#~ msgstr "0 paquets disponibles pour : %s"
 
 #~ msgid "$pkg_name is installed."
 #~ msgstr "$pkg_name est installé."
 
-#, fuzzy
 #~ msgid "$num files removed from cache."
 #~ msgstr "$num fichier supprimé du cache."
 
