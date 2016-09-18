@@ -288,24 +288,9 @@ EOT
 
 # return possible name for a virtual package name
 
-virtual_pkg() {
+virtual_name() {
 	# input:  $1 virtual package name
 	#         $2 repository db directory
-	# output: display possible package name
-
-	debug "\nvirtual_pkg('$1', '$2')"
-
-	if [ "$tazpkg_command" != 'get-install' ]; then
-		# 'get' command: download any package
-		if [ -z "$(awk -F$'\t' -vp="$1" '{if ($1 == p) print p}' "$2/packages.info")" ]; then
-			# This package not exists in the list, it may be virtual package
-			grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"
-		else
-			echo $1
-		fi
-		return
-	fi
-
 	local i
 	unset IFS
 	for i in $(grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"); do
@@ -325,6 +310,27 @@ virtual_pkg() {
 	done
 	# the real package name
 	echo $1
+}
+
+virtual_pkg() {
+	# input:  $1 virtual package name
+	#         $2 repository db directory
+	# output: display possible package name
+
+	debug "\nvirtual_pkg('$1', '$2')"
+
+	if [ "$tazpkg_command" != 'get-install' ]; then
+		# 'get' command: download any package
+		if [ -z "$(awk -F$'\t' -vp="$1" '{if ($1 == p) print p}' "$2/packages.info")" ]; then
+			# This package not exists in the list, it may be virtual package
+			virtual_name "$1" "$2"
+		else
+			echo $1
+		fi
+		return
+	fi
+
+	virtual_name "$1" "$2"
 }
 
 
