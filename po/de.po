@@ -1,0 +1,2019 @@
+# German translations for TazPkg package.
+# Deutsche Übersetzungen für das Paket TazPkg.
+# Copyright (C) 2016 SliTaz
+# This file is distributed under the same license as the TazPkg package.
+# Hans-Günter Theisgen, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: TazPkg 5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-09 04:42+0200\n"
+"PO-Revision-Date: 2016-09-22 21:22+0100\n"
+"Last-Translator: Hans-Günter Theisgen\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: tazpkg:105
+msgid "Creating folder \"%s\"..."
+msgstr "Verzeichnis \"%s\" wird erstellt..."
+
+#: tazpkg:141
+msgid "Please specify a package name on the command line."
+msgstr "Bitte geben Sie im Kommando einen Paketnamen an."
+
+#: tazpkg:144
+msgid "Please specify a list name on the command line."
+msgstr "Bitte geben Sie im Kommando einen Listendateinamen an."
+
+#: tazpkg:147
+msgid "Please specify a flavor name on the command line."
+msgstr "Bitte geben Sie im Kommando den Namen einer Variante an."
+
+#: tazpkg:150
+msgid "Please specify a release name on the command line."
+msgstr "Bitte geben Sie im Kommando einen Freigabenamen an."
+
+#: tazpkg:153
+msgid "Unable to find file \"%s\""
+msgstr "Datei \"%s\" nicht gefunden"
+
+#: tazpkg:156
+msgid "Please specify an existing folder name on the command line."
+msgstr "Bitte geben Sie im Kommando den Namen eines existierenden Verzeichnisses an."
+
+#: tazpkg:159
+msgid "Please specify a pattern to search for."
+msgstr "Bitte geben Sie ein Suchmuster an."
+
+#: tazpkg:162
+msgid "Unable to find the receipt \"%s\""
+msgstr "Rezept \"%s\" nicht gefunden"
+
+#: tazpkg:230 modules/extract:19 modules/install:198 modules/recompress:19
+msgid "Extracting package..."
+msgstr "Paket wird entpackt..."
+
+#: tazpkg:244 modules/list:44
+msgid "base-system"
+msgstr "Basissystem"
+
+#: tazpkg:244 modules/list:44
+msgid "x-window"
+msgstr "X-Fenster"
+
+#: tazpkg:245 modules/list:45
+msgid "utilities"
+msgstr "Dienstprogramme"
+
+#: tazpkg:245 modules/list:45
+msgid "network"
+msgstr "Netzwerk"
+
+#: tazpkg:246 modules/list:46
+msgid "graphics"
+msgstr "Grafik"
+
+#: tazpkg:246 modules/list:46
+msgid "multimedia"
+msgstr "Multimedia"
+
+#: tazpkg:247 modules/list:47
+msgid "office"
+msgstr "Büro"
+
+#: tazpkg:247 modules/list:47
+msgid "development"
+msgstr "Entwicklung"
+
+#: tazpkg:248 modules/list:48
+msgid "system-tools"
+msgstr "Systemwerkzeuge"
+
+#: tazpkg:248 modules/list:48
+msgid "security"
+msgstr "Sicherheit"
+
+#: tazpkg:249 modules/list:49
+msgid "games"
+msgstr "Spiele"
+
+#: tazpkg:249 modules/list:49
+msgid "misc"
+msgstr "Verschiedenes"
+
+#: tazpkg:249 modules/list:49
+msgid "meta"
+msgstr "Meta"
+
+#: tazpkg:250 modules/list:50
+msgid "non-free"
+msgstr "Nicht-frei"
+
+#: tazpkg:435
+msgid "Done: %s"
+msgstr "Fertig: %s"
+
+#: tazpkg:511
+msgid "TazPkg SHell."
+msgstr "TazPkg-Kommandointerpreter."
+
+#: tazpkg:512
+msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
+msgstr ""
+"Um alle verfügbaren Kommandos anzuzeigen, 'usage' eingeben; 'quit' oder 'q' zum Beenden."
+
+#: tazpkg:521
+msgid "You are already running a TazPkg SHell."
+msgstr "Es läuft bereits ein TazPkg-Kommandointerpreter."
+
+#: modules/block:18 modules/remove:101
+msgid "Package \"%s\" is not installed."
+msgstr "Das Paket \"%s\" ist nicht installiert."
+
+#: modules/block:27
+msgid "Package \"%s\" is already blocked."
+msgstr "Das Paket \"%s\" ist bereits gesperrt."
+
+#: modules/block:32 modules/block:61 modules/get:403 modules/install:599
+msgid "Package \"%s\" blocked."
+msgstr "Das Paket \"%s\" wurde gesperrt."
+
+#: modules/block:43 modules/block:56
+msgid "Package \"%s\" unblocked."
+msgstr "Das Paket \"%s\" wurde entsperrt."
+
+#: modules/block:45
+msgid "Package \"%s\" is not blocked."
+msgstr "Das Paket \"%s\" ist nicht gesperrt."
+
+#: modules/bugs:21
+msgid "No known bugs."
+msgstr "Keine Fehler bekannt."
+
+#: modules/bugs:23
+msgid "Known bugs in packages"
+msgstr "Bekannte Fehler in Paketen"
+
+#: modules/bugs:30
+msgid "Bug list completed"
+msgstr "Ende der Fehlerliste"
+
+#: modules/bugs:32
+msgid "Bugs in package \"%s\" version %s:"
+msgstr "Fehler im Paket \"%s\" der Version %s:"
+
+#: modules/cache:22
+msgid "Cleaning cache directory..."
+msgstr "Zwischenspeicher wird gelöscht..."
+
+#: modules/cache:23
+msgid "Path: %s"
+msgstr "Pfad: %s"
+
+#: modules/cache:28
+msgid "%s file removed from cache (%s)."
+msgid_plural "%s files removed from cache (%s)."
+msgstr[0] "%s Datei aus dem Zwischenspeicher (%s) gelöscht."
+msgstr[1] "%s Dateien aus dem Zwischenspeicher (%s) gelöscht."
+
+#: modules/cache:34 tazpanel/pkgs.cgi:1225
+msgid "Packages cache"
+msgstr "Paket-Zwischenspeicher"
+
+#: modules/cache:38
+msgid "%s file (%s)"
+msgid_plural "%s files (%s)"
+msgstr[0] "%s Datei (%s)"
+msgstr[1] "%s Dateien (%s)"
+
+#: modules/check:20 tazpanel/pkgs.cgi:979
+msgid "Package %s"
+msgstr "Paket %s"
+
+#: modules/check:96
+msgid "The package installation has not completed"
+msgstr "Die Paketinstallation ist unvollständig"
+
+#: modules/check:104
+msgid "The package has been modified by:"
+msgstr "Das Paket wurde verändert von:"
+
+#: modules/check:108
+msgid "Files lost from package:"
+msgstr "Von dem Paket fehlen die Dateien:"
+
+#: modules/check:112
+msgid "target of symlink"
+msgstr "Ziel der symbolischen Verknüpfung"
+
+#: modules/check:119
+msgid "Missing dependencies for package:"
+msgstr "Fehlende vom Paket benötigte Pakete:"
+
+#: modules/check:128
+msgid "Dependencies loop between package and:"
+msgstr "Gegenseitige Abhängigkeiten zwischen dem Paket und:"
+
+#: modules/check:134
+msgid "Looking for known bugs..."
+msgstr "Suche nach bekannten Fehlern..."
+
+#: modules/check:141
+msgid "Mismatch checksum of installed files:"
+msgstr "Nichtübereinstimmung der Prüfsumme der installierten Dateien:"
+
+#: modules/check:160
+msgid "Check file providers:"
+msgstr "Suche nach Paketen, die die Datei enthalten:"
+
+#: modules/check:171
+msgid "The following packages provide file \"%s\":"
+msgstr "Die folgenden Pakete enthalten die Datei \"%s\":"
+
+#: modules/check:176
+# oder ist gemeint: geändert durch ?
+msgid "(overridden by %s)"
+msgstr "(ersetzt durch %s)"
+
+#: modules/check:188
+# gemeint sind wohl Dateien, die in keinem Paket enthalten sind
+msgid "Alien files:"
+msgstr "paketfremde Dateien:"
+
+#: modules/check:189
+msgid "No package has installed the following files:"
+msgstr "Die folgenden Dateien gehören zu keinem Paket:"
+
+#: modules/check:200
+msgid "Check completed."
+msgstr "Prüfung beendet."
+
+#: modules/convert:27
+msgid "No dependency for:"
+msgstr "Keine Abhängigkeit für:"
+
+#: modules/convert:30
+msgid "WARNING: unknown dependency for %s"
+msgstr "WARNUNG: unbekannte Abhängigkeit für %s"
+
+#: modules/convert:84 modules/convert:238 modules/convert:276
+#: modules/convert:346 modules/convert:397 modules/convert:479
+#: modules/convert:722 modules/convert:743
+msgid "File \"%s\" does not look like %s package!"
+msgstr "Die Datei \"%s\" sieht nicht aus wie ein Paket im %s-Format!"
+
+#: modules/convert:203 modules/convert:536
+# Meint target wirklich Zielsystem oder Zielarchitektur?
+msgid "Invalid target: %s (expected i386)"
+msgstr "Ungültiges Zielsystem: %s (erwartet wird i386)"
+
+#: modules/convert:586
+msgid "Unable to extract the RPM using standard tools (rpm2cpio)."
+msgstr "Das RPM-Paket kann nicht mit dem Standardprogramm rpm2cpio extrahiert werden."
+
+#: modules/convert:587
+msgid "Do you want to install \"%s\" package? (y/N)"
+msgstr "Soll das Paket \"%s\" installiert werden? (j/N)"
+
+#: modules/convert:626
+msgid "Arch \"%s\" not supported."
+msgstr "Die Architektur \"%s\" wird nicht unterstützt."
+
+#: modules/convert:776
+msgid "Unsupported format"
+msgstr "Das Format wird nicht unterstützt"
+
+#: modules/depends:121
+msgid "Total: %s package (%s)"
+msgid_plural "Total: %s packages (%s)"
+msgstr[0] "Gesamt: %s Paket (%s)"
+msgstr[1] "Gesamt: %s Pakete (%s)"
+
+#: modules/depends:128
+msgid "To install: %s package (%s)"
+msgid_plural "To install: %s packages (%s)"
+msgstr[0] "Zu installieren: %s Paket (%s)"
+msgstr[1] "Zu installieren: %s Pakete (%s)"
+
+#: modules/description:73
+msgid "Description of package \"%s\""
+msgstr "Beschreibung des Paketes \"%s\""
+
+#: modules/description:80
+msgid "Description absent."
+msgstr "Beschreibung fehlt."
+
+#: modules/extract:36
+msgid "Extracting package \"%s\""
+msgstr "Entpacken des Paketes \"%s\""
+
+#: modules/extract:47 modules/recompress:35
+msgid "Copying original package..."
+msgstr "Das Original-Paket wird kopiert..."
+
+#: modules/extract:54
+msgid "Package \"%s\" is extracted to \"%s\""
+msgstr "Das Paket \"%s\" wurde nach \"%s\" entpackt"
+
+#: modules/find-depends:21
+# depends ist kein Substantiv
+# Heißt das, es wird nach Paketen gesucht, die ein Paket benötigt?
+msgid "Find depends..."
+msgstr "Abhängigkeiten werden gesucht..."
+
+#: modules/find-depends:42
+msgid "for %s"
+msgstr "für %s"
+
+#: modules/flavor:94
+msgid "Can't find flavor \"%s\". Abort."
+msgstr "Variante \"%s\" nicht gefunden. Abbruch."
+
+#: modules/get:138 modules/getenv:59
+msgid "File \"%s\" empty."
+msgstr "Die Datei \"%s\" ist leer."
+
+#: modules/get:139 modules/get:145
+# Eigentlich heißt es ja "in der Liste der Extra-Pakete nicht gefunden"
+msgid "Unable to find package \"%s\" in the extra packages list."
+msgstr "Das Paket \"%s\" wurde im Extra-Depot nicht gefunden."
+
+#: modules/get:163 modules/get:363
+msgid "Package \"%s\" already in the cache"
+msgstr "Das Paket \"%s\" befindet sich bereits im Zwischenspeicher"
+
+#: modules/get:367
+msgid "Continuing package \"%s\" download"
+msgstr "Transfer des Paketes \"%s\" wird fortgesetzt"
+
+#: modules/get:378
+msgid "Checksum error for \"%s\""
+msgstr "Prüfsummenfehler für \"%s\""
+
+#: modules/get:388
+msgid "Please wait until the mirror synchronization is complete and try again."
+msgstr ""
+"Bitte warten, bis die Synchronisierung mit dem Depot abgeschlossen ist, dann erneut versuchen."
+
+#: modules/get:412 modules/install:612
+msgid "\"%s\" package is already installed."
+msgstr "Das Paket \"%s\" ist bereits installiert."
+
+#: modules/get:413 modules/install:613
+msgid "You can use the --forced option to force installation."
+msgstr "Mit der Option --forced kann es erneut installiert werden."
+
+#: modules/getenv:41 modules/getenv:49 modules/link:31
+msgid "Missing: %s"
+msgstr "Es fehlt: %s"
+
+#: modules/getenv:41 modules/getenv:49 modules/getenv:59 modules/getenv:160
+msgid "Please run tazpkg as root."
+msgstr "Bitte tazpkg mit root-Berechtigung starten."
+
+#: modules/getenv:121 modules/getenv:146
+msgid "File \"%s\" generated. Please wait..."
+msgstr "Die Datei \"%s\" wird erstellt. Bitte warten..."
+
+#: modules/getenv:160
+msgid "Old \"%s\"."
+msgstr "Alt \"%s\"."
+
+#: modules/help:17 modules/summary:18
+msgid "SliTaz package manager - Version: %s"
+msgstr "SliTaz-Paketverwaltung - Version: %s"
+
+#: modules/help:19 tazpkg-box:23 tazpkg-notify:53
+msgid "Usage:"
+msgstr "Anwendung:"
+
+#: modules/help:20
+msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
+msgstr ""
+
+#: modules/help:22
+msgid "SHell:"
+msgstr "Kommandointerpreter:"
+
+#: modules/help:24
+msgid "Commands:"
+msgstr "Kommandos:"
+
+#: modules/help:26
+msgid "Print this short usage"
+msgstr "Diese Kurzanleitung ausgeben"
+
+#: modules/help:27
+msgid "Show help on the TazPkg commands"
+msgstr ""
+"Anleitungen für die TazPkg-Kommandos ausgeben"
+
+#: modules/help:28
+msgid "Show TazPkg activity log"
+msgstr "TazPkg-Protokoll anzeigen"
+
+#: modules/help:29
+msgid "Clean all packages downloaded in cache directory"
+msgstr "Den Zwischenspeicher löschen"
+
+#: modules/help:30
+msgid "List *.tazpkg packages downloaded to the cache"
+msgstr "Alle in den Zwischenspeicher transferierten Pakete anzeigen"
+
+#: modules/help:31
+msgid "Run interactive TazPkg shell"
+msgstr "TazPkg-Kommandointerpreter starten"
+
+#: modules/help:33
+msgid "List installed packages on the system"
+msgstr "Installierte Pakete anzeigen"
+
+#: modules/help:34
+msgid "List all available packages on the mirror"
+msgstr "Pakete eines Depots anzeigen"
+
+#: modules/help:35
+msgid "List the configuration files"
+msgstr "Namen der Konfigurationsdateien anzeigen"
+
+#: modules/help:37
+msgid "Search for a package by pattern or name"
+msgstr "Ein Paket (mit Namensmuster) suchen"
+
+#: modules/help:38
+msgid "Search on mirror for package having a particular file"
+msgstr "In einem Depot nach einem Paket suchen, das eine bestimmte Datei enthält"
+
+#: modules/help:39
+msgid "Search for file in all installed packages files"
+msgstr "Installierte Pakete suchen, die eine bestimmte Datei enthalten"
+
+#: modules/help:41
+msgid "Download a package into the current directory"
+msgstr "Ein Paket in das aktuelle Verzeichnis transferieren"
+
+#: modules/help:42
+msgid "Install a local package"
+msgstr "Ein Paket aus einer lokalen Datei installieren"
+
+#: modules/help:43
+msgid "Download and install a package from the mirror"
+msgstr "Ein Paket von einem Depot transferieren und installieren"
+
+#: modules/help:44
+msgid "Install all packages from a list of packages"
+msgstr "Alle Pakete aus einer Listendatei installieren"
+
+#: modules/help:45
+msgid "Download and install a list of packages from the mirror"
+msgstr "Alle Pakete aus einer Listendatei von einem Depot transferieren und installieren"
+
+#: modules/help:46
+msgid "Remove the specified package and all installed files"
+msgstr "Das angegebene Paket mit allen installierten Dateien deinstallieren"
+
+#: modules/help:47
+msgid "Replay post install script from package"
+msgstr "Die Nachinstallationsprozedur eines Paketes erneut ausführen"
+
+#: modules/help:48
+msgid "Link a package from another SliTaz installation"
+msgstr "Ein Paket einer anderen SliTaz-Installation verknüpfen"
+
+#: modules/help:49
+msgid "Change release and update packages"
+msgstr "Den Freigabestand ändern und alle Pakete entsprechend aktualisieren"
+
+#: modules/help:50
+msgid "Install the flavor list of packages"
+msgstr "Die Pakete einer SliTaz-Variante installieren"
+
+#: modules/help:51
+msgid "Install the flavor list of packages and remove other ones"
+msgstr "Die Pakete einer SliTaz-Variante installieren und andere deinstallieren"
+
+#: modules/help:53
+msgid "Print information about a package"
+msgstr "Information über ein Paket ausgeben"
+
+#: modules/help:54
+msgid "Print description of a package"
+msgstr "Die Beschreibung eines Paketes ausgeben"
+
+#: modules/help:55
+msgid "List the files installed with a package"
+msgstr "Die Namen der Dateien eines installierten Paketes ausgeben"
+
+#: modules/help:56
+msgid "Block an installed package version or unblock it for upgrade"
+msgstr ""
+"Die Version eines installierten Paketes für Aktualisierungen sperren oder entsperren"
+
+#: modules/help:57
+msgid "Verify consistency of installed packages"
+msgstr "Die Konsistenz installierter Pakete prüfen"
+
+#: modules/help:58
+msgid "Show known bugs in packages"
+msgstr "Bekannte Fehler in Paketen anzeigen"
+
+#: modules/help:59
+msgid "Display dependencies tree"
+msgstr "Den Abhängigkeitsbaum ausgeben"
+
+#: modules/help:60
+msgid "Display reverse dependencies tree"
+msgstr "Den umgekehrten Abhängigkeitsbaum ausgeben"
+
+#: modules/help:61
+msgid "Extract a (*.tazpkg) package into a directory"
+msgstr "Die Dateien eines Paketes im tazpkg-Format in ein Verzeichnis entpacken"
+
+#: modules/help:62
+msgid "Pack an unpacked or prepared package tree"
+msgstr ""
+"Ein entpacktes Paket oder ein vorbereitetes Paket aus einem Verzeichnis packen"
+
+#: modules/help:63
+msgid "Create a package archive from an installed package"
+msgstr "Ein Paket aus den Dateien eines installierten Paketes packen"
+
+#: modules/help:64
+msgid "Create a package archive with configuration files"
+msgstr ""
+"Ein Paket aus den Dateien eines installierten Paketes und den System-Konfigurationsdateien packen"
+
+#: modules/help:65
+msgid "Rebuild a package with a better compression ratio"
+msgstr "Ein Paket erneut mit einer höheren Kompressionsrate packen"
+
+#: modules/help:66
+msgid "Convert alien package to tazpkg"
+msgstr "Ein Fremdpaket in das tazpkg-Format umsetzen"
+
+#: modules/help:67
+msgid "Print list of suggested packages"
+msgstr "Ein Liste vorgeschlagener Pakete ausgeben"
+
+#: modules/help:69
+msgid "Recharge your packages.list from the mirror"
+msgstr "Die Datei packages.list aus einem Depot aktualisieren"
+
+#: modules/help:70
+msgid "Check packages %s to list and install latest upgrades"
+msgstr "Pakete %s prüfen, letzte Aktualisierungen anzeigen und installieren"
+
+#: modules/help:71
+msgid "Change the mirror URL configuration"
+msgstr "Die Adresse (URL) eines Depots ändern"
+
+#: modules/help:72
+msgid "Update an undigest mirror"
+msgstr "Die Adresse (URL) eines inoffiziellen Depots ändern"
+
+#: modules/help:73
+msgid "List undigest mirrors"
+msgstr "Inoffizielle Depots auflisten"
+
+#: modules/help:74
+msgid "Add an undigest mirror"
+msgstr "Ein inoffizielles Depot hinzufügen"
+
+#: modules/help:75
+msgid "Remove an undigest mirror"
+msgstr "Ein inoffizielles Depot entfernen"
+
+#: modules/help:76
+msgid "Make a TazPkg database for a folder with *.tazpkg packages"
+msgstr "Eine TazPkg-Datenbank für ein Verzeichnis mit Paketen im tazpkg-Format erzeugen"
+
+#: modules/help:105 modules/help:136
+msgid "Sorry, no help for \"%s\""
+msgstr "Keine Anwendungshilfe für \"%s\" vorhanden"
+
+#: modules/help:112
+msgid "%d help topic available:"
+msgid_plural "%d help topics available:"
+msgstr[0] "%d Hilfethema vorhanden:"
+msgstr[1] "%d Hilfethemen vorhanden:"
+
+#: modules/help:166
+msgid "%s"
+msgstr "%s"
+
+#: modules/info:33
+msgid "local package"
+msgstr "lokales Paket"
+
+#: modules/info:39 tazpanel/pkgs.cgi:950
+msgid "installed package"
+msgstr "installiertes Paket"
+
+#: modules/info:45
+msgid "(new version \"%s\" available)"
+msgstr "(neue Version \"%s\" verfügbar)"
+
+#: modules/info:50
+# Was meint build?
+msgid "(new build available)"
+msgstr "(neue Kompilierung verfügbar)"
+
+#: modules/info:74 tazpanel/pkgs.cgi:953
+msgid "mirrored package"
+msgstr "Paket im Depot"
+
+#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:972
+msgid "Package \"%s\" not available."
+msgstr "Paket \"%s\" nicht vorhanden."
+
+#: modules/info:84 modules/search:66 modules/search:100
+msgid ""
+"No \"%s\" found to check for mirrored packages. For more results, please run "
+"\"%s\" once as root before searching."
+msgstr ""
+"Keine Dateien \"%s\" vorhanden zum Vergleich mit Paketen im Depot."
+"Bitte \"%s\" mit root-Berechtigung starten und erneut versuchen."
+
+#: modules/info:92
+msgid "TazPkg information"
+msgstr "TazPkg-Information"
+
+#: modules/info:107
+msgid "Package    : %s"
+msgstr "Paket        : %s"
+
+#: modules/info:108
+msgid "State      : %s"
+msgstr "Status       : %s"
+
+#: modules/info:109
+msgid "Version    : %s"
+msgstr "Version      : %s"
+
+#: modules/info:110
+msgid "Category   : %s"
+msgstr "Kategorie    : %s"
+
+#: modules/info:111
+msgid "Short desc : %s"
+msgstr "Kurzbeschr.  : %s"
+
+#: modules/info:112
+msgid "Maintainer : %s"
+msgstr "Betreuer     : %s"
+
+#: modules/info:113
+msgid "License    : %s"
+msgstr "Lizenz       : %s"
+
+#: modules/info:114
+msgid "Depends    : %s"
+msgstr "Benötigt     : %s"
+
+#: modules/info:115
+msgid "Suggested  : %s"
+msgstr "Vorgeschlagen: %s"
+
+#: modules/info:116
+# zur Kompilierung benötigt ?
+msgid "Build deps : %s"
+msgstr ""
+
+#: modules/info:117
+# benötigte Quellen ?
+msgid "Wanted src : %s"
+msgstr ""
+
+#: modules/info:118
+msgid "Web site   : %s"
+msgstr "website      : %s"
+
+#: modules/info:119
+msgid "Conf. files: %s"
+msgstr "Konf.-dateien: %s"
+
+#: modules/info:120
+# provide als Infinitiv eines Verbs scheint mir hier wenig sinnvoll
+msgid "Provide    : %s"
+msgstr "Stellt bereit: %s"
+
+#: modules/info:121
+msgid "Size       : %s"
+msgstr "Größe        : %s"
+
+#: modules/info:122
+msgid "Tags       : %s"
+msgstr "Kennzeichen  : %s"
+
+#: modules/install:109
+msgid "WARNING! Dependency loop between \"%s\" and \"%s\"."
+msgstr "WARNUNG! Gegenseitige Abhängigkeiten zwischen \"%s\" und \"%s\"."
+
+#: modules/install:117
+msgid "Tracking dependencies for package \"%s\""
+msgstr "Vom Paket \"%s\" benötigte Pakete werden gesucht"
+
+#: modules/install:122
+msgid "Missing package \"%s\""
+msgstr "Das Paket \"%s\" fehlt"
+
+#: modules/install:126
+msgid "%s missing package to install."
+msgid_plural "%s missing packages to install."
+msgstr[0] "%s fehlendes zu installierendes Paket"
+msgstr[1] "%s fehlende zu installierende Pakete"
+
+#: modules/install:135
+msgid "Install all missing dependencies? (y/N)"
+msgstr "Alle benötigten Pakete installieren? (j/N)"
+
+#: modules/install:160
+msgid "Checking if package \"%s\" exists in local list..."
+msgstr "Prüfung, ob das Paket \"%s\" in der Paket-Datenbank enthalten ist..."
+
+#: modules/install:186
+msgid "Leaving dependencies for package \"%s\" unresolved."
+msgstr "Vom Paket \"%s\" benötigte Pakete werden nicht installiert."
+
+#: modules/install:187
+msgid "The package will be installed but will probably not work."
+msgstr "Das Paket wird installiert, wird aber möglicherweise nicht funktionieren."
+
+#: modules/install:258
+msgid "Execute pre-install commands..."
+msgstr "Vorinstallations-Kommandos werden ausgeführt..."
+
+#: modules/install:272 modules/reconfigure:36
+msgid "Execute post-install commands..."
+msgstr "Nachinstallations-Kommandos werden ausgeführt..."
+
+#: modules/install:342
+msgid "Installation of package \"%s\" (%s)"
+msgstr "Installation des Paketes \"%s\" (%s)"
+
+#: modules/install:344
+msgid "Installation of package \"%s\""
+msgstr "Installation des Paketes \"%s\""
+
+#: modules/install:352
+msgid "Copying package..."
+msgstr "Paket wird kopiert..."
+
+#: modules/install:382
+msgid "Remember modified packages..."
+msgstr "Merken der veränderten Pakete..."
+
+#: modules/install:444
+msgid "Saving configuration files..."
+msgstr "Konfigurationsdateien werden gesichert..."
+
+#: modules/install:475
+msgid "Installing package..."
+msgstr "Paket wird installiert..."
+
+#: modules/install:495
+msgid "Removing old files..."
+msgstr "Alte Dateien werden gelöscht..."
+
+#: modules/install:511
+msgid "Removing all tmp files..."
+msgstr "Alle temporären Dateien werden gelöscht..."
+
+#: modules/install:536 modules/remove:219
+# Was ist damit gemeint: Paket-Datenbank oder etwas anderes ?
+msgid "Update system databases..."
+msgstr "Die System-Datenbanken werden aktualisiert..."
+
+#: modules/install:576
+msgid "Package \"%s\" (%s) is installed."
+msgstr "Das Paket \"%s\" (%s) wurde installiert."
+
+#: modules/link:20
+msgid "Package \"%s\" is already installed."
+msgstr "Das Paket \"%s\" wurde bereits installiert."
+
+#: modules/link:36
+msgid "Link all missing dependencies? (y/N)"
+msgstr "Alle fehlenden benötigten Pakete verknüpfen? (j/N)"
+
+#: modules/link:45
+msgid "Leaving dependencies unresolved for package \"%s\""
+msgstr "Vom Paket \"%s\" benötigte Pakete wurden nicht installiert"
+
+#: modules/link:46
+msgid "The package is installed but probably will not work."
+msgstr "Das Paket wurde installiert, wird aber möglicherweise nicht funktionieren."
+
+#: modules/list:50
+msgid "all"
+msgstr "alle"
+
+#: modules/list:50
+msgid "extra"
+msgstr "Extra"
+
+#: modules/list:82
+msgid "Blocked packages"
+msgstr "Gesperrte Pakete"
+
+#: modules/list:87 modules/list:121 modules/search:223
+msgid "%s package"
+msgid_plural "%s packages"
+msgstr[0] "%s Paket"
+msgstr[1] "%s Pakete"
+
+#: modules/list:90
+msgid "No blocked packages found."
+msgstr "Keine gesperrten Pakete vorhanden."
+
+#: modules/list:97
+msgid "Packages categories"
+msgstr "Paketkategorien"
+
+#: modules/list:104
+msgid "%s category"
+msgid_plural "%s categories"
+msgstr[0] "%s Kategorie"
+msgstr[1] "%s Kategorien"
+
+#: modules/list:111
+msgid "Linked packages"
+msgstr "Verknüpfte Pakete"
+
+#: modules/list:124
+msgid "No linked packages found."
+msgstr "Kein verknüpften Pakete vorhanden."
+
+#: modules/list:131
+msgid "List of all installed packages"
+msgstr "Liste aller installierten Pakete"
+
+#: modules/list:137
+msgid "%s package installed."
+msgid_plural "%s packages installed."
+msgstr[0] "%s Paket installiert."
+msgstr[1] "%s Pakete installiert."
+
+#: modules/list:147 tazpanel/pkgs.cgi:698
+msgid "Installed packages of category \"%s\""
+msgstr "Installierte Pakete der Kategorie \"%s\""
+
+#: modules/list:156
+msgid "%s package installed of category \"%s\"."
+msgid_plural "%s packages installed of category \"%s\"."
+msgstr[0] "%s Paket installiert der Kategorie \"%s\"."
+msgstr[1] "%s Pakete installiert der Kategorie \"%s\"."
+
+#: modules/list:167 modules/recharge:181
+msgid "Mirrored packages diff"
+msgstr "Unterschiede zu Paketen im Depot"
+
+#: modules/list:171
+msgid "%s new package listed on the mirror."
+msgid_plural "%s new packages listed on the mirror."
+msgstr[0] "%s neues Paket im Depot"
+msgstr[1] "%s neue Pakete im Depot"
+
+#: modules/list:176
+msgid "Unable to list anything, no packages.diff found."
+msgstr "Keine Ausgabe möglich, da die Datei packages.diff nicht vorhanden ist."
+
+#: modules/list:177
+msgid "Recharge your current list to create a first diff."
+msgstr "Aktualisieren Sie die Paketdatenbank, um eine Datei packages.diff zu erstellen."
+
+#: modules/list:181
+msgid "List of available packages on the mirror"
+msgstr "Liste der Pakete im Depot"
+
+#: modules/list:188
+msgid "%s package in the last recharged list."
+msgid_plural "%s packages in the last recharged list."
+msgstr[0] "% Paket in der zuletzt aktualisierten Liste."
+msgstr[1] "% Pakete in der zuletzt aktualisierten Liste."
+
+#: modules/list:200 modules/list:207
+msgid "Installed files by \"%s\""
+msgstr "Mit \"%s\" installierte Dateien"
+
+#: modules/list:203 modules/list:213 modules/search:194 tazpanel/pkgs.cgi:72
+msgid "%s file"
+msgid_plural "%s files"
+msgstr[0] "%s Datei"
+msgstr[1] "%s Dateien"
+
+#: modules/list:226
+msgid "TazPkg Activity"
+msgstr "TazPkg-Protokoll"
+
+#: modules/list:261
+msgid "File lost"
+msgstr "Datei fehlt"
+
+#: modules/list:273 tazpanel/pkgs.cgi:1082 tazpanel/pkgs.cgi:1172
+msgid "Configuration files"
+msgstr "Konfigurationsdateien"
+
+#: modules/mirror:23
+# Singular und Plural sollten getrennt werden
+msgid "Current mirror(s)"
+msgstr "Aktuelle(s) Depot(s)"
+
+#: modules/mirror:25
+msgid ""
+"Please enter URL of the new mirror (http, ftp or local path). You must "
+"specify the complete address to the directory of the packages and packages."
+"list file."
+msgstr ""
+"Bitte den URL eines neuen Depots eingeben (http, ftp oder lokaler Pfadname). "
+"Es muss die vollständige Adresse des Verzeichnisses angegeben werden, "
+"das die Paketliste und die Pakete enthält."
+
+#: modules/mirror:30
+# Singular und Plural sollten getrennt werden
+msgid "New mirror(s) URL: "
+msgstr "URL der neuen Depots: "
+
+#: modules/mirror:39
+msgid "Nothing has been changed."
+msgstr "Es wurde nichts geändert."
+
+#: modules/mirror:41
+# Singular und Plural sollten getrennt werden
+msgid "Setting mirror(s) to: \"%s\""
+msgstr "Als Depots wurden eingestellt: \"%s\""
+
+#: modules/mirror:63
+# Singular und Plural sollten getrennt werden
+msgid "Current undigest(s)"
+msgstr "Aktuelle inoffizielle Depots"
+
+#: modules/mirror:66
+msgid "No undigest mirror found."
+msgstr "Kein inoffizielles Depot bekannt."
+
+#: modules/mirror:81
+msgid "Remove \"%s\" undigest? (y/N)"
+msgstr "Inoffizielles Depot \"%s\" entfernen? (j/N)"
+
+#: modules/mirror:83
+msgid "Removing \"%s\" undigest..."
+msgstr "Inoffizielles Depot \"%s\" wird entfernt..."
+
+#: modules/mirror:89
+msgid "Undigest \"%s\" not found"
+msgstr "Inoffizielles Depot \"%s\" nicht vorhanden"
+
+#: modules/mirror:108
+msgid "Creating new undigest \"%s\"."
+msgstr "Inoffizielles Depot \"%s\" wird hinzugefügt."
+
+#: modules/mkdb:74
+msgid "Input folder not specified"
+msgstr "Angabe des Eingabe-Verzeichnisses fehlt"
+
+#: modules/mkdb:80
+msgid "You are not allowed to write to the folder \"%s\""
+msgstr "Kein Schreibrecht für das Verzeichnis \"%s\""
+
+#: modules/mkdb:84
+msgid "Folder \"%s\" does not contain packages"
+msgstr "Das Verzeichnis \"%s\" enthält keine Pakete"
+
+#: modules/mkdb:102
+msgid "Packages DB already exists."
+msgstr "Die Paket-Datenbank existiert bereits."
+
+#: modules/mkdb:110
+msgid "Calculate %s..."
+msgstr "Berechne %s..."
+
+#: modules/pack:22
+# Wo immer von receipt die Rede ist, ist vermutlich recipe gemeint.
+msgid "Receipt is missing. Please read the documentation."
+msgstr "Das Rezept fehlt. Bitte lesen Sie in der Dokumentation nach."
+
+#: modules/pack:26
+msgid "Packing package \"%s\""
+msgstr "Das Paket \"%s\" wird gepackt"
+
+#: modules/pack:29
+msgid "Creating the list of files..."
+msgstr "Die Liste der Dateien wird erstellt..."
+
+#: modules/pack:36
+# Ist das richtig?
+msgid "Creating %s of files..."
+msgstr "Die Prüfsumme %s der Dateien wird erstellt..."
+
+#: modules/pack:50
+# Es werden doch Dateien, kein Dateisystem komprimiert.
+msgid "Compressing the FS..."
+msgstr "Die Dateien werden komprimiert..."
+
+#: modules/pack:60
+msgid "Updating receipt sizes..."
+msgstr "Die Größen im Rezept werden aktualisiert..."
+
+#: modules/pack:66
+# Was ist mit full gemeint?
+msgid "Creating full cpio archive..."
+msgstr "Ein cpio-Archiv wird erstellt..."
+
+#: modules/pack:70
+msgid "Restoring original package tree..."
+msgstr "Die ursprüngliche Verzeichnisstruktur des Paketes wird wiederhergestellt..."
+
+#: modules/pack:80
+msgid "Package \"%s\" compressed successfully."
+msgstr "Das Paket \"%s\" wurde erfolgreich komprimiert."
+
+#: modules/pack:81 modules/repack:81
+msgid "Size: %s"
+msgstr "Größe: %s"
+
+#: modules/recharge:48
+msgid "Restoring database files..."
+msgstr "Wiederherstellung der Datenbank-Dateien..."
+
+#: modules/recharge:56
+msgid "Recharging failed"
+msgstr "Aktualisierung fehlgeschlagen"
+
+#: modules/recharge:70
+msgid "Repository \"%s\" doesn't exist."
+msgstr "Das Depot \"%s\" existiert nicht."
+
+#: modules/recharge:87 modules/summary:33
+msgid "Undigest %s"
+msgstr "Inoffizielles Depot %s"
+
+#: modules/recharge:90
+msgid "Recharging repository \"%s\""
+msgstr "Aktualisierung aus dem Depot \"%s\""
+
+#: modules/recharge:99
+msgid "Checking..."
+msgstr "Überprüfung..."
+
+#: modules/recharge:105
+msgid "Database timestamp: %s"
+msgstr "Zeitstempel der Datenbank: %s"
+
+#: modules/recharge:110
+# Ist nicht gemeint: Die Informationen über das Depot in der lokalen Datenbank sind aktuell ?
+msgid "Repository \"%s\" is up to date."
+msgstr "Das Depot \"%s\" ist aktuell"
+
+#: modules/recharge:116
+msgid "Creating backup of the last packages list..."
+msgstr "Sicherung der letzten Paketliste wird erstellt..."
+
+#: modules/recharge:127 modules/recharge:142 modules/recharge:146
+msgid "Getting \"%s\"..."
+msgstr "Transferiere \"%s\"..."
+
+#: modules/recharge:161
+msgid "Last database is ready to use."
+msgstr "Die aktualisierte Datenbank kann jetzt verwendet werden."
+
+#: modules/recharge:184
+msgid "%s new package on the mirror."
+msgid_plural "%s new packages on the mirror."
+msgstr[0] "%s neues Paket im Depot."
+msgstr[1] "%s neue Pakete im Depot."
+
+#: modules/recharge:189
+msgid ""
+"Note that next time you recharge the list, a list of differences will be "
+"displayed to show new and upgradeable packages."
+msgstr ""
+"Bei der nächsten Aktualisierung der Liste werden die Unterschiede zur vorherigen "
+"Liste angezeigt werden, um neue und aktualisierbare Pakete zu erkennen." 
+
+#: modules/recompress:32
+msgid "Recompressing package \"%s\""
+msgstr "Das Paket \"%s\" wird erneut komprimiert"
+
+#: modules/recompress:42
+msgid "Recompressing the FS..."
+msgstr "Die Dateien werden erneut komprimiert..."
+
+#: modules/recompress:47
+msgid "Creating new package..."
+msgstr "Ein neues Paket wird erzeugt..."
+
+#: modules/reconfigure:47
+msgid "Nothing to do for package \"%s\"."
+msgstr "Für das Paket \"%s\" ist nichts zu tun."
+
+#: modules/remove:38
+msgid "Execute pre-remove commands..."
+msgstr "Die Vor-Deinstallations-Kommandos werden ausgeführt..."
+
+#: modules/remove:51
+msgid "Execute post-remove commands..."
+msgstr "Die Nach-Deinstallations-Kommandos werden ausgeführt..."
+
+#: modules/remove:111
+msgid "The following packages depend on package \"%s\":"
+msgstr "Die folgenden Pakete benötigen das Paket \"%s\":"
+
+#: modules/remove:119
+msgid "The following packages have been modified by package \"%s\":"
+msgstr "Die folgenden Pakete wurden von dem Paket \"%s\" verändert:"
+
+#: modules/remove:127
+msgid "Remove package \"%s\" (%s)? (y/N)"
+msgstr "Das Paket \"%s\" (%s) deinstallieren? (j/N)"
+
+#: modules/remove:129
+msgid "Uninstallation of package \"%s\" cancelled."
+msgstr "Deinstallation des Pakets \"%s\" abgebrochen."
+
+#: modules/remove:136
+msgid "Removing package \"%s\""
+msgstr "Das Paket \"%s\" wird deinstalliert"
+
+#: modules/remove:143
+msgid "Removing all files installed..."
+msgstr "Löschen aller installierten Dateien..."
+
+#: modules/remove:242
+msgid "Removing package receipt..."
+msgstr "Löschen des Paket-Rezeptes..."
+
+#: modules/remove:248
+msgid "Package \"%s\" (%s) removed."
+msgstr "Das Paket \"%s\" (%s) wurde deinstalliert"
+
+#: modules/remove:261
+msgid "Remove packages depending on package \"%s\"? (y/N)"
+msgstr "Pakete deinstallieren, die das Paket \"%s\" benötigen? (j/N)"
+
+#: modules/remove:278
+msgid "Reinstall packages modified by package \"%s\"? (y/N)"
+msgstr "Pakete erneut installieren, die von dem Paket \"%s\" verändert wurden? (j/N)"
+
+#: modules/remove:284
+msgid ""
+"Package \"%s\" was modified by \"%s\" and other packages. It will not be "
+"reinstalled."
+msgstr ""
+"Das Paket \"%s\" wurde von dem Paket \"%s\" und anderen Paketen verändert. "
+"Es wird nicht erneut installiert."
+
+#: modules/remove:286
+msgid "Check \"%s\" for reinstallation."
+msgstr "Prüfung von \"%s\" auf erneute Installation."
+
+#: modules/repack:16
+msgid "Repacking \"%s\""
+msgstr "Erneutes Packen von \"%s\""
+
+#: modules/repack:19
+msgid "Can't repack package \"%s\""
+msgstr "Das Paket \"%s\" kann nicht erneut gepackt werden"
+
+#: modules/repack:24
+msgid "Can't repack, \"%s\" files have been modified by:"
+msgstr ""
+"Das Paket \"%s\" kann nicht erneut gepackt werden, "
+"da seine Dateien von folgenden Paketen geändert wurden:"
+
+#: modules/repack:35
+msgid "Can't repack, the following files are lost:"
+msgstr ""
+"Das Paket kann nicht erneut gepackt werden, "
+"da die folgenden Dateien fehlen:"
+
+#: modules/repack:69
+msgid "Can't repack, %s error."
+msgstr "Das Paket kann nicht erneut gepackt werden, Fehler %s."
+
+#: modules/repack:80
+msgid "Package \"%s\" repacked successfully."
+msgstr "Das Paket \"%s\" wurde erfolgreich erneut gepackt."
+
+#: modules/repack-config:46
+msgid "User configuration backup on date %s"
+msgstr "Konfigurationsdateien gesichert am %s"
+
+#: modules/search:19 tazpanel/pkgs.cgi:660
+msgid "Installed packages"
+msgstr "Installierte Pakete"
+
+#: modules/search:32
+msgid "%s installed package found for \"%s\""
+msgid_plural "%s installed packages found for \"%s\""
+msgstr[0] "%s installiertes Paket gefunden für \"%s\""
+msgstr[1] "%s installierte Pakete gefunden für \"%s\""
+
+#: modules/search:41 tazpanel/pkgs.cgi:659
+msgid "Available packages"
+msgstr "Vorhandene Pakete"
+
+#: modules/search:73 modules/search:107
+msgid "%s available package found for \"%s\""
+msgid_plural "%s available packages found for \"%s\""
+msgstr[0] "%s Paket vorhanden für \"%s\""
+msgstr[1] "%s Pakete vorhanden für \"%s\""
+
+#: modules/search:83
+msgid "Matching packages name with version and desc"
+msgstr "Passende Pakete mit Version und Beschreibung"
+
+#: modules/search:127
+msgid "Search result for \"%s\""
+msgstr "Suchergebnis für \"%s\""
+
+#: modules/search:144
+msgid "Search result for file \"%s\""
+msgstr "Suchergebnis für die Datei \"%s\""
+
+#: modules/search:164 modules/search:179
+msgid "Package %s:"
+msgstr "Paket %s:"
+
+#: modules/search:204
+msgid "Search result for package \"%s\""
+msgstr "Suchergebnis für Paket \"%s\""
+
+#: modules/summary:36
+msgid "Repository:"
+msgstr "Depot:"
+
+#: modules/summary:38 tazpanel/pkgs.cgi:1711
+msgid "Last recharge:"
+msgstr "Letzte Aktualisierung:"
+
+#: modules/summary:50 tazpanel/pkgs.cgi:1724
+msgid "Today at %s."
+msgstr "Heute um %s Uhr."
+
+#: modules/summary:51 tazpanel/pkgs.cgi:1725
+msgid "Yesterday at %s."
+msgstr "Gestern um %s Uhr."
+
+#: modules/summary:52 tazpanel/pkgs.cgi:1722
+msgid "%d day ago."
+msgid_plural "%d days ago."
+msgstr[0] "Vor %d Tag."
+msgstr[1] "Vor %d Tagen."
+
+#: modules/summary:55
+msgid "Database timestamp:"
+msgstr "Zeitstempel der Datenbank:"
+
+#: modules/summary:58 tazpanel/pkgs.cgi:1732
+msgid "never."
+msgstr "nie."
+
+#: modules/summary:62 tazpanel/pkgs.cgi:1742
+msgid "Mirrored packages:"
+msgstr "Pakete im Depot:"
+
+#: modules/summary:66
+msgid "Linked packages:"
+msgstr "Verknüpfte Pakete:"
+
+#: modules/summary:74 tazpanel/pkgs.cgi:1737
+msgid "Installed packages:"
+msgstr "Installierte Pakete:"
+
+#: modules/summary:75 tazpanel/pkgs.cgi:1752
+msgid "Installed files:"
+msgstr "Installierte Dateien:"
+
+#: modules/summary:76 tazpanel/pkgs.cgi:1755
+msgid "Blocked packages:"
+msgstr "Gesperrte Pakete:"
+
+#: modules/summary:77 tazpanel/pkgs.cgi:1747
+msgid "Upgradeable packages:"
+msgstr "Aktualisierbare Pakete:"
+
+#: modules/upgrade:43
+# passendere Übersetzung für build ?
+msgid "New build"
+msgstr "Neu kompiliert"
+
+#: modules/upgrade:45
+msgid "Blocked"
+msgstr "Gesperrt"
+
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:810
+msgid "Package"
+msgstr "Paket"
+
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:578
+msgid "Repository"
+msgstr "Depot"
+
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:310
+#: tazpanel/pkgs.cgi:1042
+msgid "Version"
+msgstr "Version"
+
+#: modules/upgrade:88 modules/upgrade:104
+msgid "Status"
+msgstr "Status"
+
+#: modules/upgrade:115
+msgid "System is up-to-date..."
+msgstr "Das System ist auf dem aktuellen Stand..."
+
+#: modules/upgrade:120
+msgid "%s blocked"
+msgid_plural "%s blocked"
+msgstr[0] "%s gesperrt"
+msgstr[1] "%s gesperrt"
+
+#: modules/upgrade:125
+msgid "You have %s available upgrade (%s)"
+msgid_plural "You have %s available upgrades (%s)"
+msgstr[0] "Es ist %s Versionsaktualisierung verfügbar (%s)"
+msgstr[1] "Es sind %s Versionsaktualisierungen verfügbar (%s)"
+
+#: modules/upgrade:130
+msgid "%s installed package scanned in %ds"
+msgid_plural "%s installed packages scanned in %ds"
+msgstr[0] "%s installiertes Paket durchsucht in %ds"
+msgstr[1] "%s installierte Pakete durchsucht in %ds"
+
+#: modules/upgrade:145
+msgid "Do you wish to install them now? (y/N)"
+msgstr "Sollen diese jetzt installiert werden? (j/N)"
+
+#: modules/upgrade:157
+msgid "Leaving without any upgrades installed."
+msgstr "Beenden, ohne dass irgendwelche Aktualisierungen installiert werden."
+
+#: tazpkg-box:15
+msgid "SliTaz Package Action"
+msgstr "SliTaz Paket-Aktion"
+
+#: tazpkg-box:23
+msgid "package"
+msgstr "Paket"
+
+#: tazpkg-box:55 tazpanel/pkgs.cgi:271
+msgid "Install"
+msgstr "Installieren"
+
+#: tazpkg-box:56
+msgid "Extract"
+msgstr "Entpacken"
+
+#: tazpkg-box:79
+msgid "Downloading: %s"
+msgstr "Transferieren: %s"
+
+#: tazpkg-notify:30
+msgid "%s installed package"
+msgid_plural "%s installed packages"
+msgstr[0] "%s installiertes Paket"
+msgstr[1] "%s installierte Pakete"
+
+#: tazpkg-notify:68 tazpanel/pkgs.cgi:41 tazpanel/pkgs.cgi:266
+#: tazpanel/pkgs.cgi:555
+msgid "My packages"
+msgstr "Meine Pakete"
+
+#: tazpkg-notify:69 tazpkg-notify:80 tazpkg-notify:88 tazpkg-notify:106
+msgid "Recharge lists"
+msgstr "Paket-Datenbank aktualisieren"
+
+#: tazpkg-notify:70 tazpkg-notify:99 tazpkg-notify:106
+msgid "Check upgrade"
+msgstr "Auf Aktualisierungen prüfen"
+
+#: tazpkg-notify:71
+msgid "TazPkg SHell"
+msgstr "TazPkg-Kommandointerpreter"
+
+#: tazpkg-notify:72
+msgid "TazPkg manual"
+msgstr "TazPkg-Handbuch"
+
+#: tazpkg-notify:73
+msgid "Close notification"
+msgstr "Mitteilung schließen"
+
+#: tazpkg-notify:78
+msgid "No packages list found"
+msgstr "Keine Paketliste gefunden"
+
+#: tazpkg-notify:86
+msgid "Your packages list is older than 10 days"
+msgstr "Die Paketliste ist älter als 10 Tage"
+
+#: tazpkg-notify:95
+msgid "There is %s upgradeable package"
+msgid_plural "There are %s upgradeable packages"
+msgstr[0] "Es gibt %s aktualisierbares Paket"
+msgstr[1] "Es gibt %s aktualisierbare Pakete"
+
+#: tazpkg-notify:104
+msgid "System is up to date"
+msgstr "Das System ist auf dem aktuellen Stand"
+
+#: tazpanel/pkgs.cgi:38 tazpanel/pkgs.cgi:206
+msgid "Packages"
+msgstr "Pakete"
+
+#: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:1707
+msgid "Summary"
+msgstr "Übersicht"
+
+#: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:264
+msgid "Recharge list"
+msgstr "Paket-Datenbank aktualisieren"
+
+#: tazpanel/pkgs.cgi:43
+msgid "Check updates"
+msgstr "Auf Aktualisierungen prüfen"
+
+#: tazpanel/pkgs.cgi:44 tazpanel/pkgs.cgi:269 tazpanel/pkgs.cgi:1118
+#: tazpanel/pkgs.cgi:1367
+msgid "Administration"
+msgstr "Verwaltung"
+
+#: tazpanel/pkgs.cgi:192
+msgid "Receipt for package %s unavailable"
+msgstr "Das Rezept für das Paket %s fehlt"
+
+#: tazpanel/pkgs.cgi:265
+msgid "Check upgrades"
+msgstr "Auf Versionsaktualisierungen prüfen"
+
+#: tazpanel/pkgs.cgi:267 tazpanel/pkgs.cgi:1054
+msgid "Tags"
+msgstr "Kennzeichen"
+
+#: tazpanel/pkgs.cgi:268 tazpanel/pkgs.cgi:614
+msgid "Linkable packages"
+msgstr "Verknüpfbare Pakete"
+
+#: tazpanel/pkgs.cgi:270
+msgid "Install (Non Free)"
+msgstr "Installieren (Nicht-frei)"
+
+#: tazpanel/pkgs.cgi:272
+msgid "Remove"
+msgstr "Deinstallieren"
+
+#: tazpanel/pkgs.cgi:273
+msgid "Link"
+msgstr "Verknüpfen"
+
+#: tazpanel/pkgs.cgi:274
+msgid "Block"
+msgstr "Sperren"
+
+#: tazpanel/pkgs.cgi:275
+msgid "Unblock"
+msgstr "Entsperren"
+
+#: tazpanel/pkgs.cgi:276
+msgid "(Un)block"
+msgstr "(Ent)sperren"
+
+#: tazpanel/pkgs.cgi:277
+msgid "Repack"
+msgstr "Erneut packen"
+
+#: tazpanel/pkgs.cgi:278
+msgid "Save configuration"
+msgstr "Konfiguration sichern"
+
+#: tazpanel/pkgs.cgi:279
+msgid "List configuration files"
+msgstr "Namen der Konfigurationsdateien anzeigen"
+
+#: tazpanel/pkgs.cgi:280
+msgid "Quick check"
+msgstr "Schnellprüfung"
+
+#: tazpanel/pkgs.cgi:281
+msgid "Full check"
+msgstr "Vollständige Prüfung"
+
+#: tazpanel/pkgs.cgi:282
+msgid "Clean"
+msgstr "Zwischenspeicher löschen"
+
+#: tazpanel/pkgs.cgi:283
+msgid "Set link"
+msgstr "Verknüpfung herstellen"
+
+#: tazpanel/pkgs.cgi:284
+msgid "Remove link"
+msgstr "Verknüpfung entfernen"
+
+#: tazpanel/pkgs.cgi:285
+msgid "Add mirror"
+msgstr "Depot hinzufügen"
+
+#: tazpanel/pkgs.cgi:286
+msgid "Add repository"
+msgstr "Depot hinzufügen"
+
+#: tazpanel/pkgs.cgi:287
+msgid "Toggle all"
+msgstr "Auswahl umkehren"
+
+#: tazpanel/pkgs.cgi:309 tazpanel/pkgs.cgi:1036 tazpanel/pkgs.cgi:1301
+msgid "Name"
+msgstr "Name"
+
+#: tazpanel/pkgs.cgi:311 tazpanel/pkgs.cgi:1046
+msgid "Description"
+msgstr "Beschreibung"
+
+#: tazpanel/pkgs.cgi:349 tazpanel/pkgs.cgi:1242
+msgid "Repository: %s"
+msgstr "Depot: %s"
+
+#: tazpanel/pkgs.cgi:359 tazpanel/pkgs.cgi:436
+msgid "Pages:"
+msgstr "Seiten:"
+
+#: tazpanel/pkgs.cgi:520
+msgid "Web search tool"
+msgstr "Web-Suche"
+
+#: tazpanel/pkgs.cgi:522
+msgid "Search"
+msgstr "Suchen"
+
+#: tazpanel/pkgs.cgi:523
+msgid "Files"
+msgstr "Dateien"
+
+#: tazpanel/pkgs.cgi:556
+msgid "All packages"
+msgstr "Alle Pakete"
+
+#: tazpanel/pkgs.cgi:560
+msgid "Categories"
+msgstr "Kategorien"
+
+#: tazpanel/pkgs.cgi:581
+msgid "Public"
+msgstr "Öffentlich"
+
+#: tazpanel/pkgs.cgi:585
+msgid "Any"
+msgstr "Beliebig"
+
+#: tazpanel/pkgs.cgi:592
+msgid "All tags..."
+msgstr "Alle Kennzeichen..."
+
+#: tazpanel/pkgs.cgi:593
+msgid "All categories..."
+msgstr "Alle Kategorien..."
+
+#: tazpanel/pkgs.cgi:615
+msgid "Listing linkable packages..."
+msgstr "Zeige verknüpfbare Pakete..."
+
+#: tazpanel/pkgs.cgi:619
+msgid "Selection:"
+msgstr "Auswahl:"
+
+#: tazpanel/pkgs.cgi:649
+msgid "Categories list"
+msgstr "Kategorienliste"
+
+#: tazpanel/pkgs.cgi:658 tazpanel/pkgs.cgi:1044
+msgid "Category"
+msgstr "Kategorie"
+
+#: tazpanel/pkgs.cgi:691 tazpanel/pkgs.cgi:745 tazpanel/pkgs.cgi:1347
+msgid "Packages list"
+msgstr "Paketliste"
+
+#: tazpanel/pkgs.cgi:692 tazpanel/pkgs.cgi:746
+msgid "Listing packages..."
+msgstr "Zeige Pakete..."
+
+#: tazpanel/pkgs.cgi:699
+msgid "All packages of category \"%s\""
+msgstr "Alle Pakete der Kategorie \"%s\""
+
+#: tazpanel/pkgs.cgi:703
+msgid "Installed packages of category \"%s\" in repository \"%s\""
+msgstr "Installierte Pakete der Kategorie \"%s\" des Depots \"%s\""
+
+#: tazpanel/pkgs.cgi:704
+msgid "All packages of category \"%s\" in repository \"%s\""
+msgstr "Alle Pakete der Kategorie \"%s\" des Depots \"%s\""
+
+#: tazpanel/pkgs.cgi:713
+msgid "You can not view a list of all packages until recharging lists."
+msgstr ""
+"Die Paket-Datenbank muss aktualisiert werden, bevor eine Liste aller Pakete angezeigt werden kann."
+
+#: tazpanel/pkgs.cgi:717 tazpanel/pkgs.cgi:758 tazpanel/pkgs.cgi:796
+#: tazpanel/pkgs.cgi:874 tazpanel/pkgs.cgi:1479 tazpanel/pkgs.cgi:1507
+msgid "Selected packages:"
+msgstr "Ausgewählte Pakete:"
+
+#: tazpanel/pkgs.cgi:753
+msgid "Packages suggested by %s"
+msgstr "Von %s vorgeschlagene Pakete"
+
+#: tazpanel/pkgs.cgi:788
+msgid "Search packages"
+msgstr "Pakete suchen"
+
+#: tazpanel/pkgs.cgi:789
+msgid "Searching packages..."
+msgstr "Pakete werden durchsucht..."
+
+#: tazpanel/pkgs.cgi:811
+msgid "File"
+msgstr "Datei"
+
+#: tazpanel/pkgs.cgi:844
+msgid "Recharge"
+msgstr "Aktualisieren"
+
+#: tazpanel/pkgs.cgi:845
+msgid "Recharging lists..."
+msgstr "Aktualisiere Paket-Datenbank..."
+
+#: tazpanel/pkgs.cgi:848
+# nach französischem Text
+msgid "Recharge checks for new or updated packages"
+msgstr "Neue Pakete oder Aktualisierungen suchen"
+
+#: tazpanel/pkgs.cgi:852
+# Was ist damit gemeint?
+msgid "Recharging log"
+msgstr "Protokoll aktualisieren"
+
+#: tazpanel/pkgs.cgi:856
+msgid "Recharging packages list"
+msgstr "Paketliste aktualisieren"
+
+#: tazpanel/pkgs.cgi:859
+msgid "Packages lists are up-to-date. You should check for upgrades now."
+msgstr ""
+"Die Paket-Datenbank ist aktuell. Sie sollten jetzt prüfen, "
+"ob Aktualisierungen vorhanden sind."
+
+#: tazpanel/pkgs.cgi:869
+# Soll Up eine Abkürzung für Update sein?
+msgid "Up packages"
+msgstr "Pakete aktualisieren"
+
+#: tazpanel/pkgs.cgi:870
+msgid "Checking for upgrades..."
+msgstr "Nach Aktualisierungen wird gesucht..."
+
+#: tazpanel/pkgs.cgi:911
+msgid "Installing: %s"
+msgstr "Installieren: %s"
+
+#: tazpanel/pkgs.cgi:912
+msgid "Removing: %s"
+msgstr "Deinstallieren: %s"
+
+#: tazpanel/pkgs.cgi:913
+msgid "Linking: %s"
+msgstr "Verknüpfen: %s"
+
+#: tazpanel/pkgs.cgi:914
+msgid "Blocking: %s"
+msgstr "Sperren: %s"
+
+#: tazpanel/pkgs.cgi:915
+msgid "Unblocking: %s"
+msgstr "Entsperren: %s"
+
+#: tazpanel/pkgs.cgi:916
+msgid "(Un)blocking: %s"
+msgstr "(Ent)sperren: %s"
+
+#: tazpanel/pkgs.cgi:917
+msgid "Repacking: %s"
+msgstr "Erneut packen: %s"
+
+#: tazpanel/pkgs.cgi:943
+msgid "Package info"
+msgstr "Paketinformation"
+
+#: tazpanel/pkgs.cgi:944
+msgid "Getting package info..."
+msgstr "Hole Paketinformation..."
+
+#: tazpanel/pkgs.cgi:958
+msgid "Packages providing %s"
+msgstr "Pakete, die %s anbieten"
+
+#: tazpanel/pkgs.cgi:967
+msgid "if"
+msgstr "wenn"
+
+#: tazpanel/pkgs.cgi:967
+msgid "is installed"
+msgstr "ist installiert"
+
+#: tazpanel/pkgs.cgi:1040
+msgid "State"
+msgstr "Status"
+
+#: tazpanel/pkgs.cgi:1048
+msgid "Maintainer"
+msgstr "Betreuer"
+
+#: tazpanel/pkgs.cgi:1050
+msgid "License"
+msgstr "Lizenz"
+
+#: tazpanel/pkgs.cgi:1052
+msgid "Website"
+msgstr "Website"
+
+#: tazpanel/pkgs.cgi:1056
+msgid "Sizes"
+msgstr "Größen"
+
+#: tazpanel/pkgs.cgi:1058
+msgid "Depends"
+msgstr "Benötigt"
+
+#: tazpanel/pkgs.cgi:1060
+msgid "Provide"
+msgstr "Stellt bereit"
+
+#: tazpanel/pkgs.cgi:1062
+msgid "Suggested"
+msgstr "Vorgeschlagen"
+
+#: tazpanel/pkgs.cgi:1067
+msgid "View receipt"
+msgstr "Rezept ansehen"
+
+#: tazpanel/pkgs.cgi:1068
+msgid "Improve package"
+msgstr "Paket verbessern"
+
+#: tazpanel/pkgs.cgi:1091
+msgid "Installed files"
+msgstr "Installierte Dateien"
+
+#: tazpanel/pkgs.cgi:1093
+msgid "Please wait"
+msgstr "Bitte warten"
+
+#: tazpanel/pkgs.cgi:1156
+msgid "TazPkg administration and settings"
+msgstr "TazPkg-Verwaltung und -Einstellungen"
+
+#: tazpanel/pkgs.cgi:1165
+msgid "Creating the package..."
+msgstr "Das Paket wird erzeugt..."
+
+#: tazpanel/pkgs.cgi:1169
+msgid "Path:"
+msgstr "Pfad:"
+
+#: tazpanel/pkgs.cgi:1188
+msgid "Checking packages consistency..."
+msgstr "Paket-Konsistenz wird geprüft..."
+
+#: tazpanel/pkgs.cgi:1192
+msgid "Full packages check..."
+msgstr "Konsistenz aller Pakete wird geprüft..."
+
+#: tazpanel/pkgs.cgi:1201 tazpanel/pkgs.cgi:1212
+msgid "%s is installed on /mnt/packages"
+msgstr "%s ist in /mnt/packages installiert"
+
+#: tazpanel/pkgs.cgi:1227
+msgid "Packages in the cache: %s (%s)"
+msgstr "Pakete im Zwischenspeicher: %s (%s)"
+
+#: tazpanel/pkgs.cgi:1234
+msgid "Current mirror list"
+msgstr "Liste der aktuellen Depots"
+
+#: tazpanel/pkgs.cgi:1257 tazpanel/pkgs.cgi:1289
+msgid "Delete"
+msgstr "Entfernen"
+
+#: tazpanel/pkgs.cgi:1279
+msgid "Private repositories"
+msgstr "Private Depots"
+
+#: tazpanel/pkgs.cgi:1302
+msgid "URL:"
+msgstr "URL:"
+
+#: tazpanel/pkgs.cgi:1312
+msgid "Link to another SliTaz installation"
+msgstr "Verknüpfung mit einer anderen SliTaz-Installation"
+
+#: tazpanel/pkgs.cgi:1315
+msgid ""
+"This link points to the root of another SliTaz installation. You will be "
+"able to install packages using soft links to it."
+msgstr ""
+"Diese Verknüpfung zeigt auf die Wurzel einer anderen SliTaz-Installation. "
+"Mithilfe symbolischer Verknüpfungen können dort Pakete installiert werden."
+
+#: tazpanel/pkgs.cgi:1326
+msgid "SliTaz packages DVD"
+msgstr "DVD mit SliTaz-Paketen"
+
+#: tazpanel/pkgs.cgi:1329
+msgid ""
+"A bootable DVD image of all available packages for the %s version is "
+"generated every day. It also contains a copy of the website and can be used "
+"without an internet connection. This image can be installed on a DVD or a "
+"USB key."
+msgstr ""
+"Jeden Tag wird ein urladefähiges DVD-Abbild mit allen verfügbaren Paketen der "
+"Version %s erzeugt. Dieses enthält auch alle Dateien der website und kann daher "
+"ohne Internet-Verbindung benutzt werden. Das Abbild kann auf DVD oder USB-"
+"Speichermedium kopiert werden."
+
+#: tazpanel/pkgs.cgi:1332
+msgid "Install from ISO image:"
+msgstr "Von ISO-Abbild installieren:"
+
+#: tazpanel/pkgs.cgi:1339
+msgid "Download DVD image"
+msgstr "DVD-Abbild transferieren"
+
+#: tazpanel/pkgs.cgi:1341
+msgid "Install from DVD/USB key"
+msgstr "Von DVD oder USB-Speichermedium installieren"
+
+#: tazpanel/pkgs.cgi:1350
+msgid ""
+"Long list of packages is paginated. Here you can set the page size (default: "
+"100, turning off the pager: 0)."
+msgstr ""
+"Die vollständige Paketliste wird seitenweise ausgegeben. "
+"Hier kann die Anzahl der Zeilen je Seite angegeben werden (Standard: 100). "
+"Mit 0 wird die seitenweise Ausgabe abgeschaltet."
+
+#: tazpanel/pkgs.cgi:1355
+# nach der französischen Übersetzung
+msgid "Set"
+msgstr "Anwenden"
+
+#: tazpanel/pkgs.cgi:1381
+msgid "Licenses for package %s"
+msgstr "Lizenzen für das Paket %s"
+
+#: tazpanel/pkgs.cgi:1402
+msgid "%s license on %s website"
+msgstr "Lizenz %s auf der website %s"
+
+#: tazpanel/pkgs.cgi:1403
+msgid "Read online:"
+msgstr "Über das Internet lesen:"
+
+#: tazpanel/pkgs.cgi:1403
+msgid "Read local:"
+msgstr "In lokaler Datei lesen:"
+
+#: tazpanel/pkgs.cgi:1444
+msgid "Tags list"
+msgstr "Liste der Kennzeichen"
+
+#: tazpanel/pkgs.cgi:1448
+msgid "List of tags in all repositories"
+msgstr "Liste der Kennzeichen in allen Depots"
+
+#: tazpanel/pkgs.cgi:1449
+msgid "List of tags in repository \"%s\""
+msgstr "Liste der Kennzeichen im Depot \"%s\""
+
+#: tazpanel/pkgs.cgi:1475
+msgid "Tag \"%s\""
+msgstr "Kennzeichen \"%s\""
+
+#: tazpanel/pkgs.cgi:1503
+msgid "Blocked packages list"
+msgstr "Liste gesperrter Pakete"
+
+#: tazpanel/pkgs.cgi:1541 tazpanel/pkgs.cgi:1618
+msgid "Improve package \"%s\""
+msgstr "Das Paket \"%s\" verbessern"
+
+#: tazpanel/pkgs.cgi:1576
+msgid "Please log in using your TazBug account."
+msgstr "Bitte melden Sie sich mit Ihrer TazBug-Benutzerkennung an."
+
+#: tazpanel/pkgs.cgi:1580
+msgid "Login:"
+msgstr "Benutzername:"
+
+#: tazpanel/pkgs.cgi:1582
+msgid "Password:"
+msgstr "Kennwort:"
+
+#: tazpanel/pkgs.cgi:1585
+msgid "Remember me"
+msgstr "Anmeldung merken"
+
+#: tazpanel/pkgs.cgi:1587
+msgid "Log in"
+msgstr "Anmelden"
+
+#: tazpanel/pkgs.cgi:1591
+msgid "Create new account"
+msgstr "Neue Benutzerkennung einrichten"
+
+#: tazpanel/pkgs.cgi:1619 tazpanel/pkgs.cgi:1676
+msgid "Back"
+msgstr "Zurück"
+
+#: tazpanel/pkgs.cgi:1642
+msgid "How can you help:"
+msgstr "So können Sie helfen:"
+
+#: tazpanel/pkgs.cgi:1644
+msgid "Please select an action"
+msgstr "Bitte wählen Sie eine Aktion"
+
+#: tazpanel/pkgs.cgi:1645
+msgid "Report new version"
+msgstr "Eine neue Version melden"
+
+#: tazpanel/pkgs.cgi:1646
+msgid "Improve short description"
+msgstr "Die Kurzbeschreibung verbessern"
+
+#: tazpanel/pkgs.cgi:1647
+msgid "Translate short description"
+msgstr "Die Kurzbeschreibung übersetzen"
+
+#: tazpanel/pkgs.cgi:1648
+msgid "Add or improve description"
+msgstr "Eine Beschreibung hinzufügen oder verbessern"
+
+#: tazpanel/pkgs.cgi:1649
+msgid "Translate description"
+msgstr "Eine Beschreibung übersetzen"
+
+#: tazpanel/pkgs.cgi:1650
+msgid "Improve category"
+msgstr "Eine Kategorie verbessern"
+
+#: tazpanel/pkgs.cgi:1651
+msgid "Add or improve tags"
+msgstr "Kennzeichen hinzufügen oder verbessern"
+
+#: tazpanel/pkgs.cgi:1652
+msgid "Add application icon"
+msgstr "Ein Anwendungssymbol hinzufügen"
+
+#: tazpanel/pkgs.cgi:1653
+msgid "Add application screenshot"
+msgstr "Ein Bildschirmfoto hinzufügen"
+
+#: tazpanel/pkgs.cgi:1654
+msgid "Improve receipt"
+msgstr "Ein Rezept verbessern"
+
+#: tazpanel/pkgs.cgi:1655
+msgid "Other"
+msgstr "Etwas anderes"
+
+#: tazpanel/pkgs.cgi:1666
+msgid "Send"
+msgstr "Abschicken"
+
+#: tazpanel/pkgs.cgi:1675
+msgid "Thank you!"
+msgstr "Danke!"
+
+#: tazpanel/pkgs.cgi:1728
+# Wozu dienen die eckigen Klammern?
+msgid "It is recommended to [recharge] the lists."
+msgstr "Es wird empfohlen, die Paket-Datenbank zu aktualisieren"
+
+#: tazpanel/pkgs.cgi:1733
+msgid "You need to [download] the lists for further work."
+msgstr "Um fortfahren zu können, muss die Paket-Datenbank aktualisiert werden"
+
+#: tazpanel/pkgs.cgi:1765
+msgid "Latest log entries"
+msgstr "Die letzten Protokollsätze"
+
+#: tazpanel/pkgs.cgi:1767
+msgid "Show"
+msgstr "Anzeigen"
