@@ -135,6 +135,11 @@ fi
 # Removing package
 title 'Removing package "%s"' "$PACKAGE"
 
+# Unblock package quietly; otherwise:
+# 1. We can no longer install the package one more time - because it is blocked
+# 2. We can no longer unblock the package - because it is not installed
+tazpkg -u "$PACKAGE" --nowarning | grep -v '^$'
+
 # [1/5] Pre-remove commands
 call_pre_remove "$INSTALLED/$PACKAGE/receipt"
 

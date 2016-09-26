@@ -42,7 +42,7 @@ case $1 in
 			. "$INSTALLED/$2/receipt"; tazpkg call log_pkg Unblocked
 			_ 'Package "%s" unblocked.' "$2"
 		else
-			_ 'Package "%s" is not blocked.' "$2"
+			[ -z "$nowarning" ] && _ 'Package "%s" is not blocked.' "$2"
 		fi
 		;;
 
