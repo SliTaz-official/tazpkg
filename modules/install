@@ -164,6 +164,7 @@ install_all_deps() {
 					# Find local package
 					tempd="$(mktemp -d)"; cd "$tempd"
 					for pkgfile in $dir/$pkg-*.tazpkg; do
+						[ -e "$pkgfile" ] || continue
 						# Extract receipt from each matched package
 						cpio -F "$pkgfile" -i receipt >/dev/null 2>&1
 						name=$(. receipt; echo $PACKAGE)
