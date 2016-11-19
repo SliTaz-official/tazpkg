@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-09 04:42+0200\n"
+"POT-Creation-Date: 2016-11-20 00:11+0200\n"
 "PO-Revision-Date: 2013-08-07 13:34+0100\n"
 "Last-Translator: Paweł Pyrczak <tkr.tkr.pl@gmail.com>\n"
 "Language-Team: Paweł Pyrczak <support@pyrczak.pl>\n"
@@ -62,7 +62,7 @@ msgstr "Proszę wprowadzić szukany wzór albo nazwę pliku."
 msgid "Unable to find the receipt \"%s\""
 msgstr "Nie można odnaleźć recepty: %s"
 
-#: tazpkg:230 modules/extract:19 modules/install:198 modules/recompress:19
+#: tazpkg:230 modules/extract:19 modules/install:202 modules/recompress:19
 msgid "Extracting package..."
 msgstr "Rozpakowywanie..."
 
@@ -153,7 +153,7 @@ msgstr "%s nie jest zainstalowany."
 msgid "Package \"%s\" is already blocked."
 msgstr "%s jest już zainstalowany."
 
-#: modules/block:32 modules/block:61 modules/get:403 modules/install:599
+#: modules/block:32 modules/block:61 modules/get:425 modules/install:603
 #, fuzzy
 msgid "Package \"%s\" blocked."
 msgstr "%s nie jest zainstalowany."
@@ -201,7 +201,7 @@ msgstr[0] "Usunięto %s plik z pamięci podręcznej (%s)."
 msgstr[1] "Usunięto %s plik z pamięci podręcznej (%s)."
 msgstr[2] "Usunięto %s plik z pamięci podręcznej (%s)."
 
-#: modules/cache:34 tazpanel/pkgs.cgi:1225
+#: modules/cache:34 tazpanel/pkgs.cgi:1243
 msgid "Packages cache"
 msgstr "Pamięć podręczna pakietów"
 
@@ -212,7 +212,7 @@ msgstr[0] "%s plik (%s)"
 msgstr[1] "%s pliki (%s)"
 msgstr[2] "%s plików (%s)"
 
-#: modules/check:20 tazpanel/pkgs.cgi:979
+#: modules/check:20 tazpanel/pkgs.cgi:997
 msgid "Package %s"
 msgstr "Pakiet %s"
 
@@ -358,36 +358,40 @@ msgstr ""
 msgid "Can't find flavor \"%s\". Abort."
 msgstr "Nie można odnaleźć konfiguracji dla odmiany %s. Przerwano."
 
-#: modules/get:138 modules/getenv:59
+#: modules/get:140 modules/getenv:59
 msgid "File \"%s\" empty."
 msgstr ""
 
-#: modules/get:139 modules/get:145
+#: modules/get:141 modules/get:147
 #, fuzzy
 msgid "Unable to find package \"%s\" in the extra packages list."
 msgstr "Nie można znaleźć: %s na liście pakietów na serwerze."
 
-#: modules/get:163 modules/get:363
+#: modules/get:165 modules/get:385
 msgid "Package \"%s\" already in the cache"
 msgstr "%s aktualnie w pamięci podręcznej"
 
-#: modules/get:367
+#: modules/get:364
+msgid "Unable to find package \"%s\" in the mirrored packages list."
+msgstr "Nie można znaleźć: %s na liście pakietów na serwerze."
+
+#: modules/get:389
 msgid "Continuing package \"%s\" download"
 msgstr "Kontynuowanie pobierania %s"
 
-#: modules/get:378
+#: modules/get:400
 msgid "Checksum error for \"%s\""
 msgstr ""
 
-#: modules/get:388
+#: modules/get:410
 msgid "Please wait until the mirror synchronization is complete and try again."
 msgstr ""
 
-#: modules/get:412 modules/install:612
+#: modules/get:434 modules/install:616
 msgid "\"%s\" package is already installed."
 msgstr "Pakiet \"%s\" już jest zainstalowany."
 
-#: modules/get:413 modules/install:613
+#: modules/get:435 modules/install:617
 msgid "You can use the --forced option to force installation."
 msgstr ""
 "Można użyć opcji --forced aby wymusić instalację, albo usunąć\n"
@@ -652,7 +656,7 @@ msgstr ""
 msgid "local package"
 msgstr "Dostępne pakiety"
 
-#: modules/info:39 tazpanel/pkgs.cgi:950
+#: modules/info:39 tazpanel/pkgs.cgi:968
 #, fuzzy
 msgid "installed package"
 msgstr "%s zainstalowany pakiet"
@@ -666,12 +670,12 @@ msgstr "Nowa wersja %s"
 msgid "(new build available)"
 msgstr ""
 
-#: modules/info:74 tazpanel/pkgs.cgi:953
+#: modules/info:74 tazpanel/pkgs.cgi:971
 #, fuzzy
 msgid "mirrored package"
 msgstr "Pakiety na serwerze:"
 
-#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:972
+#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:990
 #, fuzzy
 msgid "Package \"%s\" not available."
 msgstr "%s nie jest zainstalowany."
@@ -775,74 +779,74 @@ msgstr[0] "%s brakujący pakiet do instalacji."
 msgstr[1] "%s brakujące pakiety do instalacji."
 msgstr[2] "%s brakujących pakietów do instalacji."
 
-#: modules/install:135
+#: modules/install:138
 msgid "Install all missing dependencies? (y/N)"
 msgstr "Zainstaluj wszystkie brakujące zalezności? (t/N)"
 
-#: modules/install:160
+#: modules/install:163
 msgid "Checking if package \"%s\" exists in local list..."
 msgstr "Sprawdzanie czy %s istnieje na lokalnej liście pakietów..."
 
-#: modules/install:186
+#: modules/install:190
 msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "Pozostawianie nierozwiązanych zależności dla %s."
 
-#: modules/install:187
+#: modules/install:191
 #, fuzzy
 msgid "The package will be installed but will probably not work."
 msgstr "Pakiet jest zainstalowany ale prawdopodobnie nie będzie działał."
 
-#: modules/install:258
+#: modules/install:262
 #, fuzzy
 msgid "Execute pre-install commands..."
 msgstr "Sprawdzanie po instalacyjnych zależności..."
 
-#: modules/install:272 modules/reconfigure:36
+#: modules/install:276 modules/reconfigure:36
 #, fuzzy
 msgid "Execute post-install commands..."
 msgstr "Sprawdzanie po instalacyjnych zależności..."
 
-#: modules/install:342
+#: modules/install:346
 #, fuzzy
 msgid "Installation of package \"%s\" (%s)"
 msgstr "Instalacja: %s"
 
-#: modules/install:344
+#: modules/install:348
 msgid "Installation of package \"%s\""
 msgstr "Instalacja: %s"
 
-#: modules/install:352
+#: modules/install:356
 msgid "Copying package..."
 msgstr "Kopiowanie..."
 
-#: modules/install:382
+#: modules/install:386
 #, fuzzy
 msgid "Remember modified packages..."
 msgstr "Usuwanie starej wersji..."
 
-#: modules/install:444
+#: modules/install:448
 msgid "Saving configuration files..."
 msgstr "Zachowywanie plików konfiguracyjnych..."
 
-#: modules/install:475
+#: modules/install:479
 msgid "Installing package..."
 msgstr "Instalowanie..."
 
-#: modules/install:495
+#: modules/install:499
 #, fuzzy
 msgid "Removing old files..."
 msgstr "Usuwanie wszystkich tymczasowych plików tmp..."
 
-#: modules/install:511
+#: modules/install:515
 msgid "Removing all tmp files..."
 msgstr "Usuwanie wszystkich tymczasowych plików tmp..."
 
-#: modules/install:536 modules/remove:219
+#: modules/install:540 modules/remove:224
 #, fuzzy
 msgid "Update system databases..."
 msgstr "Usuwanie wszystkich tymczasowych plików tmp..."
 
-#: modules/install:576
+#: modules/install:580
 msgid "Package \"%s\" (%s) is installed."
 msgstr "Pakiet %s (%s) nie jest zainstalowany."
 
@@ -919,7 +923,7 @@ msgstr[0] "%s zainstalowany pakiet."
 msgstr[1] "%s zainstalowane pakiety."
 msgstr[2] "%s zainstalowanych pakietów."
 
-#: modules/list:147 tazpanel/pkgs.cgi:698
+#: modules/list:147 tazpanel/pkgs.cgi:714
 msgid "Installed packages of category \"%s\""
 msgstr "Zainstalowanych pakietów w kategorii: %s"
 
@@ -980,7 +984,7 @@ msgstr ""
 msgid "File lost"
 msgstr "Brakujący plik"
 
-#: modules/list:273 tazpanel/pkgs.cgi:1082 tazpanel/pkgs.cgi:1172
+#: modules/list:273 tazpanel/pkgs.cgi:1100 tazpanel/pkgs.cgi:1190
 msgid "Configuration files"
 msgstr "Pliki konfiguracyjne"
 
@@ -1207,34 +1211,34 @@ msgstr "Usuwanie pakietu %s zostało anulowane."
 msgid "Removing package \"%s\""
 msgstr "Usuwanie: %s"
 
-#: modules/remove:143
+#: modules/remove:148
 msgid "Removing all files installed..."
 msgstr "Usuwania wszystkich zainstalowanych plików..."
 
-#: modules/remove:242
+#: modules/remove:247
 msgid "Removing package receipt..."
 msgstr "Usuwanie recepty dla pakietu..."
 
-#: modules/remove:248
+#: modules/remove:253
 #, fuzzy
 msgid "Package \"%s\" (%s) removed."
 msgstr "Pakiet %s (%s) nie jest zainstalowany."
 
-#: modules/remove:261
+#: modules/remove:266
 msgid "Remove packages depending on package \"%s\"? (y/N)"
 msgstr "Usunąć pakiety zależne od %s? (t/N)"
 
-#: modules/remove:278
+#: modules/remove:283
 msgid "Reinstall packages modified by package \"%s\"? (y/N)"
 msgstr "Zainstalować ponownie pakiety zmodyfikowane przez %s? (t/N)"
 
-#: modules/remove:284
+#: modules/remove:289
 msgid ""
 "Package \"%s\" was modified by \"%s\" and other packages. It will not be "
 "reinstalled."
 msgstr ""
 
-#: modules/remove:286
+#: modules/remove:291
 #, fuzzy
 msgid "Check \"%s\" for reinstallation."
 msgstr "Sprawdza %s w poszukiwaniu reinstalacji"
@@ -1267,7 +1271,7 @@ msgstr "Pakiet %s został z powodzeniem przepakowany."
 msgid "User configuration backup on date %s"
 msgstr "Kopia zapasowa ustawień użytkownika z %s"
 
-#: modules/search:19 tazpanel/pkgs.cgi:660
+#: modules/search:19 tazpanel/pkgs.cgi:676
 msgid "Installed packages"
 msgstr "Zainstalowane pakiety"
 
@@ -1278,7 +1282,7 @@ msgstr[0] "Znaleziono %s zainstalowany pakiet dla: %s"
 msgstr[1] "Znaleziono %s zainstalowane pakiety dla: %s"
 msgstr[2] "Znaleziono %s zainstalowanych pakietów dla: %s"
 
-#: modules/search:41 tazpanel/pkgs.cgi:659
+#: modules/search:41 tazpanel/pkgs.cgi:675
 msgid "Available packages"
 msgstr "Dostępne pakiety"
 
@@ -1314,19 +1318,19 @@ msgstr "Rezultat wyszukiwania pakietu %s"
 msgid "Repository:"
 msgstr "Repozytorium: %s"
 
-#: modules/summary:38 tazpanel/pkgs.cgi:1711
+#: modules/summary:38 tazpanel/pkgs.cgi:1730
 msgid "Last recharge:"
 msgstr "Ostatnie odświeżenie listy:"
 
-#: modules/summary:50 tazpanel/pkgs.cgi:1724
+#: modules/summary:50 tazpanel/pkgs.cgi:1743
 msgid "Today at %s."
 msgstr ""
 
-#: modules/summary:51 tazpanel/pkgs.cgi:1725
+#: modules/summary:51 tazpanel/pkgs.cgi:1744
 msgid "Yesterday at %s."
 msgstr ""
 
-#: modules/summary:52 tazpanel/pkgs.cgi:1722
+#: modules/summary:52 tazpanel/pkgs.cgi:1741
 msgid "%d day ago."
 msgid_plural "%d days ago."
 msgstr[0] ""
@@ -1337,11 +1341,11 @@ msgstr[2] ""
 msgid "Database timestamp:"
 msgstr ""
 
-#: modules/summary:58 tazpanel/pkgs.cgi:1732
+#: modules/summary:58 tazpanel/pkgs.cgi:1751
 msgid "never."
 msgstr ""
 
-#: modules/summary:62 tazpanel/pkgs.cgi:1742
+#: modules/summary:62 tazpanel/pkgs.cgi:1761
 msgid "Mirrored packages:"
 msgstr "Pakiety na serwerze:"
 
@@ -1350,19 +1354,19 @@ msgstr "Pakiety na serwerze:"
 msgid "Linked packages:"
 msgstr "Pakiety mogące być dowiązanymi"
 
-#: modules/summary:74 tazpanel/pkgs.cgi:1737
+#: modules/summary:74 tazpanel/pkgs.cgi:1756
 msgid "Installed packages:"
 msgstr "Zainstalowane pakiety:"
 
-#: modules/summary:75 tazpanel/pkgs.cgi:1752
+#: modules/summary:75 tazpanel/pkgs.cgi:1771
 msgid "Installed files:"
 msgstr "Zainstalowane pliki:"
 
-#: modules/summary:76 tazpanel/pkgs.cgi:1755
+#: modules/summary:76 tazpanel/pkgs.cgi:1774
 msgid "Blocked packages:"
 msgstr "Zablokowane pakiety:"
 
-#: modules/summary:77 tazpanel/pkgs.cgi:1747
+#: modules/summary:77 tazpanel/pkgs.cgi:1766
 msgid "Upgradeable packages:"
 msgstr "Pakiety do aktualizacji:"
 
@@ -1374,17 +1378,17 @@ msgstr "Nowy build"
 msgid "Blocked"
 msgstr "Zablokowany"
 
-#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:810
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:826
 msgid "Package"
 msgstr "Pakiet"
 
-#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:578
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:594
 #, fuzzy
 msgid "Repository"
 msgstr "Repozytorium: %s"
 
-#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:310
-#: tazpanel/pkgs.cgi:1042
+#: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:326
+#: tazpanel/pkgs.cgi:1060
 msgid "Version"
 msgstr "Wersja"
 
@@ -1434,7 +1438,7 @@ msgstr "Działanie TazPkg"
 msgid "package"
 msgstr "pakiet"
 
-#: tazpkg-box:55 tazpanel/pkgs.cgi:271
+#: tazpkg-box:55 tazpanel/pkgs.cgi:287
 msgid "Install"
 msgstr "Instaluj"
 
@@ -1454,8 +1458,8 @@ msgstr[0] "%s zainstalowany pakiet"
 msgstr[1] "%s zainstalowane pakiety"
 msgstr[2] "%s zainstalowanych pakietów"
 
-#: tazpkg-notify:68 tazpanel/pkgs.cgi:41 tazpanel/pkgs.cgi:266
-#: tazpanel/pkgs.cgi:555
+#: tazpkg-notify:68 tazpanel/pkgs.cgi:41 tazpanel/pkgs.cgi:282
+#: tazpanel/pkgs.cgi:571
 msgid "My packages"
 msgstr "Moje pakiety"
 
@@ -1502,11 +1506,11 @@ msgstr "System jest aktualny"
 msgid "Packages"
 msgstr "Pakiety"
 
-#: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:1707
+#: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:1726
 msgid "Summary"
 msgstr "Podsumowanie"
 
-#: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:264
+#: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:280
 msgid "Recharge list"
 msgstr "Pobierz świeżą listę"
 
@@ -1514,8 +1518,8 @@ msgstr "Pobierz świeżą listę"
 msgid "Check updates"
 msgstr "Sprawdź aktualizacje"
 
-#: tazpanel/pkgs.cgi:44 tazpanel/pkgs.cgi:269 tazpanel/pkgs.cgi:1118
-#: tazpanel/pkgs.cgi:1367
+#: tazpanel/pkgs.cgi:44 tazpanel/pkgs.cgi:285 tazpanel/pkgs.cgi:1136
+#: tazpanel/pkgs.cgi:1386
 msgid "Administration"
 msgstr "Administracja"
 
@@ -1523,414 +1527,414 @@ msgstr "Administracja"
 msgid "Receipt for package %s unavailable"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:265
+#: tazpanel/pkgs.cgi:281
 msgid "Check upgrades"
 msgstr "Sprawdź uaktualnienia"
 
-#: tazpanel/pkgs.cgi:267 tazpanel/pkgs.cgi:1054
+#: tazpanel/pkgs.cgi:283 tazpanel/pkgs.cgi:1072
 #, fuzzy
 msgid "Tags"
 msgstr "Tagi:"
 
-#: tazpanel/pkgs.cgi:268 tazpanel/pkgs.cgi:614
+#: tazpanel/pkgs.cgi:284 tazpanel/pkgs.cgi:630
 msgid "Linkable packages"
 msgstr "Pakiety mogące być dowiązanymi"
 
-#: tazpanel/pkgs.cgi:270
+#: tazpanel/pkgs.cgi:286
 msgid "Install (Non Free)"
 msgstr "Zainstaluj (Nie-Wolne)"
 
-#: tazpanel/pkgs.cgi:272
+#: tazpanel/pkgs.cgi:288
 msgid "Remove"
 msgstr "Usuń"
 
-#: tazpanel/pkgs.cgi:273
+#: tazpanel/pkgs.cgi:289
 msgid "Link"
 msgstr "Dowiązanie"
 
-#: tazpanel/pkgs.cgi:274
+#: tazpanel/pkgs.cgi:290
 msgid "Block"
 msgstr "Zablokuj"
 
-#: tazpanel/pkgs.cgi:275
+#: tazpanel/pkgs.cgi:291
 msgid "Unblock"
 msgstr "Odblokuj"
 
-#: tazpanel/pkgs.cgi:276
+#: tazpanel/pkgs.cgi:292
 #, fuzzy
 msgid "(Un)block"
 msgstr "Odblokuj"
 
-#: tazpanel/pkgs.cgi:277
+#: tazpanel/pkgs.cgi:293
 msgid "Repack"
 msgstr "Przepakuj"
 
-#: tazpanel/pkgs.cgi:278
+#: tazpanel/pkgs.cgi:294
 msgid "Save configuration"
 msgstr "Zapisz konfigurację"
 
-#: tazpanel/pkgs.cgi:279
+#: tazpanel/pkgs.cgi:295
 msgid "List configuration files"
 msgstr "Wyświetla listę plików konfiguracyjnych"
 
-#: tazpanel/pkgs.cgi:280
+#: tazpanel/pkgs.cgi:296
 msgid "Quick check"
 msgstr "Szybkie sprawdzenie spójności"
 
-#: tazpanel/pkgs.cgi:281
+#: tazpanel/pkgs.cgi:297
 msgid "Full check"
 msgstr "Dogłębne sprawdzenie spójności"
 
-#: tazpanel/pkgs.cgi:282
+#: tazpanel/pkgs.cgi:298
 msgid "Clean"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:283
+#: tazpanel/pkgs.cgi:299
 msgid "Set link"
 msgstr "Ustaw dowiązanie"
 
-#: tazpanel/pkgs.cgi:284
+#: tazpanel/pkgs.cgi:300
 msgid "Remove link"
 msgstr "Usuń dowiązanie"
 
-#: tazpanel/pkgs.cgi:285
+#: tazpanel/pkgs.cgi:301
 #, fuzzy
 msgid "Add mirror"
 msgstr "serwer"
 
-#: tazpanel/pkgs.cgi:286
+#: tazpanel/pkgs.cgi:302
 #, fuzzy
 msgid "Add repository"
 msgstr "Repozytorium: %s"
 
-#: tazpanel/pkgs.cgi:287
+#: tazpanel/pkgs.cgi:303
 #, fuzzy
 msgid "Toggle all"
 msgstr "Zmień wszystkie"
 
-#: tazpanel/pkgs.cgi:309 tazpanel/pkgs.cgi:1036 tazpanel/pkgs.cgi:1301
+#: tazpanel/pkgs.cgi:325 tazpanel/pkgs.cgi:1054 tazpanel/pkgs.cgi:1320
 msgid "Name"
 msgstr "Nazwa"
 
-#: tazpanel/pkgs.cgi:311 tazpanel/pkgs.cgi:1046
+#: tazpanel/pkgs.cgi:327 tazpanel/pkgs.cgi:1064
 msgid "Description"
 msgstr "Opis"
 
-#: tazpanel/pkgs.cgi:349 tazpanel/pkgs.cgi:1242
+#: tazpanel/pkgs.cgi:365 tazpanel/pkgs.cgi:1260
 msgid "Repository: %s"
 msgstr "Repozytorium: %s"
 
-#: tazpanel/pkgs.cgi:359 tazpanel/pkgs.cgi:436
+#: tazpanel/pkgs.cgi:375 tazpanel/pkgs.cgi:452
 #, fuzzy
 msgid "Pages:"
 msgstr "Pakiety"
 
-#: tazpanel/pkgs.cgi:520
+#: tazpanel/pkgs.cgi:536
 msgid "Web search tool"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:522
+#: tazpanel/pkgs.cgi:538
 msgid "Search"
 msgstr "Szukaj"
 
-#: tazpanel/pkgs.cgi:523
+#: tazpanel/pkgs.cgi:539
 msgid "Files"
 msgstr "Pliki"
 
-#: tazpanel/pkgs.cgi:556
+#: tazpanel/pkgs.cgi:572
 #, fuzzy
 msgid "All packages"
 msgstr "Dostępne pakiety"
 
-#: tazpanel/pkgs.cgi:560
+#: tazpanel/pkgs.cgi:576
 msgid "Categories"
 msgstr "Kategorie"
 
-#: tazpanel/pkgs.cgi:581
+#: tazpanel/pkgs.cgi:597
 msgid "Public"
 msgstr "Publiczne"
 
-#: tazpanel/pkgs.cgi:585
+#: tazpanel/pkgs.cgi:601
 msgid "Any"
 msgstr "Wszystkie"
 
-#: tazpanel/pkgs.cgi:592
+#: tazpanel/pkgs.cgi:608
 msgid "All tags..."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:593
+#: tazpanel/pkgs.cgi:609
 #, fuzzy
 msgid "All categories..."
 msgstr "Kategorie"
 
-#: tazpanel/pkgs.cgi:615
+#: tazpanel/pkgs.cgi:631
 msgid "Listing linkable packages..."
 msgstr "Tworzenie listy pakietów mogących być dowiązanymi..."
 
-#: tazpanel/pkgs.cgi:619
+#: tazpanel/pkgs.cgi:635
 msgid "Selection:"
 msgstr "Zaznaczenie:"
 
-#: tazpanel/pkgs.cgi:649
+#: tazpanel/pkgs.cgi:665
 #, fuzzy
 msgid "Categories list"
 msgstr "Kategorie"
 
-#: tazpanel/pkgs.cgi:658 tazpanel/pkgs.cgi:1044
+#: tazpanel/pkgs.cgi:674 tazpanel/pkgs.cgi:1062
 #, fuzzy
 msgid "Category"
 msgstr "Kategoria:"
 
-#: tazpanel/pkgs.cgi:691 tazpanel/pkgs.cgi:745 tazpanel/pkgs.cgi:1347
+#: tazpanel/pkgs.cgi:707 tazpanel/pkgs.cgi:761 tazpanel/pkgs.cgi:1366
 #, fuzzy
 msgid "Packages list"
 msgstr "Pakiet %s"
 
-#: tazpanel/pkgs.cgi:692 tazpanel/pkgs.cgi:746
+#: tazpanel/pkgs.cgi:708 tazpanel/pkgs.cgi:762
 msgid "Listing packages..."
 msgstr "Sporządzanie listy pakietów..."
 
-#: tazpanel/pkgs.cgi:699
+#: tazpanel/pkgs.cgi:715
 #, fuzzy
 msgid "All packages of category \"%s\""
 msgstr "Zainstalowanych pakietów w kategorii: %s"
 
-#: tazpanel/pkgs.cgi:703
+#: tazpanel/pkgs.cgi:719
 #, fuzzy
 msgid "Installed packages of category \"%s\" in repository \"%s\""
 msgstr "Zainstalowanych pakietów w kategorii: %s"
 
-#: tazpanel/pkgs.cgi:704
+#: tazpanel/pkgs.cgi:720
 #, fuzzy
 msgid "All packages of category \"%s\" in repository \"%s\""
 msgstr "Zainstalowanych pakietów w kategorii: %s"
 
-#: tazpanel/pkgs.cgi:713
+#: tazpanel/pkgs.cgi:729
 msgid "You can not view a list of all packages until recharging lists."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:717 tazpanel/pkgs.cgi:758 tazpanel/pkgs.cgi:796
-#: tazpanel/pkgs.cgi:874 tazpanel/pkgs.cgi:1479 tazpanel/pkgs.cgi:1507
+#: tazpanel/pkgs.cgi:733 tazpanel/pkgs.cgi:774 tazpanel/pkgs.cgi:812
+#: tazpanel/pkgs.cgi:892 tazpanel/pkgs.cgi:1498 tazpanel/pkgs.cgi:1526
 #, fuzzy
 msgid "Selected packages:"
 msgstr "Zablokowane pakiety:"
 
-#: tazpanel/pkgs.cgi:753
+#: tazpanel/pkgs.cgi:769
 #, fuzzy
 msgid "Packages suggested by %s"
 msgstr "Pakiet %s został rozpakowany do: %s"
 
-#: tazpanel/pkgs.cgi:788
+#: tazpanel/pkgs.cgi:804
 msgid "Search packages"
 msgstr "Szukaj pakietów"
 
-#: tazpanel/pkgs.cgi:789
+#: tazpanel/pkgs.cgi:805
 msgid "Searching packages..."
 msgstr "Wyszukiwanie pakietów..."
 
-#: tazpanel/pkgs.cgi:811
+#: tazpanel/pkgs.cgi:827
 msgid "File"
 msgstr "Plik"
 
-#: tazpanel/pkgs.cgi:844
+#: tazpanel/pkgs.cgi:862
 msgid "Recharge"
 msgstr "Pobierz świeżą listę pakietów"
 
-#: tazpanel/pkgs.cgi:845
+#: tazpanel/pkgs.cgi:863
 msgid "Recharging lists..."
 msgstr "Pobieranie świeżej listy pakietów..."
 
-#: tazpanel/pkgs.cgi:848
+#: tazpanel/pkgs.cgi:866
 msgid "Recharge checks for new or updated packages"
 msgstr ""
 "Odświeżenie listy pakietów sprawdza serwer w poszukiwaniu nowych albo "
 "zaktualizowanych pakietów"
 
-#: tazpanel/pkgs.cgi:852
+#: tazpanel/pkgs.cgi:870
 #, fuzzy
 msgid "Recharging log"
 msgstr "Pobieranie świeżej listy pakietów..."
 
-#: tazpanel/pkgs.cgi:856
+#: tazpanel/pkgs.cgi:874
 msgid "Recharging packages list"
 msgstr "Pobieranie świeżej listy pakietów"
 
-#: tazpanel/pkgs.cgi:859
+#: tazpanel/pkgs.cgi:877
 msgid "Packages lists are up-to-date. You should check for upgrades now."
 msgstr "Listy pakietów są już aktualne. Należy teraz sprawdzić aktualizacje."
 
-#: tazpanel/pkgs.cgi:869
+#: tazpanel/pkgs.cgi:887
 msgid "Up packages"
 msgstr "Uaktualnij pakiety"
 
-#: tazpanel/pkgs.cgi:870
+#: tazpanel/pkgs.cgi:888
 msgid "Checking for upgrades..."
 msgstr "Sprawdzanie uaktualnień..."
 
-#: tazpanel/pkgs.cgi:911
+#: tazpanel/pkgs.cgi:929
 #, fuzzy
 msgid "Installing: %s"
 msgstr "Zainstalowanych plików: %s"
 
-#: tazpanel/pkgs.cgi:912
+#: tazpanel/pkgs.cgi:930
 #, fuzzy
 msgid "Removing: %s"
 msgstr "Usuwanie: %s"
 
-#: tazpanel/pkgs.cgi:913
+#: tazpanel/pkgs.cgi:931
 #, fuzzy
 msgid "Linking: %s"
 msgstr "Brakujące: %s"
 
-#: tazpanel/pkgs.cgi:914
+#: tazpanel/pkgs.cgi:932
 #, fuzzy
 msgid "Blocking: %s"
 msgstr "Pobieranie: $pkg"
 
-#: tazpanel/pkgs.cgi:915
+#: tazpanel/pkgs.cgi:933
 #, fuzzy
 msgid "Unblocking: %s"
 msgstr "Pobieranie: $pkg"
 
-#: tazpanel/pkgs.cgi:916
+#: tazpanel/pkgs.cgi:934
 #, fuzzy
 msgid "(Un)blocking: %s"
 msgstr "Pobieranie: $pkg"
 
-#: tazpanel/pkgs.cgi:917
+#: tazpanel/pkgs.cgi:935
 #, fuzzy
 msgid "Repacking: %s"
 msgstr "Przepakowywanie: %s"
 
-#: tazpanel/pkgs.cgi:943
+#: tazpanel/pkgs.cgi:961
 #, fuzzy
 msgid "Package info"
 msgstr "Pakiet"
 
-#: tazpanel/pkgs.cgi:944
+#: tazpanel/pkgs.cgi:962
 msgid "Getting package info..."
 msgstr "Pobieranie informacji o pakiecie..."
 
-#: tazpanel/pkgs.cgi:958
+#: tazpanel/pkgs.cgi:976
 #, fuzzy
 msgid "Packages providing %s"
 msgstr "Pakiet %s"
 
-#: tazpanel/pkgs.cgi:967
+#: tazpanel/pkgs.cgi:985
 msgid "if"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:967
+#: tazpanel/pkgs.cgi:985
 #, fuzzy
 msgid "is installed"
 msgstr "%s zainstalowany pakiet"
 
-#: tazpanel/pkgs.cgi:1040
+#: tazpanel/pkgs.cgi:1058
 #, fuzzy
 msgid "State"
 msgstr "Status"
 
-#: tazpanel/pkgs.cgi:1048
+#: tazpanel/pkgs.cgi:1066
 #, fuzzy
 msgid "Maintainer"
 msgstr "Opiekun:"
 
-#: tazpanel/pkgs.cgi:1050
+#: tazpanel/pkgs.cgi:1068
 #, fuzzy
 msgid "License"
 msgstr "Licencja   : %s"
 
-#: tazpanel/pkgs.cgi:1052
+#: tazpanel/pkgs.cgi:1070
 #, fuzzy
 msgid "Website"
 msgstr "Strona internetowa:"
 
-#: tazpanel/pkgs.cgi:1056
+#: tazpanel/pkgs.cgi:1074
 #, fuzzy
 msgid "Sizes"
 msgstr "Rozmiary:"
 
-#: tazpanel/pkgs.cgi:1058
+#: tazpanel/pkgs.cgi:1076
 msgid "Depends"
 msgstr "Zależności"
 
-#: tazpanel/pkgs.cgi:1060
+#: tazpanel/pkgs.cgi:1078
 #, fuzzy
 msgid "Provide"
 msgstr "Pakiet     : %s"
 
-#: tazpanel/pkgs.cgi:1062
+#: tazpanel/pkgs.cgi:1080
 #, fuzzy
 msgid "Suggested"
 msgstr "Sugerowane :"
 
-#: tazpanel/pkgs.cgi:1067
+#: tazpanel/pkgs.cgi:1085
 msgid "View receipt"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1068
+#: tazpanel/pkgs.cgi:1086
 #, fuzzy
 msgid "Improve package"
 msgstr "Uaktualnij pakiety"
 
-#: tazpanel/pkgs.cgi:1091
+#: tazpanel/pkgs.cgi:1109
 msgid "Installed files"
 msgstr "Zainstalowanych plików"
 
-#: tazpanel/pkgs.cgi:1093
+#: tazpanel/pkgs.cgi:1111
 msgid "Please wait"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1156
+#: tazpanel/pkgs.cgi:1174
 msgid "TazPkg administration and settings"
 msgstr "TazPkg administracja i ustawienia"
 
-#: tazpanel/pkgs.cgi:1165
+#: tazpanel/pkgs.cgi:1183
 msgid "Creating the package..."
 msgstr "Tworzenie pakietu..."
 
-#: tazpanel/pkgs.cgi:1169
+#: tazpanel/pkgs.cgi:1187
 msgid "Path:"
 msgstr "Ścieżka:"
 
-#: tazpanel/pkgs.cgi:1188
+#: tazpanel/pkgs.cgi:1206
 msgid "Checking packages consistency..."
 msgstr "Sprawdzanie spójności pakietów..."
 
-#: tazpanel/pkgs.cgi:1192
+#: tazpanel/pkgs.cgi:1210
 msgid "Full packages check..."
 msgstr "Dogłębne sprawdzanie pakietów..."
 
-#: tazpanel/pkgs.cgi:1201 tazpanel/pkgs.cgi:1212
+#: tazpanel/pkgs.cgi:1219 tazpanel/pkgs.cgi:1230
 #, fuzzy
 msgid "%s is installed on /mnt/packages"
 msgstr "Zainstalowane pakiety"
 
-#: tazpanel/pkgs.cgi:1227
+#: tazpanel/pkgs.cgi:1245
 msgid "Packages in the cache: %s (%s)"
 msgstr "Pakiety w pamięci podręcznej: %s (%s)"
 
-#: tazpanel/pkgs.cgi:1234
+#: tazpanel/pkgs.cgi:1252
 msgid "Current mirror list"
 msgstr "Aktualna lista serwerów"
 
-#: tazpanel/pkgs.cgi:1257 tazpanel/pkgs.cgi:1289
+#: tazpanel/pkgs.cgi:1262 tazpanel/pkgs.cgi:1308
 msgid "Delete"
 msgstr "Usuń"
 
-#: tazpanel/pkgs.cgi:1279
+#: tazpanel/pkgs.cgi:1298
 msgid "Private repositories"
 msgstr "Prywatne repozytoria"
 
-#: tazpanel/pkgs.cgi:1302
+#: tazpanel/pkgs.cgi:1321
 msgid "URL:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1312
+#: tazpanel/pkgs.cgi:1331
 msgid "Link to another SliTaz installation"
 msgstr "Dowiązanie do innej instalacji SliTaz"
 
-#: tazpanel/pkgs.cgi:1315
+#: tazpanel/pkgs.cgi:1334
 msgid ""
 "This link points to the root of another SliTaz installation. You will be "
 "able to install packages using soft links to it."
@@ -1938,11 +1942,11 @@ msgstr ""
 "To dowiązanie wskazuje do głównego katalogu innej instalacji SliTaz. Możliwa "
 "będzie instalacja pakietów używając miękkich dowiązań do niego."
 
-#: tazpanel/pkgs.cgi:1326
+#: tazpanel/pkgs.cgi:1345
 msgid "SliTaz packages DVD"
 msgstr "DVD z pakietami SliTaz"
 
-#: tazpanel/pkgs.cgi:1329
+#: tazpanel/pkgs.cgi:1348
 msgid ""
 "A bootable DVD image of all available packages for the %s version is "
 "generated every day. It also contains a copy of the website and can be used "
@@ -1954,178 +1958,178 @@ msgstr ""
 "może być używany bez dostępu do internetu. Obraz ten może być zainstalowany "
 "jedynie na nośniku DVD bądź USB."
 
-#: tazpanel/pkgs.cgi:1332
+#: tazpanel/pkgs.cgi:1351
 msgid "Install from ISO image:"
 msgstr "Zainstaluj z obrazu ISO:"
 
-#: tazpanel/pkgs.cgi:1339
+#: tazpanel/pkgs.cgi:1358
 msgid "Download DVD image"
 msgstr "Pobierz obraz DVD"
 
-#: tazpanel/pkgs.cgi:1341
+#: tazpanel/pkgs.cgi:1360
 msgid "Install from DVD/USB key"
 msgstr "Zainstaluj z nośnika DVD/USB"
 
-#: tazpanel/pkgs.cgi:1350
+#: tazpanel/pkgs.cgi:1369
 msgid ""
 "Long list of packages is paginated. Here you can set the page size (default: "
 "100, turning off the pager: 0)."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1355
+#: tazpanel/pkgs.cgi:1374
 msgid "Set"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1381
+#: tazpanel/pkgs.cgi:1400
 #, fuzzy
 msgid "Licenses for package %s"
 msgstr "Brakujące pliki pochodzące z %s:"
 
-#: tazpanel/pkgs.cgi:1402
+#: tazpanel/pkgs.cgi:1421
 msgid "%s license on %s website"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1403
+#: tazpanel/pkgs.cgi:1422
 msgid "Read online:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1403
+#: tazpanel/pkgs.cgi:1422
 msgid "Read local:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1444
+#: tazpanel/pkgs.cgi:1463
 #, fuzzy
 msgid "Tags list"
 msgstr "Pobierz świeżą listę"
 
-#: tazpanel/pkgs.cgi:1448
+#: tazpanel/pkgs.cgi:1467
 #, fuzzy
 msgid "List of tags in all repositories"
 msgstr "Sporządza listę wszystkich zainstalowanych pakietów"
 
-#: tazpanel/pkgs.cgi:1449
+#: tazpanel/pkgs.cgi:1468
 msgid "List of tags in repository \"%s\""
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1475
+#: tazpanel/pkgs.cgi:1494
 #, fuzzy
 msgid "Tag \"%s\""
 msgstr "Przepakowywanie: %s"
 
-#: tazpanel/pkgs.cgi:1503
+#: tazpanel/pkgs.cgi:1522
 #, fuzzy
 msgid "Blocked packages list"
 msgstr "Zablokowane pakiety"
 
-#: tazpanel/pkgs.cgi:1541 tazpanel/pkgs.cgi:1618
+#: tazpanel/pkgs.cgi:1560 tazpanel/pkgs.cgi:1637
 #, fuzzy
 msgid "Improve package \"%s\""
 msgstr "Usuwanie: %s"
 
-#: tazpanel/pkgs.cgi:1576
+#: tazpanel/pkgs.cgi:1595
 msgid "Please log in using your TazBug account."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1580
+#: tazpanel/pkgs.cgi:1599
 msgid "Login:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1582
+#: tazpanel/pkgs.cgi:1601
 msgid "Password:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1585
+#: tazpanel/pkgs.cgi:1604
 msgid "Remember me"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1587
+#: tazpanel/pkgs.cgi:1606
 msgid "Log in"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1591
+#: tazpanel/pkgs.cgi:1610
 msgid "Create new account"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1619 tazpanel/pkgs.cgi:1676
+#: tazpanel/pkgs.cgi:1638 tazpanel/pkgs.cgi:1695
 msgid "Back"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1642
+#: tazpanel/pkgs.cgi:1661
 msgid "How can you help:"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1644
+#: tazpanel/pkgs.cgi:1663
 msgid "Please select an action"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1645
+#: tazpanel/pkgs.cgi:1664
 #, fuzzy
 msgid "Report new version"
 msgstr "Nowa wersja %s"
 
-#: tazpanel/pkgs.cgi:1646
+#: tazpanel/pkgs.cgi:1665
 msgid "Improve short description"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1647
+#: tazpanel/pkgs.cgi:1666
 msgid "Translate short description"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1648
+#: tazpanel/pkgs.cgi:1667
 msgid "Add or improve description"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1649
+#: tazpanel/pkgs.cgi:1668
 #, fuzzy
 msgid "Translate description"
 msgstr "Opis"
 
-#: tazpanel/pkgs.cgi:1650
+#: tazpanel/pkgs.cgi:1669
 #, fuzzy
 msgid "Improve category"
 msgstr "%s kategoria"
 
-#: tazpanel/pkgs.cgi:1651
+#: tazpanel/pkgs.cgi:1670
 msgid "Add or improve tags"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1652
+#: tazpanel/pkgs.cgi:1671
 msgid "Add application icon"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1653
+#: tazpanel/pkgs.cgi:1672
 msgid "Add application screenshot"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1654
+#: tazpanel/pkgs.cgi:1673
 msgid "Improve receipt"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1655
+#: tazpanel/pkgs.cgi:1674
 msgid "Other"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1666
+#: tazpanel/pkgs.cgi:1685
 msgid "Send"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1675
+#: tazpanel/pkgs.cgi:1694
 msgid "Thank you!"
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1728
+#: tazpanel/pkgs.cgi:1747
 msgid "It is recommended to [recharge] the lists."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1733
+#: tazpanel/pkgs.cgi:1752
 msgid "You need to [download] the lists for further work."
 msgstr ""
 
-#: tazpanel/pkgs.cgi:1765
+#: tazpanel/pkgs.cgi:1784
 msgid "Latest log entries"
 msgstr "Ostatnie wpisy logów"
 
-#: tazpanel/pkgs.cgi:1767
+#: tazpanel/pkgs.cgi:1786
 msgid "Show"
 msgstr ""
 
@@ -2140,9 +2144,6 @@ msgstr ""
 
 #~ msgid "Removing old package..."
 #~ msgstr "Usuwanie starej wersji..."
-
-#~ msgid "Unable to find package \"%s\" in the mirrored packages list."
-#~ msgstr "Nie można znaleźć: %s na liście pakietów na serwerze."
 
 #~ msgid "Adding implicit depends \"%s\"..."
 #~ msgstr "Dodawanie domyślnych zależności %s..."
