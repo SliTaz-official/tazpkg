@@ -527,14 +527,19 @@ END {
 	# Updating DBs is important process, so not to hide such errors (localized):
 	# chroot: can't execute '/usr/bin/***': No such file or directory
 
-	local fl="$INSTALLED/$PACKAGE/files.list" upd=0 udesk umime uicon uschm ukrnl
+	local fl="$INSTALLED/$PACKAGE/files.list" upd=0 udesk umime uicon uschm ukrnl ukrnlfs
 
-	fgrep    /usr/share/applications/ "$fl" | fgrep -q .desktop && udesk='yes'
-	fgrep -q /usr/share/mime "$fl" && umime='yes'
-	fgrep -q /usr/share/icon/hicolor "$fl" && uicon='yes'
-	fgrep -q /usr/share/glib-2.0/schemas "$fl" && uschm='yes'
-	fgrep    /usr/lib/gdk-pixbuf "$fl" | fgrep -q .so && upixb='yes'
-	fgrep -q /lib/modules "$fl" && ukrnl='yes'
+	fgrep    /usr/share/applications/    "$fl" | fgrep -q .desktop && udesk='yes'
+	fgrep -q /usr/share/mime             "$fl" && umime='yes'
+	fgrep -q /usr/share/icon/hicolor     "$fl" && uicon='yes'
+	fgrep    /usr/share/glib-2.0/schemas "$fl" | fgrep -q .xml && uschm='yes'
+	fgrep    /usr/lib/gdk-pixbuf         "$fl" | fgrep -q .so && upixb='yes'
+	if fgrep -q /lib/modules             "$fl"; then
+		ukrnl='yes'
+		if fgrep -q /kernel/fs/ "$fl"; then
+			ukrnlfs='yes'
+		fi
+	fi
 
 	if [ -n "$udesk$umime$uicon$uschm$upixb$ukrnl" ]; then
 		action 'Update system databases...'
@@ -553,6 +558,13 @@ END {
 	[ -n "$uschm" ] && chroot "$root/" /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas 2>&1 | fgrep -v '/apps/'
 	# package 'gdk-pixbuf'
 	[ -n "$upixb" ] && chroot "$root/" /usr/bin/gdk-pixbuf-query-loaders --update-cache
+
+	if [ -n "$ukrnlfs" ]; then
+		for i in $(awk -F/ '{if($6=="fs" && $8~$7)print $7}' "$fl" | sort -u); do
+			touch "$root/etc/filesystems"
+			grep "^$i\$" "$root/etc/filesystems" || echo "$i" >> "$root/etc/filesystems"
+		done
+	fi
 	# packages 'busybox', 'kmod', 'depmod'
 	[ -n "$ukrnl" ] && grep '/lib/modules' "$fl" | cut -d'/' -f4 | uniq | xargs chroot "$root/" /sbin/depmod -a
 
