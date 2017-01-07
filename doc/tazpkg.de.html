@@ -35,10 +35,10 @@ tazpkg [command] [options...]
 <p>TazPkg ist eine ressourcenschonende Paketverwaltung zur Installation, zum Auflisten, Transferieren,
 Aktualisieren oder Entfernen von Paketen in einem GNU/Linux-System. TazPkg bietet auch Kommandos zum Suchen und
 Erzeugen von Paketen und wurde unabhängig für die Anforderungen von SliTaz entwickelt.
-Pakete mit der *.tazpkg-Endung sind
+Pakete mit der Endung .tazpkg sind
 cpio-Archive, die ein mit lzms komprimiertes Dateisystem enthalten, ein Rezept und optional eine Beschreibung.
 TazPkg verwaltet auch Abhängigkeiten basierend auf Paket-Rezepten. Jedes Rezept enthält alle
-Informationen über ein Paket und kann Vor- und Nach-Installationsfunktionen enthalten. Dasselbe
+Informationen über ein Paket und kann Vor- und Nach-Installationsprozeduren enthalten. Dasselbe
 Rezept wird von <a href="../cookutils/cookutils.en.html" target="_blank">Cookutils</a> verwendet, um
 Quellprogramme zu übersetzen und ein .tazpkg-Paket zu erzeugen.</p>
 
@@ -56,7 +56,7 @@ unter "Ash" — einem Teil des "Busybox"-Projekts. TazPkg wird unter der freien
 	<li><tt>LANGUAGE</tt>: bestimmt die Sprache für Ausgaben und Bestätigungen des Benutzers.
 		<x-details>Hinweis: Die Umgebungsvariablen <tt>LANG</tt> und <tt>LC_ALL</tt> haben auch
 		Auswirkungen auf die Ausgabesprache (anderer Programme)</x-details></li>
-	<li><tt>LC_TIME</tt>: bestimmt das Format des Datums im <a href="#activity">activity</a>-Kommando</li>
+	<li><tt>LC_TIME</tt>: bestimmt das Format des Datums im Kommando <a href="#activity">activity</a></li>
 	<li><tt>root</tt>: gibt, wenn gesetzt, die Wurzel eines Dateisystems an, in dem TazPkg operieren soll.
 		Ein Wert, der mit der Option <tt>--root=</tt> gesetzt wird, hat Vorrang vor dem Wert
 		der Umgebungsvariablen <tt>root</tt>.</li>
@@ -90,21 +90,21 @@ unter "Ash" — einem Teil des "Busybox"-Projekts. TazPkg wird unter der freien
 	<li><tt><a href="file:///var/lib/tazpkg/IDs" target="_blank">IDs</a></tt>: Indikator für den
 		aktuellen Zustand des SliTaz-Depots und einen UNIX-Zeitstempel.
 		<x-details>Der Wert ändert sich, wenn neue oder aktualisierte Pakete im Depot
-		auftauchen. Der Zeitstempel ermöglicht es den Zeitpunkt der letzten
+		auftauchen. Der Zeitstempel ermöglicht es, den Zeitpunkt der letzten
 		Änderung des Depots festzustellen und wie aktuell die Spiegel-Depots sind.
 		(Der UNIX-Zeitstempel kann in ein Datum umgesetzt werden mit:
 		<code>date -d@<em>timestamp</em></code>)</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/mirror" target="_blank">mirror</a></tt>: URL des aktuell
-		benutzten Spiegel-Depots.
+		benutzten Depots.
 		<x-details>URL ist die Adresse des fernen Verzeichnisses, das Pakete und Datenbank-Dateien
 		enthält.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/mirrors" target="_blank">mirrors</a></tt>: Liste von URLs
-		verfügbarer Spiegel-Depots.
+		verfügbarer Depots.
 		<x-details>Im Gegensatz zum vorgenannten URL müssen die URL in dieser Datei mit
 		<tt>packages/<em>version</em>/</tt> erweitert werden, wobei <em>version</em> z.B. <em>4.0</em>
 		oder <tt><em>cooking</em></tt> sein kann.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.list" target="_blank">packages.list </a></tt>
-		(obsolet): Liste von Paketnamen mit Versionsnummern die in dem Depot enthalten sind.</li>
+		(obsolet): Liste von Paketnamen mit Versionsnummern, die in dem Depot enthalten sind.</li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.desc" target="_blank">packages.desc</a></tt>
 		(obsolet): Liste von Paketnamen, Version, Kurzbeschreibung, Kategorie und "upstream
 		URL".</li>
@@ -135,15 +135,15 @@ unter "Ash" — einem Teil des "Busybox"-Projekts. TazPkg wird unter der freien
 		</ul>
 		</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.diff" target="_blank">packages.diff</a></tt>:
-		Diese Datei wird vom <tt><a href="#recharge">recharge</a></tt>-Kommando erzeugt.
+		Diese Datei wird vom Kommando <tt><a href="#recharge">recharge</a></tt> erzeugt.
 		<x-details>Liste von Paketnamen und Versionen neuer Pakete in dem Depot, auf das
 		das letzte "recharge" angewendet wurde.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/packages.up" target="_blank">packages.up</a></tt>:
-		Diese Datei wird vom <tt><a href="#upgrade">upgrade</a></tt>-Kommando erzeugt.
+		Diese Datei wird vom Kommando <tt><a href="#upgrade">upgrade</a></tt> erzeugt.
 		<x-details>Liste von Paketnamen, die nach dem letzten "recharge" aktualisiert werden
 		können.</x-details></li>
 	<li><tt><a href="file:///var/lib/tazpkg/descriptions.txt"
-		target="_blank">descriptions.txt</a></tt>: List der ausführlichen Beschreibungen aller
+		target="_blank">descriptions.txt</a></tt>: Liste der ausführlichen Beschreibungen aller
 		Pakete im Depot.</li>
 	<li><tt>packages-desc.<em>language</em></tt> — optionale Liste von übersetzten Kurzbeschreibungen
 		von Paketen <x-details>(siehe das Paket tazpkg-desc-ru)</x-details>.</li>
@@ -159,7 +159,7 @@ unter "Ash" — einem Teil des "Busybox"-Projekts. TazPkg wird unter der freien
 		Extra-Paketen
 		<x-details>(nicht-freie Pakete; freie Pakete, die nicht aus Quellprogrammen übersetzt wurden).
 		Die Listeneinträge bestehen aus
-		Paketname, Kurzbeschreibung, "upstream URL",Kategorie, Version und Lizenz.</x-details></li>
+		Paketname, Kurzbeschreibung, "upstream URL", Kategorie, Version und Lizenz.</x-details></li>
 	<li><a href="file:///var/lib/tazpkg/files.list.lzma"><tt>files.list.lzma</tt></a>: sehr große,
 		komprimierte Liste, die die Namen aller Dateien aller Pakete des Depots enthält
 		<x-details>(zur Zeit etwa 5.000 Pakete und etwa 700.000 Dateien)</x-details>.</li>
@@ -283,7 +283,7 @@ Dateisystem und das Aktualisieren von SliTaz-Paketen auf einem fernen System.</x
 	<li><a href="#search">search</a>: ein Paket über seinen Namen oder ein Muster suchen</li>
 	<li><a href="#search-pkgname">search-pkgname</a>: im Depot nach einem Paket suchen, das
 		eine bestimmte Datei enthält</li>
-	<li><a href="#search-file">search-file</a>: in allen installierten Paketen nach einer Datei suchen</li>
+	<li><a href="#search-file">search-file</a>: in allen installierten Paketen oder einem Depot nach einer Datei suchen</li>
 </ul>
 </article>
 
@@ -336,7 +336,7 @@ Dateisystem und das Aktualisieren von SliTaz-Paketen auf einem fernen System.</x
 <article><header>Verwaltung von Depots</header>
 
 <ul>
-	<li><a href="#recharge">recharge</a>: die Paket-Datenbank aus einem Spiegel-Depot aktualisieren</li>
+	<li><a href="#recharge">recharge</a>: die Paket-Datenbank aus einem Depot aktualisieren</li>
 	<li><a href="#upgrade">upgrade</a>: Pakete prüfen, letzte Aktualisierungen anzeigen und installieren</li>
 	<li><a href="#setup-mirror">setup-mirror</a>: die Adresse (URL) eines Depots ändern</li>
 	<li><a href="#add-undigest">setup-undigest</a>: die Adresse (URL) eines inoffiziellen Depots ändern</li>
@@ -369,7 +369,7 @@ $ tazpkg usage
 <p>Anwendungshilfe für das angegebene Kommando ausgeben (<tt>help</tt> oder <tt>-h</tt>).
 Es kann ein Kurzname des Kommandos, der vollständige Kommandoname oder ein Teil davon angegeben werden.
 Bindestriche am Anfang des Kurznamens brauchen nicht eingegeben zu werden.
-Wenn der eingegebene Teil eines vollständigen Kommandonamens auf mehrere Kommandos paßt, wird nachgefragt.</p>
+Wenn der eingegebene Teil eines vollständigen Kommandonamens auf mehrere Kommandos passt, wird nachgefragt.</p>
 
 <pre>
 $ tazpkg help <em>-gi</em>
@@ -539,14 +539,14 @@ $ tazpkg -sf <em>/usr/share/fonts</em> --mirror
 
 <article id="get"><h3>get</h3>
 
-<p>Pakete von einem Depot transferieren (<tt>get</tt> or <tt>-g</tt>). Die Pakete werden in das
+<p>Pakete von einem Depot transferieren (<tt>get</tt> oder <tt>-g</tt>). Die Pakete werden in das
 aktuelle Verzeichnis transferiert. Wenn mit dem Namen kein offizielles Paket gefunden wird,
 wird ein Paket mit dem Präfix get- oder ein Extra-Paket (in dieser Reihenfolge) gesucht und transferiert.
 Die Option <tt>--extra</tt> bewirkt, dass nur ein Extra-Paket transferiert wird.</p>
 
 <p>Es können auch mehrere Paketnamen im tazpkg-Kommando angegeben werden oder (mit der Option <tt>--list</tt>)
 eine Datei, die eine Liste von Paketnamen enthält.
-Alternativ kann dass Kommando <tt><a href="#get-list">get-list</a></tt> verwendet werden.</p>
+Alternativ kann das Kommando <tt><a href="#get-list">get-list</a></tt> verwendet werden.</p>
 
 <pre>
 # tazpkg get <em>grub</em>
@@ -571,12 +571,12 @@ Berücksichtigung von Abhängigkeiten zu installieren.</p>
 <p>Mit der Option <tt>--local</tt> bevorzugt TazPkg bei der Installation von Paketen zur Auflösung von
 Abhängigkeiten Pakete aus lokalen Dateien (d.h. Pakete aus demselben Verzeichnis wie das zu installierende Paket)
 gegenüber Paketen aus dem Zwischenspeicher oder einem Depot.
-Dies ermöglicht es, eine Anzahl bereits lokal gespeicherter Pakete mitsamt der Pakete von denen sie
-abhängen zu installieren, ohne dass dabei eine Netzwerk-Verbindung benötigt wird.</p>
+Dies ermöglicht es, eine Anzahl bereits lokal gespeicherter Pakete mitsamt der Pakete, von denen sie
+abhängen, zu installieren, ohne dass dabei eine Netzwerk-Verbindung benötigt wird.</p>
 
 <p>Es können mehrere Paketnamen im tazpkg-Kommando angegeben werden oder (mit der Option <tt>--list</tt>)
 eine Datei, die eine Liste von Paketnamen enthält.
-Alternativ kann dass Kommando <tt><a href="#get-list">install-list</a></tt> verwendet werden.</p>
+Alternativ kann das Kommando <tt><a href="#get-list">install-list</a></tt> verwendet werden.</p>
 
 <p>Wie ein Paket über das Netzwerk installiert wird, ist bei <tt><a href="#get-install">get-install</a></tt>
 beschrieben.</p>
@@ -606,7 +606,7 @@ Berücksichtigung von Abhängigkeiten zu installieren.</p>
 
 <p>Es können mehrere Paketnamen angegeben werden oder (mit der Option <tt>--list</tt>) eine Datei,
 die eine Liste von Paketnamen enthält.
-Alternativ kann dass Kommando <tt><a href="#get-list">get-install-list</a></tt> verwendet werden.</p>
+Alternativ kann das Kommando <tt><a href="#get-list">get-install-list</a></tt> verwendet werden.</p>
 
 <p>Um eine Liste der Pakete im Depot zu erhalten, kann das Kommando
 <tt><a href="#list-mirror">list-mirror</a></tt> verwendet werden.</p>
@@ -710,7 +710,7 @@ anderen installierten Pakete.</p>
 
 <article id="info"><h3>info</h3>
 
-<p>Alle verfügbare Information über ein Paket ausgeben. Angegeben werden kann der Name eines
+<p>Alle verfügbaren Informationen über ein Paket ausgeben. Angegeben werden kann der Name eines
 installierten Paketes oder eines Paketes, das noch nicht installiert, aber im Depot vorhanden ist.
 Es können auch die Informationen aus einer lokalen Paketdatei angezeigt werden, indem ein absoluter oder relativer
 Pfadname der <tt>.tazpkg</tt>-Datei eingegeben wird. Die Informationen werden der
@@ -753,9 +753,9 @@ $ tazpkg list-files <em>bc</em>
 
 <article id="block"><h3>block, unblock, chblock</h3>
 
-<p>Mit den Kommandos <tt>block</tt> (oder <tt>-b</tt>) und <tt>unblock</tt> (oder <tt>-u</tt>) können
+<p>Mit den Kommandos <tt>block</tt> (oder <tt>-b</tt>) bzw. <tt>unblock</tt> (oder <tt>-u</tt>) können
 installierte Paket-Versionen gesperrt werden, so dass sie vom Kommando <tt><a href="#upgrade">upgrade</a></tt>
-übergangen werden und entsperrt werden. Mit dem Kommando <tt>chblock</tt> kann der
+übergangen werden bzw. entsperrt werden. Mit dem Kommando <tt>chblock</tt> kann der
 Blockierzustand des Paketes invertiert werden.
 Die Datei <tt>/var/lib/tazpkg/blocked-packages.list</tt> enthält die Namen der blockierten Pakete.
 Diese Datei kann auch manuell bearbeitet werden.</p>
@@ -801,7 +801,7 @@ $ tazpkg bugs <em>nano</em>
 
 <p>Mit dem Kommando <code>depends</code> wird eine Liste der Pakete ausgegeben, von denen das Paket abhängt, die
 also nötig sind, damit das Paket funktioniert.
-Im <code>depends</code>-Kommando bewirkt die Option <tt>--mark</tt>, dass installierte Pakete mit einem
+Im Kommando <code>depends</code> bewirkt die Option <tt>--mark</tt>, dass installierte Pakete mit einem
 Plus-Zeichen und nicht installierte Pakete mit einem Minus-Zeichen markiert werden.
 Die Option <tt>--total</tt> bewirkt, dass Anzahl und Größe der Pakete ausgegeben werden.
 Werden beide Optionen zusammen eingegeben, so werden Anzahl und Größe der Pakete ausgegeben, die zu
@@ -809,10 +809,10 @@ installieren sind.</p>
 
 <p>Mit dem Kommando <code>rdepends</code> wird eine Liste der Pakete ausgegeben, die von diesem Paket abhängen,
 die also nur richtig funktionieren, wenn das Paket installiert ist.
-Wird das <code>rdepends</code>-Kommando <em>ohne</em> die Option <tt>--all</tt> eingegeben, werden nur die
+Wird das Kommando <code>rdepends</code> <em>ohne</em> die Option <tt>--all</tt> eingegeben, werden nur die
 installierten Pakete angezeigt, die von dem Paket abhängen, <em>mit</em> dieser Option eine List aller 
 verfügbaren Pakete, die von dem Paket abhängen.
-Mit der Option <tt>--mark</tt> werden die Pakete wie beim <code>depends</code>-Kommando markiert.</p>
+Mit der Option <tt>--mark</tt> werden die Pakete wie beim Kommando <code>depends</code> markiert.</p>
 
 <pre>
 $ tazpkg depends <em>mpd</em>
@@ -964,8 +964,8 @@ oder der Name eines inoffiziellen Depots.</p>
 (<tt>upgrade</tt> oder <tt>up</tt>). Die Aktualisierung von Paketen ist ein wichtiger Beitrag zur
 Systemsicherheit: mit den neuesten Aktualisierungen und Korrekturen bleibt das System sicher.
 Das SliTaz-Projekt, auch wenn es klein ist, bietet regelmäßig Sicherheitsaktualisierungen und
-generell die neuesten Versionen von Software. Dies Funktion ist für Anwender gedacht, die
-SliTaz auf Platte installiert haben. Im "Live CD"-Modus aktualisierte Pakete sind nach Systembeendigung
+generell die neuesten Versionen von Software. Diese Funktion ist für Anwender gedacht, die
+SliTaz auf Platte installiert haben. Im Direktstart-Modus aktualisierte Pakete sind nach Systembeendigung
 ("shutdown") verloren!</p>
 
 <p>Zunächst wird die Paket-Datenbank automatisch aktualisiert (<tt><a href="#recharge">recharge</a></tt>)
@@ -986,7 +986,7 @@ werden alle installiert.</p>
 
 <article id="setup-mirror"><h3>setup-mirror</h3>
 
-<p>Die Adresse (URL) eines Depots ändern(<tt>setup-mirror</tt> oder <tt>-sm</tt>). Der
+<p>Die Adresse (URL) eines Depots ändern (<tt>setup-mirror</tt> oder <tt>-sm</tt>). Der
 URL des neuen Depots wird nachgefragt. Es können mehrere URL, durch Leerzeichen getrennt, eingegeben
 werden. Stattdessen kann auch die Datei
 <a href="file:///var/lib/tazpkg/mirror"><tt>/var/lib/tazpkg/mirror</tt></a> direkt geändert werden.
@@ -1028,7 +1028,7 @@ $ tazpkg list-undigest --box
 
 <article id="remove-undigest"><h3>remove-undigest</h3>
 
-<p>Den URL eines inoffizielles Depots entfernen. Es wird nach einer Bestätigung gefragt.</p>
+<p>Den URL eines inoffiziellen Depots entfernen. Es wird nach einer Bestätigung gefragt.</p>
 
 <pre>
 # tazpkg remove-undigest <em>my-repository</em>
@@ -1064,6 +1064,7 @@ Option <tt>--forced</tt> bewirkt werden.</p>
 
     <section>
       <p>Deutsche Übersetzung erstellt 2016-09-05.</p>
+      <p>Deutsche Übersetzung überarbeitet 2017-01-03.</p>
     </section>
 
 
