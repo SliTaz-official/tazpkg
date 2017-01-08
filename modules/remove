@@ -21,11 +21,6 @@ log_pkg() {
 }
 
 
-# Interactive mode
-
-im() { tty -s; }
-
-
 # Block of receipt function callers
 # Why? "Bad" receipt sourcing can redefine some vital TazPkg variables.
 # Few receipts function should be patched now.
@@ -209,6 +204,9 @@ status
 
 # [3/5] Post-remove commands
 call_post_remove "$INSTALLED/$PACKAGE/receipt"
+# restore Busybox applets
+. @@MODULES@@/bb restore
+
 
 # [4/5] Update system databases
 fl="$INSTALLED/$PACKAGE/files.list"; upd=0

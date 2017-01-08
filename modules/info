@@ -13,11 +13,6 @@
 
 
 
-# Interactive mode
-
-im() { tty -s; }
-
-
 # Unset variables that may absent in the receipt
 unset EXTRAVERSION TAGS DEPENDS PROVIDE SIZES
 

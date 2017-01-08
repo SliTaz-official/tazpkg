@@ -30,11 +30,6 @@
 
 
 
-# Interactive mode
-
-im() { tty -s; }
-
-
 # Functions set for translate categories
 # --------------------------------------
 

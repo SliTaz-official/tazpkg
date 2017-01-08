@@ -1,0 +1,45 @@
+#!/bin/sh
+# TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
+# bb - TazPkg module
+# Manage Busybox applets
+
+
+# Input: $1 - command:
+#    restore   restore missing Busybox applets
+#    replaced  list of the replaced Busybox applets
+#
+# Variable $root points to the root of the installation
+
+
+# Connect function libraries
+. /lib/libtaz.sh
+
+
+
+
+[ ! -x "$root/bin/busybox" ] && die 'Busybox is not installed in the %s. Exit.' "$root"
+
+# Full list but skipping some applets: bbconfig, linuxrc
+applets_list=$($root/bin/busybox --list-full | grep -v 'bbconfig\|linuxrc')
+
+case $1 in
+	restore)
+		mkdir -p "$root/sbin" "$root/usr/bin" "$root/usr/sbin"
+		for applet in $applets_list; do
+			if [ ! -x "$root/$applet" ]; then
+				action 'Restoring Busybox applet %s...' "$(basename $applet)"
+				case $(dirname $applet) in
+					bin)      ln -sf           'busybox' "$root/$applet";;
+					sbin)     ln -sf    '../bin/busybox' "$root/$applet";;
+					usr/*bin) ln -sf '../../bin/busybox' "$root/$applet";;
+				esac
+				status
+			fi
+		done
+		;;
+	replaced)
+		ls -l $(echo "$applets_list" | sed "s|^|$root/|") 2>/dev/null | \
+		awk -vr="$root" '{if ($0 !~ /busybox$/){sub(r, ""); print $9}}'
+		;;
+esac
+

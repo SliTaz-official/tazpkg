@@ -13,13 +13,6 @@
 
 
 
-# Interactive mode
-
-im() { tty -s; }
-
-
-
-
 unset desc
 
 # 1) Localized description
