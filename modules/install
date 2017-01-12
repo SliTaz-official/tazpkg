@@ -342,6 +342,16 @@ EOT
 	# TODO: why this list-processed in the $PKGS_DB?
 	#[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> "$PKGS_DB/$INSTALL_LIST-processed"
 
+	# Special mode for using in cookutils: clear show whether used fresh package or cached one
+	if [ -n "$cookmode" ]; then
+		f=${PACKAGE_FILE%/*}; f=${f%/*}; f=${f##*/}
+		if [ "$f" == "$(cat /etc/slitaz-release)" ]; then
+			_ 'Installing (web/cache): %s' "$(basename $PACKAGE_FILE .tazpkg)"
+		else
+			_ 'Installing (pkg/local): %s' "$(basename $PACKAGE_FILE .tazpkg)"
+		fi
+	fi
+
 	if [ -n "$sequence" ]; then
 		title 'Installation of package "%s" (%s)' "$PACKAGE" "$sequence"
 	else
