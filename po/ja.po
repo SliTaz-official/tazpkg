@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-02 18:52+0900\n"
-"PO-Revision-Date: 2017-01-08 16:09+0900\n"
+"PO-Revision-Date: 2017-01-22 12:14+0900\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -351,7 +351,7 @@ msgstr "パッケージ \"%s\" ダウンロードを継続中"
 
 #: modules/get:400
 msgid "Checksum error for \"%s\""
-msgstr "\"$s\" チェックサムエラー"
+msgstr "\"%s\" チェックサムエラー"
 
 #: modules/get:410
 msgid "Please wait until the mirror synchronization is complete and try again."
@@ -559,13 +559,12 @@ msgstr "推奨パッケージのリストを出力します"
 
 #: modules/help:69
 msgid "Recharge your packages.list from the mirror"
-msgstr "ミラーからあなたのパッケージリストを再取得します"
+msgstr "ミラーからパッケージリストを再取得します"
 
 #: modules/help:70
 msgid "Check packages %s to list and install latest upgrades"
 msgstr ""
-"最新のアップグレードをリストしてインストールするには、パッケージ %s を確認し"
-"て下さい"
+"パッケージ %s を確認して一覧し、最新のアップグレードをインストールします"
 
 #: modules/help:71
 msgid "Change the mirror URL configuration"
@@ -593,12 +592,12 @@ msgstr "*.tazpkg パッケージを含むフォルダの TazPkg データベー�
 
 #: modules/help:105 modules/help:136
 msgid "Sorry, no help for \"%s\""
-msgstr "ごめんあさい。\"%s\" のヘルプはありません"
+msgstr "ごめんなさい。\"%s\" のヘルプはありません"
 
 #: modules/help:112
 msgid "%d help topic available:"
 msgid_plural "%d help topics available:"
-msgstr[0] "%s 個のヘルプトピックが利用可能です:"
+msgstr[0] "%s ヘルプトピックが利用可能です:"
 
 #: modules/help:166
 msgid "%s"
@@ -714,12 +713,12 @@ msgstr "パッケージ \"%s\" 依存関係の追跡"
 
 #: modules/install:122
 msgid "Missing package \"%s\""
-msgstr "パッケージ \"%s\" が見つかりません"
+msgstr "パッケージ \"%s\" はインストールされていません"
 
 #: modules/install:126
 msgid "%s missing package to install."
 msgid_plural "%s missing packages to install."
-msgstr[0] "%s はインストールするパッケージがありません。"
+msgstr[0] "存在しない %s パッケージはインストールされます。"
 
 #: modules/install:138
 msgid "Install all missing dependencies? (y/N)"
@@ -1308,7 +1307,7 @@ msgstr[0] "%s のアップグレードが利用可能です (%s)"
 #: modules/upgrade:130
 msgid "%s installed package scanned in %ds"
 msgid_plural "%s installed packages scanned in %ds"
-msgstr[0] "%s でインストールされたパッケージ %s が検出されました"
+msgstr[0] "インストール済パッケージ %s が %ds にあります"
 
 #: modules/upgrade:145
 msgid "Do you wish to install them now? (y/N)"
@@ -1316,7 +1315,7 @@ msgstr "今すぐインストールしますか？ (y/N）"
 
 #: modules/upgrade:157
 msgid "Leaving without any upgrades installed."
-msgstr "アップグレードを一切インストールしないで放置。"
+msgstr "いずれのアップグレードをしないで放置します。"
 
 #: tazpkg-box:15
 msgid "SliTaz Package Action"
