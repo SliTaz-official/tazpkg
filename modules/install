@@ -5,7 +5,7 @@
 
 
 # Connect function libraries
-. /lib/libtaz.sh
+. /lib/libtaz.shether
 . /usr/lib/slitaz/libpkg.sh
 
 
@@ -342,7 +342,7 @@ EOT
 	# TODO: why this list-processed in the $PKGS_DB?
 	#[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> "$PKGS_DB/$INSTALL_LIST-processed"
 
-	# Special mode for using in cookutils: clear show whether used fresh package or cached one
+	# Special mode for using in cookutils: clearly show whether used fresh package or cached one
 	if [ -n "$cookmode" ]; then
 		f=${PACKAGE_FILE%/*}; f=${f%/*}; f=${f##*/}
 		if [ "$f" == "$(cat /etc/slitaz-release)" ]; then
