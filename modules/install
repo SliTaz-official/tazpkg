@@ -5,7 +5,7 @@
 
 
 # Connect function libraries
-. /lib/libtaz.shether
+. /lib/libtaz.sh
 . /usr/lib/slitaz/libpkg.sh
 
 
