@@ -96,7 +96,7 @@ download_from() {
 			debug "  wget -c -T 30 -U $UA ${1%/}/$2"
 			q=''; [ -n "$quiet" ] && q='-q'
 			# Display abridged wget status (skip info about connections)
-			wget -c $q -T 30 -U $UA ${1%/}/$2 2>&1 | awk 'BEGIN{RS="\r"}$0~"%"{printf "%s\r",$0}' >&2
+			wget -c $q -T 30 -U $UA ${1%/}/$2 2>&1 | awk '$0~"%"{printf "%s\r",$0}' >&2
 			;;
 		*)
 			debug "  cp ${1%/}/$2 ."
