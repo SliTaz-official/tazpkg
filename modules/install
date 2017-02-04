@@ -572,7 +572,7 @@ END {
 	if [ -n "$ukrnlfs" ]; then
 		for i in $(awk -F/ '{if($6=="fs" && $8~$7)print $7}' "$fl" | sort -u); do
 			touch "$root/etc/filesystems"
-			grep "^$i\$" "$root/etc/filesystems" || echo "$i" >> "$root/etc/filesystems"
+			grep -q "^$i\$" "$root/etc/filesystems" || echo "$i" >> "$root/etc/filesystems"
 		done
 	fi
 	# packages 'busybox', 'kmod', 'depmod'
