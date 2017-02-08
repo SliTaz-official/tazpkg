@@ -97,6 +97,11 @@ done
 
 [ -z "$SIZES" ] && SIZES=$(echo $PACKED_SIZE/$UNPACKED_SIZE | sed 's|\.0||g' | sed 's|^/$||')
 
+# Allow maintainer in form: John Doe <john@example.com>
+case $output in
+	html|gtk) MAINTAINER=$(echo "$MAINTAINER" | sed 's|&|\&amp;|g; s|<|\&lt;|g; s|>|\&gt;|g');;
+esac
+
 emsg "$(
 {
 			_ 'Package    : %s' "$PACKAGE"
