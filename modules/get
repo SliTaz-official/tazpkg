@@ -416,6 +416,44 @@ get_pkg() {
 }
 
 
+# Get local package from /home/slitaz/packages to co-work with the cookutils
+
+get_pkg_cookmode() {
+	# input:  $1 package name (like 'advancecomp')
+	# action: find package in /home/slitaz/packages (or where defined in the cook.conf)
+	# output: full path to the found package
+	# ROOT NOT USED
+
+	local PKGS='/home/slitaz/packages' found='0'
+	[ -e "/etc/slitaz/cook.conf" ] && . "/etc/slitaz/cook.conf"
+
+	# Find local package
+	tempd="$(mktemp -d)"; cd "$tempd"
+
+	for pkgfile in $PKGS/$1-*.tazpkg; do
+		[ -e "$pkgfile" ] || continue
+		# Extract receipt from each matched package
+		cpio -F "$pkgfile" -i receipt >/dev/null 2>&1
+		name=$(. receipt; echo $PACKAGE)
+		rm receipt
+		if [ "$name" == "$1" ]; then
+			# Use the first matched package: normally there is only one package
+			# with the $PACKAGE matched in the receipt
+			found='1'
+			# Output: path to found package and exit loop
+			echo "$pkgfile"
+			break
+		fi
+	done
+	rm -r "$tempd"
+
+	# Proceed to get package as usual (non-local)
+	if [ "$found" -eq 0 ]; then
+		get_pkg "$1"
+	fi
+}
+
+
 
 
 # Command 'get-install' calls 'get', then 'install' modules. Check package presence here, on the
@@ -441,7 +479,11 @@ if [ "$tazpkg_command" == 'get-install' ]; then
 	fi
 fi
 
-if [ -n "$extra" ]; then
+if [ -n "$cookmode" ]; then
+	# When '--cookmode' option given, try to find package in the local cook repository,
+	# then, if fails, try to get the package as usual
+	get_pkg_cookmode "$1"
+elif [ -n "$extra" ]; then
 	# When '--extra' option given, extra-package has priority over 'regular' packages
 	get_pkg_extra "$1"
 else
