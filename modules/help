@@ -6,6 +6,17 @@
 
 . /lib/libtaz.sh
 
+# Determine the help language
+
+BASE='/usr/share/doc/tazpkg'
+
+for i in $(echo $LANGUAGE | tr ':' ' ') ${LANG%.*} ${LANG%_*} en; do
+	if [ -f "$BASE/tazpkg.$i.html" ]; then
+		DOC="$BASE/tazpkg.$i.html"
+		break
+	fi
+done
+
 
 
 
@@ -82,7 +93,6 @@ EOT
 
 
 T="${1#-}"
-DOC='/usr/share/doc/tazpkg/tazpkg.html'
 QUERY="$T"
 
 if [ -z "$T" ]; then
