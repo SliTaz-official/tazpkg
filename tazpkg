@@ -380,7 +380,7 @@ case "$COMMAND" in
 
 	pack)
 		# Create SliTaz package archive using cpio and lzma.
-		# TODO: Cook also pack packages, we should share code in libpkg.sh
+		# TODO: Cook also packs packages, we should share code in libpkg.sh
 		check_cmd pkg; shift; @@MODULES@@/pack $@;;
 
 

@@ -135,7 +135,7 @@ emsg "$(_p \
 # Clean
 rm "$blocked_counter" "$tmp_up_list"
 
-# Pkgs to upgrade ? Skip, let install them all, or ask user
+# Pkgs to upgrade ? Skip, lets install them all, or ask user
 [ -n "$check" ] && exit 0
 
 if [ "$upnb" -gt 0 ]; then

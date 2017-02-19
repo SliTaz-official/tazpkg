@@ -1,7 +1,7 @@
 #!/bin/sh
 # TazPkg - Tiny autonomous zone packages manager, hg.slitaz.org/tazpkg
 # find-depends - TazPkg module
-# Functions that are common to tazpkg and tazpkg-convert, and sourced by them.
+# Functions that are common to tazpkg and tazpkg-convert and sourced by them.
 
 
 # search dependencies for files in $TMP_DIR/$file/fs

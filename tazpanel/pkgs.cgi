@@ -2,7 +2,7 @@
 #
 # TazPkg CGI interface - Manage packages via a browser
 #
-# This CGI interface extensively uses tazpkg to manage packages and have
+# This CGI interface extensively uses tazpkg to manage packages and has
 # its own code for some tasks. Please KISS, it is important and keep speed
 # in mind. Thanks, Pankso.
 #
@@ -1030,7 +1030,7 @@ EOT
 			fi
 		fi
 
-		# Show Block/Unblock, and Repack buttons
+		# Show Block/Unblock and Repack buttons
 		[ "$REMOTE_USER" == "root" ] &&
 		if [ -d $INSTALLED/$pkg ]; then
 			if grep -qs "^$pkg$" "$BLOCKED"; then

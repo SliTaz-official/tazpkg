@@ -3,8 +3,8 @@
 # tazpkg-notify - part of TazPkg
 # Notification icon for TazPkg packages
 
-# Recharging pkgs list can be done automatically at boot, so notifies users
-# if some updates are available. Also notifies users if the packages list is too
+# Recharging pkgs list can be done automatically at boot, so notify users
+# if some updates are available. Also notify users if the packages list is too
 # old and out-of-date or if no packages list found. This script should
 # be run by the WM autostart script or ~/.xsession and needs a systray to
 # sit in like in LXpanel or Tint2.

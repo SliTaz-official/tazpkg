@@ -29,7 +29,7 @@ PACKAGE="$1"
 
 # Receipt function caller
 # Why? "Bad" receipt sourcing can redefine some vital TazPkg variables.
-# Few receipts function should be patched now.
+# Few receipts functions should be patched now.
 
 # Check for post_install function
 if grep -q '^post_install()' "$INSTALLED/$PACKAGE/receipt"; then

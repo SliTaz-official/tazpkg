@@ -13,7 +13,7 @@
 
 
 
-# Unset variables that may absent in the receipt
+# Unset variables that may be absent in the receipt
 unset EXTRAVERSION TAGS DEPENDS PROVIDE SIZES
 
 if [ -e "$1" -a "${1%.tazpkg}" != "$1" ]; then

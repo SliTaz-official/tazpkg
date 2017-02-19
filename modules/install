@@ -129,7 +129,7 @@ install_all_deps() {
 
 
 	if [ "$AUTO_INSTALL_DEPS" == 'yes' ] || [ -n "$quiet" ]; then
-		# Quietly not display anything. Assume 'yes' unless '--noconfirm' is provided
+		# Quietly not displaying anything. Assume 'yes' unless '--noconfirm' is provided
 		answer=0
 		[ -n "$noconfirm" ] && answer=1
 	else
@@ -144,7 +144,7 @@ install_all_deps() {
 	dir="$(dirname "$1")"
 	debug "  dir='$dir'"
 
-	# We can install packages from /home/boot/packages at a boot time
+	# We can install packages from /home/boot/packages at boot time
 	# Also we can prefer local packages over mirrored/cached using '--local' option
 	[ "$dir" == '/home/boot/packages' ] && local='yes'
 	debug "  local='$local'"
@@ -251,7 +251,7 @@ grepesc() {
 
 # Block of receipt function callers
 # Why? "Bad" receipt sourcing can redefine some vital TazPkg variables.
-# Few receipts function should be patched now.
+# Few receipts functions should be patched now.
 
 # Input: $1 = path to the receipt to be processed
 
@@ -342,7 +342,7 @@ EOT
 	# TODO: why this list-processed in the $PKGS_DB?
 	#[ -n "$INSTALL_LIST" ] && echo "$PACKAGE_FILE" >> "$PKGS_DB/$INSTALL_LIST-processed"
 
-	# Special mode for using in cookutils: clearly show whether used fresh package or cached one
+	# Special mode for using in cookutils: clearly show whether freshly used package or cached one
 	if [ -n "$cookmode" ]; then
 		f=${PACKAGE_FILE%/*}; f=${f%/*}; f=${f##*/}
 		if [ "$f" == "$(cat /etc/slitaz-release)" ]; then

@@ -65,7 +65,7 @@ if [ -f "$FLAVOR.flavor" ] || download "$FLAVOR.flavor"; then
 		# Continue if package already installed
 		[ "$?" -eq 1 ] && continue
 
-		# Install package if it not installed or has a different version
+		# Install package if it's not installed or has a different version
 		cd "$CACHE_DIR"
 		download "$pkgver.tazpkg"
 		cd "$TMP_DIR"

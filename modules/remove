@@ -23,7 +23,7 @@ log_pkg() {
 
 # Block of receipt function callers
 # Why? "Bad" receipt sourcing can redefine some vital TazPkg variables.
-# Few receipts function should be patched now.
+# Few receipts functions should be patched now.
 
 # Input: $1 = path to the receipt to be processed
 

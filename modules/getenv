@@ -4,7 +4,7 @@
 # Get TazPkg working environment
 
 
-# Set up the aliases to guaranteed to work with Busybox applets rather with the GNU Coreutils ones
+# Set up the aliases guaranteed to work with Busybox applets rather with the GNU Coreutils ones
 # due to some incompatibilities.
 # Please don't hesitate to expand or shrink this list (with justification).
 for i in awk basename bzcat cat chmod chroot clear cmp cp cpio cut date dd diff dirname dpkg-deb \
