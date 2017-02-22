@@ -40,8 +40,15 @@ for path in $PKGS_DB $PKGS_DB/undigest/* $PKGS_DB_LINK; do
 	if [ -e "$IDs" ]; then
 		# Timezone offset as string, ex. '+0200' for EET (+2 hours)
 		ohhmm=$(date +%z)
+			# offset sign (1; -1)
+			osign="${ohhmm:0:1}1"; osign=${osign#+}
+			# offset hours (without leading 0)
+			ohh=${ohhmm:1:2}; ohh=${ohh#0}
+			# offset minutes (without leading 0)
+			omm=${ohhmm:3:2}; omm=${omm#0}
 		# Timezone offset in the seconds
-		offset=$(( 60 * (60 * ${ohhmm:0:3} + ${ohhmm:3:2}) ))
+		offset=$(( 60 * (60 * $osign * $ohh + $omm) ))
+
 		daynow=$(( ($(date         +%s) + $offset) / 86400 ))
 		dayupd=$(( ($(date -r $IDs +%s) + $offset) / 86400 ))
 		days=$(( $daynow - $dayupd ))
