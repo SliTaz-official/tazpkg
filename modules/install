@@ -181,13 +181,15 @@ install_all_deps() {
 			# Prefer local packages
 			if [ -n "$local" ]; then
 				[ -z "$quiet" ] && _ 'Checking if package "%s" exists in local list...' "$pkg"
+				[ -n "$cookmode" ] && dir='/home/slitaz/packages'
+				pi="$dir/packages.info"
 				# Find local package
-				if [ -f "$dir/packages.info" ]; then
+				if [ -f "$pi" ]; then
 					# Packages database exists (should be everfresh!)
 					namever=$(awk -F$'\t' -vpkg="$pkg" '{
 						# if package name or provided package name matched
 						if (index(" " $1 " " $10 " ", " " pkg " ")) { printf("%s-%s", $1, $2); exit; }
-					}' "$dir/packages.info")		# <namever> = <package_name>-<package_version>
+					}' "$pi")		# <namever> = <package_name>-<package_version>
 					# Package file may be in form <namever>.tazpkg or <namever>-<arch>.tazpkg, so find one
 					[ -n "$namever" ] && pkgfile=$(find "$dir" -name "$namever*.tazpkg")
 					[ -n "$pkgfile" ] && found='1'

@@ -428,27 +428,20 @@ get_pkg_cookmode() {
 	[ -e "/etc/slitaz/cook.conf" ] && . "/etc/slitaz/cook.conf"
 
 	# Find local package
-	tempd="$(mktemp -d)"; cd "$tempd"
+	pkgfile="$(awk -F$'\t' -vpkg="$1" -vbase="$PKGS" '{
+		if ($1 == pkg) { printf("%s/%s-%s.tazpkg", base, $1, $2); exit; }
+	}' $PKGS/packages.info)"
 
-	for pkgfile in $PKGS/$1-*.tazpkg; do
-		[ -e "$pkgfile" ] || continue
-		# Extract receipt from each matched package
-		cpio -F "$pkgfile" -i receipt >/dev/null 2>&1
-		name=$(. receipt; echo $PACKAGE)
-		rm receipt
-		if [ "$name" == "$1" ]; then
-			# Use the first matched package: normally there is only one package
-			# with the $PACKAGE matched in the receipt
-			found='1'
-			# Output: path to found package and exit loop
-			echo "$pkgfile"
-			break
-		fi
-	done
-	rm -r "$tempd"
+	# Find local provided package
+	[ -n "$pkgfile" ] ||
+	pkgfile="$(awk -F$'\t' -vpkg="$1" -vbase="$PKGS" '{
+		if (index(" " $10 " ", " " pkg " ")) { printf("%s/%s-%s.tazpkg", base, $1, $2); exit; }
+	}' $PKGS/packages.info)"
 
-	# Proceed to get package as usual (non-local)
-	if [ "$found" -eq 0 ]; then
+	if [ -n "$pkgfile" ]; then
+		echo "$pkgfile"
+	else
+		# Proceed to get package as usual (non-local)
 		get_pkg "$1"
 	fi
 }
