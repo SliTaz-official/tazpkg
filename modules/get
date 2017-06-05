@@ -438,7 +438,7 @@ get_pkg_cookmode() {
 		if (index(" " $10 " ", " " pkg " ")) { printf("%s/%s-%s.tazpkg", base, $1, $2); exit; }
 	}' $PKGS/packages.info)"
 
-	if [ -n "$pkgfile" ]; then
+	if [ -n "$pkgfile" -a -f "$PKGS/$pkgfile" ]; then
 		echo "$pkgfile"
 	else
 		# Proceed to get package as usual (non-local)
