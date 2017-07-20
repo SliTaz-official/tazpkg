@@ -348,11 +348,11 @@ get_pkg() {
 	IFS=$'\n'
 	for rep in $PRIORITY; do
 		[ ! -f "$rep/packages.info" ] && continue
-		# If found, output string "<name>-<ver>:<sum>"
-		line=$(awk -F$'\t' -vpkg="$(virtual_pkg "$1" "$rep")" \
-			'$1==pkg || $1"-"$2==pkg {printf "%s-%s:%s", $1, $2, $9; exit}' "$rep/packages.info")
-		if [ -n "$line" ]; then
-			namever=${line%:*}; pkgsum=${line#*:}
+		# If found, output string "<name>-<ver>"
+		namever=$(awk -F$'\t' -vpkg="$(virtual_pkg "$1" "$rep")" \
+			'$1==pkg || $1"-"$2==pkg {printf "%s-%s", $1, $2; exit}' "$rep/packages.info")
+		if [ -n "$namever" ]; then
+			pkgsum=$(awk -vfile="$namever.tazpkg" '{if($2==file)print $1}' $rep/packages.md5)
 			break
 		fi
 	done
@@ -360,7 +360,7 @@ get_pkg() {
 
 	debug "  rep='$rep'\n  namever='$namever'\n  pkgsum='$pkgsum'"
 
-	if [ -z "$line" ]; then
+	if [ -z "$namever" ]; then
 		_ 'Unable to find package "%s" in the mirrored packages list.' "$1" >&2
 		# Retry with "get-package"; prevent looping with 'redo'
 		if [ "$2" != 'redo' ]; then

@@ -615,20 +615,34 @@ END {
 
 
 
-	# Update installed.info
+	# Update installed.info ----------------------------------------------------
 	SIZES=$(echo $PACKED_SIZE $UNPACKED_SIZE | sed 's|\.0||g')
+
 	# Remove newlines from some receipts
 	DEPENDS=$(echo $DEPENDS)
-	PKG_SUM="$(fgrep " $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" "$PKGS_DB/installed.$SUM" | cut -d' ' -f1)"
+
+	# Calculate "release checksum": md5sum of file containing md5sums of:
+	# a) all files, b) receipt, and c) description.txt.
+	rsumf=$(mktemp)
+	cp $INSTALLED/$PACKAGE/md5sum $rsumf
+	md5sum $INSTALLED/$PACKAGE/receipt | sed 's| [^ ]*/| |' >> $rsumf
+	[ -e "$INSTALLED/$PACKAGE/description.txt" ] &&
+		md5sum $INSTALLED/$PACKAGE/description.txt | sed 's| [^ ]*/| |' >> $rsumf
+	RSUM=$(md5sum $rsumf | awk '{print $1}')
+	rm $rsumf
+
 	ii="$PKGS_DB/installed.info"
+
 	# Remove old entry
 	sed -i "/^$PACKAGE	/d" "$ii"
+
 	cat >> "$ii" <<EOT
-$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS	$PKG_SUM
+$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS	$RSUM
 EOT
-	#awk -F$'\t' -vp="$PACKAGE" '$1==p' "$PKGS_DB/packages.info" > $ii
+
 	TEMP_FILE="$(mktemp)"
 	sort "$ii" > "$TEMP_FILE"; mv -f "$TEMP_FILE" "$ii"; chmod a+r "$ii"; unset ii
+	# --------------------------------------------------------------------------
 
 	cd "$CUR_DIR"
 	footer "$(_ 'Package "%s" (%s) is installed.' "$PACKAGE" "$VERSION$EXTRAVERSION")"
