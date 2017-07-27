@@ -113,7 +113,7 @@ install_all_deps() {
 	DEPENDS=$(
 		TMP_DIR=$(mktemp -d); cd "$TMP_DIR"
 		cpio --quiet -i receipt >/dev/null 2>&1
-		. receipt; echo $DEPENDS
+		. ./receipt; echo $DEPENDS
 		rm -rf "$TMP_DIR"
 	) < "$1"
 
@@ -200,7 +200,7 @@ install_all_deps() {
 						[ -e "$pkgfile" ] || continue
 						# Extract receipt from each matched package
 						cpio -F "$pkgfile" -i receipt >/dev/null 2>&1
-						name=$(. receipt; echo $PACKAGE)
+						name=$(. ./receipt; echo $PACKAGE)
 						[ "$name" == "$pkg" ] && found='1' && break
 						# Install the first matched package: normally there is only one package
 						# with the $PACKAGE matched in the receipt
@@ -663,7 +663,7 @@ EOT
 PACKAGE=$(
 	tmp_dir=$(mktemp -d); cd "$tmp_dir"
 	cpio --quiet -i receipt >/dev/null 2>&1
-	. receipt; echo $PACKAGE
+	. ./receipt; echo $PACKAGE
 	rm -rf "$tmp_dir"
 ) < "$1"
 

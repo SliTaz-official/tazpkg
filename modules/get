@@ -254,7 +254,7 @@ EOT
 	fi
 
 	# Add dependencies which was found to already defined dependencies
-	DEPENDS="$(unset DEPENDS; . "$PACKAGE-$VERSION/receipt"; echo $DEPENDS)"
+	DEPENDS="$(unset DEPENDS; . ./$PACKAGE-$VERSION/receipt; echo $DEPENDS)"
 	TMP_DIR="$tmp_dir"
 	for i in $(find_depends "$PACKAGE-$VERSION/fs"); do
 		case " $DEPENDS " in
@@ -425,7 +425,7 @@ get_pkg_cookmode() {
 	# ROOT NOT USED
 
 	local PKGS='/home/slitaz/packages' found='0'
-	[ -e "/etc/slitaz/cook.conf" ] && . "/etc/slitaz/cook.conf"
+	[ -e "/etc/slitaz/cook.conf" ] && . /etc/slitaz/cook.conf
 
 	# Find local package
 	pkgfile="$(awk -F$'\t' -vpkg="$1" -vbase="$PKGS" '{

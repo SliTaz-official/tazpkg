@@ -27,7 +27,8 @@
 # 6: tags (space-separated)
 # 7: packed and unpacked sizes (space-separated) in human readable format
 # 8: depends
-# 9: checksum
+# 9: "release checksum"
+#10: provide
 
 # packages.equiv
 # --------------
@@ -60,6 +61,12 @@
 # First field is package name, second field is file path.
 # There are DB records for all files installed with the package.
 
+# packages.md5
+#-------------
+# Record is line; field separator is "  ".
+# First field is md5sum of the package file; second field is package file name.
+# Actually, the type of checksum defined in variable $SUM and defaults to "md5".
+
 
 # Connect function libraries
 . /lib/libtaz.sh
@@ -87,6 +94,7 @@ folder=$(realpath "$root$1") || exit 1
 # DB file names
 DBi="$folder/packages.info"
 DBe="$folder/packages.equiv"
+DBm="$folder/packages.$SUM"
 DBd="$folder/descriptions.txt"
 DBf="$folder/files.list"
 
@@ -94,6 +102,7 @@ DBf="$folder/files.list"
 if [ -n "$forced" ]; then
 	[ -e "$DBi" ] && rm "$DBi"
 	[ -e "$DBe" ] && rm "$DBe"
+	[ -e "$DBm" ] && rm "$DBm"
 	[ -e "$DBd" ] && rm "$DBd"
 	[ -e "$DBf.lzma" ] && rm "$DBf.lzma"
 fi
@@ -108,7 +117,7 @@ tempd="$(mktemp -d)"
 
 # Make temporary list of packages checksum (usually md5sum)
 _n 'Calculate %s...' "$CHECKSUM"
-cd "$folder"; $CHECKSUM *.tazpkg > "$tempd/$SUM"
+cd "$folder"; $CHECKSUM *.tazpkg | tee "$tempd/$SUM" > "$DBm"
 status
 
 cd "$tempd"
@@ -118,21 +127,30 @@ while read pkgsum pkgfile; do
 	# Current processed package
 	echo -n "$pkgfile"
 
-	# Extract receipt from package
-	cpio -F "$folder/$pkgfile" -i receipt >/dev/null 2>&1
+	# Extract $CHECKSUM, receipt, description.txt from package
+	# (description.txt may absent, no error produced)
+	cpio -F "$folder/$pkgfile" -i $CHECKSUM receipt description.txt >/dev/null 2>&1
+
+	# Make "release checksum"
+	cp $CHECKSUM rsum_file
+	md5sum receipt >> rsum_file
+	[ -e "description.txt" ] && md5sum description.txt >> rsum_file
+	rsum=$(md5sum rsum_file | awk '{print $1}')
 
 	# Unset variables that may absent in the receipt
 	unset EXTRAVERSION TAGS DEPENDS PROVIDE
 	# Get values
-	. receipt; rm receipt
+	. ./receipt
 
+	# Clean
+	rm -f $CHECKSUM receipt description.txt rsum_file 2>/dev/null
 
 	# Make packages.info
 	echo -en "$PACKAGE\t$VERSION$EXTRAVERSION\t$CATEGORY\t" >> "$DBi"
 	echo -en "$SHORT_DESC\t$WEB_SITE\t$TAGS\t" >> "$DBi"
 	echo -en "$PACKED_SIZE $UNPACKED_SIZE\t" | sed 's|\.0||g' >> "$DBi"
-	echo -n $DEPENDS$'\t' >> "$DBi"
-	echo $pkgsum >> "$DBi"
+	echo -n  $DEPENDS$'\t' >> "$DBi"
+	echo -e  "$rsum\t$PROVIDE" >> "$DBi"
 
 
 	# Make packages.equiv

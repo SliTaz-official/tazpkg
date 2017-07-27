@@ -24,7 +24,7 @@ if [ -e "$1" -a "${1%.tazpkg}" != "$1" ]; then
 	TMP_DIR=$(mktemp -d); cd "$TMP_DIR"
 	cpio -F "$PKG" -i receipt >/dev/null 2>&1
 
-	. receipt; rm -r "$TMP_DIR"
+	. ./receipt; rm -r "$TMP_DIR"
 	STATE=$(_ 'local package')
 
 elif [ -d "$INSTALLED/$1" ]; then

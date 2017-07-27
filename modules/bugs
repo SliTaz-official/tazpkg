@@ -24,7 +24,7 @@ title 'Known bugs in packages'
 
 for pkg in $LIST; do
 	unset BUGS EXTRAVERSION
-	. "$pkg/receipt"
+	. ./$pkg/receipt
 
 	if [ -n "$BUGS" ]; then
 		MSG=$(_n 'Bug list completed')

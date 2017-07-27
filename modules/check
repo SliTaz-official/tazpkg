@@ -68,7 +68,7 @@ check_for_deps_loop() {
 	ALL_DEPS="$ALL_DEPS$list "
 	for i in $list; do
 		[ -f "$i/receipt" ] || continue
-		deps="$(unset DEPENDS; . "$i/receipt"; echo $DEPENDS)"
+		deps="$(unset DEPENDS; . ./$i/receipt; echo $DEPENDS)"
 		case " $deps " in
 			*\ $pkg\ *)
 				print_pkgname
@@ -98,7 +98,7 @@ for PACKAGE in $PACKAGES; do
 	fi
 
 	unset DEPENDS EXTRAVERSION
-	. "$PACKAGE/receipt"
+	. ./$PACKAGE/receipt
 	if [ -s "$PACKAGE/modifiers" ]; then
 		print_pkgname
 		_ 'The package has been modified by:'
@@ -143,7 +143,7 @@ if [ -n "$full" ]; then
 	for PACKAGE in $PACKAGES; do
 		file="$PACKAGE/$CHECKSUM"
 		CONFIG_FILES=''
-		. "$PACKAGE/receipt"
+		. ./$PACKAGE/receipt
 		[ -s "$file" ] || continue
 		while read md5 f; do
 			[ -f "$f" ] || continue

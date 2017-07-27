@@ -28,7 +28,7 @@ title 'Packing package "%s"' "$PACKAGE"
 # Create files.list with redirecting find output.
 action 'Creating the list of files...'
 cd fs
-find . -type f -print > ../files.list
+find . -type f -print >  ../files.list
 find . -type l -print >> ../files.list
 cd ..; sed -i s/'^.'/''/ files.list
 status
