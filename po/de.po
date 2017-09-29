@@ -1,15 +1,15 @@
 # German translations for TazPkg package.
 # Deutsche Übersetzungen für das Paket TazPkg.
-# Copyright (C) 2016 SliTaz
+# Copyright (C) 2017 SliTaz
 # This file is distributed under the same license as the TazPkg package.
-# Hans-Günter Theisgen, 2016.
+# Hans-Günter Theisgen, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-20 00:11+0200\n"
-"PO-Revision-Date: 2016-09-22 21:22+0100\n"
+"PO-Revision-Date: 2017-09-29 17:22+0100\n"
 "Last-Translator: Hans-Günter Theisgen\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -269,10 +269,9 @@ msgstr "WARNUNG: unbekannte Abhängigkeit für %s"
 msgid "File \"%s\" does not look like %s package!"
 msgstr "Die Datei \"%s\" sieht nicht aus wie ein Paket im %s-Format!"
 
-# Meint target wirklich Zielsystem oder Zielarchitektur?
 #: modules/convert:203 modules/convert:536
 msgid "Invalid target: %s (expected i386)"
-msgstr "Ungültiges Zielsystem: %s (erwartet wird i386)"
+msgstr "Ungültige Zielarchitektur: %s (erwartet wird i386)"
 
 #: modules/convert:586
 msgid "Unable to extract the RPM using standard tools (rpm2cpio)."
@@ -341,20 +340,17 @@ msgstr "Variante \"%s\" nicht gefunden. Abbruch."
 msgid "File \"%s\" empty."
 msgstr "Die Datei \"%s\" ist leer."
 
-# Eigentlich heißt es ja "in der Liste der Extra-Pakete nicht gefunden"
 #: modules/get:141 modules/get:147
 msgid "Unable to find package \"%s\" in the extra packages list."
-msgstr "Das Paket \"%s\" wurde im Extra-Depot nicht gefunden."
+msgstr "Das Paket \"%s\" wurde in der Liste der Pakete des Extra-Depots nicht gefunden."
 
 #: modules/get:165 modules/get:385
 msgid "Package \"%s\" already in the cache"
 msgstr "Das Paket \"%s\" befindet sich bereits im Zwischenspeicher"
 
-# Eigentlich heißt es ja "in der Liste der Extra-Pakete nicht gefunden"
 #: modules/get:364
-#, fuzzy
 msgid "Unable to find package \"%s\" in the mirrored packages list."
-msgstr "Das Paket \"%s\" wurde im Extra-Depot nicht gefunden."
+msgstr "Das Paket \"%s\" wurde in der Liste der Pakete des Depots nicht gefunden."
 
 #: modules/get:389
 msgid "Continuing package \"%s\" download"
@@ -384,7 +380,7 @@ msgstr "Es fehlt: %s"
 
 #: modules/getenv:41 modules/getenv:49 modules/getenv:59 modules/getenv:160
 msgid "Please run tazpkg as root."
-msgstr "Bitte tazpkg mit root-Berechtigung starten."
+msgstr "Bitte tazpkg mit Administratorrechten starten."
 
 #: modules/getenv:121 modules/getenv:146
 msgid "File \"%s\" generated. Please wait..."
@@ -655,8 +651,8 @@ msgid ""
 "No \"%s\" found to check for mirrored packages. For more results, please run "
 "\"%s\" once as root before searching."
 msgstr ""
-"Keine Dateien \"%s\" vorhanden zum Vergleich mit Paketen im Depot.Bitte \"%s"
-"\" mit root-Berechtigung starten und erneut versuchen."
+"Keine Dateien \"%s\" vorhanden zum Vergleich mit Paketen im Depot. Bitte \"%s"
+"\" mit Administratorrechten starten und erneut versuchen."
 
 #: modules/info:92
 msgid "TazPkg information"
@@ -664,70 +660,68 @@ msgstr "TazPkg-Information"
 
 #: modules/info:107
 msgid "Package    : %s"
-msgstr "Paket        : %s"
+msgstr "Paket                    : %s"
 
 #: modules/info:108
 msgid "State      : %s"
-msgstr "Status       : %s"
+msgstr "Status                   : %s"
 
 #: modules/info:109
 msgid "Version    : %s"
-msgstr "Version      : %s"
+msgstr "Version                  : %s"
 
 #: modules/info:110
 msgid "Category   : %s"
-msgstr "Kategorie    : %s"
+msgstr "Kategorie                : %s"
 
 #: modules/info:111
 msgid "Short desc : %s"
-msgstr "Kurzbeschr.  : %s"
+msgstr "Kurzbeschreibung         : %s"
 
 #: modules/info:112
 msgid "Maintainer : %s"
-msgstr "Betreuer     : %s"
+msgstr "Betreuer                 : %s"
 
 #: modules/info:113
 msgid "License    : %s"
-msgstr "Lizenz       : %s"
+msgstr "Lizenz                   : %s"
 
 #: modules/info:114
 msgid "Depends    : %s"
-msgstr "Benötigt     : %s"
+msgstr "Benötigt                 : %s"
 
 #: modules/info:115
 msgid "Suggested  : %s"
-msgstr "Vorgeschlagen: %s"
+msgstr "Vorgeschlagen            : %s"
 
-# zur Kompilierung benötigt ?
 #: modules/info:116
 msgid "Build deps : %s"
-msgstr ""
+msgstr "Zur Kompilierung benötigt: %s"
 
-# benötigte Quellen ?
 #: modules/info:117
 msgid "Wanted src : %s"
-msgstr ""
+msgstr "Benötigte Quellen        : %s"
 
 #: modules/info:118
 msgid "Web site   : %s"
-msgstr "website      : %s"
+msgstr "website                  : %s"
 
 #: modules/info:119
 msgid "Conf. files: %s"
-msgstr "Konf.-dateien: %s"
+msgstr "Konfigurationsdateien    : %s"
 
 # provide als Infinitiv eines Verbs scheint mir hier wenig sinnvoll
 #: modules/info:120
 msgid "Provide    : %s"
-msgstr "Stellt bereit: %s"
+msgstr "Stellt bereit            : %s"
 
 #: modules/info:121
 msgid "Size       : %s"
-msgstr "Größe        : %s"
+msgstr "Größe                    : %s"
 
 #: modules/info:122
 msgid "Tags       : %s"
-msgstr "Kennzeichen  : %s"
+msgstr "Kennzeichen              : %s"
 
 #: modules/install:109
 msgid "WARNING! Dependency loop between \"%s\" and \"%s\"."
@@ -804,10 +798,10 @@ msgstr "Alte Dateien werden gelöscht..."
 msgid "Removing all tmp files..."
 msgstr "Alle temporären Dateien werden gelöscht..."
 
-# Was ist damit gemeint: Paket-Datenbank oder etwas anderes ?
+# HGT: Was ist damit gemeint: Paket-Datenbank oder etwas anderes ?
 #: modules/install:540 modules/remove:224
 msgid "Update system databases..."
-msgstr "Die System-Datenbanken werden aktualisiert..."
+msgstr "Die Paket-Datenbank wird aktualisiert..."
 
 #: modules/install:580
 msgid "Package \"%s\" (%s) is installed."
@@ -868,7 +862,7 @@ msgstr "Verknüpfte Pakete"
 
 #: modules/list:124
 msgid "No linked packages found."
-msgstr "Kein verknüpften Pakete vorhanden."
+msgstr "Keine verknüpften Pakete vorhanden."
 
 #: modules/list:131
 msgid "List of all installed packages"
@@ -957,7 +951,7 @@ msgstr ""
 "Es muss die vollständige Adresse des Verzeichnisses angegeben werden, das "
 "die Paketliste und die Pakete enthält."
 
-# Singular und Plural sollten getrennt werden
+# HGT: Singular und Plural sollten getrennt werden
 #: modules/mirror:30
 msgid "New mirror(s) URL: "
 msgstr "URL der neuen Depots: "
@@ -966,12 +960,12 @@ msgstr "URL der neuen Depots: "
 msgid "Nothing has been changed."
 msgstr "Es wurde nichts geändert."
 
-# Singular und Plural sollten getrennt werden
+# HGT: Singular und Plural sollten getrennt werden
 #: modules/mirror:41
 msgid "Setting mirror(s) to: \"%s\""
 msgstr "Als Depots wurden eingestellt: \"%s\""
 
-# Singular und Plural sollten getrennt werden
+# HGT: Singular und Plural sollten getrennt werden
 #: modules/mirror:63
 msgid "Current undigest(s)"
 msgstr "Aktuelle inoffizielle Depots"
@@ -1016,7 +1010,7 @@ msgstr "Die Paket-Datenbank existiert bereits."
 msgid "Calculate %s..."
 msgstr "Berechne %s..."
 
-# Wo immer von receipt die Rede ist, ist vermutlich recipe gemeint.
+# HGT: Wo immer von receipt die Rede ist, ist vermutlich recipe gemeint.
 #: modules/pack:22
 msgid "Receipt is missing. Please read the documentation."
 msgstr "Das Rezept fehlt. Bitte lesen Sie in der Dokumentation nach."
@@ -1029,12 +1023,12 @@ msgstr "Das Paket \"%s\" wird gepackt"
 msgid "Creating the list of files..."
 msgstr "Die Liste der Dateien wird erstellt..."
 
-# Ist das richtig?
+# HGT: Ist das richtig?
 #: modules/pack:36
 msgid "Creating %s of files..."
 msgstr "Die Prüfsumme %s der Dateien wird erstellt..."
 
-# Es werden doch Dateien, kein Dateisystem komprimiert.
+# HGT: Es werden doch Dateien, kein Dateisystem komprimiert.
 #: modules/pack:50
 msgid "Compressing the FS..."
 msgstr "Die Dateien werden komprimiert..."
@@ -1043,7 +1037,7 @@ msgstr "Die Dateien werden komprimiert..."
 msgid "Updating receipt sizes..."
 msgstr "Die Größen im Rezept werden aktualisiert..."
 
-# Was ist mit full gemeint?
+# HGT: Was ist mit full gemeint?
 #: modules/pack:66
 msgid "Creating full cpio archive..."
 msgstr "Ein cpio-Archiv wird erstellt..."
@@ -1089,10 +1083,10 @@ msgstr "Überprüfung..."
 msgid "Database timestamp: %s"
 msgstr "Zeitstempel der Datenbank: %s"
 
-# Ist nicht gemeint: Die Informationen über das Depot in der lokalen Datenbank sind aktuell ?
+# HGT: Ist nicht gemeint: Die Informationen über das Depot in der lokalen Datenbank sind aktuell ?
 #: modules/recharge:110
 msgid "Repository \"%s\" is up to date."
-msgstr "Das Depot \"%s\" ist aktuell"
+msgstr "Die Informationen in der Datenbank über das Depot \"%s\" sind aktuell"
 
 #: modules/recharge:116
 msgid "Creating backup of the last packages list..."
@@ -1323,7 +1317,6 @@ msgstr "Gesperrte Pakete:"
 msgid "Upgradeable packages:"
 msgstr "Aktualisierbare Pakete:"
 
-# passendere Übersetzung für build ?
 #: modules/upgrade:43
 msgid "New build"
 msgstr "Neu kompiliert"
@@ -1696,14 +1689,14 @@ msgstr ""
 "Die Paket-Datenbank ist aktuell. Sie sollten jetzt prüfen, ob "
 "Aktualisierungen vorhanden sind."
 
-# Soll Up eine Abkürzung für Update sein?
+# HGT: Soll Up eine Abkürzung für Update sein?
 #: tazpanel/pkgs.cgi:887
 msgid "Up packages"
 msgstr "Pakete aktualisieren"
 
 #: tazpanel/pkgs.cgi:888
 msgid "Checking for upgrades..."
-msgstr "Nach Aktualisierungen wird gesucht..."
+msgstr "Es wird nach Aktualisierungen gesucht..."
 
 #: tazpanel/pkgs.cgi:929
 msgid "Installing: %s"
@@ -1831,7 +1824,7 @@ msgstr "Pakete im Zwischenspeicher: %s (%s)"
 
 #: tazpanel/pkgs.cgi:1252
 msgid "Current mirror list"
-msgstr "Liste der aktuellen Depots"
+msgstr "Aktuelle Liste der Depots"
 
 #: tazpanel/pkgs.cgi:1262 tazpanel/pkgs.cgi:1308
 msgid "Delete"
@@ -1868,7 +1861,7 @@ msgid ""
 "without an internet connection. This image can be installed on a DVD or a "
 "USB key."
 msgstr ""
-"Jeden Tag wird ein urladefähiges DVD-Abbild mit allen verfügbaren Paketen "
+"Jeden Tag wird ein urladefähiges ISO-Abbild mit allen verfügbaren Paketen "
 "der Version %s erzeugt. Dieses enthält auch alle Dateien der website und "
 "kann daher ohne Internet-Verbindung benutzt werden. Das Abbild kann auf DVD "
 "oder USB-Speichermedium kopiert werden."
@@ -1879,7 +1872,7 @@ msgstr "Von ISO-Abbild installieren:"
 
 #: tazpanel/pkgs.cgi:1358
 msgid "Download DVD image"
-msgstr "DVD-Abbild transferieren"
+msgstr "ISO-Abbild transferieren"
 
 #: tazpanel/pkgs.cgi:1360
 msgid "Install from DVD/USB key"
@@ -1894,7 +1887,7 @@ msgstr ""
 "Anzahl der Zeilen je Seite angegeben werden (Standard: 100). Mit 0 wird die "
 "seitenweise Ausgabe abgeschaltet."
 
-# nach der französischen Übersetzung
+# HGT: nach der französischen Übersetzung
 #: tazpanel/pkgs.cgi:1374
 msgid "Set"
 msgstr "Anwenden"
@@ -2027,7 +2020,7 @@ msgstr "Abschicken"
 msgid "Thank you!"
 msgstr "Danke!"
 
-# Wozu dienen die eckigen Klammern?
+# HGT: Wozu dienen die eckigen Klammern?
 #: tazpanel/pkgs.cgi:1747
 msgid "It is recommended to [recharge] the lists."
 msgstr "Es wird empfohlen, die Paket-Datenbank zu aktualisieren"
