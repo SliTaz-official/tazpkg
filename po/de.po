@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-20 00:11+0200\n"
-"PO-Revision-Date: 2017-09-29 17:22+0100\n"
+"PO-Revision-Date: 2017-10-09 16:49+0100\n"
 "Last-Translator: Hans-Günter Theisgen\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -237,12 +237,12 @@ msgstr "Suche nach Paketen, die die Datei enthalten:"
 msgid "The following packages provide file \"%s\":"
 msgstr "Die folgenden Pakete enthalten die Datei \"%s\":"
 
-# oder ist gemeint: geändert durch ?
+# HGT: oder ist gemeint: geändert durch ?
 #: modules/check:176
 msgid "(overridden by %s)"
 msgstr "(ersetzt durch %s)"
 
-# gemeint sind wohl Dateien, die in keinem Paket enthalten sind
+# HGT: gemeint sind wohl Dateien, die in keinem Paket enthalten sind
 #: modules/check:188
 msgid "Alien files:"
 msgstr "paketfremde Dateien:"
@@ -322,8 +322,8 @@ msgstr "Das Original-Paket wird kopiert..."
 msgid "Package \"%s\" is extracted to \"%s\""
 msgstr "Das Paket \"%s\" wurde nach \"%s\" entpackt"
 
-# depends ist kein Substantiv
-# Heißt das, es wird nach Paketen gesucht, die ein Paket benötigt?
+# HGT: depends ist kein Substantiv
+# HGT: Heißt das, es wird nach Paketen gesucht, die ein Paket benötigt?
 #: modules/find-depends:21
 msgid "Find depends..."
 msgstr "Abhängigkeiten werden gesucht..."
@@ -400,7 +400,7 @@ msgstr "Anwendung:"
 
 #: modules/help:20
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
-msgstr ""
+msgstr "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
 
 #: modules/help:22
 msgid "SHell:"
@@ -633,7 +633,7 @@ msgstr "installiertes Paket"
 msgid "(new version \"%s\" available)"
 msgstr "(neue Version \"%s\" verfügbar)"
 
-# Was meint build?
+# HGT: Was meint build?
 #: modules/info:50
 msgid "(new build available)"
 msgstr "(neue Kompilierung verfügbar)"
@@ -710,7 +710,7 @@ msgstr "website                  : %s"
 msgid "Conf. files: %s"
 msgstr "Konfigurationsdateien    : %s"
 
-# provide als Infinitiv eines Verbs scheint mir hier wenig sinnvoll
+# HGT: provide als Infinitiv eines Verbs scheint mir hier wenig sinnvoll
 #: modules/info:120
 msgid "Provide    : %s"
 msgstr "Stellt bereit            : %s"
@@ -936,7 +936,7 @@ msgstr "Datei fehlt"
 msgid "Configuration files"
 msgstr "Konfigurationsdateien"
 
-# Singular und Plural sollten getrennt werden
+# HGT: Singular und Plural sollten getrennt werden
 #: modules/mirror:23
 msgid "Current mirror(s)"
 msgstr "Aktuelle(s) Depot(s)"
@@ -1669,12 +1669,12 @@ msgstr "Aktualisieren"
 msgid "Recharging lists..."
 msgstr "Aktualisiere Paket-Datenbank..."
 
-# nach französischem Text
+# HGT: nach französischem Text
 #: tazpanel/pkgs.cgi:866
 msgid "Recharge checks for new or updated packages"
 msgstr "Neue Pakete oder Aktualisierungen suchen"
 
-# Was ist damit gemeint?
+# HGT: Was ist damit gemeint?
 #: tazpanel/pkgs.cgi:870
 msgid "Recharging log"
 msgstr "Protokoll aktualisieren"
