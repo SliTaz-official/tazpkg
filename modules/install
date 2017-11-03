@@ -620,7 +620,8 @@ END {
 
 	# Remove newlines from some receipts
 	DEPENDS=$(echo $DEPENDS)
-
+	PKG_SUM="$(fgrep " $PACKAGE-$VERSION$EXTRAVERSION.tazpkg" "$PKGS_DB/installed.$SUM" | cut -d' ' -f1)"
+	
 	# Calculate "release checksum": md5sum of file containing md5sums of:
 	# a) all files, b) receipt, and c) description.txt.
 	rsumf=$(mktemp)
@@ -637,7 +638,7 @@ END {
 	sed -i "/^$PACKAGE	/d" "$ii"
 
 	cat >> "$ii" <<EOT
-$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS	$RSUM
+$PACKAGE	$VERSION$EXTRAVERSION	$CATEGORY	$SHORT_DESC	$WEB_SITE	$TAGS	$SIZES	$DEPENDS	$PKG_SUM
 EOT
 
 	TEMP_FILE="$(mktemp)"
