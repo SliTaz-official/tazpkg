@@ -174,7 +174,7 @@ case "$1" in
 			# name and the full path to the file(s).
 			for pkg in $(awk -F$'\t' '{print $1}' $PKGS_DB/installed.info); do
 				FL="$INSTALLED/$pkg/files.list"
-				if grep -qs "$2" "$FL"; then
+				if grep -qs -e "$2" "$FL"; then
 					newline
 					emsg "<c 33>$(_ 'Package %s:' "$pkg")</c>"
 					awk -vtmp="$TMPLIST" -vfile="$2" -vcfile="$(colorize 32 $2)" '
