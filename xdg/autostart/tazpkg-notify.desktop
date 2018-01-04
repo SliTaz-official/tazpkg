@@ -4,3 +4,4 @@ Name=Packages Notification System
 Name[fr]=Notification du système de paquets
 Name[ru]=Уведомления менеджера пакетов
 Exec=tazpkg-notify
+NotShowIn=LXQt
