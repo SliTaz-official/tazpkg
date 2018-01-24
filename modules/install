@@ -112,10 +112,10 @@ install_all_deps() {
 	# Get the receipt's variable DEPENDS
 	DEPENDS=$(
 		TMP_DIR=$(mktemp -d); cd "$TMP_DIR"
-		cpio --quiet -i receipt >/dev/null 2>&1
+		cpio --quiet -i receipt < "$1" >/dev/null 2>&1
 		. ./receipt; echo $DEPENDS
 		rm -rf "$TMP_DIR"
-	) < "$1"
+	)
 
 	unset num missing_packages
 	for depend in $DEPENDS; do
@@ -332,7 +332,7 @@ install_package() {
 	TMP_DIR="$(mktemp -d)"
 
 	# Get receipt's variables and functions
-	{ cd "$TMP_DIR"; cpio --quiet -i receipt >/dev/null 2>&1; } < "$PACKAGE_FILE"
+	{ cd "$TMP_DIR"; cpio --quiet -i receipt < "$PACKAGE_FILE" >/dev/null 2>&1; }
 	# Why next code? "Bad" receipt sourcing can redefine some vital TazPkg variables.
 	(
 		. "$TMP_DIR/receipt"
@@ -663,10 +663,10 @@ EOT
 
 PACKAGE=$(
 	tmp_dir=$(mktemp -d); cd "$tmp_dir"
-	cpio --quiet -i receipt >/dev/null 2>&1
+	cpio --quiet -i receipt < "$1" >/dev/null 2>&1
 	. ./receipt; echo $PACKAGE
 	rm -rf "$tmp_dir"
-) < "$1"
+)
 
 if grep -qs "^$PACKAGE$" "$BLOCKED"; then
 	_ 'Package "%s" blocked.' "$PACKAGE"

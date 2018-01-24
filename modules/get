@@ -428,15 +428,17 @@ get_pkg_cookmode() {
 	[ -e "/etc/slitaz/cook.conf" ] && . /etc/slitaz/cook.conf
 
 	# Find local package
-	pkgfile="$(awk -F$'\t' -vpkg="$1" -vbase="$PKGS" '{
-		if ($1 == pkg) { printf("%s/%s-%s.tazpkg", base, $1, $2); exit; }
+	namever="$(awk -F$'\t' -vpkg="$1" '{
+		if ($1 == pkg) { printf("%s-%s", $1, $2); exit; }
 	}' $PKGS/packages.info)"
 
 	# Find local provided package
-	[ -n "$pkgfile" ] ||
-	pkgfile="$(awk -F$'\t' -vpkg="$1" -vbase="$PKGS" '{
-		if (index(" " $10 " ", " " pkg " ")) { printf("%s/%s-%s.tazpkg", base, $1, $2); exit; }
+	[ -n "$namever" ] ||
+	namever="$(awk -F$'\t' -vpkg="$1" '{
+		if (index(" " $10 " ", " " pkg " ")) { printf("%s-%s", $1, $2); exit; }
 	}' $PKGS/packages.info)"
+
+	[ -n "$namever" ] && pkgfile=$(find "$PKGS" -name "$namever*.tazpkg")
 
 	if [ -n "$pkgfile" -a -f "$pkgfile" ]; then
 		echo "$pkgfile"
