@@ -1,300 +1,289 @@
-# Traditional Chinese translations for SliTaz tazpkg package.
-# Copyright (C) 2014 SliTaz Association
-# This file is distributed under the same license as the SliTaz tazpkg package.
-# lunglungyu <lunglungyu2004@gmail.com>, 2014.
+# Italian translations for TazPkg package.
+# Copyright (C) 2018 SliTaz
+# This file is distributed under the same license as the TazPkg package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: TazPkg 5.2\n"
+"Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-30 11:47+0200\n"
-"PO-Revision-Date: 2014-06-07 22:55+0800\n"
-"Last-Translator: lunglungyu <lunglungyu2004@gmail.com>\n"
+"PO-Revision-Date: 2018-01-30 11:45+0200\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: zh_TW\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 
 #: tazpkg:105
 msgid "Creating folder \"%s\"..."
-msgstr "正在創建 %s..."
+msgstr ""
 
 #: tazpkg:141
 msgid "Please specify a package name on the command line."
-msgstr "請在命令行指定包名稱."
+msgstr ""
 
 #: tazpkg:144
-#, fuzzy
 msgid "Please specify a list name on the command line."
-msgstr "請在命令行指定包名稱."
+msgstr ""
 
 #: tazpkg:147
-#, fuzzy
 msgid "Please specify a flavor name on the command line."
-msgstr "請在命令行指定包名稱."
+msgstr ""
 
 #: tazpkg:150
-#, fuzzy
 msgid "Please specify a release name on the command line."
-msgstr "請在命令行指定包名稱."
+msgstr ""
 
 #: tazpkg:153
 msgid "Unable to find file \"%s\""
-msgstr "找不到: %s"
+msgstr ""
 
 #: tazpkg:156
-#, fuzzy
 msgid "Please specify an existing folder name on the command line."
-msgstr "請在命令行指定包名稱."
+msgstr ""
 
 #: tazpkg:159
-#, fuzzy
 msgid "Please specify a pattern to search for."
-msgstr "請指定一個模式串或文件名作搜索"
+msgstr ""
 
 #: tazpkg:162
 msgid "Unable to find the receipt \"%s\""
-msgstr "找不到清單: %s"
+msgstr ""
 
 #: tazpkg:230 modules/extract:19 modules/install:234 modules/recompress:19
 msgid "Extracting package..."
-msgstr "正在解壓縮..."
+msgstr ""
 
 #: tazpkg:244 modules/list:39
 msgid "base-system"
-msgstr "基本系統包"
+msgstr ""
 
 #: tazpkg:244 modules/list:39
 msgid "x-window"
-msgstr "x-窗口"
+msgstr ""
 
 #: tazpkg:245 modules/list:40
 msgid "utilities"
-msgstr "實用程式"
+msgstr ""
 
 #: tazpkg:245 modules/list:40
 msgid "network"
-msgstr "網絡工具"
+msgstr ""
 
 #: tazpkg:246 modules/list:41
 msgid "graphics"
-msgstr "圖像工具"
+msgstr ""
 
 #: tazpkg:246 modules/list:41
 msgid "multimedia"
-msgstr "多媒體軟件"
+msgstr ""
 
 #: tazpkg:247 modules/list:42
 msgid "office"
-msgstr "辦公室軟件"
+msgstr ""
 
 #: tazpkg:247 modules/list:42
 msgid "development"
-msgstr "開發工具"
+msgstr ""
 
 #: tazpkg:248 modules/list:43
 msgid "system-tools"
-msgstr "系統工具"
+msgstr ""
 
 #: tazpkg:248 modules/list:43
 msgid "security"
-msgstr "安全工具"
+msgstr ""
 
 #: tazpkg:249 modules/list:44
 msgid "games"
-msgstr "遊戲"
+msgstr ""
 
 #: tazpkg:249 modules/list:44
 msgid "misc"
-msgstr "雜項"
+msgstr ""
 
 #: tazpkg:249 modules/list:44
 msgid "meta"
-msgstr "元工具"
+msgstr ""
 
 #: tazpkg:250 modules/list:45
 msgid "non-free"
-msgstr "非自由軟件"
+msgstr ""
 
 #: tazpkg:435
-#, fuzzy
 msgid "Done: %s"
-msgstr "大小: %s"
+msgstr ""
 
 #: tazpkg:511
 msgid "TazPkg SHell."
-msgstr "TazPkg SHell."
+msgstr ""
 
 #: tazpkg:512
 msgid "Type 'usage' to list all available commands or 'quit' or 'q' to exit."
-msgstr "鍵入 'usage' 以列出所有可用命令或 'quit' 或 'q' 以退出"
+msgstr ""
 
 #: tazpkg:521
 msgid "You are already running a TazPkg SHell."
-msgstr "你已經在運行 TazPkg SHell."
+msgstr ""
 
 #: modules/bb:20
 msgid "Busybox is not installed in the %s. Exit."
 msgstr ""
 
 #: modules/bb:30
-#, fuzzy
 msgid "Restoring Busybox applet %s..."
-msgstr "正在移除所有暫存文件..."
+msgstr ""
 
 #: modules/block:18 modules/remove:96
 msgid "Package \"%s\" is not installed."
-msgstr "未安裝 %s."
+msgstr ""
 
 #: modules/block:27
-#, fuzzy
 msgid "Package \"%s\" is already blocked."
-msgstr "%s 已被安裝."
+msgstr ""
 
 #: modules/block:32 modules/block:61 modules/get:458 modules/install:672
-#, fuzzy
 msgid "Package \"%s\" blocked."
-msgstr "未安裝 %s."
+msgstr ""
 
 #: modules/block:43 modules/block:56
-#, fuzzy
 msgid "Package \"%s\" unblocked."
-msgstr "未安裝 %s."
+msgstr ""
 
 #: modules/block:45
-#, fuzzy
 msgid "Package \"%s\" is not blocked."
-msgstr "未安裝 %s."
+msgstr ""
 
 #: modules/bugs:21
 msgid "No known bugs."
-msgstr "沒有已知bugs."
+msgstr ""
 
 #: modules/bugs:23
-#, fuzzy
 msgid "Known bugs in packages"
-msgstr "顯示包的已知bugs"
+msgstr ""
 
 #: modules/bugs:30
 msgid "Bug list completed"
-msgstr "已知 Bug 清單"
+msgstr ""
 
 #: modules/bugs:32
 msgid "Bugs in package \"%s\" version %s:"
-msgstr "%s 包 %s 版本的Bugs"
+msgstr ""
 
 #: modules/cache:22
 msgid "Cleaning cache directory..."
-msgstr "正在清除緩存目錄..."
+msgstr ""
 
 #: modules/cache:23
-#, fuzzy
 msgid "Path: %s"
-msgstr "路徑:"
+msgstr ""
 
 #: modules/cache:28
 msgid "%s file removed from cache (%s)."
 msgid_plural "%s files removed from cache (%s)."
-msgstr[0] "%s 個文件已在緩存中被刪除 (%s)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/cache:34 tazpanel/pkgs.cgi:1243
 msgid "Packages cache"
-msgstr "包緩存"
+msgstr ""
 
 #: modules/cache:38
 msgid "%s file (%s)"
 msgid_plural "%s files (%s)"
-msgstr[0] "%s文件 (%s)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/check:20 tazpanel/pkgs.cgi:997
 msgid "Package %s"
-msgstr "包 %s"
+msgstr ""
 
 #: modules/check:96
 msgid "The package installation has not completed"
-msgstr "未完成 包的安裝"
+msgstr ""
 
 #: modules/check:104
 msgid "The package has been modified by:"
-msgstr "包已被以下程式更改:"
+msgstr ""
 
 #: modules/check:108
 msgid "Files lost from package:"
-msgstr "已遺失以下文件:"
+msgstr ""
 
 #: modules/check:112
 msgid "target of symlink"
-msgstr "軟鏈接(symlink)對象"
+msgstr ""
 
 #: modules/check:119
 msgid "Missing dependencies for package:"
-msgstr "欠缺以下依賴:"
+msgstr ""
 
 #: modules/check:128
 msgid "Dependencies loop between package and:"
-msgstr "包與以下程式有依賴循環"
+msgstr ""
 
 #: modules/check:134
 msgid "Looking for known bugs..."
-msgstr "正在查找已知bugs..."
+msgstr ""
 
 #: modules/check:141
 msgid "Mismatch checksum of installed files:"
 msgstr ""
 
 #: modules/check:160
-#, fuzzy
 msgid "Check file providers:"
-msgstr "檢查更新"
+msgstr ""
 
 #: modules/check:171
 msgid "The following packages provide file \"%s\":"
-msgstr "以下包提供文件 %s:"
+msgstr ""
 
 #: modules/check:176
 msgid "(overridden by %s)"
 msgstr ""
 
 #: modules/check:188
-#, fuzzy
 msgid "Alien files:"
-msgstr "已安裝文件:"
+msgstr ""
 
 #: modules/check:189
 msgid "No package has installed the following files:"
-msgstr "沒有包安裝以下文件:"
+msgstr ""
 
 #: modules/check:200
 msgid "Check completed."
-msgstr "已完成檢查"
+msgstr ""
 
 #: modules/convert:27
 msgid "No dependency for:"
-msgstr "沒有任何依賴項:"
+msgstr ""
 
 #: modules/convert:30
 msgid "WARNING: unknown dependency for %s"
-msgstr "警告: %s 有未知依賴項:"
+msgstr ""
 
 #: modules/convert:84 modules/convert:238 modules/convert:276
 #: modules/convert:346 modules/convert:397 modules/convert:479
 #: modules/convert:722 modules/convert:743
 msgid "File \"%s\" does not look like %s package!"
-msgstr "%s 並非 %s 包!"
+msgstr ""
 
 #: modules/convert:203 modules/convert:536
 msgid "Invalid target: %s (expected i386)"
-msgstr "非法對象: %s (預計 i386)"
+msgstr ""
 
 #: modules/convert:586
 msgid "Unable to extract the RPM using standard tools (rpm2cpio)."
-msgstr "無法用標準工具(rpm2cpio)解壓縮RPM包."
+msgstr ""
 
 #: modules/convert:587
 msgid "Do you want to install \"%s\" package? (y/N)"
-msgstr "你想要安裝'%s'包？（是/否）"
+msgstr ""
 
 #: modules/convert:626
 msgid "Arch \"%s\" not supported."
@@ -302,40 +291,39 @@ msgstr ""
 
 #: modules/convert:776
 msgid "Unsupported format"
-msgstr "不支持的格式"
+msgstr ""
 
 #: modules/depends:121
-#, fuzzy
 msgid "Total: %s package (%s)"
 msgid_plural "Total: %s packages (%s)"
-msgstr[0] "可用的包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/depends:128
-#, fuzzy
 msgid "To install: %s package (%s)"
 msgid_plural "To install: %s packages (%s)"
-msgstr[0] "%s 個已安裝包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/description:66
 msgid "Description of package \"%s\""
-msgstr "%s 的描述"
+msgstr ""
 
 #: modules/description:73
-#, fuzzy
 msgid "Description absent."
-msgstr "描述"
+msgstr ""
 
 #: modules/extract:36
 msgid "Extracting package \"%s\""
-msgstr "正在解壓縮: %s"
+msgstr ""
 
 #: modules/extract:47 modules/recompress:35
 msgid "Copying original package..."
-msgstr "正在複製原來包"
+msgstr ""
 
 #: modules/extract:54
 msgid "Package \"%s\" is extracted to \"%s\""
-msgstr "%s 已解壓縮到: %s"
+msgstr ""
 
 #: modules/find-depends:21
 msgid "Find depends..."
@@ -347,28 +335,27 @@ msgstr ""
 
 #: modules/flavor:94
 msgid "Can't find flavor \"%s\". Abort."
-msgstr "找不到偏好項 %s. 放棄操作."
+msgstr ""
 
 #: modules/get:140 modules/getenv:56
 msgid "File \"%s\" empty."
 msgstr ""
 
 #: modules/get:141 modules/get:147
-#, fuzzy
 msgid "Unable to find package \"%s\" in the extra packages list."
-msgstr "在鏡像包清單找不到: %s"
+msgstr ""
 
 #: modules/get:165 modules/get:385
 msgid "Package \"%s\" already in the cache"
-msgstr "%s 已在緩存內"
+msgstr ""
 
 #: modules/get:364
 msgid "Unable to find package \"%s\" in the mirrored packages list."
-msgstr "在鏡像包清單找不到: %s"
+msgstr ""
 
 #: modules/get:389
 msgid "Continuing package \"%s\" download"
-msgstr "繼續 %s 的下載"
+msgstr ""
 
 #: modules/get:400
 msgid "Checksum error for \"%s\""
@@ -380,15 +367,15 @@ msgstr ""
 
 #: modules/get:467 modules/install:685
 msgid "\"%s\" package is already installed."
-msgstr "包已經被安裝"
+msgstr ""
 
 #: modules/get:468 modules/install:686
 msgid "You can use the --forced option to force installation."
-msgstr "你可以用 --forced 選項強制安裝"
+msgstr ""
 
 #: modules/getenv:38 modules/getenv:46 modules/link:31
 msgid "Missing: %s"
-msgstr "欠缺: %s"
+msgstr ""
 
 #: modules/getenv:38 modules/getenv:46 modules/getenv:56 modules/getenv:157
 msgid "Please run tazpkg as root."
@@ -404,27 +391,27 @@ msgstr ""
 
 #: modules/help:28 modules/summary:18
 msgid "SliTaz package manager - Version: %s"
-msgstr "SliTaz 包管理員 - 版本: %s"
+msgstr ""
 
 #: modules/help:30 tazpkg-box:23 tazpkg-notify:53
 msgid "Usage:"
-msgstr "用法:"
+msgstr ""
 
 #: modules/help:31
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
-msgstr "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
+msgstr ""
 
 #: modules/help:33
 msgid "SHell:"
-msgstr "SHell:"
+msgstr ""
 
 #: modules/help:35
 msgid "Commands:"
-msgstr "命令:"
+msgstr ""
 
 #: modules/help:37
 msgid "Print this short usage"
-msgstr "列印本工具用法"
+msgstr ""
 
 #: modules/help:38
 msgid "Show help on the TazPkg commands"
@@ -432,16 +419,15 @@ msgstr ""
 
 #: modules/help:39
 msgid "Show TazPkg activity log"
-msgstr "顯示TazPkg的活動紀錄"
+msgstr ""
 
 #: modules/help:40
 msgid "Clean all packages downloaded in cache directory"
-msgstr "清除所有下載到暫存目錄的包"
+msgstr ""
 
 #: modules/help:41
-#, fuzzy
 msgid "List *.tazpkg packages downloaded to the cache"
-msgstr "清除所有下載到暫存目錄的包"
+msgstr ""
 
 #: modules/help:42
 msgid "Run interactive TazPkg shell"
@@ -449,281 +435,271 @@ msgstr ""
 
 #: modules/help:44
 msgid "List installed packages on the system"
-msgstr "根據分類或全部列出系統已安裝的包"
+msgstr ""
 
 #: modules/help:45
 msgid "List all available packages on the mirror"
-msgstr "列出鏡像上所有的可用包"
+msgstr ""
 
 #: modules/help:46
 msgid "List the configuration files"
-msgstr "顯示配置文件"
+msgstr ""
 
 #: modules/help:48
 msgid "Search for a package by pattern or name"
-msgstr "按模式或名字搜索包"
+msgstr ""
 
 #: modules/help:49
 msgid "Search on mirror for package having a particular file"
-msgstr "在鏡像上搜索有特定文件的包"
+msgstr ""
 
 #: modules/help:50
 msgid "Search for file in all installed packages files"
-msgstr "在所有已安裝包中找尋文件"
+msgstr ""
 
 #: modules/help:52
 msgid "Download a package into the current directory"
-msgstr "下載包到當前目錄"
+msgstr ""
 
 #: modules/help:53
 msgid "Install a local package"
-msgstr "安裝本地包"
+msgstr ""
 
 #: modules/help:54
 msgid "Download and install a package from the mirror"
-msgstr "由鏡像下載及安裝包"
+msgstr ""
 
 #: modules/help:55
-#, fuzzy
 msgid "Install all packages from a list of packages"
-msgstr "安裝包列表內所有包"
+msgstr ""
 
 #: modules/help:56
 msgid "Download and install a list of packages from the mirror"
-msgstr "由鏡像下載及安裝包列表"
+msgstr ""
 
 #: modules/help:57
 msgid "Remove the specified package and all installed files"
-msgstr "移除特定包及所有其安裝檔案"
+msgstr ""
 
 #: modules/help:58
 msgid "Replay post install script from package"
-msgstr "重新運行包的安裝腳本"
+msgstr ""
 
 #: modules/help:59
 msgid "Link a package from another SliTaz installation"
-msgstr "由另一個安裝好的SliTaz連接包"
+msgstr ""
 
 #: modules/help:60
 msgid "Change release and update packages"
-msgstr "更改版本及安裝包"
+msgstr ""
 
 #: modules/help:61
 msgid "Install the flavor list of packages"
-msgstr "安裝包偏好列表"
+msgstr ""
 
 #: modules/help:62
 msgid "Install the flavor list of packages and remove other ones"
-msgstr "安裝並移除其他包偏好列表"
+msgstr ""
 
 #: modules/help:64
 msgid "Print information about a package"
-msgstr "顯示關於包的資訊"
+msgstr ""
 
 #: modules/help:65
 msgid "Print description of a package"
-msgstr "顯示包描述"
+msgstr ""
 
 #: modules/help:66
 msgid "List the files installed with a package"
-msgstr "列出會隨包安裝的文件"
+msgstr ""
 
 #: modules/help:67
 msgid "Block an installed package version or unblock it for upgrade"
-msgstr "封鎖已安裝包或解封以進行更新"
+msgstr ""
 
 #: modules/help:68
 msgid "Verify consistency of installed packages"
-msgstr "校驗已安裝包是否完整"
+msgstr ""
 
 #: modules/help:69
 msgid "Show known bugs in packages"
-msgstr "顯示包的已知bugs"
+msgstr ""
 
 #: modules/help:70
 msgid "Display dependencies tree"
-msgstr "顯示依賴樹"
+msgstr ""
 
 #: modules/help:71
 msgid "Display reverse dependencies tree"
-msgstr "顯示反向依賴樹"
+msgstr ""
 
 #: modules/help:72
 msgid "Extract a (*.tazpkg) package into a directory"
-msgstr "解壓縮(*.tazpkg)到目錄"
+msgstr ""
 
 #: modules/help:73
 msgid "Pack an unpacked or prepared package tree"
-msgstr "按解壓生成或自行凖備的配置樹打包"
+msgstr ""
 
 #: modules/help:74
 msgid "Create a package archive from an installed package"
-msgstr "由已安裝包創建壓縮檔"
+msgstr ""
 
 #: modules/help:75
 msgid "Create a package archive with configuration files"
-msgstr "創建有配置文件的壓縮安裝包"
+msgstr ""
 
 #: modules/help:76
 msgid "Rebuild a package with a better compression ratio"
-msgstr "以較高壓縮比重新建立包"
+msgstr ""
 
 #: modules/help:77
 msgid "Convert alien package to tazpkg"
-msgstr "將deb/rpm/tgz/pet/sfs/sb/arch/ipk包轉換成tazpkg 格式"
+msgstr ""
 
 #: modules/help:78
-#, fuzzy
 msgid "Print list of suggested packages"
-msgstr "所有已安裝包清單"
+msgstr ""
 
 #: modules/help:80
 msgid "Recharge your packages.list from the mirror"
-msgstr "從鏡像更新packages.list"
+msgstr ""
 
 #: modules/help:81
 msgid "Check packages %s to list and install latest upgrades"
-msgstr "檢查包 %s 以列出及安裝最新更新"
+msgstr ""
 
 #: modules/help:82
 msgid "Change the mirror URL configuration"
-msgstr "更改鏡像URL配置"
+msgstr ""
 
 #: modules/help:83
 msgid "Update an undigest mirror"
-msgstr "更新非正式鏡像"
+msgstr ""
 
 #: modules/help:84
 msgid "List undigest mirrors"
-msgstr "列出非正式鏡像"
+msgstr ""
 
 #: modules/help:85
 msgid "Add an undigest mirror"
-msgstr "加入非正式鏡像"
+msgstr ""
 
 #: modules/help:86
 msgid "Remove an undigest mirror"
-msgstr "移除非正式鏡像"
+msgstr ""
 
 #: modules/help:87
 msgid "Make a TazPkg database for a folder with *.tazpkg packages"
 msgstr ""
 
 #: modules/help:115 modules/help:146
-#, fuzzy
 msgid "Sorry, no help for \"%s\""
-msgstr "%s 的搜索結果"
+msgstr ""
 
 #: modules/help:122
 msgid "%d help topic available:"
 msgid_plural "%d help topics available:"
 msgstr[0] ""
+msgstr[1] ""
 
 #: modules/help:176
 msgid "%s"
 msgstr ""
 
 #: modules/info:28
-#, fuzzy
 msgid "local package"
-msgstr "可用的包"
+msgstr ""
 
 #: modules/info:34 tazpanel/pkgs.cgi:968
-#, fuzzy
 msgid "installed package"
-msgstr "%s 個已安裝包"
+msgstr ""
 
 #: modules/info:40
-#, fuzzy
 msgid "(new version \"%s\" available)"
-msgstr "新版本 %s"
+msgstr ""
 
 #: modules/info:45
 msgid "(new build available)"
 msgstr ""
 
 #: modules/info:69 tazpanel/pkgs.cgi:971
-#, fuzzy
 msgid "mirrored package"
-msgstr "已鏡像包:"
+msgstr ""
 
 #: modules/info:72 modules/list:212 tazpanel/pkgs.cgi:990
-#, fuzzy
 msgid "Package \"%s\" not available."
-msgstr "未安裝 %s."
+msgstr ""
 
 #: modules/info:79 modules/search:66 modules/search:100
 msgid ""
 "No \"%s\" found to check for mirrored packages. For more results, please run "
 "\"%s\" once as root before searching."
-msgstr "找不到 '%s'來檢查已鏡像包. 請用root權限運行'%s'搜索以取得更多結果."
+msgstr ""
 
 #: modules/info:87
 msgid "TazPkg information"
-msgstr "TazPkg 資訊"
+msgstr ""
 
 #: modules/info:107
 msgid "Package    : %s"
-msgstr "包    : %s"
+msgstr ""
 
 #: modules/info:108
-#, fuzzy
 msgid "State      : %s"
-msgstr "大小: %s"
+msgstr ""
 
 #: modules/info:109
 msgid "Version    : %s"
-msgstr "版本    : %s"
+msgstr ""
 
 #: modules/info:110
 msgid "Category   : %s"
-msgstr "分類    : %s"
+msgstr ""
 
 #: modules/info:111
 msgid "Short desc : %s"
-msgstr "簡單描述 : %s"
+msgstr ""
 
 #: modules/info:112
 msgid "Maintainer : %s"
-msgstr "維護者 : %s"
+msgstr ""
 
 #: modules/info:113
 msgid "License    : %s"
-msgstr "授權    : %s"
+msgstr ""
 
 #: modules/info:114
 msgid "Depends    : %s"
-msgstr "依賴    : %s"
+msgstr ""
 
 #: modules/info:115
 msgid "Suggested  : %s"
-msgstr "建議  : %s"
+msgstr ""
 
 #: modules/info:116
 msgid "Build deps : %s"
-msgstr "編譯依賴 : %s"
+msgstr ""
 
 #: modules/info:117
 msgid "Wanted src : %s"
-msgstr "需要的源文件 : %s"
+msgstr ""
 
 #: modules/info:118
 msgid "Web site   : %s"
-msgstr "網站   : %s"
+msgstr ""
 
 #: modules/info:119
 msgid "Conf. files: %s"
 msgstr ""
 
 #: modules/info:120
-#, fuzzy
 msgid "Provide    : %s"
-msgstr "包    : %s"
+msgstr ""
 
 #: modules/info:121
-#, fuzzy
 msgid "Size       : %s"
-msgstr "大小: %s"
+msgstr ""
 
 #: modules/info:122
 msgid "Tags       : %s"
@@ -731,230 +707,223 @@ msgstr ""
 
 #: modules/install:129
 msgid "WARNING! Dependency loop between \"%s\" and \"%s\"."
-msgstr "警告:%s 和 %s 有依賴循環."
+msgstr ""
 
 #: modules/install:137
 msgid "Tracking dependencies for package \"%s\""
-msgstr "正在追蹤 %s 的包依賴"
+msgstr ""
 
 #: modules/install:142
 msgid "Missing package \"%s\""
-msgstr "欠缺: %s"
+msgstr ""
 
 #: modules/install:146
 msgid "%s missing package to install."
 msgid_plural "%s missing packages to install."
-msgstr[0] "有 %s 個缺少的包需要安裝"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/install:158
 msgid "Install all missing dependencies? (y/N)"
-msgstr "安裝所有欠缺依賴？ （是/否）"
+msgstr ""
 
 #: modules/install:183
 msgid "Checking if package \"%s\" exists in local list..."
-msgstr "正在檢查 %s 是否在本地清單中"
+msgstr ""
 
 #: modules/install:222
 msgid "Leaving dependencies for package \"%s\" unresolved."
-msgstr "%s 有未解決包依賴."
+msgstr ""
 
 #: modules/install:223
-#, fuzzy
 msgid "The package will be installed but will probably not work."
-msgstr "包已安裝但可能無法正常工作."
+msgstr ""
 
 #: modules/install:294
-#, fuzzy
 msgid "Execute pre-install commands..."
-msgstr "正在檢查安裝後依賴..."
+msgstr ""
 
 #: modules/install:308 modules/reconfigure:36
-#, fuzzy
 msgid "Execute post-install commands..."
-msgstr "正在檢查安裝後依賴..."
+msgstr ""
 
 #: modules/install:381
-#, fuzzy
 msgid "Installing (web/cache): %s"
-msgstr "已安裝文件: %s"
+msgstr ""
 
 #: modules/install:383
-#, fuzzy
 msgid "Installing (pkg/local): %s"
-msgstr "已安裝文件: %s"
+msgstr ""
 
 #: modules/install:388
-#, fuzzy
 msgid "Installation of package \"%s\" (%s)"
-msgstr "%s 的安裝過程"
+msgstr ""
 
 #: modules/install:390
 msgid "Installation of package \"%s\""
-msgstr "%s 的安裝過程"
+msgstr ""
 
 #: modules/install:398
 msgid "Copying package..."
-msgstr "正在複製..."
+msgstr ""
 
 #: modules/install:428
-#, fuzzy
 msgid "Remember modified packages..."
-msgstr "正在卸載舊版本..."
+msgstr ""
 
 #: modules/install:490
 msgid "Saving configuration files..."
-msgstr "正在儲存 的配置文件"
+msgstr ""
 
 #: modules/install:521
 msgid "Installing package..."
-msgstr "正在安裝..."
+msgstr ""
 
 #: modules/install:541
-#, fuzzy
 msgid "Removing old files..."
-msgstr "正在移除所有暫存文件..."
+msgstr ""
 
 #: modules/install:557
 msgid "Removing all tmp files..."
-msgstr "正在移除所有暫存文件..."
+msgstr ""
 
 #: modules/install:587 modules/remove:227
-#, fuzzy
 msgid "Update system databases..."
-msgstr "正在移除所有暫存文件..."
+msgstr ""
 
 #: modules/install:649
 msgid "Package \"%s\" (%s) is installed."
-msgstr "%s (%s) 包未被安裝"
+msgstr ""
 
 #: modules/link:20
 msgid "Package \"%s\" is already installed."
-msgstr "%s 已被安裝."
+msgstr ""
 
 #: modules/link:36
 msgid "Link all missing dependencies? (y/N)"
-msgstr "鏈接所有欠缺的依賴？（是/否）"
+msgstr ""
 
 #: modules/link:45
-#, fuzzy
 msgid "Leaving dependencies unresolved for package \"%s\""
-msgstr "正在追蹤 %s 的包依賴"
+msgstr ""
 
 #: modules/link:46
 msgid "The package is installed but probably will not work."
-msgstr "包已安裝但可能不會正常工作"
+msgstr ""
 
 #: modules/list:45
 msgid "all"
-msgstr "全部"
+msgstr ""
 
 #: modules/list:45
-#, fuzzy
 msgid "extra"
-msgstr "解壓縮"
+msgstr ""
 
 #: modules/list:77
 msgid "Blocked packages"
-msgstr "已封鎖包"
+msgstr ""
 
 #: modules/list:82 modules/list:116 modules/search:223
-#, fuzzy
 msgid "%s package"
 msgid_plural "%s packages"
-msgstr[0] "找到%s 個和 $file 檔案關聯的包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/list:85
 msgid "No blocked packages found."
-msgstr "沒有找到已封鎖包."
+msgstr ""
 
 #: modules/list:92
 msgid "Packages categories"
-msgstr "包分類"
+msgstr ""
 
 #: modules/list:99
 msgid "%s category"
 msgid_plural "%s categories"
-msgstr[0] "%s 個分類"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/list:106
-#, fuzzy
 msgid "Linked packages"
-msgstr "可連接包"
+msgstr ""
 
 #: modules/list:119
-#, fuzzy
 msgid "No linked packages found."
-msgstr "沒有找到已封鎖包."
+msgstr ""
 
 #: modules/list:126
 msgid "List of all installed packages"
-msgstr "所有已安裝包清單"
+msgstr ""
 
 #: modules/list:132
 msgid "%s package installed."
 msgid_plural "%s packages installed."
-msgstr[0] "%s 個已安裝包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/list:142 tazpanel/pkgs.cgi:714
 msgid "Installed packages of category \"%s\""
-msgstr "%s 分類內的已安裝包"
+msgstr ""
 
 #: modules/list:151
 msgid "%s package installed of category \"%s\"."
 msgid_plural "%s packages installed of category \"%s\"."
-msgstr[0] "%2$s 分類的 %1$s 個已安裝包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/list:162 modules/recharge:181
 msgid "Mirrored packages diff"
-msgstr "與鏡像包的差異"
+msgstr ""
 
 #: modules/list:166
 msgid "%s new package listed on the mirror."
 msgid_plural "%s new packages listed on the mirror."
-msgstr[0] "鏡像上有 %s 個新包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/list:171
 msgid "Unable to list anything, no packages.diff found."
-msgstr "無法列出任何項，找不到包差異."
+msgstr ""
 
 #: modules/list:172
 msgid "Recharge your current list to create a first diff."
-msgstr "更新當前清單以創建第一次diff"
+msgstr ""
 
 #: modules/list:176
 msgid "List of available packages on the mirror"
-msgstr "鏡像上的可用包清單"
+msgstr ""
 
 #: modules/list:183
 msgid "%s package in the last recharged list."
 msgid_plural "%s packages in the last recharged list."
-msgstr[0] "最新清單中有 %s 個包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/list:195 modules/list:202
 msgid "Installed files by \"%s\""
-msgstr "%s 安裝的文件"
+msgstr ""
 
 #: modules/list:198 modules/list:208 modules/search:194 tazpanel/pkgs.cgi:72
-#, fuzzy
 msgid "%s file"
 msgid_plural "%s files"
-msgstr[0] "與 $PACKAGE 同時安裝的 %s 個文件"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/list:221
 msgid "TazPkg Activity"
-msgstr "TazPkg 活動"
+msgstr ""
 
 #: modules/list:256
 msgid "File lost"
-msgstr "已遺失文件"
+msgstr ""
 
 #: modules/list:268 tazpanel/pkgs.cgi:1100 tazpanel/pkgs.cgi:1190
 msgid "Configuration files"
-msgstr "配置文件"
+msgstr ""
 
 #: modules/mirror:23
 msgid "Current mirror(s)"
-msgstr "當前鏡像(s)"
+msgstr ""
 
 #: modules/mirror:25
 msgid ""
@@ -962,20 +931,18 @@ msgid ""
 "specify the complete address to the directory of the packages and packages."
 "list file."
 msgstr ""
-"請輸入新鏡像的URL (http, ftp 或本地路徑). 你必須指定 包目錄和packages.list的"
-"完整地址 ."
 
 #: modules/mirror:30
 msgid "New mirror(s) URL: "
-msgstr "新鏡像(s) URL: "
+msgstr ""
 
 #: modules/mirror:39
 msgid "Nothing has been changed."
-msgstr "沒有任何更改"
+msgstr ""
 
 #: modules/mirror:41
 msgid "Setting mirror(s) to: \"%s\""
-msgstr "鏡像已被設定為: %s"
+msgstr ""
 
 #: modules/mirror:63
 msgid "Current undigest(s)"
@@ -986,23 +953,20 @@ msgid "No undigest mirror found."
 msgstr ""
 
 #: modules/mirror:81
-#, fuzzy
 msgid "Remove \"%s\" undigest? (y/N)"
-msgstr "移除 %s (%s)？ （是/否）"
+msgstr ""
 
 #: modules/mirror:83
-#, fuzzy
 msgid "Removing \"%s\" undigest..."
-msgstr "正在移除所有暫存文件..."
+msgstr ""
 
 #: modules/mirror:89
 msgid "Undigest \"%s\" not found"
 msgstr ""
 
 #: modules/mirror:108
-#, fuzzy
 msgid "Creating new undigest \"%s\"."
-msgstr "正在創建 %s..."
+msgstr ""
 
 #: modules/mkdb:81
 msgid "Input folder not specified"
@@ -1013,14 +977,12 @@ msgid "You are not allowed to write to the folder \"%s\""
 msgstr ""
 
 #: modules/mkdb:91
-#, fuzzy
 msgid "Folder \"%s\" does not contain packages"
-msgstr "%s 並非 %s 包!"
+msgstr ""
 
 #: modules/mkdb:111
-#, fuzzy
 msgid "Packages DB already exists."
-msgstr "%s 已被安裝."
+msgstr ""
 
 #: modules/mkdb:119
 msgid "Calculate %s..."
@@ -1028,72 +990,67 @@ msgstr ""
 
 #: modules/pack:22
 msgid "Receipt is missing. Please read the documentation."
-msgstr "找不到安裝清單. 請參閱文檔."
+msgstr ""
 
 #: modules/pack:26
-#, fuzzy
 msgid "Packing package \"%s\""
-msgstr "正在打包: %s"
+msgstr ""
 
 #: modules/pack:29
 msgid "Creating the list of files..."
-msgstr "正在創建文件清單..."
+msgstr ""
 
 #: modules/pack:36
 msgid "Creating %s of files..."
-msgstr "正在創建文件校驗和 %s..."
+msgstr ""
 
 #: modules/pack:50
 msgid "Compressing the FS..."
-msgstr "正在壓縮文件系統"
+msgstr ""
 
 #: modules/pack:60
 msgid "Updating receipt sizes..."
-msgstr "正在更新安裝清單大小..."
+msgstr ""
 
 #: modules/pack:66
 msgid "Creating full cpio archive..."
-msgstr "正在創建完棑一cpio壓縮檔..."
+msgstr ""
 
 #: modules/pack:70
 msgid "Restoring original package tree..."
-msgstr "正在恢復原來的包樹"
+msgstr ""
 
 #: modules/pack:80
 msgid "Package \"%s\" compressed successfully."
-msgstr "成功壓縮 %s 包"
+msgstr ""
 
 #: modules/pack:81 modules/repack:81
 msgid "Size: %s"
-msgstr "大小: %s"
+msgstr ""
 
 #: modules/recharge:48
-#, fuzzy
 msgid "Restoring database files..."
-msgstr "正在移除所有暫存文件..."
+msgstr ""
 
 #: modules/recharge:56
-#, fuzzy
 msgid "Recharging failed"
-msgstr "正在更新清單..."
+msgstr ""
 
 #: modules/recharge:70
 msgid "Repository \"%s\" doesn't exist."
-msgstr "%s 不存在."
+msgstr ""
 
 #: modules/recharge:87 modules/summary:33
 msgid "Undigest %s"
 msgstr ""
 
 #: modules/recharge:90
-#, fuzzy
 msgid "Recharging repository \"%s\""
-msgstr "庫: %s"
+msgstr ""
 
 #: modules/recharge:99
-#, fuzzy
 msgid "Checking..."
-msgstr "正在檢查升級"
+msgstr ""
 
 #: modules/recharge:105
 msgid "Database timestamp: %s"
@@ -1101,99 +1058,95 @@ msgstr ""
 
 #: modules/recharge:110
 msgid "Repository \"%s\" is up to date."
-msgstr "%s 已是最新."
+msgstr ""
 
 #: modules/recharge:116
 msgid "Creating backup of the last packages list..."
-msgstr "正在創建最新包清單的備份"
+msgstr ""
 
 #: modules/recharge:127 modules/recharge:142 modules/recharge:146
-#, fuzzy
 msgid "Getting \"%s\"..."
-msgstr "正在創建 %s..."
+msgstr ""
 
 #: modules/recharge:161
-#, fuzzy
 msgid "Last database is ready to use."
-msgstr "最新的%s 已可使用."
+msgstr ""
 
 #: modules/recharge:184
 msgid "%s new package on the mirror."
 msgid_plural "%s new packages on the mirror."
-msgstr[0] "鏡像上有 %s 個新包."
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/recharge:189
 msgid ""
 "Note that next time you recharge the list, a list of differences will be "
 "displayed to show new and upgradeable packages."
-msgstr "請注意下次你更新 清單時, 程式會列差異清單以顯示最新和可更新的 包."
+msgstr ""
 
 #: modules/recompress:32
 msgid "Recompressing package \"%s\""
-msgstr "正在重新壓縮: %s"
+msgstr ""
 
 #: modules/recompress:42
 msgid "Recompressing the FS..."
-msgstr "正在重新壓縮文件系統..."
+msgstr ""
 
 #: modules/recompress:47
 msgid "Creating new package..."
-msgstr "創建新包..."
+msgstr ""
 
 #: modules/reconfigure:47
 msgid "Nothing to do for package \"%s\"."
-msgstr "對 %s 沒有可進行動作"
+msgstr ""
 
 #: modules/remove:33
-#, fuzzy
 msgid "Execute pre-remove commands..."
-msgstr "正在檢查安裝後依賴..."
+msgstr ""
 
 #: modules/remove:46
-#, fuzzy
 msgid "Execute post-remove commands..."
-msgstr "正在檢查安裝後依賴..."
+msgstr ""
 
 #: modules/remove:106
 msgid "The following packages depend on package \"%s\":"
-msgstr "以下包依賴 %s:"
+msgstr ""
 
 #: modules/remove:114
 msgid "The following packages have been modified by package \"%s\":"
-msgstr "以下包已被 %s 更改:"
+msgstr ""
 
 #: modules/remove:122
 msgid "Remove package \"%s\" (%s)? (y/N)"
-msgstr "移除 %s (%s)？ （是/否）"
+msgstr ""
 
 #: modules/remove:124
 msgid "Uninstallation of package \"%s\" cancelled."
-msgstr "已取消卸載 %s"
+msgstr ""
 
 #: modules/remove:131
 msgid "Removing package \"%s\""
-msgstr "正在移除: %s"
+msgstr ""
 
 #: modules/remove:143
 msgid "Removing all files installed..."
-msgstr "正在移除所有已安裝文件"
+msgstr ""
 
 #: modules/remove:256
 msgid "Removing package receipt..."
-msgstr "正在移除包文件清單"
+msgstr ""
 
 #: modules/remove:262
-#, fuzzy
 msgid "Package \"%s\" (%s) removed."
-msgstr "%s (%s) 包未被安裝"
+msgstr ""
 
 #: modules/remove:275
 msgid "Remove packages depending on package \"%s\"? (y/N)"
-msgstr "移除依賴 %s 的包？ （是/否）"
+msgstr ""
 
 #: modules/remove:292
 msgid "Reinstall packages modified by package \"%s\"? (y/N)"
-msgstr "重新安裝被 %s 更改過的包？ （是/否）"
+msgstr ""
 
 #: modules/remove:298
 msgid ""
@@ -1202,84 +1155,84 @@ msgid ""
 msgstr ""
 
 #: modules/remove:300
-#, fuzzy
 msgid "Check \"%s\" for reinstallation."
-msgstr "檢查 %s 以重新安裝"
+msgstr ""
 
 #: modules/repack:16
 msgid "Repacking \"%s\""
-msgstr "正在重新打包: %s"
+msgstr ""
 
 #: modules/repack:19
 msgid "Can't repack package \"%s\""
-msgstr "無法重新打包 %s"
+msgstr ""
 
 #: modules/repack:24
 msgid "Can't repack, \"%s\" files have been modified by:"
-msgstr "無法重新打包, %s 的文件已被以下程式更改:"
+msgstr ""
 
 #: modules/repack:35
 msgid "Can't repack, the following files are lost:"
-msgstr "無法重新打包, 以下文件已遺失:"
+msgstr ""
 
 #: modules/repack:69
 msgid "Can't repack, %s error."
-msgstr "無法重新打包, %s 錯誤."
+msgstr ""
 
 #: modules/repack:80
 msgid "Package \"%s\" repacked successfully."
-msgstr "成功重新打包 %s 包"
+msgstr ""
 
 #: modules/repack-config:46
 msgid "User configuration backup on date %s"
-msgstr "%s 的用戶配置備分"
+msgstr ""
 
 #: modules/search:19 tazpanel/pkgs.cgi:676
 msgid "Installed packages"
-msgstr "已安裝包"
+msgstr ""
 
 #: modules/search:32
 msgid "%s installed package found for \"%s\""
 msgid_plural "%s installed packages found for \"%s\""
-msgstr[0] "找到 %s 個已安裝包: %s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/search:41 tazpanel/pkgs.cgi:675
 msgid "Available packages"
-msgstr "可用的包"
+msgstr ""
 
 #: modules/search:73 modules/search:107
 msgid "%s available package found for \"%s\""
 msgid_plural "%s available packages found for \"%s\""
-msgstr[0] "找到 %s 個可用包: %s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/search:83
 msgid "Matching packages name with version and desc"
-msgstr "將包名稱與版本和描述匹配"
+msgstr ""
 
 #: modules/search:127
 msgid "Search result for \"%s\""
-msgstr "%s 的搜索結果"
+msgstr ""
 
 #: modules/search:144
 msgid "Search result for file \"%s\""
-msgstr "%s 文件的搜索結果"
+msgstr ""
 
 #: modules/search:164 modules/search:179
 msgid "Package %s:"
-msgstr "包 %s:"
+msgstr ""
 
 #: modules/search:204
 msgid "Search result for package \"%s\""
-msgstr "%s 包的搜索結果 "
+msgstr ""
 
 #: modules/summary:36
-#, fuzzy
 msgid "Repository:"
-msgstr "庫: %s"
+msgstr ""
 
 #: modules/summary:38 tazpanel/pkgs.cgi:1730
 msgid "Last recharge:"
-msgstr "上一次更新:"
+msgstr ""
 
 #: modules/summary:57 tazpanel/pkgs.cgi:1743
 msgid "Today at %s."
@@ -1293,6 +1246,7 @@ msgstr ""
 msgid "%d day ago."
 msgid_plural "%d days ago."
 msgstr[0] ""
+msgstr[1] ""
 
 #: modules/summary:62
 msgid "Database timestamp:"
@@ -1304,170 +1258,172 @@ msgstr ""
 
 #: modules/summary:69 tazpanel/pkgs.cgi:1761
 msgid "Mirrored packages:"
-msgstr "已鏡像包:"
+msgstr ""
 
 #: modules/summary:73
-#, fuzzy
 msgid "Linked packages:"
-msgstr "可連接包"
+msgstr ""
 
 #: modules/summary:81 tazpanel/pkgs.cgi:1756
 msgid "Installed packages:"
-msgstr "已安裝包:"
+msgstr ""
 
 #: modules/summary:82 tazpanel/pkgs.cgi:1771
 msgid "Installed files:"
-msgstr "已安裝文件:"
+msgstr ""
 
 #: modules/summary:83 tazpanel/pkgs.cgi:1774
 msgid "Blocked packages:"
-msgstr "已封鎖包:"
+msgstr ""
 
 #: modules/summary:84 tazpanel/pkgs.cgi:1766
 msgid "Upgradeable packages:"
-msgstr "可更新包:"
+msgstr ""
 
 #: modules/upgrade:43
 msgid "New build"
-msgstr "新建構"
+msgstr ""
 
 #: modules/upgrade:45
 msgid "Blocked"
-msgstr "已封鎖"
+msgstr ""
 
 #: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:826
 msgid "Package"
-msgstr "包"
+msgstr ""
 
 #: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:594
-#, fuzzy
 msgid "Repository"
-msgstr "庫: %s"
+msgstr ""
 
 #: modules/upgrade:88 modules/upgrade:104 tazpanel/pkgs.cgi:326
 #: tazpanel/pkgs.cgi:1060
 msgid "Version"
-msgstr "版本"
+msgstr ""
 
 #: modules/upgrade:88 modules/upgrade:104
 msgid "Status"
-msgstr "狀態"
+msgstr ""
 
 #: modules/upgrade:115
 msgid "System is up-to-date..."
-msgstr "系統已是最新版本..."
+msgstr ""
 
 #: modules/upgrade:120
 msgid "%s blocked"
 msgid_plural "%s blocked"
-msgstr[0] "%s 個已封鎖"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/upgrade:125
 msgid "You have %s available upgrade (%s)"
 msgid_plural "You have %s available upgrades (%s)"
-msgstr[0] "你有 %s 個可用更新 (%s)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/upgrade:130
 msgid "%s installed package scanned in %ds"
 msgid_plural "%s installed packages scanned in %ds"
-msgstr[0] "已用 %2$ds 掃描 %1$s 個已安裝包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/upgrade:145
 msgid "Do you wish to install them now? (y/N)"
-msgstr "你想現在就安裝嗎? (y/N)"
+msgstr ""
 
 #: modules/upgrade:157
 msgid "Leaving without any upgrades installed."
-msgstr "不安裝任何更新就離開."
+msgstr ""
 
 #: tazpkg-box:15
 msgid "SliTaz Package Action"
-msgstr "SliTaz 包行為"
+msgstr ""
 
 #: tazpkg-box:23
 msgid "package"
-msgstr "包"
+msgstr ""
 
 #: tazpkg-box:55 tazpanel/pkgs.cgi:287
 msgid "Install"
-msgstr "安裝"
+msgstr ""
 
 #: tazpkg-box:56
 msgid "Extract"
-msgstr "解壓縮"
+msgstr ""
 
 #: tazpkg-box:79
-#, fuzzy
 msgid "Downloading: %s"
-msgstr "正在下載: $pkg"
+msgstr ""
 
 #: tazpkg-notify:30
 msgid "%s installed package"
 msgid_plural "%s installed packages"
-msgstr[0] "%s 個已安裝包"
+msgstr[0] ""
+msgstr[1] ""
 
 #: tazpkg-notify:68 tazpanel/pkgs.cgi:41 tazpanel/pkgs.cgi:282
 #: tazpanel/pkgs.cgi:571
 msgid "My packages"
-msgstr "我的包"
+msgstr ""
 
 #: tazpkg-notify:69 tazpkg-notify:80 tazpkg-notify:88 tazpkg-notify:106
 msgid "Recharge lists"
-msgstr "更新清單"
+msgstr ""
 
 #: tazpkg-notify:70 tazpkg-notify:99 tazpkg-notify:106
 msgid "Check upgrade"
-msgstr "檢查更新"
+msgstr ""
 
 #: tazpkg-notify:71
 msgid "TazPkg SHell"
-msgstr "TazPkg SHell"
+msgstr ""
 
 #: tazpkg-notify:72
 msgid "TazPkg manual"
-msgstr "TazPkg 手冊"
+msgstr ""
 
 #: tazpkg-notify:73
 msgid "Close notification"
-msgstr "關閉提示"
+msgstr ""
 
 #: tazpkg-notify:78
 msgid "No packages list found"
-msgstr "找不到包清單"
+msgstr ""
 
 #: tazpkg-notify:86
 msgid "Your packages list is older than 10 days"
-msgstr "當前的包清單已是十天前的版本"
+msgstr ""
 
 #: tazpkg-notify:95
 msgid "There is %s upgradeable package"
 msgid_plural "There are %s upgradeable packages"
-msgstr[0] "有 %s 個包可更新"
+msgstr[0] ""
+msgstr[1] ""
 
 #: tazpkg-notify:104
 msgid "System is up to date"
-msgstr "系統已更新到最新"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:38 tazpanel/pkgs.cgi:206
 msgid "Packages"
-msgstr "包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:40 tazpanel/pkgs.cgi:1726
 msgid "Summary"
-msgstr "摘要"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:42 tazpanel/pkgs.cgi:280
 msgid "Recharge list"
-msgstr "更新清單"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:43
 msgid "Check updates"
-msgstr "檢查更新"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:44 tazpanel/pkgs.cgi:285 tazpanel/pkgs.cgi:1136
 #: tazpanel/pkgs.cgi:1386
 msgid "Administration"
-msgstr "系統管理"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:192
 msgid "Receipt for package %s unavailable"
@@ -1475,61 +1431,59 @@ msgstr ""
 
 #: tazpanel/pkgs.cgi:281
 msgid "Check upgrades"
-msgstr "檢查更新"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:283 tazpanel/pkgs.cgi:1072
-#, fuzzy
 msgid "Tags"
-msgstr "標記:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:284 tazpanel/pkgs.cgi:630
 msgid "Linkable packages"
-msgstr "可連接包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:286
 msgid "Install (Non Free)"
-msgstr "安裝 (非自由)"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:288
 msgid "Remove"
-msgstr "移除"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:289
 msgid "Link"
-msgstr "連接"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:290
 msgid "Block"
-msgstr "封鎖"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:291
 msgid "Unblock"
-msgstr "解取封鎖"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:292
-#, fuzzy
 msgid "(Un)block"
-msgstr "解取封鎖"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:293
 msgid "Repack"
-msgstr "重新打包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:294
 msgid "Save configuration"
-msgstr "儲存配置"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:295
 msgid "List configuration files"
-msgstr "列出配置文件"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:296
 msgid "Quick check"
-msgstr "快速檢查"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:297
 msgid "Full check"
-msgstr "完整檢查"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:298
 msgid "Clean"
@@ -1537,43 +1491,39 @@ msgstr ""
 
 #: tazpanel/pkgs.cgi:299
 msgid "Set link"
-msgstr "設定連接"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:300
 msgid "Remove link"
-msgstr "移除連接"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:301
-#, fuzzy
 msgid "Add mirror"
-msgstr "鏡像"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:302
-#, fuzzy
 msgid "Add repository"
-msgstr "庫: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:303
-#, fuzzy
 msgid "Toggle all"
-msgstr "反轉所有"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:325 tazpanel/pkgs.cgi:1054 tazpanel/pkgs.cgi:1320
 msgid "Name"
-msgstr "名稱"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:327 tazpanel/pkgs.cgi:1064
 msgid "Description"
-msgstr "描述"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:365 tazpanel/pkgs.cgi:1260
 msgid "Repository: %s"
-msgstr "庫: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:375 tazpanel/pkgs.cgi:452
-#, fuzzy
 msgid "Pages:"
-msgstr "包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:536
 msgid "Web search tool"
@@ -1581,79 +1531,71 @@ msgstr ""
 
 #: tazpanel/pkgs.cgi:538
 msgid "Search"
-msgstr "搜索"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:539
 msgid "Files"
-msgstr "文件"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:572
-#, fuzzy
 msgid "All packages"
-msgstr "可用的包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:576
 msgid "Categories"
-msgstr "分類"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:597
 msgid "Public"
-msgstr "公開"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:601
 msgid "Any"
-msgstr "任何"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:608
 msgid "All tags..."
 msgstr ""
 
 #: tazpanel/pkgs.cgi:609
-#, fuzzy
 msgid "All categories..."
-msgstr "分類"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:631
 msgid "Listing linkable packages..."
-msgstr "正在列出可連接包..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:635
 msgid "Selection:"
-msgstr "選擇:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:665
-#, fuzzy
 msgid "Categories list"
-msgstr "分類"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:674 tazpanel/pkgs.cgi:1062
-#, fuzzy
 msgid "Category"
-msgstr "分類:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:707 tazpanel/pkgs.cgi:761 tazpanel/pkgs.cgi:1366
-#, fuzzy
 msgid "Packages list"
-msgstr "包 %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:708 tazpanel/pkgs.cgi:762
 msgid "Listing packages..."
-msgstr "正在列出包..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:715
-#, fuzzy
 msgid "All packages of category \"%s\""
-msgstr "%s 分類內的已安裝包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:719
-#, fuzzy
 msgid "Installed packages of category \"%s\" in repository \"%s\""
-msgstr "%s 分類內的已安裝包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:720
-#, fuzzy
 msgid "All packages of category \"%s\" in repository \"%s\""
-msgstr "%s 分類內的已安裝包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:729
 msgid "You can not view a list of all packages until recharging lists."
@@ -1661,170 +1603,148 @@ msgstr ""
 
 #: tazpanel/pkgs.cgi:733 tazpanel/pkgs.cgi:774 tazpanel/pkgs.cgi:812
 #: tazpanel/pkgs.cgi:892 tazpanel/pkgs.cgi:1498 tazpanel/pkgs.cgi:1526
-#, fuzzy
 msgid "Selected packages:"
-msgstr "已封鎖包:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:769
-#, fuzzy
 msgid "Packages suggested by %s"
-msgstr "%s 已解壓縮到: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:804
 msgid "Search packages"
-msgstr "搜索包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:805
 msgid "Searching packages..."
-msgstr "正在搜索包..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:827
 msgid "File"
-msgstr "文件"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:862
 msgid "Recharge"
-msgstr "更新"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:863
 msgid "Recharging lists..."
-msgstr "正在更新清單..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:866
 msgid "Recharge checks for new or updated packages"
-msgstr "更新檢查新包或已升級包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:870
-#, fuzzy
 msgid "Recharging log"
-msgstr "正在更新清單..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:874
 msgid "Recharging packages list"
-msgstr "更新包清單"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:877
 msgid "Packages lists are up-to-date. You should check for upgrades now."
-msgstr "包清單已是最新.你現在應該檢查有否可用升級"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:887
 msgid "Up packages"
-msgstr "升級包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:888
 msgid "Checking for upgrades..."
-msgstr "正在檢查升級"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:929
-#, fuzzy
 msgid "Installing: %s"
-msgstr "已安裝文件: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:930
-#, fuzzy
 msgid "Removing: %s"
-msgstr "正在移除: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:931
-#, fuzzy
 msgid "Linking: %s"
-msgstr "欠缺: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:932
-#, fuzzy
 msgid "Blocking: %s"
-msgstr "正在下載: $pkg"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:933
-#, fuzzy
 msgid "Unblocking: %s"
-msgstr "正在下載: $pkg"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:934
-#, fuzzy
 msgid "(Un)blocking: %s"
-msgstr "正在下載: $pkg"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:935
-#, fuzzy
 msgid "Repacking: %s"
-msgstr "正在重新打包: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:961
-#, fuzzy
 msgid "Package info"
-msgstr "包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:962
 msgid "Getting package info..."
-msgstr "正在取得包資訊..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:976
-#, fuzzy
 msgid "Packages providing %s"
-msgstr "包 %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:985
 msgid "if"
 msgstr ""
 
 #: tazpanel/pkgs.cgi:985
-#, fuzzy
 msgid "is installed"
-msgstr "%s 個已安裝包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1058
-#, fuzzy
 msgid "State"
-msgstr "狀態"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1066
-#, fuzzy
 msgid "Maintainer"
-msgstr "維護者:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1068
-#, fuzzy
 msgid "License"
-msgstr "授權    : %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1070
-#, fuzzy
 msgid "Website"
-msgstr "網站:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1074
-#, fuzzy
 msgid "Sizes"
-msgstr "大小:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1076
-#, fuzzy
 msgid "Depends"
-msgstr "依賴:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1078
-#, fuzzy
 msgid "Provide"
-msgstr "包    : %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1080
-#, fuzzy
 msgid "Suggested"
-msgstr "建議:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1085
 msgid "View receipt"
 msgstr ""
 
 #: tazpanel/pkgs.cgi:1086
-#, fuzzy
 msgid "Improve package"
-msgstr "升級包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1109
 msgid "Installed files"
-msgstr "已安裝文件"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1111
 msgid "Please wait"
@@ -1832,44 +1752,43 @@ msgstr ""
 
 #: tazpanel/pkgs.cgi:1174
 msgid "TazPkg administration and settings"
-msgstr "TazPkg 管理及配置"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1183
 msgid "Creating the package..."
-msgstr "正在創建包..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1187
 msgid "Path:"
-msgstr "路徑:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1206
 msgid "Checking packages consistency..."
-msgstr "正在檢查包完整性..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1210
 msgid "Full packages check..."
-msgstr "檢查完整包..."
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1219 tazpanel/pkgs.cgi:1230
-#, fuzzy
 msgid "%s is installed on /mnt/packages"
-msgstr "已安裝包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1245
 msgid "Packages in the cache: %s (%s)"
-msgstr "緩存中的包: %s (%s)"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1252
 msgid "Current mirror list"
-msgstr "當前鏡像清單"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1262 tazpanel/pkgs.cgi:1308
 msgid "Delete"
-msgstr "刪除"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1298
 msgid "Private repositories"
-msgstr "私有庫"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1321
 msgid "URL:"
@@ -1877,19 +1796,17 @@ msgstr ""
 
 #: tazpanel/pkgs.cgi:1331
 msgid "Link to another SliTaz installation"
-msgstr "連接到另一個安裝好的SliTaz"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1334
 msgid ""
 "This link points to the root of another SliTaz installation. You will be "
 "able to install packages using soft links to it."
 msgstr ""
-"這會連接到另一個已安裝SliTaz的根目錄(root).你將可以用軟連接(softlink) 來安裝"
-"包."
 
 #: tazpanel/pkgs.cgi:1345
 msgid "SliTaz packages DVD"
-msgstr "SliTaz 包DVD"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1348
 msgid ""
@@ -1898,20 +1815,18 @@ msgid ""
 "without an internet connection. This image can be installed on a DVD or a "
 "USB key."
 msgstr ""
-"每日將會創建一個包含 %s 版本所有可用包的可啟動(bootable) DVD映像映像亦會包含"
-"可離線使用的全站內容，可安裝到DVD或USB設備"
 
 #: tazpanel/pkgs.cgi:1351
 msgid "Install from ISO image:"
-msgstr "由ISO映像安裝"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1358
 msgid "Download DVD image"
-msgstr "下載DVD映像"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1360
 msgid "Install from DVD/USB key"
-msgstr "由DVD/USB設備安裝"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1369
 msgid ""
@@ -1924,9 +1839,8 @@ msgid "Set"
 msgstr ""
 
 #: tazpanel/pkgs.cgi:1400
-#, fuzzy
 msgid "Licenses for package %s"
-msgstr "%s 已遺失以下文件:"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1421
 msgid "%s license on %s website"
@@ -1941,33 +1855,28 @@ msgid "Read local:"
 msgstr ""
 
 #: tazpanel/pkgs.cgi:1463
-#, fuzzy
 msgid "Tags list"
-msgstr "更新清單"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1467
-#, fuzzy
 msgid "List of tags in all repositories"
-msgstr "所有已安裝包清單"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1468
 msgid "List of tags in repository \"%s\""
 msgstr ""
 
 #: tazpanel/pkgs.cgi:1494
-#, fuzzy
 msgid "Tag \"%s\""
-msgstr "正在重新打包: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1522
-#, fuzzy
 msgid "Blocked packages list"
-msgstr "已封鎖包"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1560 tazpanel/pkgs.cgi:1637
-#, fuzzy
 msgid "Improve package \"%s\""
-msgstr "正在移除: %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1595
 msgid "Please log in using your TazBug account."
@@ -2006,9 +1915,8 @@ msgid "Please select an action"
 msgstr ""
 
 #: tazpanel/pkgs.cgi:1664
-#, fuzzy
 msgid "Report new version"
-msgstr "新版本 %s"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1665
 msgid "Improve short description"
@@ -2023,14 +1931,12 @@ msgid "Add or improve description"
 msgstr ""
 
 #: tazpanel/pkgs.cgi:1668
-#, fuzzy
 msgid "Translate description"
-msgstr "描述"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1669
-#, fuzzy
 msgid "Improve category"
-msgstr "%s 個分類"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1670
 msgid "Add or improve tags"
@@ -2070,209 +1976,8 @@ msgstr ""
 
 #: tazpanel/pkgs.cgi:1784
 msgid "Latest log entries"
-msgstr "最新日誌項"
+msgstr ""
 
 #: tazpanel/pkgs.cgi:1786
 msgid "Show"
 msgstr ""
-
-#~ msgid "Checking packages lists - %s"
-#~ msgstr "正在檢查包清單 - %s"
-
-#~ msgid "Checking post install dependencies..."
-#~ msgstr "正在檢查安裝後依賴..."
-
-#~ msgid "Please run \"%s\" in / and retry."
-#~ msgstr "請運行 '%s' 並重試. "
-
-#~ msgid "Removing old package..."
-#~ msgstr "正在卸載舊版本..."
-
-#~ msgid "Adding implicit depends \"%s\"..."
-#~ msgstr "正在加入隱性依賴 %s..."
-
-#~ msgid "Unable to find the list \"%s\""
-#~ msgstr "找不到清單: %s"
-
-#~ msgid ""
-#~ "You must probably run '%s' as root to get the latest list of packages "
-#~ "available on the mirror."
-#~ msgstr "你必須以root權限運行 ‘%s’ 以取得鏡像中可用包的最新清單"
-
-#, fuzzy
-#~ msgid "Unable to find list \"%s\""
-#~ msgstr "找不到清單: %s"
-
-#~ msgid "rootconfig needs --root= option used."
-#~ msgstr "rootconfig 需要使用 --root= 選項."
-
-#~ msgid "Install package with \"%s\" or \"%s\""
-#~ msgstr "以'%s' 或 '%s' 安裝包"
-
-#~ msgid "Usage: tazpkg link package_name slitaz_root"
-#~ msgstr "用法: tazpkg link package_name slitaz_root"
-
-#~ msgid "Example:"
-#~ msgstr "例子:"
-
-#~ msgid "\"%s\" will use less than 100k in your running system RAM."
-#~ msgstr "'%s' 會使用少於 100k 的系統記憶體."
-
-#~ msgid "Usage for command up:"
-#~ msgstr "Usage for command up:"
-
-#~ msgid "option"
-#~ msgstr "選項"
-
-#~ msgid "Without options run in interactive mode and ask before install"
-#~ msgstr "自動在交互模式運行，並在安裝前詢問"
-
-#~ msgid "Where options are:"
-#~ msgstr "參閱以下選項:"
-
-#~ msgid "Check only for available upgrades"
-#~ msgstr "只檢查可用更新"
-
-#~ msgid "Force recharge of packages list and check"
-#~ msgstr "強制更新及檢查包清單"
-
-#~ msgid "Check for upgrades and install them all"
-#~ msgstr "檢查並更新所有更新"
-
-#~ msgid ""
-#~ "Please change directory (cd) to the packages repository and specify the "
-#~ "list of packages to install."
-#~ msgstr "請更改目錄 (cd) 到包倉庫，並指定 要安裝的包清單."
-
-#~ msgid "Please specify the release you want on the command line."
-#~ msgstr "請指定你想用於命令行的版本."
-
-#~ msgid "Please specify a pattern or package name to search for."
-#~ msgstr "請指定一個模式串或包名稱作搜索"
-
-#~ msgid "List \"%s\" is older than one week... Recharging."
-#~ msgstr "%s 已是一周前的版本... 正在更新"
-
-#, fuzzy
-#~ msgid "Short desc"
-#~ msgstr "簡單描述 : %s"
-
-#~ msgid "Unknown option \"%s\"."
-#~ msgstr "未知選項 %s."
-
-#~ msgid "TazPkg"
-#~ msgstr "TazPkg"
-
-#~ msgid "TazPanel - Packages"
-#~ msgstr "TazPanel - 包"
-
-#~ msgid "y"
-#~ msgstr "y"
-
-#~ msgid "Sorry, no description available for this package."
-#~ msgstr "抱歉，這個包沒有可用的描述"
-
-#~ msgid "Package \"%s\" is already in the blocked packages list."
-#~ msgstr "%s 已在封鎖包清單內"
-
-#~ msgid "Add package \"%s\" to: %s..."
-#~ msgstr "將 %s 加入到: %s..."
-
-#~ msgid "Removing package \"%s\" from: %s..."
-#~ msgstr "由 %2$s 移除 %1$s..."
-
-#~ msgid "Package \"%s\" is not in the blocked packages list."
-#~ msgstr "%s 並不在已封鎖包清單"
-
-#~ msgid "(Older than 10 days)"
-#~ msgstr "(多於十日前)"
-
-#~ msgid "(Not older than 10 days)"
-#~ msgstr "(在十日內)"
-
-#~ msgid "Use as default"
-#~ msgstr "設為預設"
-
-#~ msgid "Web"
-#~ msgstr "網頁"
-
-#~ msgid "Repositories"
-#~ msgstr "庫"
-
-#~ msgid "Category: %s"
-#~ msgstr "分類: %s"
-
-#~ msgid "Performing tasks on packages"
-#~ msgstr "正在對包進行處理"
-
-#~ msgid "Executing %s for: %s"
-#~ msgstr "正在對 %2$s 執行 %1$s :"
-
-#~ msgid "Default mirror"
-#~ msgstr "預設鏡像"
-
-#~ msgid "Website:"
-#~ msgstr "網站:"
-
-#~ msgid "Sizes:"
-#~ msgstr "大小:"
-
-#~ msgid "Name:"
-#~ msgstr "名稱:"
-
-#~ msgid "Version:"
-#~ msgstr "版本:"
-
-#~ msgid "Description:"
-#~ msgstr "描述:"
-
-#~ msgid "Depends:"
-#~ msgstr "依賴:"
-
-#~ msgid "$PACKAGE_FILE does not look like an Archlinux/Alpine package!"
-#~ msgstr "$PACKAGE_FILE 並非 Archlinux/Alpine 包!"
-
-#~ msgid "$PACKAGE_FILE does not look like a Puppy package!"
-#~ msgstr "$PACKAGE_FILE 並非 Puppy 包!"
-
-#~ msgid "$PACKAGE_FILE does not look like a Slax package!"
-#~ msgstr "$PACKAGE_FILE 並非 Slax 包!"
-
-#~ msgid "$PACKAGE_FILE does not look like a Slackware package!"
-#~ msgstr "$PACKAGE_FILE 並非 Slackware 包!"
-
-#~ msgid "Leaving dependencies unresolved for: $PACKAGE"
-#~ msgstr "$PACKAGE 的依賴未被解決"
-
-#~ msgid "No new packages on the mirror."
-#~ msgstr "鏡像上沒有新包."
-
-#~ msgid "$num file found for: $pkg"
-#~ msgid_plural "$num files found for: $pkg"
-#~ msgstr[0] "搜索到 $pkg 的 $num 個檔案"
-
-#~ msgid "Path: $CACHE_DIR"
-#~ msgstr "路徑: $CACHE_DIR"
-
-#~ msgid "0 blocked"
-#~ msgstr "0 個已封鎖"
-
-#~ msgid "No file found for: $file"
-#~ msgstr "找不到和 $file 檔案關聯的包"
-
-#~ msgid "Unable to find \"%s\""
-#~ msgstr "找不到: %s"
-
-#, fuzzy
-#~ msgid "0 files found for: $pkg"
-#~ msgstr "搜索到 $pkg 的0個檔案"
-
-#, fuzzy
-#~ msgid "No available packages found for \"%s\""
-#~ msgstr "找不到已安裝包: %s"
-
-#~ msgid "$pkg_name is installed."
-#~ msgstr "$pkg_name 已完成安裝."
-
-#~ msgid "$num files removed from cache."
-#~ msgstr "$num 個文件已在緩存中被刪除"

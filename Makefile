@@ -13,7 +13,7 @@ iconsdir    ?= $(datarootdir)/icons
 
 CC	?= gcc
 DESTDIR ?=
-LINGUAS ?= de el es fr ja pl pt_BR ru sv zh_CN zh_TW
+LINGUAS ?= de el es fr it ja pl pt_BR ru sv zh_CN zh_TW
 MODULES := $(shell ls modules)
 
 VERSION := 5.0

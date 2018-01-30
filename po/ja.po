@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-02 18:52+0900\n"
+"POT-Creation-Date: 2018-01-30 11:47+0200\n"
 "PO-Revision-Date: 2017-01-22 12:14+0900\n"
+"Last-Translator: BALLOON a.k.a. Fu-sen. (Keiichi SHIGA) <balloonakafusen　AT "
+"gmail DOT com>\n"
 "Language-Team: \n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.8.7.1\n"
-"Last-Translator: BALLOON a.k.a. Fu-sen. (Keiichi SHIGA) <balloonakafusen　AT "
-"gmail DOT com>\n"
-"Language: ja_JP\n"
 
 #: tazpkg:105
 msgid "Creating folder \"%s\"..."
@@ -55,63 +55,63 @@ msgstr "検索パターンを指定してください。"
 msgid "Unable to find the receipt \"%s\""
 msgstr "レシピ \"%s\" が見つかりません"
 
-#: tazpkg:230 modules/extract:19 modules/install:202 modules/recompress:19
+#: tazpkg:230 modules/extract:19 modules/install:234 modules/recompress:19
 msgid "Extracting package..."
 msgstr "パッケージの抽出中..."
 
-#: tazpkg:244 modules/list:44
+#: tazpkg:244 modules/list:39
 msgid "base-system"
 msgstr "ベースシステム"
 
-#: tazpkg:244 modules/list:44
+#: tazpkg:244 modules/list:39
 msgid "x-window"
 msgstr "X ウインドウ"
 
-#: tazpkg:245 modules/list:45
+#: tazpkg:245 modules/list:40
 msgid "utilities"
 msgstr "ユーティリティ"
 
-#: tazpkg:245 modules/list:45
+#: tazpkg:245 modules/list:40
 msgid "network"
 msgstr "ネットワーク"
 
-#: tazpkg:246 modules/list:46
+#: tazpkg:246 modules/list:41
 msgid "graphics"
 msgstr "グラフィック"
 
-#: tazpkg:246 modules/list:46
+#: tazpkg:246 modules/list:41
 msgid "multimedia"
 msgstr "マルチメディア"
 
-#: tazpkg:247 modules/list:47
+#: tazpkg:247 modules/list:42
 msgid "office"
 msgstr "オフィス"
 
-#: tazpkg:247 modules/list:47
+#: tazpkg:247 modules/list:42
 msgid "development"
 msgstr "開発"
 
-#: tazpkg:248 modules/list:48
+#: tazpkg:248 modules/list:43
 msgid "system-tools"
 msgstr "システムツール"
 
-#: tazpkg:248 modules/list:48
+#: tazpkg:248 modules/list:43
 msgid "security"
 msgstr "セキュリティ"
 
-#: tazpkg:249 modules/list:49
+#: tazpkg:249 modules/list:44
 msgid "games"
 msgstr "ゲーム"
 
-#: tazpkg:249 modules/list:49
+#: tazpkg:249 modules/list:44
 msgid "misc"
 msgstr "その他"
 
-#: tazpkg:249 modules/list:49
+#: tazpkg:249 modules/list:44
 msgid "meta"
 msgstr "メタ"
 
-#: tazpkg:250 modules/list:50
+#: tazpkg:250 modules/list:45
 msgid "non-free"
 msgstr "非フリー"
 
@@ -133,7 +133,16 @@ msgstr ""
 msgid "You are already running a TazPkg SHell."
 msgstr "すでに TazPkg シェルを実行しています。"
 
-#: modules/block:18 modules/remove:101
+#: modules/bb:20
+msgid "Busybox is not installed in the %s. Exit."
+msgstr ""
+
+#: modules/bb:30
+#, fuzzy
+msgid "Restoring Busybox applet %s..."
+msgstr "データベースファイルの復旧中..."
+
+#: modules/block:18 modules/remove:96
 msgid "Package \"%s\" is not installed."
 msgstr "パッケージ \"%s\" はインストールされていません。"
 
@@ -141,7 +150,7 @@ msgstr "パッケージ \"%s\" はインストールされていません。"
 msgid "Package \"%s\" is already blocked."
 msgstr "パッケージ \"%s\" はすでにブロックされています。"
 
-#: modules/block:32 modules/block:61 modules/get:425 modules/install:603
+#: modules/block:32 modules/block:61 modules/get:458 modules/install:672
 msgid "Package \"%s\" blocked."
 msgstr "パッケージ \"%s\" はブロックされました。"
 
@@ -295,11 +304,11 @@ msgid "To install: %s package (%s)"
 msgid_plural "To install: %s packages (%s)"
 msgstr[0] "インストール: %s パッケージ (%s)"
 
-#: modules/description:73
+#: modules/description:66
 msgid "Description of package \"%s\""
 msgstr "パッケージ \"%s\" の説明"
 
-#: modules/description:80
+#: modules/description:73
 msgid "Description absent."
 msgstr "説明はありません。"
 
@@ -327,7 +336,7 @@ msgstr "for %s"
 msgid "Can't find flavor \"%s\". Abort."
 msgstr "フレーバー \"%s\" は見つかりません。中断します。"
 
-#: modules/get:140 modules/getenv:59
+#: modules/get:140 modules/getenv:56
 msgid "File \"%s\" empty."
 msgstr "ファイル \"%s\" は空です。"
 
@@ -357,277 +366,277 @@ msgstr "\"%s\" チェックサムエラー"
 msgid "Please wait until the mirror synchronization is complete and try again."
 msgstr "ミラーの同期が完了するまでお待ち下さい。もう一度やり直して下さい。"
 
-#: modules/get:434 modules/install:616
+#: modules/get:467 modules/install:685
 msgid "\"%s\" package is already installed."
 msgstr "\"%s\" パッケージはすでにインストールされています。"
 
-#: modules/get:435 modules/install:617
+#: modules/get:468 modules/install:686
 msgid "You can use the --forced option to force installation."
 msgstr "--forced オプションを使用してインストールを強制できます。"
 
-#: modules/getenv:41 modules/getenv:49 modules/link:31
+#: modules/getenv:38 modules/getenv:46 modules/link:31
 msgid "Missing: %s"
 msgstr "見つかりません: %s"
 
-#: modules/getenv:41 modules/getenv:49 modules/getenv:59 modules/getenv:160
+#: modules/getenv:38 modules/getenv:46 modules/getenv:56 modules/getenv:157
 msgid "Please run tazpkg as root."
 msgstr "tazpkg は root で実行して下さい"
 
-#: modules/getenv:121 modules/getenv:146
+#: modules/getenv:118 modules/getenv:143
 msgid "File \"%s\" generated. Please wait..."
 msgstr "ファイル \"%s\" を生成します。 お待ち下さい..."
 
-#: modules/getenv:160
+#: modules/getenv:157
 msgid "Old \"%s\"."
 msgstr "古い \"%s\" です。"
 
-#: modules/help:17 modules/summary:18
+#: modules/help:28 modules/summary:18
 msgid "SliTaz package manager - Version: %s"
 msgstr "SliTaz パッケージマネージャー - バージョン: %s"
 
-#: modules/help:19 tazpkg-box:23 tazpkg-notify:53
+#: modules/help:30 tazpkg-box:23 tazpkg-notify:53
 msgid "Usage:"
 msgstr "用途:"
 
-#: modules/help:20
+#: modules/help:31
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
 msgstr "tazpkg [コマンド] [パッケージ|dir|パターン|list|cat|--opt] [dir|--opt]"
 
-#: modules/help:22
+#: modules/help:33
 msgid "SHell:"
 msgstr "シェル"
 
-#: modules/help:24
+#: modules/help:35
 msgid "Commands:"
 msgstr "コマンド:"
 
-#: modules/help:26
+#: modules/help:37
 msgid "Print this short usage"
 msgstr "短い使用法を出力します。"
 
-#: modules/help:27
+#: modules/help:38
 msgid "Show help on the TazPkg commands"
 msgstr "TazPkg コマンドに関するヘルプを表示します"
 
-#: modules/help:28
+#: modules/help:39
 msgid "Show TazPkg activity log"
 msgstr "TazPkg アクティビティログを表示します"
 
-#: modules/help:29
+#: modules/help:40
 msgid "Clean all packages downloaded in cache directory"
 msgstr ""
 "キャッシュディレクトリにダウンロードされたすべてのパッケージを消去します"
 
-#: modules/help:30
+#: modules/help:41
 msgid "List *.tazpkg packages downloaded to the cache"
 msgstr "キャッシュにダウンロードされた *.tazpkg パッケージを一覧表示します"
 
-#: modules/help:31
+#: modules/help:42
 msgid "Run interactive TazPkg shell"
 msgstr "インタラクティブに TazPkg シェルを実行します"
 
-#: modules/help:33
+#: modules/help:44
 msgid "List installed packages on the system"
 msgstr "インストールされたパッケージをシステムに一覧表示します"
 
-#: modules/help:34
+#: modules/help:45
 msgid "List all available packages on the mirror"
 msgstr "ミラー上で利用可能なパッケージをすべて一覧表示します"
 
-#: modules/help:35
+#: modules/help:46
 msgid "List the configuration files"
 msgstr "設定ファイルを一覧表示します"
 
-#: modules/help:37
+#: modules/help:48
 msgid "Search for a package by pattern or name"
 msgstr "パターンまたは名前でパッケージを検索します"
 
-#: modules/help:38
+#: modules/help:49
 msgid "Search on mirror for package having a particular file"
 msgstr "ミラー上で特定のファイルを持つパッケージを検索します"
 
-#: modules/help:39
+#: modules/help:50
 msgid "Search for file in all installed packages files"
 msgstr ""
 "インストールされているすべてのパッケージファイル内のファイルを検索します"
 
-#: modules/help:41
+#: modules/help:52
 msgid "Download a package into the current directory"
 msgstr "現在のディレクトリにパッケージをダウンロードします"
 
-#: modules/help:42
+#: modules/help:53
 msgid "Install a local package"
 msgstr "ローカルパッケージをインストールします"
 
-#: modules/help:43
+#: modules/help:54
 msgid "Download and install a package from the mirror"
 msgstr "ミラーからパッケージをダウンロードしてインストールします"
 
-#: modules/help:44
+#: modules/help:55
 msgid "Install all packages from a list of packages"
 msgstr "パッケージのリストからすべてのパッケージをインストールします"
 
-#: modules/help:45
+#: modules/help:56
 msgid "Download and install a list of packages from the mirror"
 msgstr "ミラーからパッケージのリストをダウンロードしてインストールします"
 
-#: modules/help:46
+#: modules/help:57
 msgid "Remove the specified package and all installed files"
 msgstr "指定したパッケージとインストールされているすべてのファイルを削除します"
 
-#: modules/help:47
+#: modules/help:58
 msgid "Replay post install script from package"
 msgstr "パッケージからインストール後のスクリプトを再生します"
 
-#: modules/help:48
+#: modules/help:59
 msgid "Link a package from another SliTaz installation"
 msgstr "別の SliTaz インストールからパッケージをリンクします"
 
-#: modules/help:49
+#: modules/help:60
 msgid "Change release and update packages"
 msgstr "リリースを変更しパッケージを更新します"
 
-#: modules/help:50
+#: modules/help:61
 msgid "Install the flavor list of packages"
 msgstr "パッケージのフレーバーリストをインストールします"
 
-#: modules/help:51
+#: modules/help:62
 msgid "Install the flavor list of packages and remove other ones"
 msgstr "パッケージのフレーバー一覧をインストールし他のパッケージを削除します"
 
-#: modules/help:53
+#: modules/help:64
 msgid "Print information about a package"
 msgstr "パッケージに関する情報を出力します"
 
-#: modules/help:54
+#: modules/help:65
 msgid "Print description of a package"
 msgstr "パッケージの説明を出力します"
 
-#: modules/help:55
+#: modules/help:66
 msgid "List the files installed with a package"
 msgstr "パッケージと共にインストールされたファイルを一覧表示します"
 
-#: modules/help:56
+#: modules/help:67
 msgid "Block an installed package version or unblock it for upgrade"
 msgstr ""
 "インストールされているパッケージのバージョンをブロックするか、アップグレード"
 "のためにブロックを解除します"
 
-#: modules/help:57
+#: modules/help:68
 msgid "Verify consistency of installed packages"
 msgstr "インストールされたパッケージの一貫性を確認します"
 
-#: modules/help:58
+#: modules/help:69
 msgid "Show known bugs in packages"
 msgstr "パッケージの既知バグを表示します"
 
-#: modules/help:59
+#: modules/help:70
 msgid "Display dependencies tree"
 msgstr "依存関係ツリーを表示します"
 
-#: modules/help:60
+#: modules/help:71
 msgid "Display reverse dependencies tree"
 msgstr "逆依存関係ツリーを表示します"
 
-#: modules/help:61
+#: modules/help:72
 msgid "Extract a (*.tazpkg) package into a directory"
 msgstr "(*.tazpkg）パッケージをディレクトリに展開します"
 
-#: modules/help:62
+#: modules/help:73
 msgid "Pack an unpacked or prepared package tree"
 msgstr "パッケージ化されていないパッケージツリーをパックします"
 
-#: modules/help:63
+#: modules/help:74
 msgid "Create a package archive from an installed package"
 msgstr "インストールされたパッケージからパッケージアーカイブを作成します"
 
-#: modules/help:64
+#: modules/help:75
 msgid "Create a package archive with configuration files"
 msgstr "構成ファイルを含むパッケージアーカイブを作成します"
 
-#: modules/help:65
+#: modules/help:76
 msgid "Rebuild a package with a better compression ratio"
 msgstr "より良い圧縮率でパッケージを再構築します"
 
-#: modules/help:66
+#: modules/help:77
 msgid "Convert alien package to tazpkg"
 msgstr "alien パッケージを tazpkg に変換します"
 
-#: modules/help:67
+#: modules/help:78
 msgid "Print list of suggested packages"
 msgstr "推奨パッケージのリストを出力します"
 
-#: modules/help:69
+#: modules/help:80
 msgid "Recharge your packages.list from the mirror"
 msgstr "ミラーからパッケージリストを再取得します"
 
-#: modules/help:70
+#: modules/help:81
 msgid "Check packages %s to list and install latest upgrades"
 msgstr ""
 "パッケージ %s を確認して一覧し、最新のアップグレードをインストールします"
 
-#: modules/help:71
+#: modules/help:82
 msgid "Change the mirror URL configuration"
 msgstr "ミラー URL の設定を変更する"
 
-#: modules/help:72
+#: modules/help:83
 msgid "Update an undigest mirror"
 msgstr "問題のあるミラーを更新する"
 
-#: modules/help:73
+#: modules/help:84
 msgid "List undigest mirrors"
 msgstr "問題のあるミラーのリスト"
 
-#: modules/help:74
+#: modules/help:85
 msgid "Add an undigest mirror"
 msgstr "問題のあるミラーへ追加する"
 
-#: modules/help:75
+#: modules/help:86
 msgid "Remove an undigest mirror"
 msgstr "問題のあるミラーから削除する"
 
-#: modules/help:76
+#: modules/help:87
 msgid "Make a TazPkg database for a folder with *.tazpkg packages"
 msgstr "*.tazpkg パッケージを含むフォルダの TazPkg データベースを作成します"
 
-#: modules/help:105 modules/help:136
+#: modules/help:115 modules/help:146
 msgid "Sorry, no help for \"%s\""
 msgstr "ごめんなさい。\"%s\" のヘルプはありません"
 
-#: modules/help:112
+#: modules/help:122
 msgid "%d help topic available:"
 msgid_plural "%d help topics available:"
 msgstr[0] "%s ヘルプトピックが利用可能です:"
 
-#: modules/help:166
+#: modules/help:176
 msgid "%s"
 msgstr "%s"
 
-#: modules/info:33
+#: modules/info:28
 msgid "local package"
 msgstr "ローカルパッケージ"
 
-#: modules/info:39 tazpanel/pkgs.cgi:968
+#: modules/info:34 tazpanel/pkgs.cgi:968
 msgid "installed package"
 msgstr "インストール済パッケージ"
 
-#: modules/info:45
+#: modules/info:40
 msgid "(new version \"%s\" available)"
 msgstr "(新しいバージョン \"%s\" が利用可能です)"
 
-#: modules/info:50
+#: modules/info:45
 msgid "(new build available)"
 msgstr "(新しいビルドが利用可能です)"
 
-#: modules/info:74 tazpanel/pkgs.cgi:971
+#: modules/info:69 tazpanel/pkgs.cgi:971
 msgid "mirrored package"
 msgstr "ミラー済みパッケージ"
 
-#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:990
+#: modules/info:72 modules/list:212 tazpanel/pkgs.cgi:990
 msgid "Package \"%s\" not available."
 msgstr "パッケージ \"%s\" は利用できません。"
 
-#: modules/info:84 modules/search:66 modules/search:100
+#: modules/info:79 modules/search:66 modules/search:100
 msgid ""
 "No \"%s\" found to check for mirrored packages. For more results, please run "
 "\"%s\" once as root before searching."
@@ -635,7 +644,7 @@ msgstr ""
 "ミラー化されたパッケージを確認するための \"%s\" は見つかりませんでした。 より"
 "多くの結果を得るには、検索の前に root として \"%s\" を一度実行してください。"
 
-#: modules/info:92
+#: modules/info:87
 msgid "TazPkg information"
 msgstr "TazPkg 情報"
 
@@ -703,84 +712,94 @@ msgstr "サイズ     : %s"
 msgid "Tags       : %s"
 msgstr "タグ       : %s"
 
-#: modules/install:109
+#: modules/install:129
 msgid "WARNING! Dependency loop between \"%s\" and \"%s\"."
 msgstr "警告！ \"%s\" と \"%s\" の間で依存関係がループしています。"
 
-#: modules/install:117
+#: modules/install:137
 msgid "Tracking dependencies for package \"%s\""
 msgstr "パッケージ \"%s\" 依存関係の追跡"
 
-#: modules/install:122
+#: modules/install:142
 msgid "Missing package \"%s\""
 msgstr "パッケージ \"%s\" はインストールされていません"
 
-#: modules/install:126
+#: modules/install:146
 msgid "%s missing package to install."
 msgid_plural "%s missing packages to install."
 msgstr[0] "存在しない %s パッケージはインストールされます。"
 
-#: modules/install:138
+#: modules/install:158
 msgid "Install all missing dependencies? (y/N)"
 msgstr "不足している依存関係をすべてインストールしますか？ （y/N）"
 
-#: modules/install:163
+#: modules/install:183
 msgid "Checking if package \"%s\" exists in local list..."
 msgstr "パッケージ \"%s\" のローカルリスト存在を確認中.."
 
-#: modules/install:190
+#: modules/install:222
 msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "パッケージ \"%s\" の依存関係を未解決のままにしておきます。"
 
-#: modules/install:191
+#: modules/install:223
 msgid "The package will be installed but will probably not work."
 msgstr "パッケージはインストールされますが、おそらく動作しません。"
 
-#: modules/install:262
+#: modules/install:294
 msgid "Execute pre-install commands..."
 msgstr "インストール前のコマンドを実行..."
 
-#: modules/install:276 modules/reconfigure:36
+#: modules/install:308 modules/reconfigure:36
 msgid "Execute post-install commands..."
 msgstr "インストール後のコマンドを実行..."
 
-#: modules/install:346
+#: modules/install:381
+#, fuzzy
+msgid "Installing (web/cache): %s"
+msgstr "インストール中: %s"
+
+#: modules/install:383
+#, fuzzy
+msgid "Installing (pkg/local): %s"
+msgstr "インストール中: %s"
+
+#: modules/install:388
 msgid "Installation of package \"%s\" (%s)"
 msgstr "パッケージ \"%s\" (%s) をインストール"
 
-#: modules/install:348
+#: modules/install:390
 msgid "Installation of package \"%s\""
 msgstr "パッケージ \"%s\" をインストール"
 
-#: modules/install:356
+#: modules/install:398
 msgid "Copying package..."
 msgstr "パッケージのコピー中..."
 
-#: modules/install:386
+#: modules/install:428
 msgid "Remember modified packages..."
 msgstr "変更パッケージを確認中..."
 
-#: modules/install:448
+#: modules/install:490
 msgid "Saving configuration files..."
 msgstr "設定ファイルの保存中..."
 
-#: modules/install:479
+#: modules/install:521
 msgid "Installing package..."
 msgstr "パッケージのインストール中..."
 
-#: modules/install:499
+#: modules/install:541
 msgid "Removing old files..."
 msgstr "古いファイルの削除中..."
 
-#: modules/install:515
+#: modules/install:557
 msgid "Removing all tmp files..."
 msgstr "すべての一時ファイルを削除中..."
 
-#: modules/install:540 modules/remove:224
+#: modules/install:587 modules/remove:227
 msgid "Update system databases..."
 msgstr "システムデーターベースの更新..."
 
-#: modules/install:580
+#: modules/install:649
 msgid "Package \"%s\" (%s) is installed."
 msgstr "パッケージ \"%s\" (%s) をインストールしました。"
 
@@ -800,106 +819,106 @@ msgstr "パッケージ \"%s\" の依存関係を未解決のままにしてお�
 msgid "The package is installed but probably will not work."
 msgstr "パッケージはインストールされていますが、おそらく動作しません。"
 
-#: modules/list:50
+#: modules/list:45
 msgid "all"
 msgstr "すべて"
 
-#: modules/list:50
+#: modules/list:45
 msgid "extra"
 msgstr "extra"
 
-#: modules/list:82
+#: modules/list:77
 msgid "Blocked packages"
 msgstr "ブロック済パッケージ"
 
-#: modules/list:87 modules/list:121 modules/search:223
+#: modules/list:82 modules/list:116 modules/search:223
 msgid "%s package"
 msgid_plural "%s packages"
 msgstr[0] "%s パッケージ"
 
-#: modules/list:90
+#: modules/list:85
 msgid "No blocked packages found."
 msgstr "ブロックされたパッケージは見つかりません"
 
-#: modules/list:97
+#: modules/list:92
 msgid "Packages categories"
 msgstr "パッケージカテゴリ"
 
-#: modules/list:104
+#: modules/list:99
 msgid "%s category"
 msgid_plural "%s categories"
 msgstr[0] "%s カテゴリ"
 
-#: modules/list:111
+#: modules/list:106
 msgid "Linked packages"
 msgstr "リンク済パッケージ"
 
-#: modules/list:124
+#: modules/list:119
 msgid "No linked packages found."
 msgstr "リンクされたパッケージは見つかりません"
 
-#: modules/list:131
+#: modules/list:126
 msgid "List of all installed packages"
 msgstr "すべてのインストール済パッケージ一覧"
 
-#: modules/list:137
+#: modules/list:132
 msgid "%s package installed."
 msgid_plural "%s packages installed."
 msgstr[0] "%s パッケージインストールしました。"
 
-#: modules/list:147 tazpanel/pkgs.cgi:714
+#: modules/list:142 tazpanel/pkgs.cgi:714
 msgid "Installed packages of category \"%s\""
 msgstr "カテゴリ \"%s\" のインストール済パッケージ"
 
-#: modules/list:156
+#: modules/list:151
 msgid "%s package installed of category \"%s\"."
 msgid_plural "%s packages installed of category \"%s\"."
 msgstr[0] "%s パッケージがカテゴリ \"%s\" へインストールされています。"
 
-#: modules/list:167 modules/recharge:181
+#: modules/list:162 modules/recharge:181
 msgid "Mirrored packages diff"
 msgstr "ミラー化されたパッケージの差分"
 
-#: modules/list:171
+#: modules/list:166
 msgid "%s new package listed on the mirror."
 msgid_plural "%s new packages listed on the mirror."
 msgstr[0] "%s の新しいパッケージがミラー上に表示されています。"
 
-#: modules/list:176
+#: modules/list:171
 msgid "Unable to list anything, no packages.diff found."
 msgstr "何もリストできないため、packages.diff は見つかりませんでした。"
 
-#: modules/list:177
+#: modules/list:172
 msgid "Recharge your current list to create a first diff."
 msgstr "現在のリストを再生成して最初の差分を作成してください。"
 
-#: modules/list:181
+#: modules/list:176
 msgid "List of available packages on the mirror"
 msgstr "ミラー上で利用可能なパッケージのリスト"
 
-#: modules/list:188
+#: modules/list:183
 msgid "%s package in the last recharged list."
 msgid_plural "%s packages in the last recharged list."
 msgstr[0] "％s　個パッケージの再生成リスト"
 
-#: modules/list:200 modules/list:207
+#: modules/list:195 modules/list:202
 msgid "Installed files by \"%s\""
 msgstr "\"%s\" でインストールされたファイル"
 
-#: modules/list:203 modules/list:213 modules/search:194 tazpanel/pkgs.cgi:72
+#: modules/list:198 modules/list:208 modules/search:194 tazpanel/pkgs.cgi:72
 msgid "%s file"
 msgid_plural "%s files"
 msgstr[0] "%s ファイル"
 
-#: modules/list:226
+#: modules/list:221
 msgid "TazPkg Activity"
 msgstr "TazPkg アクティビティ"
 
-#: modules/list:261
+#: modules/list:256
 msgid "File lost"
 msgstr "失われたファイル"
 
-#: modules/list:273 tazpanel/pkgs.cgi:1100 tazpanel/pkgs.cgi:1190
+#: modules/list:268 tazpanel/pkgs.cgi:1100 tazpanel/pkgs.cgi:1190
 msgid "Configuration files"
 msgstr "設定ファイル"
 
@@ -953,23 +972,23 @@ msgstr "Undigest \"%s\" が見つかりません"
 msgid "Creating new undigest \"%s\"."
 msgstr "新しい undigest \"%s\" を作成中。"
 
-#: modules/mkdb:74
+#: modules/mkdb:81
 msgid "Input folder not specified"
 msgstr "入力フォルダが指定されていません"
 
-#: modules/mkdb:80
+#: modules/mkdb:87
 msgid "You are not allowed to write to the folder \"%s\""
 msgstr "フォルダ \"%s\" に書き込む事はできません"
 
-#: modules/mkdb:84
+#: modules/mkdb:91
 msgid "Folder \"%s\" does not contain packages"
 msgstr "フォルダ \"%s\" にパッケージは含まれていません"
 
-#: modules/mkdb:102
+#: modules/mkdb:111
 msgid "Packages DB already exists."
 msgstr "パッケージ DB はすでに存在します。"
 
-#: modules/mkdb:110
+#: modules/mkdb:119
 msgid "Calculate %s..."
 msgstr "%s を計算中..."
 
@@ -1086,55 +1105,55 @@ msgstr "新しいパッケージの生成中..."
 msgid "Nothing to do for package \"%s\"."
 msgstr "パッケージ \"%s\" には何もしません。"
 
-#: modules/remove:38
+#: modules/remove:33
 msgid "Execute pre-remove commands..."
 msgstr "削除前のコマンドを実行する..."
 
-#: modules/remove:51
+#: modules/remove:46
 msgid "Execute post-remove commands..."
 msgstr "削除後のコマンドを実行する..."
 
-#: modules/remove:111
+#: modules/remove:106
 msgid "The following packages depend on package \"%s\":"
 msgstr "次のパッケージはパッケージ \"%s\" に依存します："
 
-#: modules/remove:119
+#: modules/remove:114
 msgid "The following packages have been modified by package \"%s\":"
 msgstr "次のパッケージはパッケージ \"%s\" によって変更されています："
 
-#: modules/remove:127
+#: modules/remove:122
 msgid "Remove package \"%s\" (%s)? (y/N)"
 msgstr "パッケージ \"%s\" (%s) を削除しますか？ (y/N)"
 
-#: modules/remove:129
+#: modules/remove:124
 msgid "Uninstallation of package \"%s\" cancelled."
 msgstr "パッケージ \"%s\" のアンインストールはキャンセルされました"
 
-#: modules/remove:136
+#: modules/remove:131
 msgid "Removing package \"%s\""
 msgstr "パッケージ \"%s\" を削除中"
 
-#: modules/remove:148
+#: modules/remove:143
 msgid "Removing all files installed..."
 msgstr "すべてのインストール済ファイルを削除中..."
 
-#: modules/remove:247
+#: modules/remove:256
 msgid "Removing package receipt..."
 msgstr "パッケージ receipt の削除中..."
 
-#: modules/remove:253
+#: modules/remove:262
 msgid "Package \"%s\" (%s) removed."
 msgstr "パッケージ \"%s\" (%s) は削除されました。"
 
-#: modules/remove:266
+#: modules/remove:275
 msgid "Remove packages depending on package \"%s\"? (y/N)"
 msgstr "依存パッケージ \"%s\" を削除しますか？ (y/N)"
 
-#: modules/remove:283
+#: modules/remove:292
 msgid "Reinstall packages modified by package \"%s\"? (y/N)"
 msgstr "修正されたパッケージ \"%s\" を再インストールしますか？ (y/N)"
 
-#: modules/remove:289
+#: modules/remove:298
 msgid ""
 "Package \"%s\" was modified by \"%s\" and other packages. It will not be "
 "reinstalled."
@@ -1142,7 +1161,7 @@ msgstr ""
 "パッケージ \"%s\" は \"%s\" と他のパッケージによって修正されました。 再インス"
 "トールされません。"
 
-#: modules/remove:291
+#: modules/remove:300
 msgid "Check \"%s\" for reinstallation."
 msgstr "\"%s\"を確認し再インストール"
 
@@ -1220,48 +1239,48 @@ msgstr "リポジトリ:"
 msgid "Last recharge:"
 msgstr "最終再生成日"
 
-#: modules/summary:50 tazpanel/pkgs.cgi:1743
+#: modules/summary:57 tazpanel/pkgs.cgi:1743
 msgid "Today at %s."
 msgstr "今日 %s"
 
-#: modules/summary:51 tazpanel/pkgs.cgi:1744
+#: modules/summary:58 tazpanel/pkgs.cgi:1744
 msgid "Yesterday at %s."
 msgstr "昨日 %s"
 
-#: modules/summary:52 tazpanel/pkgs.cgi:1741
+#: modules/summary:59 tazpanel/pkgs.cgi:1741
 msgid "%d day ago."
 msgid_plural "%d days ago."
 msgstr[0] "%s 日前"
 
-#: modules/summary:55
+#: modules/summary:62
 msgid "Database timestamp:"
 msgstr "データベースの日時:"
 
-#: modules/summary:58 tazpanel/pkgs.cgi:1751
+#: modules/summary:65 tazpanel/pkgs.cgi:1751
 msgid "never."
 msgstr "なし"
 
-#: modules/summary:62 tazpanel/pkgs.cgi:1761
+#: modules/summary:69 tazpanel/pkgs.cgi:1761
 msgid "Mirrored packages:"
 msgstr "ミラー済パッケージ:"
 
-#: modules/summary:66
+#: modules/summary:73
 msgid "Linked packages:"
 msgstr "リンク済パッケージ:"
 
-#: modules/summary:74 tazpanel/pkgs.cgi:1756
+#: modules/summary:81 tazpanel/pkgs.cgi:1756
 msgid "Installed packages:"
 msgstr "インストール済パッケージ:"
 
-#: modules/summary:75 tazpanel/pkgs.cgi:1771
+#: modules/summary:82 tazpanel/pkgs.cgi:1771
 msgid "Installed files:"
 msgstr "インストール済ファイル:"
 
-#: modules/summary:76 tazpanel/pkgs.cgi:1774
+#: modules/summary:83 tazpanel/pkgs.cgi:1774
 msgid "Blocked packages:"
 msgstr "ブロック済パッケージ:"
 
-#: modules/summary:77 tazpanel/pkgs.cgi:1766
+#: modules/summary:84 tazpanel/pkgs.cgi:1766
 msgid "Upgradeable packages:"
 msgstr "アップグレード可能なパッケージ："
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-20 00:11+0200\n"
+"POT-Creation-Date: 2018-01-30 11:47+0200\n"
 "PO-Revision-Date: 2015-10-05 03:50+0300\n"
 "Last-Translator: Aleksej Bobylev <al.bobylev@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -57,63 +57,63 @@ msgstr "Укажите поисковый запрос в командной с�
 msgid "Unable to find the receipt \"%s\""
 msgstr "Не удалось найти рецепт «%s»"
 
-#: tazpkg:230 modules/extract:19 modules/install:202 modules/recompress:19
+#: tazpkg:230 modules/extract:19 modules/install:234 modules/recompress:19
 msgid "Extracting package..."
 msgstr "Распаковка пакета…"
 
-#: tazpkg:244 modules/list:44
+#: tazpkg:244 modules/list:39
 msgid "base-system"
 msgstr "базовая-система"
 
-#: tazpkg:244 modules/list:44
+#: tazpkg:244 modules/list:39
 msgid "x-window"
 msgstr "иксы"
 
-#: tazpkg:245 modules/list:45
+#: tazpkg:245 modules/list:40
 msgid "utilities"
 msgstr "утилиты"
 
-#: tazpkg:245 modules/list:45
+#: tazpkg:245 modules/list:40
 msgid "network"
 msgstr "сеть"
 
-#: tazpkg:246 modules/list:46
+#: tazpkg:246 modules/list:41
 msgid "graphics"
 msgstr "графика"
 
-#: tazpkg:246 modules/list:46
+#: tazpkg:246 modules/list:41
 msgid "multimedia"
 msgstr "мультимедиа"
 
-#: tazpkg:247 modules/list:47
+#: tazpkg:247 modules/list:42
 msgid "office"
 msgstr "офис"
 
-#: tazpkg:247 modules/list:47
+#: tazpkg:247 modules/list:42
 msgid "development"
 msgstr "разработка"
 
-#: tazpkg:248 modules/list:48
+#: tazpkg:248 modules/list:43
 msgid "system-tools"
 msgstr "системные"
 
-#: tazpkg:248 modules/list:48
+#: tazpkg:248 modules/list:43
 msgid "security"
 msgstr "безопасность"
 
-#: tazpkg:249 modules/list:49
+#: tazpkg:249 modules/list:44
 msgid "games"
 msgstr "игры"
 
-#: tazpkg:249 modules/list:49
+#: tazpkg:249 modules/list:44
 msgid "misc"
 msgstr "прочее"
 
-#: tazpkg:249 modules/list:49
+#: tazpkg:249 modules/list:44
 msgid "meta"
 msgstr "мета"
 
-#: tazpkg:250 modules/list:50
+#: tazpkg:250 modules/list:45
 msgid "non-free"
 msgstr "несвободные"
 
@@ -135,7 +135,16 @@ msgstr ""
 msgid "You are already running a TazPkg SHell."
 msgstr "Вы уже работаете в оболочке TazPkg."
 
-#: modules/block:18 modules/remove:101
+#: modules/bb:20
+msgid "Busybox is not installed in the %s. Exit."
+msgstr ""
+
+#: modules/bb:30
+#, fuzzy
+msgid "Restoring Busybox applet %s..."
+msgstr "Восстановление файлов базы данных…"
+
+#: modules/block:18 modules/remove:96
 msgid "Package \"%s\" is not installed."
 msgstr "Пакет «%s» не установлен."
 
@@ -143,7 +152,7 @@ msgstr "Пакет «%s» не установлен."
 msgid "Package \"%s\" is already blocked."
 msgstr "Пакет «%s» уже был заблокирован."
 
-#: modules/block:32 modules/block:61 modules/get:425 modules/install:603
+#: modules/block:32 modules/block:61 modules/get:458 modules/install:672
 msgid "Package \"%s\" blocked."
 msgstr "Пакет «%s» заблокирован."
 
@@ -305,11 +314,11 @@ msgstr[0] "Установить: %s пакет (%s)"
 msgstr[1] "Установить: %s пакета (%s)"
 msgstr[2] "Установить: %s пакетов (%s)"
 
-#: modules/description:73
+#: modules/description:66
 msgid "Description of package \"%s\""
 msgstr "Описание пакета «%s»"
 
-#: modules/description:80
+#: modules/description:73
 msgid "Description absent."
 msgstr "Описание отсутствует"
 
@@ -337,7 +346,7 @@ msgstr "для %s"
 msgid "Can't find flavor \"%s\". Abort."
 msgstr "Не удалось найти редакцию «%s». Остановлено."
 
-#: modules/get:140 modules/getenv:59
+#: modules/get:140 modules/getenv:56
 msgid "File \"%s\" empty."
 msgstr "Файл «%s» пуст."
 
@@ -367,276 +376,276 @@ msgstr ""
 "Пожалуйста, дождитесь завершения синхронизации выбранного вами зеркала и "
 "попробуйте еще раз."
 
-#: modules/get:434 modules/install:616
+#: modules/get:467 modules/install:685
 msgid "\"%s\" package is already installed."
 msgstr "Пакет «%s» уже был установлен."
 
-#: modules/get:435 modules/install:617
+#: modules/get:468 modules/install:686
 msgid "You can use the --forced option to force installation."
 msgstr "Используйте опцию --forced, чтобы принудительно установить пакет."
 
-#: modules/getenv:41 modules/getenv:49 modules/link:31
+#: modules/getenv:38 modules/getenv:46 modules/link:31
 msgid "Missing: %s"
 msgstr "Отсутствует: %s"
 
-#: modules/getenv:41 modules/getenv:49 modules/getenv:59 modules/getenv:160
+#: modules/getenv:38 modules/getenv:46 modules/getenv:56 modules/getenv:157
 msgid "Please run tazpkg as root."
 msgstr "Пожалуйста, запустите tazpkg с правами root."
 
-#: modules/getenv:121 modules/getenv:146
+#: modules/getenv:118 modules/getenv:143
 msgid "File \"%s\" generated. Please wait..."
 msgstr "Создаётся файл «%s». Пожалуйста, подождите…"
 
-#: modules/getenv:160
+#: modules/getenv:157
 msgid "Old \"%s\"."
 msgstr "Старый «%s»."
 
-#: modules/help:17 modules/summary:18
+#: modules/help:28 modules/summary:18
 msgid "SliTaz package manager - Version: %s"
 msgstr "Менеджер пакетов SliTaz, версия %s"
 
-#: modules/help:19 tazpkg-box:23 tazpkg-notify:53
+#: modules/help:30 tazpkg-box:23 tazpkg-notify:53
 msgid "Usage:"
 msgstr "Использование:"
 
-#: modules/help:20
+#: modules/help:31
 msgid "tazpkg [command] [package|dir|pattern|list|cat|--opt] [dir|--opt]"
 msgstr ""
 "tazpkg [команда] [пакет|папка|шаблон|список|категория|--опции] [папка|--"
 "опции]"
 
-#: modules/help:22
+#: modules/help:33
 msgid "SHell:"
 msgstr "Оболочка:"
 
-#: modules/help:24
+#: modules/help:35
 msgid "Commands:"
 msgstr "Команды:"
 
-#: modules/help:26
+#: modules/help:37
 msgid "Print this short usage"
 msgstr "Эта короткая справка"
 
-#: modules/help:27
+#: modules/help:38
 msgid "Show help on the TazPkg commands"
 msgstr "Показать справку по командам TazPkg"
 
-#: modules/help:28
+#: modules/help:39
 msgid "Show TazPkg activity log"
 msgstr "Показать журнал действий TazPkg"
 
-#: modules/help:29
+#: modules/help:40
 msgid "Clean all packages downloaded in cache directory"
 msgstr "Очистить кэш загруженных пакетов"
 
-#: modules/help:30
+#: modules/help:41
 msgid "List *.tazpkg packages downloaded to the cache"
 msgstr "Показать список пакетов *.tazpkg, загруженных в кэш"
 
-#: modules/help:31
+#: modules/help:42
 msgid "Run interactive TazPkg shell"
 msgstr "Запустить интерактивную оболочку TazPkg"
 
-#: modules/help:33
+#: modules/help:44
 msgid "List installed packages on the system"
 msgstr "Список установленных пакетов"
 
-#: modules/help:34
+#: modules/help:45
 msgid "List all available packages on the mirror"
 msgstr "Список доступных в репозитории пакетов"
 
-#: modules/help:35
+#: modules/help:46
 msgid "List the configuration files"
 msgstr "Список конфигурационных файлов"
 
-#: modules/help:37
+#: modules/help:48
 msgid "Search for a package by pattern or name"
 msgstr "Поиск пакета по шаблону или названию"
 
-#: modules/help:38
+#: modules/help:49
 msgid "Search on mirror for package having a particular file"
 msgstr "Поиск в репозитории пакета, имеющего указанный файл"
 
-#: modules/help:39
+#: modules/help:50
 msgid "Search for file in all installed packages files"
 msgstr "Поиск файла среди файлов всех установленных пакетов"
 
-#: modules/help:41
+#: modules/help:52
 msgid "Download a package into the current directory"
 msgstr "Загрузить пакет в текущую папку"
 
-#: modules/help:42
+#: modules/help:53
 msgid "Install a local package"
 msgstr "Установить локальный пакет"
 
-#: modules/help:43
+#: modules/help:54
 msgid "Download and install a package from the mirror"
 msgstr "Загрузить пакет из репозитория и установить его"
 
-#: modules/help:44
+#: modules/help:55
 msgid "Install all packages from a list of packages"
 msgstr "Установить все пакеты из списка пакетов"
 
-#: modules/help:45
+#: modules/help:56
 msgid "Download and install a list of packages from the mirror"
 msgstr "Загрузить по списку пакеты из репозитория и установить их"
 
-#: modules/help:46
+#: modules/help:57
 msgid "Remove the specified package and all installed files"
 msgstr "Удалить указанный пакет и все установленные им файлы"
 
-#: modules/help:47
+#: modules/help:58
 msgid "Replay post install script from package"
 msgstr "Повторно выполнить пост-установочный скрипт из пакета"
 
-#: modules/help:48
+#: modules/help:59
 msgid "Link a package from another SliTaz installation"
 msgstr "Присоединить пакет из другого установленного SliTaz"
 
-#: modules/help:49
+#: modules/help:60
 msgid "Change release and update packages"
 msgstr "Изменить релиз и обновить пакеты"
 
-#: modules/help:50
+#: modules/help:61
 msgid "Install the flavor list of packages"
 msgstr "Установить список пакетов flavor"
 
-#: modules/help:51
+#: modules/help:62
 msgid "Install the flavor list of packages and remove other ones"
 msgstr "Установить список пакетов flavor и удалить прочие"
 
-#: modules/help:53
+#: modules/help:64
 msgid "Print information about a package"
 msgstr "Информация о пакете"
 
-#: modules/help:54
+#: modules/help:65
 msgid "Print description of a package"
 msgstr "Описание пакета"
 
-#: modules/help:55
+#: modules/help:66
 msgid "List the files installed with a package"
 msgstr "Список файлов пакета"
 
-#: modules/help:56
+#: modules/help:67
 msgid "Block an installed package version or unblock it for upgrade"
 msgstr "Блокировать|разблокировать установленный пакет для обновлений"
 
-#: modules/help:57
+#: modules/help:68
 msgid "Verify consistency of installed packages"
 msgstr "Проверить целостность установленных пакетов"
 
-#: modules/help:58
+#: modules/help:69
 msgid "Show known bugs in packages"
 msgstr "Известные ошибки в пакетах"
 
-#: modules/help:59
+#: modules/help:70
 msgid "Display dependencies tree"
 msgstr "Показать дерево зависимостей"
 
-#: modules/help:60
+#: modules/help:71
 msgid "Display reverse dependencies tree"
 msgstr "Показать дерево обратных зависимостей"
 
-#: modules/help:61
+#: modules/help:72
 msgid "Extract a (*.tazpkg) package into a directory"
 msgstr "Распаковать пакет (*.tazpkg) в папку"
 
-#: modules/help:62
+#: modules/help:73
 msgid "Pack an unpacked or prepared package tree"
 msgstr "Упаковать распакованное или подготовленное дерево пакета"
 
-#: modules/help:63
+#: modules/help:74
 msgid "Create a package archive from an installed package"
 msgstr "Создать пакет из файлов установленного пакета"
 
-#: modules/help:64
+#: modules/help:75
 msgid "Create a package archive with configuration files"
 msgstr "Создать пакет со всеми конфигурационными файлами"
 
-#: modules/help:65
+#: modules/help:76
 msgid "Rebuild a package with a better compression ratio"
 msgstr "Перепаковать пакет с лучшей степенью сжатия"
 
-#: modules/help:66
+#: modules/help:77
 msgid "Convert alien package to tazpkg"
 msgstr "Конвертировать «чужой» пакет в формат tazpkg"
 
-#: modules/help:67
+#: modules/help:78
 msgid "Print list of suggested packages"
 msgstr "Список предлагаемых пакетов"
 
-#: modules/help:69
+#: modules/help:80
 msgid "Recharge your packages.list from the mirror"
 msgstr "Получить свежий список пакетов репозитория"
 
-#: modules/help:70
+#: modules/help:81
 msgid "Check packages %s to list and install latest upgrades"
 msgstr "Проверить %s пакетов, показать и установить обновления"
 
-#: modules/help:71
+#: modules/help:82
 msgid "Change the mirror URL configuration"
 msgstr "Изменить настройки URL репозитория"
 
-#: modules/help:72
+#: modules/help:83
 msgid "Update an undigest mirror"
 msgstr "Обновить неофициальный репозиторий"
 
-#: modules/help:73
+#: modules/help:84
 msgid "List undigest mirrors"
 msgstr "Список неофициальных репозиториев"
 
-#: modules/help:74
+#: modules/help:85
 msgid "Add an undigest mirror"
 msgstr "Добавить неофициальный репозиторий"
 
-#: modules/help:75
+#: modules/help:86
 msgid "Remove an undigest mirror"
 msgstr "Удалить неофициальный репозиторий"
 
-#: modules/help:76
+#: modules/help:87
 msgid "Make a TazPkg database for a folder with *.tazpkg packages"
 msgstr "Создать базу данных TazPkg для папки с пакетами *.tazpkg"
 
-#: modules/help:105 modules/help:136
+#: modules/help:115 modules/help:146
 msgid "Sorry, no help for \"%s\""
 msgstr "Извините, для «%s» нет справки"
 
-#: modules/help:112
+#: modules/help:122
 msgid "%d help topic available:"
 msgid_plural "%d help topics available:"
 msgstr[0] "Доступна %d тема справки:"
 msgstr[1] "Доступны %d темы справки:"
 msgstr[2] "Доступны %d тем справки:"
 
-#: modules/help:166
+#: modules/help:176
 msgid "%s"
 msgstr "%s"
 
-#: modules/info:33
+#: modules/info:28
 msgid "local package"
 msgstr "локальный пакет"
 
-#: modules/info:39 tazpanel/pkgs.cgi:968
+#: modules/info:34 tazpanel/pkgs.cgi:968
 msgid "installed package"
 msgstr "установленный пакет"
 
-#: modules/info:45
+#: modules/info:40
 msgid "(new version \"%s\" available)"
 msgstr "(доступна новая версия «%s»)"
 
-#: modules/info:50
+#: modules/info:45
 msgid "(new build available)"
 msgstr "(доступна новая сборка)"
 
-#: modules/info:74 tazpanel/pkgs.cgi:971
+#: modules/info:69 tazpanel/pkgs.cgi:971
 msgid "mirrored package"
 msgstr "доступный пакет"
 
-#: modules/info:77 modules/list:217 tazpanel/pkgs.cgi:990
+#: modules/info:72 modules/list:212 tazpanel/pkgs.cgi:990
 msgid "Package \"%s\" not available."
 msgstr "Пакет «%s» недоступен."
 
-#: modules/info:84 modules/search:66 modules/search:100
+#: modules/info:79 modules/search:66 modules/search:100
 msgid ""
 "No \"%s\" found to check for mirrored packages. For more results, please run "
 "\"%s\" once as root before searching."
@@ -645,7 +654,7 @@ msgstr ""
 "получить больше информации, запустите «%s» от имени root перед тем как "
 "искать."
 
-#: modules/info:92
+#: modules/info:87
 msgid "TazPkg information"
 msgstr "Информация TazPkg"
 
@@ -713,86 +722,96 @@ msgstr "Размер     : %s"
 msgid "Tags       : %s"
 msgstr "Ярлыки     : %s"
 
-#: modules/install:109
+#: modules/install:129
 msgid "WARNING! Dependency loop between \"%s\" and \"%s\"."
 msgstr "ВНИМАНИЕ! Циклическая зависимость между «%s» и «%s»."
 
-#: modules/install:117
+#: modules/install:137
 msgid "Tracking dependencies for package \"%s\""
 msgstr "Отслеживание зависимостей пакета «%s»"
 
-#: modules/install:122
+#: modules/install:142
 msgid "Missing package \"%s\""
 msgstr "Отсутствует пакет «%s»"
 
-#: modules/install:126
+#: modules/install:146
 msgid "%s missing package to install."
 msgid_plural "%s missing packages to install."
 msgstr[0] "Требуется установить %s отсутствующий пакет."
 msgstr[1] "Требуется установить %s отсутствующих пакета."
 msgstr[2] "Требуется установить %s отсутствующих пакетов."
 
-#: modules/install:138
+#: modules/install:158
 msgid "Install all missing dependencies? (y/N)"
 msgstr "Установить все отсутствующие зависимости? (y/N)"
 
-#: modules/install:163
+#: modules/install:183
 msgid "Checking if package \"%s\" exists in local list..."
 msgstr "Проверка наличия пакета «%s» в локальном списке…"
 
-#: modules/install:190
+#: modules/install:222
 msgid "Leaving dependencies for package \"%s\" unresolved."
 msgstr "Зависимости пакета «%s» оставлены нерешенными."
 
-#: modules/install:191
+#: modules/install:223
 msgid "The package will be installed but will probably not work."
 msgstr "Пакет будет установлен, но, возможно, не будет работать."
 
-#: modules/install:262
+#: modules/install:294
 msgid "Execute pre-install commands..."
 msgstr "Выполнение пре-установочных команд…"
 
-#: modules/install:276 modules/reconfigure:36
+#: modules/install:308 modules/reconfigure:36
 msgid "Execute post-install commands..."
 msgstr "Выполнение пост-установочных команд…"
 
-#: modules/install:346
+#: modules/install:381
+#, fuzzy
+msgid "Installing (web/cache): %s"
+msgstr "Установка: %s"
+
+#: modules/install:383
+#, fuzzy
+msgid "Installing (pkg/local): %s"
+msgstr "Установка: %s"
+
+#: modules/install:388
 msgid "Installation of package \"%s\" (%s)"
 msgstr "Установка пакета «%s» (%s)"
 
-#: modules/install:348
+#: modules/install:390
 msgid "Installation of package \"%s\""
 msgstr "Установка пакета «%s»"
 
-#: modules/install:356
+#: modules/install:398
 msgid "Copying package..."
 msgstr "Копирование пакета…"
 
-#: modules/install:386
+#: modules/install:428
 msgid "Remember modified packages..."
 msgstr "Определение измененных пакетов…"
 
-#: modules/install:448
+#: modules/install:490
 msgid "Saving configuration files..."
 msgstr "Сохранение конфигурационных файлов…"
 
-#: modules/install:479
+#: modules/install:521
 msgid "Installing package..."
 msgstr "Установка пакета…"
 
-#: modules/install:499
+#: modules/install:541
 msgid "Removing old files..."
 msgstr "Удаление устаревших файлов…"
 
-#: modules/install:515
+#: modules/install:557
 msgid "Removing all tmp files..."
 msgstr "Удаление всех временных файлов…"
 
-#: modules/install:540 modules/remove:224
+#: modules/install:587 modules/remove:227
 msgid "Update system databases..."
 msgstr "Обновление системных баз данных…"
 
-#: modules/install:580
+#: modules/install:649
 msgid "Package \"%s\" (%s) is installed."
 msgstr "Пакет «%s» (%s) установлен."
 
@@ -812,120 +831,120 @@ msgstr "Зависимости пакета «%s» не решены"
 msgid "The package is installed but probably will not work."
 msgstr "Пакет установлен, но, возможно, не будет работать."
 
-#: modules/list:50
+#: modules/list:45
 msgid "all"
 msgstr "все"
 
-#: modules/list:50
+#: modules/list:45
 msgid "extra"
 msgstr "экстра"
 
-#: modules/list:82
+#: modules/list:77
 msgid "Blocked packages"
 msgstr "Заблокированные пакеты"
 
-#: modules/list:87 modules/list:121 modules/search:223
+#: modules/list:82 modules/list:116 modules/search:223
 msgid "%s package"
 msgid_plural "%s packages"
 msgstr[0] "%s пакет"
 msgstr[1] "%s пакета"
 msgstr[2] "%s пакетов"
 
-#: modules/list:90
+#: modules/list:85
 msgid "No blocked packages found."
 msgstr "Заблокированные пакеты отсутствуют."
 
-#: modules/list:97
+#: modules/list:92
 msgid "Packages categories"
 msgstr "Категории пакетов"
 
-#: modules/list:104
+#: modules/list:99
 msgid "%s category"
 msgid_plural "%s categories"
 msgstr[0] "%s категория"
 msgstr[1] "%s категории"
 msgstr[2] "%s категорий"
 
-#: modules/list:111
+#: modules/list:106
 msgid "Linked packages"
 msgstr "Присоединенные пакеты"
 
-#: modules/list:124
+#: modules/list:119
 msgid "No linked packages found."
 msgstr "Присоединенные пакеты отсутствуют."
 
-#: modules/list:131
+#: modules/list:126
 msgid "List of all installed packages"
 msgstr "Список всех установленных пакетов"
 
-#: modules/list:137
+#: modules/list:132
 msgid "%s package installed."
 msgid_plural "%s packages installed."
 msgstr[0] "Установлен %s пакет."
 msgstr[1] "Установлены %s пакета."
 msgstr[2] "Установлено %s пакетов."
 
-#: modules/list:147 tazpanel/pkgs.cgi:714
+#: modules/list:142 tazpanel/pkgs.cgi:714
 msgid "Installed packages of category \"%s\""
 msgstr "Установленные пакеты категории «%s»"
 
-#: modules/list:156
+#: modules/list:151
 msgid "%s package installed of category \"%s\"."
 msgid_plural "%s packages installed of category \"%s\"."
 msgstr[0] "%s пакет установлен в категории «%s»."
 msgstr[1] "%s пакета установлены в категории «%s»."
 msgstr[2] "%s пакетов установлено в категории «%s»."
 
-#: modules/list:167 modules/recharge:181
+#: modules/list:162 modules/recharge:181
 msgid "Mirrored packages diff"
 msgstr "Обновления в пакетах зеркала"
 
-#: modules/list:171
+#: modules/list:166
 msgid "%s new package listed on the mirror."
 msgid_plural "%s new packages listed on the mirror."
 msgstr[0] "В репозитории появился %s новый пакет."
 msgstr[1] "В репозитории появились %s новых пакета."
 msgstr[2] "В репозитории появилось %s новых пакетов."
 
-#: modules/list:176
+#: modules/list:171
 msgid "Unable to list anything, no packages.diff found."
 msgstr "Невозможно вывести список, packages.diff не обнаружен."
 
-#: modules/list:177
+#: modules/list:172
 msgid "Recharge your current list to create a first diff."
 msgstr "Перезагрузите ваш текущий список для создания первой разницы."
 
-#: modules/list:181
+#: modules/list:176
 msgid "List of available packages on the mirror"
 msgstr "Список пакетов, доступных в репозитории"
 
-#: modules/list:188
+#: modules/list:183
 msgid "%s package in the last recharged list."
 msgid_plural "%s packages in the last recharged list."
 msgstr[0] "Последний обновленный список содержит %s пакет."
 msgstr[1] "Последний обновленный список содержит %s пакета."
 msgstr[2] "Последний обновленный список содержит %s пакетов."
 
-#: modules/list:200 modules/list:207
+#: modules/list:195 modules/list:202
 msgid "Installed files by \"%s\""
 msgstr "Файлы, устанавливаемые пакетом «%s»"
 
-#: modules/list:203 modules/list:213 modules/search:194 tazpanel/pkgs.cgi:72
+#: modules/list:198 modules/list:208 modules/search:194 tazpanel/pkgs.cgi:72
 msgid "%s file"
 msgid_plural "%s files"
 msgstr[0] "%s файл"
 msgstr[1] "%s файла"
 msgstr[2] "%s файлов"
 
-#: modules/list:226
+#: modules/list:221
 msgid "TazPkg Activity"
 msgstr "Журнал действий TazPkg"
 
-#: modules/list:261
+#: modules/list:256
 msgid "File lost"
 msgstr "Нет файла"
 
-#: modules/list:273 tazpanel/pkgs.cgi:1100 tazpanel/pkgs.cgi:1190
+#: modules/list:268 tazpanel/pkgs.cgi:1100 tazpanel/pkgs.cgi:1190
 msgid "Configuration files"
 msgstr "Конфигурационные файлы"
 
@@ -978,23 +997,23 @@ msgstr "Неофициальный репозиторий «%s» не найде
 msgid "Creating new undigest \"%s\"."
 msgstr "Создание нового неофициального репозитория «%s»."
 
-#: modules/mkdb:74
+#: modules/mkdb:81
 msgid "Input folder not specified"
 msgstr "Не указана исходная папка"
 
-#: modules/mkdb:80
+#: modules/mkdb:87
 msgid "You are not allowed to write to the folder \"%s\""
 msgstr "У вас недостаточно прав для записи в папку «%s»"
 
-#: modules/mkdb:84
+#: modules/mkdb:91
 msgid "Folder \"%s\" does not contain packages"
 msgstr "Папка «%s» не содержит пакетов"
 
-#: modules/mkdb:102
+#: modules/mkdb:111
 msgid "Packages DB already exists."
 msgstr "База данных пакетов уже существует."
 
-#: modules/mkdb:110
+#: modules/mkdb:119
 msgid "Calculate %s..."
 msgstr "Расчёт %s…"
 
@@ -1113,62 +1132,62 @@ msgstr "Создание нового пакета…"
 msgid "Nothing to do for package \"%s\"."
 msgstr "Пакет «%s» не имеет пост-установочных команд."
 
-#: modules/remove:38
+#: modules/remove:33
 msgid "Execute pre-remove commands..."
 msgstr "Запуск команд перед удалением пакета…"
 
-#: modules/remove:51
+#: modules/remove:46
 msgid "Execute post-remove commands..."
 msgstr "Запуск команд после удаления пакета…"
 
-#: modules/remove:111
+#: modules/remove:106
 msgid "The following packages depend on package \"%s\":"
 msgstr "Следующие пакеты зависят от пакета «%s»:"
 
-#: modules/remove:119
+#: modules/remove:114
 msgid "The following packages have been modified by package \"%s\":"
 msgstr "Следующие пакеты были изменены пакетом «%s»:"
 
-#: modules/remove:127
+#: modules/remove:122
 msgid "Remove package \"%s\" (%s)? (y/N)"
 msgstr "Удалить пакет «%s» (%s)? (y/N)"
 
-#: modules/remove:129
+#: modules/remove:124
 msgid "Uninstallation of package \"%s\" cancelled."
 msgstr "Деинсталляция пакета «%s» отменена."
 
-#: modules/remove:136
+#: modules/remove:131
 msgid "Removing package \"%s\""
 msgstr "Удаление пакета «%s»"
 
-#: modules/remove:148
+#: modules/remove:143
 msgid "Removing all files installed..."
 msgstr "Удаление всех установленных файлов…"
 
-#: modules/remove:247
+#: modules/remove:256
 msgid "Removing package receipt..."
 msgstr "Удаление рецепта пакета…"
 
-#: modules/remove:253
+#: modules/remove:262
 msgid "Package \"%s\" (%s) removed."
 msgstr "Пакет «%s» (%s) удален."
 
-#: modules/remove:266
+#: modules/remove:275
 msgid "Remove packages depending on package \"%s\"? (y/N)"
 msgstr "Удалять пакеты, зависящие от пакета «%s»? (y/N)"
 
-#: modules/remove:283
+#: modules/remove:292
 msgid "Reinstall packages modified by package \"%s\"? (y/N)"
 msgstr "Переустановить пакеты, измененные пакетом «%s»? (y/N)"
 
-#: modules/remove:289
+#: modules/remove:298
 msgid ""
 "Package \"%s\" was modified by \"%s\" and other packages. It will not be "
 "reinstalled."
 msgstr ""
 "Пакет «%s» был изменен «%s» и другими пакетами. Он не будет переустановлен."
 
-#: modules/remove:291
+#: modules/remove:300
 msgid "Check \"%s\" for reinstallation."
 msgstr "Проверьте «%s» и решите, нужно ли его переустановить."
 
@@ -1250,50 +1269,50 @@ msgstr "Репозиторий:"
 msgid "Last recharge:"
 msgstr "Последнее обновление:"
 
-#: modules/summary:50 tazpanel/pkgs.cgi:1743
+#: modules/summary:57 tazpanel/pkgs.cgi:1743
 msgid "Today at %s."
 msgstr "Сегодня в %s."
 
-#: modules/summary:51 tazpanel/pkgs.cgi:1744
+#: modules/summary:58 tazpanel/pkgs.cgi:1744
 msgid "Yesterday at %s."
 msgstr "Вчера в %s."
 
-#: modules/summary:52 tazpanel/pkgs.cgi:1741
+#: modules/summary:59 tazpanel/pkgs.cgi:1741
 msgid "%d day ago."
 msgid_plural "%d days ago."
 msgstr[0] "%d день назад."
 msgstr[1] "%d дня назад."
 msgstr[2] "%d дней назад."
 
-#: modules/summary:55
+#: modules/summary:62
 msgid "Database timestamp:"
 msgstr "Отметка времени базы данных:"
 
-#: modules/summary:58 tazpanel/pkgs.cgi:1751
+#: modules/summary:65 tazpanel/pkgs.cgi:1751
 msgid "never."
 msgstr "никогда."
 
-#: modules/summary:62 tazpanel/pkgs.cgi:1761
+#: modules/summary:69 tazpanel/pkgs.cgi:1761
 msgid "Mirrored packages:"
 msgstr "Пакетов в репозитории:"
 
-#: modules/summary:66
+#: modules/summary:73
 msgid "Linked packages:"
 msgstr "Присоединенные пакеты:"
 
-#: modules/summary:74 tazpanel/pkgs.cgi:1756
+#: modules/summary:81 tazpanel/pkgs.cgi:1756
 msgid "Installed packages:"
 msgstr "Установленных пакетов:"
 
-#: modules/summary:75 tazpanel/pkgs.cgi:1771
+#: modules/summary:82 tazpanel/pkgs.cgi:1771
 msgid "Installed files:"
 msgstr "Установленных файлов:"
 
-#: modules/summary:76 tazpanel/pkgs.cgi:1774
+#: modules/summary:83 tazpanel/pkgs.cgi:1774
 msgid "Blocked packages:"
 msgstr "Заблокированных пакетов:"
 
-#: modules/summary:77 tazpanel/pkgs.cgi:1766
+#: modules/summary:84 tazpanel/pkgs.cgi:1766
 msgid "Upgradeable packages:"
 msgstr "Доступно обновленных пакетов:"
 
