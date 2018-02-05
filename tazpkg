@@ -228,11 +228,11 @@ log_pkg() {
 
 extract_package() {
 	action 'Extracting package...'
-	busybox cpio -idm --quiet < "${PACKAGE_FILE##*/}" && rm -f "${PACKAGE_FILE##*/}"
+	cpio -idm --quiet < "${PACKAGE_FILE##*/}" && rm -f "${PACKAGE_FILE##*/}"
 	if [ -f fs.cpio.lzma ]; then
-		unlzma < fs.cpio.lzma | busybox cpio -idm --quiet && rm fs.cpio.lzma
+		unlzma < fs.cpio.lzma | cpio -idm --quiet && rm fs.cpio.lzma
 	elif [ -f fs.cpio.gz ]; then
-		zcat fs.cpio.gz | busybox cpio -idm --quiet && rm fs.cpio.gz
+		zcat fs.cpio.gz | cpio -idm --quiet && rm fs.cpio.gz
 	fi
 	status
 }
