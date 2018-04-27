@@ -343,7 +343,7 @@ get_pkg() {
 	# output: full path to the downloaded package
 
 	debug "\nget_pkg('$1', '$2')"
-	local repo line namever pkgsum
+	local repo line namever pkgsum pkgfile
 
 	IFS=$'\n'
 	for rep in $PRIORITY; do
@@ -351,14 +351,20 @@ get_pkg() {
 		# If found, output string "<name>-<ver>"
 		namever=$(awk -F$'\t' -vpkg="$(virtual_pkg "$1" "$rep")" \
 			'$1==pkg || $1"-"$2==pkg {printf "%s-%s", $1, $2; exit}' "$rep/packages.info")
+
+		case $SLITAZ_ARCH in
+			i?86) pkgfile="$namever.tazpkg";;
+			*)    pkgfile="$namever-$SLITAZ_ARCH.tazpkg";;
+		esac
+
 		if [ -n "$namever" ]; then
-			pkgsum=$(awk -vfile="$namever.tazpkg" '{if($2==file)print $1}' $rep/packages.md5)
+			pkgsum=$(awk -vfile="$pkgfile" '{if($2==file)print $1}' $rep/packages.md5)
 			break
 		fi
 	done
 	unset IFS
 
-	debug "  rep='$rep'\n  namever='$namever'\n  pkgsum='$pkgsum'"
+	debug "  rep='$rep'\n  namever='$namever'\n  pkgfile='$pkgfile'\n  pkgsum='$pkgsum'"
 
 	if [ -z "$namever" ]; then
 		_ 'Unable to find package "%s" in the mirrored packages list.' "$1" >&2
@@ -372,7 +378,7 @@ get_pkg() {
 		fi
 	fi
 
-	# We need package "$namever.tazpkg" from "$rep" with "$pkgsum"
+	# We need package "$pkgfile" from "$rep" with "$pkgsum"
 
 	if [ -z "$nocache" ]; then
 		# Go to cache for "get-install" command; don't move for "get" command
@@ -381,24 +387,24 @@ get_pkg() {
 	fi
 
 	# Check if package already downloaded
-	if [ -f "$namever.tazpkg" ]; then
+	if [ -f "$pkgfile" ]; then
 		[ -z "$nocache" -a -z "$quiet" ] && _ 'Package "%s" already in the cache' "$namever" >&2
 
 		# Check if downloading complete, resume if not complete
-		if ! tail -c 2k "$namever.tazpkg" | fgrep -q '00000000TRAILER'; then
+		if ! tail -c 2k "$pkgfile" | fgrep -q '00000000TRAILER'; then
 			[ -z "$quiet" ] && _ 'Continuing package "%s" download' "$namever" >&2
-			download_from "$(cat "$rep/mirror")" "$namever.tazpkg"
+			download_from "$(cat "$rep/mirror")" "$pkgfile"
 		fi
 	else
 		# Package absent in the cache, "cold" downloading
-		download_from "$(cat "$rep/mirror")" "$namever.tazpkg"
+		download_from "$(cat "$rep/mirror")" "$pkgfile"
 	fi
 
 	# Make sure we downloaded what we want with checksum
 
-	if [ "$($CHECKSUM "$namever.tazpkg" | cut -d' ' -f1)" != "$pkgsum" ]; then
-		_ 'Checksum error for "%s"' "$namever.tazpkg" >&2
-		rm "$namever.tazpkg"
+	if [ "$($CHECKSUM "$pkgfile" | cut -d' ' -f1)" != "$pkgsum" ]; then
+		_ 'Checksum error for "%s"' "$pkgfile" >&2
+		rm "$pkgfile"
 
 		# Recharge DBs and try again; prevent looping with 'redo'
 		if [ "$2" != 'redo' ]; then
@@ -412,7 +418,7 @@ get_pkg() {
 	fi
 
 	# Output: path to downloaded package
-	printf '%s/%s.tazpkg\n' "$(pwd)" "$namever"
+	printf '%s/%s\n' "$(pwd)" "$pkgfile"
 }
 
 
