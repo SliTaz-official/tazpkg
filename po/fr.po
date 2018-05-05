@@ -135,12 +135,11 @@ msgstr "Vous êtes déjà dans un SHell TazPkg."
 
 #: modules/bb:20
 msgid "Busybox is not installed in the %s. Exit."
-msgstr ""
+msgstr "Busybox n'est pas installé dans %s. Sortie."
 
 #: modules/bb:30
-#, fuzzy
 msgid "Restoring Busybox applet %s..."
-msgstr "Restauration des fichiers d'index..."
+msgstr "Restauration de l'applet Busybox %s..."
 
 #: modules/block:18 modules/remove:96
 msgid "Package \"%s\" is not installed."
