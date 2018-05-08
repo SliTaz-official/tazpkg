@@ -753,14 +753,12 @@ msgid "Execute post-install commands..."
 msgstr "Exécution des commandes post-installation..."
 
 #: modules/install:381
-#, fuzzy
 msgid "Installing (web/cache): %s"
-msgstr "Installation de %s"
+msgstr "Installation de %s (web/cache)"
 
 #: modules/install:383
-#, fuzzy
 msgid "Installing (pkg/local): %s"
-msgstr "Installation de %s"
+msgstr "Installation de %s (pkg/local)"
 
 #: modules/install:388
 msgid "Installation of package \"%s\" (%s)"
