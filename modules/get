@@ -347,7 +347,7 @@ get_pkg() {
 	# output: full path to the downloaded package
 
 	debug "\nget_pkg('$1', '$2')"
-	local repo line namever pkgsum pkgfile
+	local repo line namever pkgsum pkgfile pi
 
 	IFS=$'\n'
 	for rep in $PRIORITY; do
@@ -359,10 +359,9 @@ get_pkg() {
 		namever=$(awk -F$'\t' -vpkg="$(virtual_pkg "$1" "$rep")" \
 			'$1==pkg || $1"-"$2==pkg {printf "%s-%s", $1, $2; exit}' "$pi")
 
-		case $SLITAZ_ARCH in
-			i?86) pkgfile="$namever.tazpkg";;
-			*)    pkgfile="$namever-$SLITAZ_ARCH.tazpkg";;
-		esac
+		pkgfile="$namever-$SLITAZ_ARCH.tazpkg"
+		[ -e "$pkgfile" ] ||
+		pkgfile="$namever-any.tazpkg"
 
 		if [ -n "$namever" ]; then
 			pkgsum=$(awk -vfile="$pkgfile" '{if($2==file)print $1}' $rep/packages.md5)
@@ -454,7 +453,11 @@ get_pkg_cookmode() {
 		if (index(" " $10 " ", " " pkg " ")) { printf("%s-%s", $1, $2); exit; }
 	}' $pi)"
 
-	[ -n "$namever" ] && pkgfile=$(find "$PKGS" -name "$namever*.tazpkg")
+	if [ -n "$namever" ]; then
+		pkgfile=$(find "$PKGS" -name "$namever-$SLITAZ_ARCH.tazpkg")
+		[ -n "$pkgfile" ] ||
+		pkgfile=$(find "$PKGS" -name "$namever-any.tazpkg")
+	fi
 
 	if [ -n "$pkgfile" -a -f "$pkgfile" ]; then
 		echo "$pkgfile"
