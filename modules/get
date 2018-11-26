@@ -157,14 +157,18 @@ get_pkg_extra() {
 
 		# Extra-cache should contain packages DB files (packages.info, etc.)
 		# to list extra-packages contained in the extra-cache
-		[ ! -f 'packages.info' ] && tazpkg mkdb "$extra_cache" --root='' --forced >/dev/null
+		[ ! -e 'packages.info' -a ! -e "packages-$SLITAZ_ARCH.info" ] &&
+			tazpkg mkdb "$extra_cache" --root='' --forced >/dev/null
 
-		if [ -f 'packages.info' ]; then
-			awk -F$'\t' -vp="$1" '$1==p{exit 1}' packages.info
+		pi='packages.info'
+		[ -e "$pi" ] || pi="packages-$SLITAZ_ARCH.info"
+
+		if [ -e "$pi" ]; then
+			awk -F$'\t' -vp="$1" '$1==p{exit 1}' $pi
 			if [ "$?" -eq 1 ]; then
 				[ -z "$quiet" ] && _ 'Package "%s" already in the cache' "$1" >&2
 				echo -n "$(pwd)/"
-				awk -F$'\t' -vp="$1" '$1==p{printf "%s-%s.tazpkg\n", $1, $2; exit}' packages.info
+				awk -F$'\t' -vp="$1" '$1==p{printf "%s-%s.tazpkg\n", $1, $2; exit}' $pi
 				exit 0
 			fi
 		fi
@@ -347,10 +351,13 @@ get_pkg() {
 
 	IFS=$'\n'
 	for rep in $PRIORITY; do
-		[ ! -f "$rep/packages.info" ] && continue
+		pi="$rep/packages.info"
+		[ ! -e "$pi" ] && pi="$rep/packages-$SLITAZ_ARCH.info"
+		[ ! -e "$pi" ] && continue
+
 		# If found, output string "<name>-<ver>"
 		namever=$(awk -F$'\t' -vpkg="$(virtual_pkg "$1" "$rep")" \
-			'$1==pkg || $1"-"$2==pkg {printf "%s-%s", $1, $2; exit}' "$rep/packages.info")
+			'$1==pkg || $1"-"$2==pkg {printf "%s-%s", $1, $2; exit}' "$pi")
 
 		case $SLITAZ_ARCH in
 			i?86) pkgfile="$namever.tazpkg";;
@@ -434,15 +441,18 @@ get_pkg_cookmode() {
 	[ -e "/etc/slitaz/cook.conf" ] && . /etc/slitaz/cook.conf
 
 	# Find local package
+	pi="$PKGS/packages.info"
+	[ -e "$pi" ] || pi="$PKGS/packages-$SLITAZ_ARCH.info"
+
 	namever="$(awk -F$'\t' -vpkg="$1" '{
 		if ($1 == pkg) { printf("%s-%s", $1, $2); exit; }
-	}' $PKGS/packages.info)"
+	}' $pi)"
 
 	# Find local provided package
 	[ -n "$namever" ] ||
 	namever="$(awk -F$'\t' -vpkg="$1" '{
 		if (index(" " $10 " ", " " pkg " ")) { printf("%s-%s", $1, $2); exit; }
-	}' $PKGS/packages.info)"
+	}' $pi)"
 
 	[ -n "$namever" ] && pkgfile=$(find "$PKGS" -name "$namever*.tazpkg")
 
