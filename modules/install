@@ -46,11 +46,12 @@ equivalent_pkg() {
 	if [ -n "$local" ]; then
 		# Search for virtual packages
 		if [ -n "$cookmode" ]; then
-			pi='/home/slitaz/packages/packages.info'
-			[ -e "$pi" ] || pi="/home/slitaz/packages/packages-$SLITAZ_ARCH.info"
+			pi="/home/slitaz/packages/packages-$SLITAZ_ARCH.info"
+			[ -e "$pi" ] || pi='/home/slitaz/packages/packages.info'
 		else
 			pi="$(dirname "$2")/packages.info"
 		fi
+
 		[ -f "$pi" ] &&
 		out=$(awk -F$'\t' -vpkg="$1" '{
 			# if package name or provided package name matched
@@ -183,8 +184,10 @@ install_all_deps() {
 			if [ -n "$local" ]; then
 				[ -z "$quiet" ] && _ 'Checking if package "%s" exists in local list...' "$pkg"
 				[ -n "$cookmode" ] && dir='/home/slitaz/packages'
-				pi="$dir/packages.info"
-				[ -e "$pi" ] || pi="$dir/packages-$SLITAZ_ARCH.info"
+
+				pi="$dir/packages-$SLITAZ_ARCH.info"
+				[ -e "$pi" ] || pi="$dir/packages.info"
+
 				# Find local package
 				if [ -f "$pi" ]; then
 					# Packages database exists (should be everfresh!)
@@ -200,13 +203,18 @@ install_all_deps() {
 						if (index(" " $10 " ", " " pkg " ")) { printf("%s-%s", $1, $2); exit; }
 					}' "$pi")		# <namever> = <package_name>-<package_version>
 
-					# Package file may be in form <namever>.tazpkg or <namever>-<arch>.tazpkg, so find one
-					[ -n "$namever" ] && pkgfile=$(find "$dir" -name "$namever*.tazpkg")
+					# Package file may be in form <namever>-<arch>.tazpkg or <namever>-any.tazpkg, so find one
+					if [ -n "$namever" ]; then
+						pkgfile=$(find "$dir" -name "$namever-$SLITAZ_ARCH.tazpkg")
+						[ -n "$pkgfile" ] ||
+						pkgfile=$(find "$dir" -name "$namever-any.tazpkg")
+					fi
+
 					[ -n "$pkgfile" ] && found='1'
 				else
 					# Packages DB missing, proceed to sniff packages
 					tempd="$(mktemp -d)"; cd "$tempd"
-					for pkgfile in $dir/$pkg-*.tazpkg; do
+					for pkgfile in $dir/$pkg-*-$SLITAZ_ARCH.tazpkg $dir/$pkg-*-any.tazpkg; do
 						[ -e "$pkgfile" ] || continue
 						# Extract receipt from each matched package
 						cpio -F "$pkgfile" -i receipt >/dev/null 2>&1
@@ -274,11 +282,9 @@ print_short_description() {
 
 	# Try to find short description for mirrored package
 	if [ -z "$short_desc" ]; then
-		if [ -e "$PKGS_DB/packages.info" ]; then
-			pi="$PKGS_DB/packages.info"
-		else
-			"$PKGS_DB/packages-$SLITAZ_ARCH.info"
-		fi
+		pi="$PKGS_DB/packages-$SLITAZ_ARCH.info"
+		[ -e "$pi" ] || pi="$PKGS_DB/packages.info"
+
 		short_desc=$(awk -F$'\t' -vp="$1" '$1==p{print $4; exit}' "$pi")
 	fi
 

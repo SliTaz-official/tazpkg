@@ -160,8 +160,8 @@ get_pkg_extra() {
 		[ ! -e 'packages.info' -a ! -e "packages-$SLITAZ_ARCH.info" ] &&
 			tazpkg mkdb "$extra_cache" --root='' --forced >/dev/null
 
-		pi='packages.info'
-		[ -e "$pi" ] || pi="packages-$SLITAZ_ARCH.info"
+		pi="packages-$SLITAZ_ARCH.info"
+		[ -e "$pi" ] || pi='packages.info'
 
 		if [ -e "$pi" ]; then
 			awk -F$'\t' -vp="$1" '$1==p{exit 1}' $pi
@@ -295,7 +295,11 @@ EOT
 virtual_name() {
 	# input:  $1 virtual package name
 	#         $2 repository db directory
-	local i
+	local i pi
+
+	pi="$2/packages-$SLITAZ_ARCH.info"
+	[ -e "$pi" ] || pi="$2/packages.info"
+
 	unset IFS
 	for i in $(grep -hs "^$1=" "$2/packages.equiv" | sed "s/^$1=//"); do
 		if echo $i | fgrep -q : ; then
@@ -306,7 +310,7 @@ virtual_name() {
 				echo ${i#*:}
 				return
 			fi
-		elif ! grep -q "^$1	" "$2/packages.info" || [ -f "$INSTALLED/$i/receipt" ]; then
+		elif ! grep -q "^$1	" "$pi" || [ -f "$INSTALLED/$i/receipt" ]; then
 			# unconditional substitution
 			echo $i
 			return
@@ -320,12 +324,16 @@ virtual_pkg() {
 	# input:  $1 virtual package name
 	#         $2 repository db directory
 	# output: display possible package name
+	local pi
 
 	debug "\nvirtual_pkg('$1', '$2')"
 
+	pi="$2/packages-$SLITAZ_ARCH.info"
+	[ -e "$pi" ] || pi="$2/packages.info"
+
 	if [ "$tazpkg_command" != 'get-install' ]; then
 		# 'get' command: download any package
-		if [ -z "$(awk -F$'\t' -vp="$1" '{if ($1 == p) print p}' "$2/packages.info")" ]; then
+		if [ -z "$(awk -F$'\t' -vp="$1" '{if ($1 == p) print p}' "$pi")" ]; then
 			# This package does not exist in the list, it may be a virtual package
 			virtual_name "$1" "$2"
 		else
@@ -351,17 +359,16 @@ get_pkg() {
 
 	IFS=$'\n'
 	for rep in $PRIORITY; do
-		pi="$rep/packages.info"
-		[ ! -e "$pi" ] && pi="$rep/packages-$SLITAZ_ARCH.info"
-		[ ! -e "$pi" ] && continue
+		pi="$rep/packages-$SLITAZ_ARCH.info"
+		[ -e "$pi" ] || pi="$rep/packages.info"
+		[ -e "$pi" ] || continue
 
 		# If found, output string "<name>-<ver>"
 		namever=$(awk -F$'\t' -vpkg="$(virtual_pkg "$1" "$rep")" \
 			'$1==pkg || $1"-"$2==pkg {printf "%s-%s", $1, $2; exit}' "$pi")
 
 		pkgfile="$namever-$SLITAZ_ARCH.tazpkg"
-		[ -e "$pkgfile" ] ||
-		pkgfile="$namever-any.tazpkg"
+		[ -e "$pkgfile" ] || pkgfile="$namever-any.tazpkg"
 
 		if [ -n "$namever" ]; then
 			pkgsum=$(awk -vfile="$pkgfile" '{if($2==file)print $1}' $rep/packages.md5)
@@ -436,12 +443,12 @@ get_pkg_cookmode() {
 	# output: full path to the found package
 	# ROOT NOT USED
 
-	local PKGS='/home/slitaz/packages' found='0'
+	local PKGS='/home/slitaz/packages' found='0' i
 	[ -e "/etc/slitaz/cook.conf" ] && . /etc/slitaz/cook.conf
 
 	# Find local package
-	pi="$PKGS/packages.info"
-	[ -e "$pi" ] || pi="$PKGS/packages-$SLITAZ_ARCH.info"
+	pi="$PKGS/packages-$SLITAZ_ARCH.info"
+	[ -e "$pi" ] || pi="$PKGS/packages.info"
 
 	namever="$(awk -F$'\t' -vpkg="$1" '{
 		if ($1 == pkg) { printf("%s-%s", $1, $2); exit; }
@@ -453,18 +460,16 @@ get_pkg_cookmode() {
 		if (index(" " $10 " ", " " pkg " ")) { printf("%s-%s", $1, $2); exit; }
 	}' $pi)"
 
-	if [ -n "$namever" ]; then
-		pkgfile=$(find "$PKGS" -name "$namever-$SLITAZ_ARCH.tazpkg")
-		[ -n "$pkgfile" ] ||
-		pkgfile=$(find "$PKGS" -name "$namever-any.tazpkg")
-	fi
+	for i in $SLITAZ_ARCH any; do
+		pkgfile="$PKGS/$namever-$i.tazpkg"
+		if [ -e "$pkgfile" ]; then
+			echo "$pkgfile"
+			return
+		fi
+	done
 
-	if [ -n "$pkgfile" -a -f "$pkgfile" ]; then
-		echo "$pkgfile"
-	else
-		# Proceed to get package as usual (non-local)
-		get_pkg "$1"
-	fi
+	# Proceed to get package as usual (non-local)
+	get_pkg "$1"
 }
 
 
