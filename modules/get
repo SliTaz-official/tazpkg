@@ -65,9 +65,9 @@ get_cache_path() {
 
 	local cache_dir
 
-	if [ "$2" == 'extra' ]; then
+	if [ "$2" = 'extra' ]; then
 		cache_dir="$SAVE_CACHE_DIR/extra/packages"
-	elif [ "$1" == "$PKGS_DB" ]; then
+	elif [ "$1" = "$PKGS_DB" ]; then
 		# Main repository
 		cache_dir="$SAVE_CACHE_DIR/$SLITAZ_RELEASE/packages"
 	else
@@ -487,7 +487,7 @@ get_pkg_cookmode() {
 
 # Command 'get-install' calls 'get', then 'install' modules. Check package presence here, on the
 # first stage, if '--forced' option not given
-if [ "$tazpkg_command" == 'get-install' ]; then
+if [ "$tazpkg_command" = 'get-install' ]; then
 	if grep -qs "^$1$" "$BLOCKED"; then
 		_ 'Package "%s" blocked.' "$1" >&2
 		exit 1

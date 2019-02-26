@@ -755,7 +755,7 @@ convert_tcz() {
 
 PACKAGE_FILE="$(realpath "$PACKAGE_FILE")"
 debug "PACKAGE_FILE='$PACKAGE_FILE'"
-if [ "$(dd if="$PACKAGE_FILE" bs=8 count=1 skip=1 2>/dev/null)" == 'debian-b' ]; then
+if [ "$(dd if="$PACKAGE_FILE" bs=8 count=1 skip=1 2>/dev/null)" = 'debian-b' ]; then
 	convert_deb
 else
 	case "$PACKAGE_FILE" in

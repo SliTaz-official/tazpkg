@@ -28,7 +28,7 @@ tmp_up_list=$(mktemp)
 
 repo_number=1
 for repo in $PRIORITY; do
-	if [ "$repo" == "$PKGS_DB" ]; then
+	if [ "$repo" = "$PKGS_DB" ]; then
 		repo_name='Main'
 	else
 		repo_name="$(basename "$repo")"

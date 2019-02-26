@@ -114,7 +114,7 @@ check_dir() {
 # If not and user is root we create them.
 
 check_base_dir() {
-	if [ "$(id -u)" == '0' ]; then
+	if [ "$(id -u)" = '0' ]; then
 		check_dir $1$CACHE_DIR
 		check_dir $1$INSTALLED
 		check_dir $1$SLITAZ_LOGS
@@ -214,7 +214,7 @@ process_list() {
 log_pkg() {
 	local extra
 
-	[ "$1" == 'Installed' ] && \
+	[ "$1" = 'Installed' ] && \
 	extra=" - $(fgrep " $PACKAGE-$VERSION" $PKGS_DB/installed.$SUM | awk '{ print $1 }')"
 
 	[ -e "$LOG" ] || touch $LOG

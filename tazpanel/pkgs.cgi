@@ -92,7 +92,7 @@ case " $(GET) " in
 			# Package not installed
 			data_icon="@pkg@"; responce='n'
 			equivs=$(grep "^$pkg=" "$PKGS_DB/packages.equiv")
-			if [ "$(GET pkg)" == "$pkg" -a -n "$equivs" ]; then
+			if [ "$(GET pkg)" = "$pkg" -a -n "$equivs" ]; then
 				# Check equivalent packages
 				for equiv in ${equivs#*=}; do
 					case $equiv in
@@ -115,9 +115,9 @@ case " $(GET) " in
 		fi
 
 		# Installed and blocked?
-		[ "$data_icon" == "@pkgi@" ] && grep -q "^$pkg$" "$BLOCKED" && data_icon="@pkgib@"
+		[ "$data_icon" = "@pkgi@" ] && grep -q "^$pkg$" "$BLOCKED" && data_icon="@pkgib@"
 
-		if [ $(GET web) == 'y' ]; then
+		if [ $(GET web) = 'y' ]; then
 			# Request from page http://pkgs.slitaz.org/ for example:
 			# http://127.0.0.1:82/pkgs.cgi?status&web=y&pkg=nano
 			# Allow http://pkgs.slitaz.org/ to get information from tazpanel server
@@ -302,7 +302,7 @@ show_button() {
 			*add-repo)		icon="@add@";		label=$(_n 'Add repository');;
 			toggle)			icon="@toggle@";	label=$(_n 'Toggle all');;
 		esac
-		if [ "$button" == 'toggle' ]; then
+		if [ "$button" = 'toggle' ]; then
 			echo -n "<span class=\"float-right\"><button data-icon=\"$icon\" onclick=\"checkBoxes()\">$label</button></span>"
 		else
 			echo -n "<button data-icon=\"$icon\" name=\"${button%%=*}\" value=\"${button#*=}\"$misc>$label</button>"
@@ -409,8 +409,8 @@ show_list() {
 		done
 		[ -f "$BLOCKED" ] && cat "$BLOCKED"
 		sed 's|.*|&\ti|' "$PKGS_DB/installed.info"
-		[ "$cat" == 'extra' ] || [ $1 == 'my' ] || cat "$i/packages.info"
-		[ "$cat" == 'extra' ] &&
+		[ "$cat" = 'extra' ] || [ $1 = 'my' ] || cat "$i/packages.info"
+		[ "$cat" = 'extra' ] &&
 		sed 's,\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\)|\([^|]*\).*,\1\t\5\textra\t\2\thttp://mirror.slitaz.org/packages/get/\1\t-\t-\t-\t-,' "$PKGS_DB/extra.list"
 		# Last list entry will miss, so add fake line
 		echo 'zzzzzzzz'
@@ -510,7 +510,7 @@ show_package_link() {
 
 show_info_links() {
 	if [ -n "$1" ]; then
-		if [ "$3" == 'tag' ]; then icon="@tag@"; else icon="@clock@"; fi
+		if [ "$3" = 'tag' ]; then icon="@tag@"; else icon="@clock@"; fi
 		case "$4" in
 			provide) echo -n "<tr><td><b>$2</b></td><td>"; noeq=' ';;
 			'')      echo -n "<tr><td><b>$2</b></td><td>"; noeq='';;
@@ -728,7 +728,7 @@ EOT
 		[ ! -f $PKGS_DB/packages.info ] && msg warn \
 		"$(_ 'You can not view a list of all packages until recharging lists.')"
 
-		[ "$REMOTE_USER" == "root" ] && cat <<EOT
+		[ "$REMOTE_USER" = "root" ] && cat <<EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -769,7 +769,7 @@ EOT
 <p>$(_ 'Packages suggested by %s' "<b>$pkg</b>")</p>
 EOT
 
-		[ "$REMOTE_USER" == "root" ] && cat <<EOT
+		[ "$REMOTE_USER" = "root" ] && cat <<EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>
@@ -981,7 +981,7 @@ EOT
 				echo "<p>"
 				show_package_link "$name"
 				condition=${pkg%:*}
-				[ "$name" == "$condition" ] ||
+				[ "$name" = "$condition" ] ||
 				echo "($(_ "if") $(show_package_link "$condition")$(_ "is installed")) "
 				echo "</p>"
 			done
@@ -1003,7 +1003,7 @@ EOT
 		if [ -d "$INSTALLED/$pkg" ]; then
 			. $INSTALLED/$pkg/receipt
 			files=$(wc -l < $INSTALLED/$pkg/files.list)
-			[ "$REMOTE_USER" == 'root' ] && show_button do=Remove
+			[ "$REMOTE_USER" = 'root' ] && show_button do=Remove
 		else
 			cd $PKGS_DB
 			eval "$(awk -F$'\t' -vp=$pkg '
@@ -1022,7 +1022,7 @@ EOT
 			fi
 			PACKED_SIZE=${SIZES% *}
 			UNPACKED_SIZE=${SIZES#* }
-			[ "$REMOTE_USER" == 'root' ] &&
+			[ "$REMOTE_USER" = 'root' ] &&
 			if [ "${pkg#get-}" != "$pkg" ]; then
 				show_button 'do=Install&amp;nf'
 			else
@@ -1031,7 +1031,7 @@ EOT
 		fi
 
 		# Show Block/Unblock and Repack buttons
-		[ "$REMOTE_USER" == "root" ] &&
+		[ "$REMOTE_USER" = "root" ] &&
 		if [ -d $INSTALLED/$pkg ]; then
 			if grep -qs "^$pkg$" "$BLOCKED"; then
 				show_button do=Unblock
@@ -1235,7 +1235,7 @@ EOT
 
 		cache_files=$(find $CACHE_DIR -name '*.tazpkg' | wc -l)
 		cache_size=$(du -sh $CACHE_DIR | cut -f1 | sed 's|\.0||')
-		[ "$cache_files" == 0 ] && cache_size="0K"
+		[ "$cache_files" = 0 ] && cache_size="0K"
 		mirror=$(cat $PKGS_DB/mirror)
 		default_mirror=${mirror%/packages/*}
 		cat <<EOT
@@ -1493,7 +1493,7 @@ END{
 		tag=$(GET tag)
 		tazpanel_header "$(_ 'Tag "%s"' $tag)"
 
-		[ "$REMOTE_USER" == 'root' ] && cat <<EOT
+		[ "$REMOTE_USER" = 'root' ] && cat <<EOT
 <section>
 	<div>$(_ 'Selected packages:') <span id="countSelected"></span></div>
 	<footer>

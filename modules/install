@@ -27,7 +27,7 @@ log_pkg() {
 
 	local extra
 
-	[ "$1" == 'Installed' ] && \
+	[ "$1" = 'Installed' ] && \
 	extra=" - $(fgrep " $PACKAGE-$VERSION" "$PKGS_DB/installed.$SUM" | awk '{print $1}')"
 	debug "  extra='$extra'"
 
@@ -150,7 +150,7 @@ install_all_deps() {
 		"$num")"
 
 
-	if [ "$AUTO_INSTALL_DEPS" == 'yes' ] || [ -n "$quiet" ]; then
+	if [ "$AUTO_INSTALL_DEPS" = 'yes' ] || [ -n "$quiet" ]; then
 		# Quietly not displaying anything. Assume 'yes' unless '--noconfirm' is provided
 		answer=0
 		[ -n "$noconfirm" ] && answer=1
@@ -168,7 +168,7 @@ install_all_deps() {
 
 	# We can install packages from /home/boot/packages at boot time
 	# Also we can prefer local packages over mirrored/cached using '--local' option
-	[ "$dir" == '/home/boot/packages' ] && local='yes'
+	[ "$dir" = '/home/boot/packages' ] && local='yes'
 	debug "  local='$local'"
 
 	# "--nodeps" option prevents to install dependencies
@@ -219,7 +219,7 @@ install_all_deps() {
 						# Extract receipt from each matched package
 						cpio -F "$pkgfile" -i receipt >/dev/null 2>&1
 						name=$(. ./receipt; echo $PACKAGE)
-						[ "$name" == "$pkg" ] && found='1' && break
+						[ "$name" = "$pkg" ] && found='1' && break
 						# Install the first matched package: normally there is only one package
 						# with the $PACKAGE matched in the receipt
 						rm receipt
@@ -399,7 +399,7 @@ EOT
 	# Special mode for using in cookutils: clearly show whether freshly used package or cached one
 	if [ -n "$cookmode" ]; then
 		f=${PACKAGE_FILE%/*}; f=${f%/*}; f=${f##*/}
-		if [ "$f" == "$(cat /etc/slitaz-release)" ]; then
+		if [ "$f" = "$(cat /etc/slitaz-release)" ]; then
 			_ 'Installing (web/cache): %s' "$(basename $PACKAGE_FILE .tazpkg)"
 		else
 			_ 'Installing (pkg/local): %s' "$(basename $PACKAGE_FILE .tazpkg)"
@@ -460,7 +460,7 @@ EOT
 		done ;
 		$check && \
 		for i in *; do
-			[ "$i" == "$PACKAGE" ] && continue
+			[ "$i" = "$PACKAGE" ] && continue
 			[ -s "$i/files.list" ] || continue
 			awk "{ printf \"$i %s\\n\",\$1 }" < "$i/files.list"
 		done;

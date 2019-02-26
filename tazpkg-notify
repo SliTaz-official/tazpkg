@@ -77,7 +77,7 @@ EOT
 		if [ ! -f "$PKGS_DB/packages.info" ]; then
 			tooltip="$(_ 'No packages list found')"
 			set_yad_action "$cmd_recharge" "$tooltip"
-			[ "$(notify "$tooltip" '1' "$(_n 'Recharge lists')")" == '1' ] && $cmd_recharge
+			[ "$(notify "$tooltip" '1' "$(_n 'Recharge lists')")" = '1' ] && $cmd_recharge
 			quit
 		fi
 
@@ -85,7 +85,7 @@ EOT
 		if [ -n "$mtime" ]; then
 			tooltip="$(_ 'Your packages list is older than 10 days')"
 			set_yad_action "$cmd_recharge" "$tooltip"
-			[ "$(notify "$tooltip" '1' "$(_n 'Recharge lists')")" == '1' ] && $cmd_recharge
+			[ "$(notify "$tooltip" '1' "$(_n 'Recharge lists')")" = '1' ] && $cmd_recharge
 			quit
 		fi
 
@@ -96,7 +96,7 @@ EOT
 				'There are %s upgradeable packages' "$up" \
 				"<b>$up</b>")"
 			set_yad_action "$cmd_up" "$tooltip"
-			[ "$(notify "$tooltip" '1' "$(_n 'Check upgrade')")" == '1' ] && $cmd_up
+			[ "$(notify "$tooltip" '1' "$(_n 'Check upgrade')")" = '1' ] && $cmd_up
 			quit
 		fi
 

@@ -81,7 +81,7 @@ for path in $repo_to_recharge; do
 	mirror=$(cat mirror); mirror="${mirror%/}/"
 
 	# Repository name
-	if [ "$path" == "$PKGS_DB" ]; then
+	if [ "$path" = "$PKGS_DB" ]; then
 		repo_name='Main'
 	else
 		repo_name="$(_n 'Undigest %s' "$(basename "$path")")"
