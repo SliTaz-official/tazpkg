@@ -36,6 +36,7 @@ cat /proc/cmdline > boot/cmdline
 cd ..
 echo "etc/tazlito/config-packages.list" >> files.list
 echo "boot/cmdline" >> files.list
+find /var/spool/cron/crontabs/* 2> /dev/null >> files.list
 
 cat > receipt <<EOT
 # SliTaz package receipt.

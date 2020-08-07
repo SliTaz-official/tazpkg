@@ -2,5 +2,6 @@
 Type=Application
 Name=TazPkg URL
 Exec=tazpkg-box %u
+Icon=tazpkg
 NoDisplay=true
 MimeType=x-scheme-handler/tazpkg;application/tazpkg;
