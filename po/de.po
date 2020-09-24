@@ -1,15 +1,15 @@
 # German translations for TazPkg package.
 # Deutsche Übersetzungen für das Paket TazPkg.
-# Copyright (C) 2017 SliTaz
+# Copyright (C) 2020 SliTaz
 # This file is distributed under the same license as the TazPkg package.
-# Hans-Günter Theisgen, 2017.
+# Hans-Günter Theisgen, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: TazPkg 5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-30 11:47+0200\n"
-"PO-Revision-Date: 2017-10-09 16:49+0100\n"
+"PO-Revision-Date: 2020-09-24 07:49+0100\n"
 "Last-Translator: Hans-Günter Theisgen\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -135,12 +135,11 @@ msgstr "Es läuft bereits ein TazPkg-Kommandointerpreter."
 
 #: modules/bb:20
 msgid "Busybox is not installed in the %s. Exit."
-msgstr ""
+msgstr "Busybox ist in %s nicht installiert. Abbruch."
 
 #: modules/bb:30
-#, fuzzy
 msgid "Restoring Busybox applet %s..."
-msgstr "Wiederherstellung der Datenbank-Dateien..."
+msgstr "Wiederherstellung der Busybox-Anwendung %s..."
 
 #: modules/block:18 modules/remove:96
 msgid "Package \"%s\" is not installed."
@@ -555,7 +554,7 @@ msgstr "Den umgekehrten Abhängigkeitsbaum ausgeben"
 #: modules/help:72
 msgid "Extract a (*.tazpkg) package into a directory"
 msgstr ""
-"Die Dateien eines Paketes im tazpkg-Format in ein Verzeichnis entpacken"
+"Die Dateien eines Paketes (im tazpkg-Format) in ein Verzeichnis entpacken"
 
 #: modules/help:73
 msgid "Pack an unpacked or prepared package tree"
@@ -570,8 +569,7 @@ msgstr "Ein Paket aus den Dateien eines installierten Paketes packen"
 #: modules/help:75
 msgid "Create a package archive with configuration files"
 msgstr ""
-"Ein Paket aus den Dateien eines installierten Paketes und den System-"
-"Konfigurationsdateien packen"
+"Ein Paket aus den System-Konfigurationsdateien packen"
 
 #: modules/help:76
 msgid "Rebuild a package with a better compression ratio"
@@ -645,7 +643,6 @@ msgstr "installiertes Paket"
 msgid "(new version \"%s\" available)"
 msgstr "(neue Version \"%s\" verfügbar)"
 
-# HGT: Was meint build?
 #: modules/info:45
 msgid "(new build available)"
 msgstr "(neue Kompilierung verfügbar)"
@@ -779,14 +776,12 @@ msgid "Execute post-install commands..."
 msgstr "Nachinstallations-Kommandos werden ausgeführt..."
 
 #: modules/install:381
-#, fuzzy
 msgid "Installing (web/cache): %s"
-msgstr "Installieren: %s"
+msgstr "Installiere (Netz/Zwischenspeicher): %s"
 
 #: modules/install:383
-#, fuzzy
 msgid "Installing (pkg/local): %s"
-msgstr "Installieren: %s"
+msgstr "Installiere (lokal): %s"
 
 #: modules/install:388
 msgid "Installation of package \"%s\" (%s)"
@@ -1105,10 +1100,9 @@ msgstr "Überprüfung..."
 msgid "Database timestamp: %s"
 msgstr "Zeitstempel der Datenbank: %s"
 
-# HGT: Ist nicht gemeint: Die Informationen über das Depot in der lokalen Datenbank sind aktuell ?
 #: modules/recharge:110
 msgid "Repository \"%s\" is up to date."
-msgstr "Die Informationen in der Datenbank über das Depot \"%s\" sind aktuell"
+msgstr "Die Informationen über das Depot \"%s\" in der lokalen Datenbank sind aktuell"
 
 #: modules/recharge:116
 msgid "Creating backup of the last packages list..."
@@ -1490,7 +1484,7 @@ msgstr "Das Rezept für das Paket %s fehlt"
 
 #: tazpanel/pkgs.cgi:281
 msgid "Check upgrades"
-msgstr "Auf Versionsaktualisierungen prüfen"
+msgstr "Installierte Pakete auf Aktualisierbarkeit prüfen"
 
 #: tazpanel/pkgs.cgi:283 tazpanel/pkgs.cgi:1072
 msgid "Tags"
@@ -1808,9 +1802,10 @@ msgstr "Rezept ansehen"
 msgid "Improve package"
 msgstr "Paket verbessern"
 
+# HGT: Wenn das Paket nicht installiert ist, stimmt das nicht!
 #: tazpanel/pkgs.cgi:1109
 msgid "Installed files"
-msgstr "Installierte Dateien"
+msgstr "Im Paket enthaltene Dateien"
 
 #: tazpanel/pkgs.cgi:1111
 msgid "Please wait"
