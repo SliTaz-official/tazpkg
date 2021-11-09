@@ -605,7 +605,7 @@ EOT
 			SHORT_DESC=`echo "$RES" | cut -d "|" -f 3`
 			CATEGORY=`echo "$RES" | cut -d "|" -f 4`
 			WEB_SITE=`echo "$RES" | cut -d "|" -f 5`
-			SIZES=`grep -sh -A 3 "^$(echo $PACKAGE)$" /var/lib/tazpkg/packages.txt \
+			SIZES=`grep -sh -A 3 "^${PACKAGE}$" /var/lib/tazpkg/packages.txt \
 				/var/lib/tazpkg/undigest/*/packages.txt | tail -1`
 			DEPENDS=""
 			SUGGESTED=""

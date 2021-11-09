@@ -180,7 +180,7 @@ while read pkgsum pkgfile; do
 		cpio -F "$folder/$pkgfile" -i description.txt >/dev/null 2>&1
 		# Append descriptions DB
 		echo "$PACKAGE" >> "$DBd"
-		cat description.txt | sed 's|^$| |' >> "$DBd"
+		sed 's|^$| |' < description.txt >> "$DBd"
 		echo >> "$DBd"
 		rm description.txt
 	fi

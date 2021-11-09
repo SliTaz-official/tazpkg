@@ -1392,7 +1392,7 @@ EOT
 				case $pkg in
 					*.htm*) cat $pkg ;;
 					*)	echo "<pre style=\"white-space: pre-wrap\">"
-						cat $pkg | htmlize | sed 's|\([hf]t*t*ps*://[a-zA-Z0-9./_-]*[a-zA-Z0-9/_-]\)|<a href="\1">\1</a>|'
+						htmlize < $pkg | sed 's|\([hf]t*t*ps*://[a-zA-Z0-9./_-]*[a-zA-Z0-9/_-]\)|<a href="\1">\1</a>|'
 						echo "</pre>"
 						;;
 				esac
@@ -1755,21 +1755,21 @@ EOT
 		<tr>
 			<td>$(_ 'Installed packages:')</td>
 			<td><a href="?list&amp;my=my&amp;cat=all&amp;repo=Any">
-				<b>$(cat $PKGS_DB/installed.info | wc -l)</b>
+				<b>$(wc -l < $PKGS_DB/installed.info)</b>
 				</a></td></tr>
 		<tr>
 			<td>$(_ 'Mirrored packages:')</td>
 			<td><a href="?list&amp;my=no&amp;cat=all&amp;repo=Any">
-				<b>$(cat $PKGS_DB/packages.list | wc -l)</b>
+				<b>$(wc -l < $PKGS_DB/packages.list)</b>
 				</a></td></tr>
 		<tr>
 			<td>$(_ 'Upgradeable packages:')</td>
 			<td><a href="?up">
-				<b>$(cat $PKGS_DB/packages.up | wc -l)</b>
+				<b>$(wc -l < $PKGS_DB/packages.up)</b>
 				</a></td></tr>
 		<tr>
 			<td>$(_ 'Installed files:')</td>
-			<td><b>$(cat $INSTALLED/*/files.list | wc -l)</b></td></tr>
+			<td><b>$(wc -l $INSTALLED/*/files.list)</b></td></tr>
 		<tr>
 			<td>$(_ 'Blocked packages:')</td>
 			<td><a href="?blocked">

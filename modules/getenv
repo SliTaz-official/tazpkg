@@ -11,7 +11,7 @@ for i in awk basename bzcat cat chmod chroot clear cmp cp cpio cut date dd diff 
 	du egrep fgrep find grep gzip head httpd id ln ls lzcat md5sum mkdir mktemp mv readlink \
 	realpath rm rmdir rpm rpm2cpio sed sort stat su tac tail tar tee touch tr tty uniq unlzma wc \
 	wget which xzcat zcat; do
-	alias $i="busybox $i"
+	eval alias $i="busybox $i"
 done
 
 

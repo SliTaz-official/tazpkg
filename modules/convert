@@ -352,7 +352,7 @@ convert_sfs() {
 	unsquashfs "$PACKAGE_FILE"
 	mv squashfs-root fs
 	set -- $(cat fs/pet.specs)
-	desc="$10"
+	desc="${10}"
 	finish_convert_puppy
 }
 

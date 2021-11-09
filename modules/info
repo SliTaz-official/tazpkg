@@ -33,15 +33,15 @@ elif [ -d "$INSTALLED/$1" ]; then
 	. "$INSTALLED/$1/receipt"
 	STATE=$(_ 'installed package')
 
-	if [ -e "$PKGS_DB/packages.info" ]; then
+	if [ -s "$PKGS_DB/packages.info" ]; then
 		# Check if upgrade available
 		NEWVER=$(awk -F$'\t' -vp="$1" '$1==p{print $2}' "$PKGS_DB/packages.info")
-		if [ "$VERSION" != "$NEWVER" ]; then
+		if [ "$VERSION" != "${NEWVER:-$VERSION}" ]; then
 			VERSION="$VERSION $(_n '(new version "%s" available)' "$NEWVER")"
 		else
 			OLDMD5=$(awk -F$'\t' -vp="$1" '$1==p{print $9}' "$PKGS_DB/installed.info")
 			NEWMD5=$(awk -F$'\t' -vp="$1" '$1==p{print $9}' "$PKGS_DB/packages.info")
-			if [ "$OLDMD5" != "$NEWMD5" ]; then
+			if [ "$OLDMD5" != "${NEWMD5:-$OLDMD5}" ]; then
 				VERSION="$VERSION $(_n '(new build available)')"
 			fi
 		fi

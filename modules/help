@@ -109,7 +109,7 @@ commands="\
 :upgrade,up::setup-mirror,sm::add-undigest,setup-undigest::list-undigest:\
 :remove-undigest:"
 
-if [ ! $(echo $commands | grep -e "[:,]$T[:,]") ]; then
+if ! echo $commands | grep -qe "[:,]$T[:,]"; then
 	try1=$(echo $commands | grep -oe ":[^:]*$T[^:]*:")
 	if [ -z "$try1" ]; then
 		_ 'Sorry, no help for "%s"' "$QUERY"; newline; exit 0
@@ -171,7 +171,7 @@ OPTB=$(echo "$OPTLIST" | tr '\n' '@' | sed 's|\*|\\*|g;')
 
 PRE2=$(echo "$OPT0" | sed "s|$OPTA|$OPTB|" | tr '@' '\n' | sed '/O/d; s|L||')
 
-[ ! -z "$TA" ] && T="$T, $TA"
+[ -n "$TA" ] && T="$T, $TA"
 
 title '%s' "$title"
 emsg "$(longline "$PRE2" | sed 's|A|<c 33>|g; s|B|<c 36>|g; s|C|</b>|g; s|D|</c>|g; ')"

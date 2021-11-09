@@ -290,7 +290,7 @@ case $1 in
 					done
 				fi
 				[ -n "$SUGGESTED" ] && cat <<EOT
-$(boldify $(echo "$PACKAGE"):) $SUGGESTED
+$(boldify ${PACKAGE}:) $SUGGESTED
 EOT
 			fi
 		done
